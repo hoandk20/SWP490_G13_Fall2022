@@ -1,11 +1,19 @@
-
+import logo from './logo.svg';
 import './App.css';
-import Login from './components/login';
-import Register from './components/register';
+import  Taixe from './components/layout/taixe/index'
+import { Route, Routes } from 'react-router';
+import RegisterDriver from './views/registers/register-khachhang';
 
 function App() {
   return (
-    <Login/>
+    <div className="App">
+      <div className="container">
+        <Routes>
+          <Route path="/taixe" element={<Taixe />} />
+          <Route path="/register-driver" element={<RegisterDriver />}/>
+        </Routes>
+      </div>
+    </div>
   );
 }
 

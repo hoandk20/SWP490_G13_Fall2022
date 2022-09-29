@@ -1,0 +1,47 @@
+.footer-info{
+    background-color: cornflowerblue;
+
+    height: 200px;
+}
+.infos{
+    margin-top: 30px;
+}
+p{
+    margin-top: 0;
+    margin-bottom: 0;
+    color: white;
+}
+
+
+.footer-info-menu{
+    margin-top: 15px;
+    margin-left: 20%;
+    background-color:  rgb(16, 59, 102);
+    width: 80%;
+    color: white;
+    text-align: center;
+    border-radius: 25px;
+  }
+  .footer-menu {   
+    margin-right: 10%;
+  }
+  .footer-icons{
+    margin-left: 20%;
+  }
+
+
+ul li {
+    display: inline;  
+  }
+  ul{
+    padding-bottom: 4px;
+    padding-top: 4px;
+  }
+  a{
+    color: white;
+    /* padding-left: 8PX; */
+  }
+  .image-app{
+    width: 120px;
+   float: right;
+  }

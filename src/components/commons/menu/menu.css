@@ -1,0 +1,61 @@
+.trigger {
+    padding: 0 7px;
+      font-size: 18px;
+      line-height: 44px;
+      cursor: pointer;
+      transition: color 0.3s;
+      float: right;
+    }
+    .menu{
+      text-align: left;
+      color: white;
+    }
+  
+  
+    
+    .trigger:hover {
+      color: #1890ff;
+      
+    }
+  
+    .logo {
+      height: 32px;
+      margin: 16px;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .site-layout .site-layout-background {
+      background: #fff;
+  
+    }
+    /* .ant-menu-item-selected {
+      background-color: #B039CC !important;
+    } */
+  
+  .ant-layout-footer{
+  margin: 0;
+  padding: 0;
+  
+  }
+  
+  
+  
+  .ant-menu-dark .ant-menu-sub, .ant-menu.ant-menu-dark, .ant-menu.ant-menu-dark .ant-menu-sub,.ant-layout-sider-children{
+    background-color: rgb(31, 40, 40);
+  }
+  
+  .ant-menu-item-selected {
+    background-color: #B039CC !important;
+    
+    
+  }
+  
+  .ant-menu-item{
+    border-bottom: 1px solid white;
+    
+  }
+   .ant-menu-inline .ant-menu-item,.ant-menu-inline .ant-menu-item:not(:last-child){
+    margin: 0;
+  height: 50px;
+  }
+  
