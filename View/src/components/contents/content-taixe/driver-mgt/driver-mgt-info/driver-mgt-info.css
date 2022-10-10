@@ -1,0 +1,24 @@
+
+.info-left-header{
+    background-color: bisque;
+    text-align: left;
+    padding-left: 4%;
+    font-size: large;
+}
+.info-left-form{
+    border-style: solid;
+    border-color: hsl(0, 0%, 73%); 
+   padding: 20px;
+    
+}
+.form1{
+    border-bottom-style: solid;
+    border-bottom-color: hsl(0, 0%, 73%); 
+    margin-bottom: 30px;
+ 
+}
+.form3{
+    text-align: left;
+    margin-left: 4%;
+    margin-top: 10px;
+}

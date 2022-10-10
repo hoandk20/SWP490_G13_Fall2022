@@ -1,0 +1,24 @@
+.form-header{
+    margin-top: 30px;
+    background-color: bisque;
+    font-size: large;
+    height: 60px;
+}
+.form-content{
+    border-style: solid;
+    border-top-style: none;
+    border-color: hsl(0, 0%, 73%); 
+   padding: 20px;
+   height: 250px;
+}
+.form-header .status{
+    color: red;
+    float: right;
+    margin-right: 10px;
+}
+.card-doc{
+    margin: 5px;
+}
+.btn-submit{
+    float: right;
+}

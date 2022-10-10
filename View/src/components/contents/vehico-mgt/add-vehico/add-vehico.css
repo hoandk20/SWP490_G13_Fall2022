@@ -1,0 +1,17 @@
+.form-header{
+    margin-top: 30px;
+    background-color: bisque;
+    text-align: left;
+    padding-left: 4%;
+    font-size: large;
+}
+
+.form-contents{
+    border-style: solid;
+    border-top-style: none;
+    border-color: hsl(0, 0%, 73%); 
+   padding: 20px;
+}
+.form-add{
+    width: 80%;
+}

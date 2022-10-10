@@ -1,17 +1,26 @@
 import React from 'react';
-import Headers from '../../../components/commons/header/index.js'
-import Footers from '../../../components/commons/footer/index.js';
-import Register from '../../../components/registers/khachhang/index.js';
+import 'antd/dist/antd.css';
+import './layout.css';
+
 import { Layout } from 'antd';
-const { Header, Footer, Content } = Layout;
+import Footers from '../commons/footer/index';
+import { Footer } from 'antd/lib/layout/layout';
+import Headers from '../commons/header/index';
 
 
-const RegisterPassenger = () =>{
-    return(
-      <Layout>
+import Menu from '../commons/menu/index'
+
+const { Header, Content } = Layout;
+
+const Layouts = (props) => {
+  const {content}=props
+
+  return (
+    <Layout>
+      <Menu/>
       <Layout  style={{ minHeight: "100vh" }} className="site-layout">
         <Header  style={{backgroundColor:"#fff"}}>
-            <Headers/>
+<Headers/>
         </Header>
         <Content
           className="site-layout-background"
@@ -19,16 +28,17 @@ const RegisterPassenger = () =>{
             borderTopStyle:'solid',
             borderTopColor:' rgb(187, 187, 187)',
             padding: 24,
-            minHeight: 560,
+            // minHeight: 560,
           }}
         >
-          <Register/>
+          <div className='content'>{content}</div>
         </Content>
         <Footer>
             <Footers/>
         </Footer>
       </Layout>
     </Layout>
-    );
+  );
 };
-export default RegisterPassenger
+
+export default Layouts;

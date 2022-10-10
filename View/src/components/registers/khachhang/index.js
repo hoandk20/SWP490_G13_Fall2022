@@ -9,7 +9,7 @@ import {
 } from 'antd';
 import React, { useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
-import './index.css'
+import './register-passenger.css'
 import ImageRegisterKh from '../../../assets/image-app/register-khachhang.png'
 
 const { Option } = Select;
@@ -44,11 +44,9 @@ const tailFormItemLayout = {
     },
 };
 
-function onChange(value) {
-    console.log("Captcha value:", value);
-}
 
-const Register = () => {
+
+const RegisterPassenger = () => {
     const [form] = Form.useForm();
 
     const onFinish = (values) => {
@@ -69,15 +67,15 @@ const Register = () => {
 
     return (
         <div className='container'>
-            <h1>ĐĂNG KÝ ĐỂ ĐI XE</h1>
+            <h2>ĐĂNG KÝ ĐỂ ĐI XE</h2    >
             <div className='container-info'>
-                <Row>
-                    <Col span={12}>
+                <Row> 
+                    <Col sm={24} md={12} >
                         <div className='container-left'>
                             <img src={ImageRegisterKh} alt="abc" />
                         </div>
                     </Col>
-                    <Col span={12}>
+                    <Col sm={24} md={12}>
                         <div className='container-right'>
                             {/* <h1>ĐĂNG KÝ ĐỂ ĐI XE</h1> */}
                             <div className='container-right-info'>
@@ -156,7 +154,7 @@ const Register = () => {
                                             }),
                                         ]}
                                     >
-                                        <Input.Password />
+                                        <Input.Password placeholder='*Nhập lại mật khẩu' />
                                     </Form.Item>
                                     {/* <p>Mật khẩu phải có từ 6-20 ký tự và không có khoảng trắng.</p> */}
                                     <h3>
@@ -228,7 +226,7 @@ const Register = () => {
 
                                     <ReCAPTCHA
                                         sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                                        onChange={onChange}
+                                    
                                     />,
                                     <Form.Item
                                   
@@ -251,4 +249,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default RegisterPassenger;

@@ -1,12 +1,13 @@
 import React from 'react';
 import Headers from '../../../components/commons/header/index.js'
 import Footers from '../../../components/commons/footer/index.js';
-import Register from '../../../components/registers/khachhang/index.js';
 import { Layout } from 'antd';
+
+import Register from '../../../components/registers/taixe/index.js';
 const { Header, Footer, Content } = Layout;
 
 
-const RegisterPassenger = () =>{
+const RegisterDriver = () =>{
     return(
       <Layout>
       <Layout  style={{ minHeight: "100vh" }} className="site-layout">
@@ -22,7 +23,7 @@ const RegisterPassenger = () =>{
             minHeight: 560,
           }}
         >
-          <Register/>
+   <Register/>
         </Content>
         <Footer>
             <Footers/>
@@ -31,4 +32,4 @@ const RegisterPassenger = () =>{
     </Layout>
     );
 };
-export default RegisterPassenger
+export default RegisterDriver

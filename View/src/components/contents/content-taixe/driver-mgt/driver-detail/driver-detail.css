@@ -1,0 +1,25 @@
+.btn-right{
+    display:inline-block;
+    float: right;
+}
+.form-header{
+    margin-top: 30px;
+    background-color: bisque;
+    font-size: large;
+}
+.form-header .status{
+    color: red;
+    float: right;
+    margin-right: 10px;
+}
+
+.form-content{
+    border-style: solid;
+    border-top-style: none;
+    border-color: hsl(0, 0%, 73%); 
+   padding: 20px;
+}
+.btn-typeVehico{
+    float: right;
+   margin-top: 20px;
+}   

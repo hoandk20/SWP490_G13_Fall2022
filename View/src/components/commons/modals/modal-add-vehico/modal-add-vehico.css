@@ -1,0 +1,15 @@
+
+.ant-modal-header{
+    background-color: bisque;
+}
+.ant-modal-body{
+    padding: 0;
+    margin: 0;
+    border-style: solid;
+    border-color: hsl(0, 0%, 73%); 
+   padding: 20px;
+   text-align: left;
+}
+.ant-modal-footer{
+    display: none;
+}
