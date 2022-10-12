@@ -5,6 +5,7 @@ import com.G13.domain.Role;
 import com.G13.domain.User;
 import com.G13.master.MasterRole;
 import com.G13.service.UserService;
+import jdk.jshell.Snippet;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -20,6 +23,15 @@ import java.util.List;
 public class UserResouce {
 
     private final UserService userService;
+
+
+    @GetMapping("/checkEmailExist")
+    public ResponseEntity<?> checkEmailExisted(String email){
+        boolean IsExisted = userService.IsEmailExisted(email);
+        Map<String,String> res = new HashMap<>();
+        res.put("IsExisted",IsExisted?"true":"false");
+        return ResponseEntity.ok().body(res);
+    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {

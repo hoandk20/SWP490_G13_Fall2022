@@ -90,5 +90,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepo.findAll();
     }
 
+    @Override
+    public Boolean IsEmailExisted(String email) {
+        User user = userRepo.findByEmail(email);
+        return user == null;
+    }
+
 
 }
