@@ -13,6 +13,7 @@ import FormItem from 'antd/es/form/FormItem';
 import React from 'react';
 import './register-driver.css'
 import ReCAPTCHA from "react-google-recaptcha";
+import { useNavigate } from 'react-router';
 
 const { Option } = Select;
 
@@ -35,6 +36,19 @@ const prefixSelector = (
 
 const RegisterDriver = () => {
 
+    const navigate= useNavigate();
+    const onFinish = (values) => {
+        const newUser={
+            country:values.country,
+            city:values.city,
+            phoneNumber:values.phoneNumber,
+            role:values.role
+        }
+        
+        console.log('Received values of form: ', newUser);
+        navigate('/signup/driver-info',{state:{newUser}});
+    };
+
     return (
         <div className='container'>
 
@@ -53,6 +67,7 @@ const RegisterDriver = () => {
                                 <p>Là thời điểm tốt nhất để lái xe với T.NET. Đăng ký thật đơn giản, và bạn sẽ kiếm được thêm thu nhập với thời gian linh hoạt.</p>
 
                                 <Form
+                                    onFinish={onFinish}
                                     initialValues={{
                                         prefix: '+84'
                                     }}
@@ -83,7 +98,7 @@ const RegisterDriver = () => {
 
                                     </FormItem>
                                     <Form.Item
-                                        name="phone"
+                                        name="phoneNumber"
                                         rules={[
                                             {
                                                 required: true,
@@ -99,7 +114,9 @@ const RegisterDriver = () => {
                                         />
                                     </Form.Item>
                                     <h3>Bạn là...</h3>
-                                    <FormItem>
+                                    <FormItem
+                                     name="role"
+                                    >
                                     <Radio.Group  >
                                         <Space direction="vertical">
                                             <Radio value={1}>Là tài xế chuyên nghiệp có giấy phép lái xe. Bạn sở hữu phương tiện hoặc có kế hoạch sở hữu phương tiện, nhưng không có giấy phép hoạt động vận tải bằng ô tô?</Radio>

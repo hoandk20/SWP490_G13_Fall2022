@@ -12,6 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,14 +32,16 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager){
         this.authenticationManager = authenticationManager;
     }
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         log.info("Username is: {}",username);log.info("Password is: {}",password);
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(username,password);
-        return authenticationManager.authenticate(authenticationToken);
+         return authenticationManager.authenticate(authenticationToken);
     }
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
@@ -54,11 +57,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withExpiresAt(new Date(System.currentTimeMillis()+30*60*1000))
                 .withClaim("roles",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
+
         response.setHeader("access_token",access_token);
         response.setHeader("refresh_token",refresh_token);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token",access_token);
         tokens.put("refresh_token",refresh_token);
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(),tokens);
     }

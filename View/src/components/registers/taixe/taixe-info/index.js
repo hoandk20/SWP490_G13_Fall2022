@@ -10,16 +10,25 @@ import {
 import React, { useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import '../../khachhang/register-passenger.css'
-
-
+import {useLocation} from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 const { Option } = Select;
 
 
 const RegisterDriverInfo = () => {
     const [form] = Form.useForm();
-
+    const navigate= useNavigate();
+    const location = useLocation();
+    console.log(location.state.newUser)
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+        const newUser ={
+            ...location.state.newUser,
+            firstName:values.firstName,
+            lastName:values.lastName,
+            email:values.email,
+            password:values.password
+        }
+        console.log('Received values of form: ', newUser);
     };
 
     const prefixSelector = (
@@ -68,7 +77,7 @@ const RegisterDriverInfo = () => {
                                             width: '50%',
 
                                         }}
-                                        name="username"
+                                        name="firstName"
                                         rules={[
                                             {
                                                 required: true,
@@ -84,7 +93,7 @@ const RegisterDriverInfo = () => {
                                             width: '50%',
 
                                         }}
-                                        name="username"
+                                        name="lastName"
                                         rules={[
                                             {
                                                 required: true,

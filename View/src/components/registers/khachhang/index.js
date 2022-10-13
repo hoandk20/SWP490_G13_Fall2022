@@ -11,6 +11,11 @@ import React, { useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import './register-passenger.css'
 import ImageRegisterKh from '../../../assets/image-app/register-khachhang.png'
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { registerPassenger } from '../../../redux/apiRequest';
+
+
 
 const { Option } = Select;
 const formItemLayout = {
@@ -48,9 +53,20 @@ const tailFormItemLayout = {
 
 const RegisterPassenger = () => {
     const [form] = Form.useForm();
-
+    const dispatch =useDispatch();
+    const navigate= useNavigate();
     const onFinish = (values) => {
-        console.log('Received values of form: ', values);
+        const newUser={
+            email:values.email,
+            password:values.password,
+            firstName:values.firstName,
+            lastName:values.lastName,
+            phoneNumber:values.phoneNumber,
+
+        }
+        
+        console.log('Received values of form: ', newUser);
+
     };
 
     const prefixSelector = (
@@ -68,7 +84,7 @@ const RegisterPassenger = () => {
     return (
         <div className='container'>
             <h2>ĐĂNG KÝ ĐỂ ĐI XE</h2    >
-            <div className='container-info'>
+            <div className='container-info-register-passenger'>
                 <Row> 
                     <Col sm={24} md={12} >
                         <div className='container-left'>
@@ -166,7 +182,7 @@ const RegisterPassenger = () => {
                                             width: '50%',
 
                                         }}
-                                        name="username"
+                                        name="firstName"
                                         rules={[
                                             {
                                                 required: true,
@@ -182,7 +198,7 @@ const RegisterPassenger = () => {
                                             width: '50%',
 
                                         }}
-                                        name="username"
+                                        name="lastName"
                                         rules={[
                                             {
                                                 required: true,
@@ -193,7 +209,7 @@ const RegisterPassenger = () => {
                                         <Input placeholder='*Họ và Tên Đệm' />
                                     </Form.Item>
                                     <Form.Item
-                                        name="phone"
+                                        name="phoneNumber"
                                         rules={[
                                             {
                                                 required: true,
@@ -211,12 +227,12 @@ const RegisterPassenger = () => {
                                     <h3>MÃ MỜI</h3>
 
                                     <Form.Item
-                                        name="username"
+                                        name="gift"
 
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please input your username!',
+                                                message: 'Please input your gift!',
                                             },
                                         ]}
                                     >

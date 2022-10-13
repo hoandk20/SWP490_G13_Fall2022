@@ -5,7 +5,6 @@ import com.G13.domain.Role;
 import com.G13.domain.User;
 import com.G13.master.MasterRole;
 import com.G13.service.UserService;
-import jdk.jshell.Snippet;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

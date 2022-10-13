@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import 'antd/dist/antd.min.css'
-import  Taixe from './components/layout/index'
+import Taixe from './components/layout/index'
 import { Route, Routes } from 'react-router';
 import RegisterPassenger from './views/registers/register-khachhang';
 import RegisterDriver from './views/registers/register-taixe';
@@ -20,16 +20,21 @@ import DriverDetail from './views/taixe/driver-mgt/driver-detail';
 import FreeTripPassenger2 from './views/khachhang/free-trips/free-trip2';
 import RegisterCompanyDoc1 from './views/registers/register-congty/register-congty-document/register-congty-document1';
 import RegisterCompanyDoc2 from './views/registers/register-congty/register-congty-document/register-congty-document2';
+import Login from './components/login';
+import { BrowserRouter } from 'react-router-dom';
 
+import routers from './components/router';
 
 function App() {
   return (
     <div className="App">
       <div className="container">
-        <Routes>
+
+          {/* <Routes>
           <Route path="/taixe" element={<Taixe />} />
           <Route path="/register-passenger" element={<RegisterPassenger />}/>
           <Route path="/register-driver" element={<RegisterDriver />}/>
+          <Route path="/login" element={<Login />}/>
           <Route path="/register-driver-info" element={<RegisterDriverInfo />}/>
           <Route path="/register-company-doc1" element={<RegisterCompanyDoc1 />}/>
           <Route path="/register-company-doc2" element={ <RegisterCompanyDoc2/>}/>
@@ -47,7 +52,24 @@ function App() {
 
           <Route path="/khachhang-free-trip-2" element={<FreeTripPassenger2 />}/>
 
-        </Routes>
+        </Routes> */}
+
+          <Routes>
+            {routers.map((route, index) => {
+              const Element = route.element;
+              const roleTarget = route.roleTarget;
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                    <Element />
+                  }
+                />
+              );
+            })}
+          </Routes>
+      
       </div>
     </div>
   );

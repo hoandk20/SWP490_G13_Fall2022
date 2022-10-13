@@ -12,6 +12,23 @@ import { Menu,Layout } from 'antd';
 import './menu.css'
 const { Sider } = Layout;
 
+const menuItem=[
+  {
+    key: '1',
+    icon: <UserOutlined />,
+    label: 'nav 1',
+  },
+  {
+    key: '2',
+    icon: <VideoCameraOutlined />,
+    label: 'nav 2',
+  },
+  {
+    key: '3',
+    icon: <UploadOutlined />,
+    label: 'nav 3',
+  },
+]
 
 const Menu1= () =>{
     const [collapsed, setCollapsed] = useState(false);
@@ -30,23 +47,7 @@ const Menu1= () =>{
           theme='dark'
           mode="inline"
           defaultSelectedKeys={['1']}
-          items={[
-            {
-              key: '1',
-              icon: <UserOutlined />,
-              label: 'nav 1',
-            },
-            {
-              key: '2',
-              icon: <VideoCameraOutlined />,
-              label: 'nav 2',
-            },
-            {
-              key: '3',
-              icon: <UploadOutlined />,
-              label: 'nav 3',
-            },
-          ]}
+          items={menuItem}
         />
       </Sider>
     );

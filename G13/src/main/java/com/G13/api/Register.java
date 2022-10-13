@@ -18,6 +18,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class Register {
 
