@@ -7,162 +7,161 @@ import java.time.Instant;
 @Table(name = "rider")
 public class Rider {
     @Id
-    @Column(name = "RiderID", nullable = false, length = 50)
+    @Column(name = "riderid", nullable = false, length = 50)
     private String id;
 
-    @Column(name = "HomeAddressID", length = 50)
+    @Column(name = "homeaddressid", length = 50)
     private String homeAddressID;
 
-    @Column(name = "OfficeAddressID", length = 50)
+    @Column(name = "officeaddressid", length = 50)
     private String officeAddressID;
 
-    @Column(name = "InternationalCode", length = 4)
+    @Column(name = "internationalcode", length = 4)
     private String internationalCode;
 
-    @Column(name = "LanguageCode", nullable = false, length = 4)
+    @Column(name = "languagecode", nullable = false, length = 4)
     private String languageCode;
 
-    @Column(name = "CountryCode", nullable = false, length = 4)
+    @Column(name = "countrycode", nullable = false, length = 4)
     private String countryCode;
 
     @Column(name = "CityID")
     private Integer cityID;
 
-    @Column(name = "FirstName", nullable = false, length = 30)
+    @Column(name = "firstname", nullable = false, length = 30)
     private String firstName;
 
-    @Column(name = "LastName", nullable = false, length = 50)
+    @Column(name = "lastname", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name = "FullName", nullable = false, length = 81)
+    @Column(name = "fullname", nullable = false, length = 81)
     private String fullName;
 
-    @Column(name = "PromotionBalance", nullable = false)
+    @Column(name = "promotionbalance", nullable = false)
     private Float promotionBalance;
 
-    @Column(name = "CancelRate", nullable = false)
+    @Column(name = "cancelrate", nullable = false)
     private Float cancelRate;
 
-    @Column(name = "AccumulatedPoints", nullable = false)
-    private Integer accumulatedPoints;
 
-    @Column(name = "TotalCanelledTrips", nullable = false)
+
+    @Column(name = "totalcanelledtrips", nullable = false)
     private Short totalCanelledTrips;
 
-    @Column(name = "TotalTrips", nullable = false)
+    @Column(name = "totaltrips", nullable = false)
     private Short totalTrips;
 
-    @Column(name = "TotalRequests", nullable = false)
+    @Column(name = "totalrequests", nullable = false)
     private Short totalRequests;
 
     @Column(name = "Image", length = 100)
     private String image;
 
-    @Column(name = "MobileNo", length = 12)
+    @Column(name = "mobileno", length = 12)
     private String mobileNo;
 
     @Column(name = "Email", length = 50)
     private String email;
 
     @Lob
-    @Column(name = "MobileDeviceID")
+    @Column(name = "mobiledeviceid")
     private String mobileDeviceID;
 
-    @Column(name = "DeviceType", length = 30)
+    @Column(name = "devicetype", length = 30)
     private String deviceType;
 
-    @Column(name = "PromotionCode", length = 40)
+    @Column(name = "promotioncode", length = 40)
     private String promotionCode;
 
-    @Column(name = "ActiveCode", length = 40)
+
+        @Column(name = "activecode", length = 40)
     private String activeCode;
 
     @Column(name = "Status", nullable = false, length = 4)
     private String status;
 
-    @Column(name = "CurrentTripId", length = 50)
+    @Column(name = "currenttripid", length = 50)
     private String currentTripId;
 
     @Column(name = "Balance", nullable = false)
     private Float balance;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
-    @Column(name = "Rate", nullable = false)
+    @Column(name = "rate", nullable = false)
     private Float rate;
 
     @Column(name = "FBAccount")
     private Boolean fBAccount;
 
-    @Column(name = "PostalCode", length = 6)
+    @Column(name = "postalcode", length = 6)
     private String postalCode;
 
-    @Column(name = "FacebookID", length = 50)
+    @Column(name = "facebookid", length = 50)
     private String facebookID;
 
-    @Column(name = "InvitationCode", length = 20)
+    @Column(name = "invitationcode", length = 20)
     private String invitationCode;
 
-    @Column(name = "ActiveDate")
+    @Column(name = "activedate")
     private Instant activeDate;
 
-    @Column(name = "DeactiveDate")
+    @Column(name = "deactivedate")
     private Instant deactiveDate;
 
-    @Column(name = "LastResentCode")
+    @Column(name = "lastresentcode")
     private Instant lastResentCode;
 
-    @Column(name = "ResentCount", nullable = false)
+    @Column(name = "resentcount", nullable = false)
     private Byte resentCount;
 
-    @Column(name = "totalTripAdjustment", nullable = false)
+    @Column(name = "totaltripadjustment", nullable = false)
     private Double totalTripAdjustment;
 
-    @Column(name = "Version", length = 10)
+    @Column(name = "version", length = 10)
     private String version;
 
-    @Column(name = "MobileDeviceID2", length = 200)
+    @Column(name = "mobiledeviceid2", length = 200)
     private String mobileDeviceID2;
 
-    @Column(name = "PromoStatus", nullable = false)
+    @Column(name = "promostatus", nullable = false)
     private Byte promoStatus;
 
-    @Column(name = "RewardedTrips", nullable = false)
+    @Column(name = "rewardedtrips", nullable = false)
     private Short rewardedTrips;
 
-    @Column(name = "NationalIdentifier", length = 15)
+    @Column(name = "nationalidentifier", length = 15)
     private String nationalIdentifier;
 
-    @Column(name = "BankID")
+    @Column(name = "bankid")
     private Integer bankID;
 
-    @Column(name = "BankAccount", length = 15)
+    @Column(name = "bankaccount", length = 15)
     private String bankAccount;
 
-    @Column(name = "totalPoint", nullable = false)
+    @Column(name = "totalpoint", nullable = false)
     private Integer totalPoint;
 
     @Lob
-    @Column(name = "VoIPToken")
+    @Column(name = "voiptoken")
     private String voIPToken;
 
-    @Column(name = "KeyValue", length = 100)
+    @Column(name = "keyvalue", length = 100)
     private String keyValue;
 
-    @Column(name = "AccountHolder", length = 100)
-    private String accountHolder;
 
-    @Column(name = "BranchId")
+
+    @Column(name = "branchid")
     private Integer branchId;
 
     public String getId() {
@@ -261,13 +260,8 @@ public class Rider {
         this.cancelRate = cancelRate;
     }
 
-    public Integer getAccumulatedPoints() {
-        return accumulatedPoints;
-    }
 
-    public void setAccumulatedPoints(Integer accumulatedPoints) {
-        this.accumulatedPoints = accumulatedPoints;
-    }
+
 
     public Short getTotalCanelledTrips() {
         return totalCanelledTrips;
@@ -565,13 +559,6 @@ public class Rider {
         this.keyValue = keyValue;
     }
 
-    public String getAccountHolder() {
-        return accountHolder;
-    }
-
-    public void setAccountHolder(String accountHolder) {
-        this.accountHolder = accountHolder;
-    }
 
     public Integer getBranchId() {
         return branchId;
