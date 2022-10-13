@@ -1,21 +1,12 @@
-h3{
-    color: blue;
- margin-bottom: 2%;
-}
+
 h2{
     color: blue;
   
 }
-p{
-    color: black;
-}
 
-.container{
-    padding: 0;
-    margin: 0;
-}
-.container-info{
-   padding-top: 3%;
+
+.container-info-register-passenger{
+   min-height: 700px;
 
 }
 

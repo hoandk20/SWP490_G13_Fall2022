@@ -3,6 +3,8 @@ import React from 'react';
 import "../register-congty-document.css"
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
 
+import ImageAvatar from '../../../../../assets/image-app/avatar.jpg'
+
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
     return (
@@ -24,7 +26,7 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-content'>
                                     <Row>
                                         <Col sm={12} md={6} style={{ textAlign: "center" }}>
-
+                                            {/* <ImageAvatar/> */}
                                         </Col>
                                         <Col sm={34} md={18} >
                                             Ghi Chú: Ảnh chụp kiểu chân dung, mới nhất, thẳng mặt và rõ nét.
@@ -61,7 +63,7 @@ const RegisterCompanyDoc1 = () => {
 
                                 </div>
                                 <div className='form-content'>
-                                    <div className='form-image' style={{ height: "170px" }}>
+                                    <div className='form-image' style={{ height: "230px" }}>
 
                                     </div>
                                     <div className='content-bottom'>
@@ -91,7 +93,7 @@ const RegisterCompanyDoc1 = () => {
                                     </Row>
                                 </div>
                                 <div className='form-content'>
-                                    <div className='form-image' style={{ height: "170px" }}>
+                                    <div className='form-image' style={{ height: "230px" }}>
 
                                     </div>
                                     <div className='content-bottom'>
@@ -112,7 +114,7 @@ const RegisterCompanyDoc1 = () => {
 
                                 </div>
                                 <div className='form-content'>
-                                    <div className='form-image' style={{ height: "170px" }}>
+                                    <div className='form-image' style={{ height: "230px" }}>
 
                                     </div>
                                     <div className='content-bottom'>
@@ -134,7 +136,7 @@ const RegisterCompanyDoc1 = () => {
 
                                 </div>
                                 <div className='form-content'>
-                                    <div className='form-image' style={{ height: "170px" }}>
+                                    <div className='form-image' style={{ height: "230px" }}>
 
                                     </div>
                                     <div className='content-bottom'>

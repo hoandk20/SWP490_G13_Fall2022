@@ -6,9 +6,25 @@ import { Layout } from 'antd';
 import Footers from '../commons/footer/index';
 import { Footer } from 'antd/lib/layout/layout';
 import Headers from '../commons/header/index';
-
-
 import Menu from '../commons/menu/index'
+const menuItem=[
+  {
+    key: '1',
+    // icon: <UserOutlined />,
+    label: 'nav 1',
+  },
+  {
+    key: '2',
+    // icon: <VideoCameraOutlined />,
+    label: 'nav 2',
+  },
+  {
+    key: '3',
+    // icon: <UploadOutlined />,
+    label: 'nav 3',
+  },
+];
+
 
 const { Header, Content } = Layout;
 
@@ -17,7 +33,7 @@ const Layouts = (props) => {
 
   return (
     <Layout>
-      <Menu/>
+      <Menu />
       <Layout  style={{ minHeight: "100vh" }} className="site-layout">
         <Header  style={{backgroundColor:"#fff"}}>
 <Headers/>

@@ -1,6 +1,5 @@
 // import React from "react";
-
-// // import AvatarUploader from "react-avatar-uploader";
+//  import AvatarUploader from "react-avatar-uploader";
 
 // const UploadImage = () => {
 //   const getInfo = (error, response) => {
