@@ -13,14 +13,20 @@ export const loginUser = async (user, dispatch, navigate) => {
         // const res = axios.post("http://localhost:8080/api/login", user);
         // console.log(res.data)
         // dispatch(loginSuccess(res.data))
-        const rest=axios
-        .post(`http://localhost:8080/api/login`, JSON.stringify(user),
-            { headers: {'Content-Type': 'application/json'}
-            }
-        ).then(res => {
-            console.log(res)
-        }).catch(error => console.log(error))
-
+        const res= await axios({
+            method: "post",
+            url: "http://localhost:8080/api/login",
+            data: user,
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          })
+            .then(function (response) {
+              //handle success
+              console.log(response);
+            })
+            .catch(function (response) {
+              //handle error
+              console.log(response);
+            });
 
     } catch (error) {
         dispatch(loginFailed());
@@ -30,11 +36,29 @@ export const loginUser = async (user, dispatch, navigate) => {
 
 
 export const registerPassenger = async (user, dispatch, navigate) => {
-    dispatch(registerPassenger)
+    // dispatch(registerPassenger)
+    console.log(user)
     try {
-        const res = axios.post("", user);
-        dispatch(registerSuccess(res.data))
-        navigate("/")
+        // const res = axios.post("", user);
+        // dispatch(registerSuccess(res.data))
+        // navigate("/")
+        const rest = axios
+            .post(`http://localhost:8080/api/RegisterPassenger`,
+                {
+                    email: user.email,
+                    password: user.password,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    phoneNumber:user.phoneNumber,
+                    language: "vi"
+                },
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                }
+            ).then(res => {
+                console.log("res: ok")
+            }).catch(error => console.log(error))
+
     } catch (error) {
         dispatch(registerFailed())
     }

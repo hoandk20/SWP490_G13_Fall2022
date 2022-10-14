@@ -45,7 +45,7 @@ public class Register {
                 Rider rider = new Rider();
                 rider.setCountryCode("vi");
                 rider.setEmail(rp.email);
-                rider.setFirstName(rp.fistName);
+                rider.setFirstName(rp.firstName);
                 rider.setLastName(rp.LastName);
                 rider.setMobileNo(rp.PhoneNumber);
                 rider.setLanguageCode(rp.Language);
@@ -57,16 +57,16 @@ public class Register {
                 rider.setTotalPoint(0);
                 rider.setTotalRequests(noShort);
                 rider.setTotalCanelledTrips(noShort);
-                rider.setCreatedBy(rp.getFistName()+rp.getLastName());
+                rider.setCreatedBy(rp.getFirstName()+rp.getLastName());
                 rider.setResentCount("0".getBytes()[0]);
                 rider.setPromoStatus("0".getBytes()[0]);
                 rider.setRewardedTrips(noShort);
                 rider.setTotalPoint(0);
                 rider.setCreatedDate(timeStamp);
-                rider.setLastModifiedBy(rp.fistName+rp.getLastName());
+                rider.setLastModifiedBy(rp.firstName+rp.getLastName());
                 rider.setLastModifiedDate(timeStamp);
                 rider.setRate(nofloat);
-                rider.setFullName(rp.fistName+rp.getLastName());
+                rider.setFullName(rp.firstName+rp.getLastName());
                 rider.setPromotionBalance(nofloat);
                 rider.setTotalTripAdjustment(0.0);
                 riderRepository.save(rider);
@@ -102,7 +102,7 @@ class RegisterPassenger{
     }
 
     public void setFistName(String fistName) {
-        this.fistName = fistName;
+        this.firstName = fistName;
     }
 
     public void setLastName(String lastName) {
@@ -125,8 +125,8 @@ class RegisterPassenger{
         return password;
     }
 
-    public String getFistName() {
-        return fistName;
+    public String getFirstName() {
+        return firstName;
     }
 
     public String getLastName() {
@@ -143,7 +143,7 @@ class RegisterPassenger{
 
     String email;
     String password;
-    String fistName;
+    String firstName;
     String LastName;
     String PhoneNumber;
     String Language;

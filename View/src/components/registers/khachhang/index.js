@@ -64,7 +64,7 @@ const RegisterPassenger = () => {
             phoneNumber:values.phoneNumber,
 
         }
-        
+        registerPassenger(newUser,dispatch,navigate);
         console.log('Received values of form: ', newUser);
 
     };
