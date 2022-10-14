@@ -10,16 +10,16 @@ export const loginUser = async (user, dispatch, navigate) => {
     headers.append('GET', 'POST', 'OPTIONS');
     console.log(user)
     try {
-        // const res = axios.post("http://localhost:8080/api/login", user);
-        // console.log(res.data)
-        // dispatch(loginSuccess(res.data))
-        const rest=axios
-        .post(`http://localhost:8080/api/login`, JSON.stringify(user),
-            { headers: {'Content-Type': 'application/json'}
-            }
-        ).then(res => {
-            console.log(res)
-        }).catch(error => console.log(error))
+        const res = axios.post("http://localhost:8080/api/login", user);
+        console.log(res.data)
+        dispatch(loginSuccess(res.data))
+        // const rest=axios
+        // .post(`http://localhost:8080/api/login`, JSON.stringify(user),
+        //     { headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        //     }
+        // ).then(res => {
+        //     console.log(res)
+        // }).catch(error => console.log(error))
 
 
     } catch (error) {
