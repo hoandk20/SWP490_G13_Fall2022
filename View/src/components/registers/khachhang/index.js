@@ -64,7 +64,7 @@ const RegisterPassenger = () => {
             phoneNumber:values.phoneNumber,
 
         }
-        
+        registerPassenger(newUser,dispatch,navigate);
         console.log('Received values of form: ', newUser);
 
     };
@@ -224,7 +224,7 @@ const RegisterPassenger = () => {
                                             }}
                                         />
                                     </Form.Item>
-                                    <h3>MÃ MỜI</h3>
+                                    {/* <h3>MÃ MỜI</h3>
 
                                     <Form.Item
                                         name="gift"
@@ -237,7 +237,7 @@ const RegisterPassenger = () => {
                                         ]}
                                     >
                                         <Input placeholder='Nhập mã mời giới thiệu để nhận phần thưởng' />
-                                    </Form.Item>
+                                    </Form.Item> */}
 
 
                                     <ReCAPTCHA
