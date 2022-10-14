@@ -56,16 +56,15 @@ const RegisterPassenger = () => {
     const dispatch =useDispatch();
     const navigate= useNavigate();
     const onFinish = (values) => {
-        const newUser={
+        const newRegisterPassenger={
             email:values.email,
             password:values.password,
             firstName:values.firstName,
             lastName:values.lastName,
-            phoneNumber:values.phoneNumber,
-
+            phoneNumber:values.phoneNumber
         }
-        
-        console.log('Received values of form: ', newUser);
+        registerPassenger(newRegisterPassenger,dispatch,navigate);
+        console.log('Received values of form: ', newRegisterPassenger);
 
     };
 

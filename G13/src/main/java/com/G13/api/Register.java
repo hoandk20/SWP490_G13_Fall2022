@@ -8,6 +8,7 @@ import com.G13.repo.UserRepository;
 import com.G13.repo.UserRoleRepository;
 import com.G13.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,19 +40,19 @@ public class Register {
             Instant timeStamp= Instant.now();
             ResopnseContent response = new ResopnseContent();
             MasterStatus masterStatus = new MasterStatus();
-            float nofloat =0;
+            float noFloat =0;
             short noShort = (short)0;
             try {
                 Rider rider = new Rider();
                 rider.setCountryCode("vi");
-                rider.setEmail(rp.email);
-                rider.setFirstName(rp.fistName);
+                rider.setEmail(rp.getEmail());
+                rider.setFirstName(rp.getFistName());
                 rider.setLastName(rp.LastName);
                 rider.setMobileNo(rp.PhoneNumber);
-                rider.setLanguageCode(rp.Language);
+                rider.setLanguageCode("vi");
                 rider.setId(rp.email);
-                rider.setBalance(nofloat);
-                rider.setCancelRate(nofloat);
+                rider.setBalance(noFloat);
+                rider.setCancelRate(noFloat);
                 rider.setStatus("at");
                 rider.setTotalTrips(noShort);
                 rider.setTotalPoint(0);
@@ -65,19 +66,17 @@ public class Register {
                 rider.setCreatedDate(timeStamp);
                 rider.setLastModifiedBy(rp.fistName+rp.getLastName());
                 rider.setLastModifiedDate(timeStamp);
-                rider.setRate(nofloat);
+                rider.setRate(noFloat);
                 rider.setFullName(rp.fistName+rp.getLastName());
-                rider.setPromotionBalance(nofloat);
+                rider.setPromotionBalance(noFloat);
                 rider.setTotalTripAdjustment(0.0);
-                riderRepository.save(rider);
-                User u = new User();
-                u.setEmail(rp.email);
-                u.setPassword(rp.password);
-                userService.saveUser(u);
-
-                response.setStatus(masterStatus.SUCCESSFULL);
-
-                return ResponseEntity.ok().body(response);
+                    riderRepository.save(rider);
+                    User u = new User();
+                    u.setEmail(rp.email);
+                    u.setPassword(rp.password);
+                    userService.saveUser(u);
+                    response.setStatus(masterStatus.SUCCESSFULL);
+                    return ResponseEntity.ok().body(response);
             }catch (Exception exception){
                 response.content=exception.getMessage();
                 response.status = masterStatus.FAILURE;
@@ -106,16 +105,13 @@ class RegisterPassenger{
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.LastName = lastName;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
+        this.PhoneNumber = phoneNumber;
     }
 
-    public void setLanguage(String language) {
-        Language = language;
-    }
 
     public String getEmail() {
         return email;
@@ -137,14 +133,10 @@ class RegisterPassenger{
         return PhoneNumber;
     }
 
-    public String getLanguage() {
-        return Language;
-    }
 
     String email;
     String password;
     String fistName;
     String LastName;
     String PhoneNumber;
-    String Language;
 }

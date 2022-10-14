@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router';
 
 const Login = () => {
     const [form] = Form.useForm();
-    const [email, setEmail] =useState("") ;
+    const [username, setEmail] =useState("") ;
     const [password, setPassword] =useState("") ;
     const dispatch = useDispatch();
     const navigate =useNavigate();
@@ -22,7 +22,7 @@ const Login = () => {
             username:values.email,
             password:values.password,
         };
-        loginUser(newUser,dispatch,navigate);
+        loginUser(username,password,dispatch,navigate);
     };
     return (
         <div className='container'>
