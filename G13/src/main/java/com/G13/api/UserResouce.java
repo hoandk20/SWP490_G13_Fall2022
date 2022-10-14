@@ -1,20 +1,32 @@
 package com.G13.api;
 
 
+import antlr.Token;
 import com.G13.domain.Role;
 import com.G13.domain.User;
 import com.G13.master.MasterRole;
+import com.G13.repo.UserRepository;
 import com.G13.service.UserService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.nio.file.attribute.UserPrincipal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -23,6 +35,31 @@ public class UserResouce {
 
     private final UserService userService;
 
+    UserDetailsService userDetailsService;
+    UserRepository userRepository;
+    @PostMapping("/login")
+    public Map<String, String>  login(@RequestBody User userrb){
+
+           UserDetails userDetails = userDetailsService.loadUserByUsername(userrb.getEmail());
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+        String access_token = JWT.create()
+                .withSubject(userDetails.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis()+10*60*1000))
+                .withClaim("roles",userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
+        String refresh_token = JWT.create()
+                .withSubject(userDetails.getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis()+30*60*1000))
+                .withClaim("roles",userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .sign(algorithm);
+
+
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("access_token",access_token);
+        tokens.put("refresh_token",refresh_token);
+
+        return new HashMap<>(tokens);
+    }
 
     @GetMapping("/checkEmailExist")
     public ResponseEntity<?> checkEmailExisted(String email){
