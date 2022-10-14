@@ -18,7 +18,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RequiredArgsConstructor
 public class Register {
 
@@ -32,7 +32,10 @@ public class Register {
             
             return ResponseEntity.badRequest().body("");
         }
-
+//    @PostMapping("/abc")
+//        public String abc(String username,String password){
+//            return (username+""+password);
+//        }
         @PostMapping("/RegisterPassenger")
         public ResponseEntity<?> RegisterPassenger(@RequestBody RegisterPassenger rp) {
             Date date = new Date();

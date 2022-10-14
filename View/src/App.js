@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import 'antd/dist/antd.min.css'
+import 'antd/dist/antd.css'
 import Taixe from './components/layout/index'
 import { Route, Routes } from 'react-router';
 import RegisterPassenger from './views/registers/register-khachhang';
