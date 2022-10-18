@@ -1,8 +1,10 @@
 package com.G13.api;
 
+import com.G13.domain.Driver;
 import com.G13.domain.Rider;
 import com.G13.domain.User;
 import com.G13.master.MasterStatus;
+import com.G13.repo.DriverRepository;
 import com.G13.repo.RiderRepository;
 import com.G13.repo.UserRepository;
 import com.G13.repo.UserRoleRepository;
@@ -25,12 +27,41 @@ public class Register {
     UserRepository userRepository;
     UserRoleRepository userRoleRepository;
 
+        private final DriverRepository driverRepository;
         private final UserService userService;
         private  final RiderRepository riderRepository;
 
+    @PostMapping("/RegisterDriver")
         public  ResponseEntity<?> RegisterDriver(@RequestBody RegisterDriver rd){
-            
-            return ResponseEntity.badRequest().body("");
+            Date date = new Date();
+            Instant timeStamp= Instant.now();
+            ResopnseContent response = new ResopnseContent();
+            MasterStatus masterStatus = new MasterStatus();
+            float nofloat =0;
+            short noShort = (short)0;
+            try {
+                Driver driver = new Driver();
+                driver.setEmail(rd.getEmail());
+                driver.setFirstName(rd.getFirstName());
+                driver.setLastName(rd.getLastName());
+                driver.setMobileNo(rd.phoneNumber);
+                driver.setLanguageCode("vi");
+                driver.setCountryCode(rd.getCountry());
+                driver.setLanguageCode(rd.getLanguage());
+                driverRepository.save(driver);
+                User u = new User();
+                u.setEmail(rd.email);
+                u.setPassword(rd.password);
+                userService.saveUser(u);
+
+                response.setStatus(masterStatus.SUCCESSFULL);
+
+                return ResponseEntity.ok().body(response);
+            }catch (Exception exception){
+                response.content=exception.toString();
+                response.status = masterStatus.FAILURE;
+                return ResponseEntity.badRequest().body(response);
+            }
         }
 //    @PostMapping("/abc")
 //        public String abc(String username,String password){
@@ -82,7 +113,7 @@ public class Register {
 
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
-                response.content=exception.getMessage();
+                response.content=exception.toString();
                 response.status = masterStatus.FAILURE;
                 return ResponseEntity.badRequest().body(response);
             }
@@ -90,10 +121,85 @@ public class Register {
         }
 
 
+
+
 }
 
 class RegisterDriver{
 
+    String email;
+    String password;
+
+    String firstName;
+    String lastName;
+    String phoneNumber;
+    String language;
+    String country;
+    String city;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 }
 class RegisterPassenger{
     public void setEmail(String email) {

@@ -1,11 +1,58 @@
 package com.G13.domain;
 
+import com.G13.api.ResopnseContent;
+import com.G13.master.MasterStatus;
+
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "driver")
 public class Driver {
+    public Driver() {
+        Date date = new Date();
+        Instant timeStamp= Instant.now();
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        float nofloat =0;
+        this.promotionBalance = 0.0;
+        this.firstName = "";
+        this.status = "";
+        this.position = "";
+        this.lastName = "";
+        this.fullName = "";
+        this.mobileNo = "";
+        this.email = "";
+        this.balance = 0.0;
+        this.cancelRate = nofloat;
+        this.driverCode = "";
+        this.invitationCode = "";
+        this.mobileDiviceID = "";
+        this.deviceType = "";
+        this.activatedDate = timeStamp;
+        this.createdBy = "";
+        this.createdDate = timeStamp;
+        this.lastModifiedBy = "";
+        this.lastModifiedDate = timeStamp;
+        this.companyName = "";
+        this.image = "";
+        this.languageCode = "";
+        this.countryCode = "";
+        this.registrationOption = "";
+        this.knownSource = "";
+        this.registrationStep = 0;
+        this.totalTrips = 0;
+        this.proBalance1 = 0.0;
+        this.promotionBalance1 = nofloat;
+        this.version = "";
+        this.mobileDeviceID2 = "";
+        this.note = "";
+        this.internal = false;
+        this.point = 0;
+        this.accountHolder = "";
+    }
+
     @Id
     @Column(name = "DriverID", nullable = false, length = 50)
     private String id;

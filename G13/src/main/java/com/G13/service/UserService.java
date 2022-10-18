@@ -14,4 +14,6 @@ public interface UserService {
     List<User> getUsers();
 
     Boolean IsEmailExisted(String email);
+
+    Role GetRoleByUser(String email);
 }

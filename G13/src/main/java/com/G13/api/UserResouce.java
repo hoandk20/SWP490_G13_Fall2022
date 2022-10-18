@@ -5,28 +5,40 @@ import antlr.Token;
 import com.G13.domain.Role;
 import com.G13.domain.User;
 import com.G13.master.MasterRole;
+import com.G13.repo.RoleRepository;
 import com.G13.repo.UserRepository;
 import com.G13.service.UserService;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
 import java.nio.file.attribute.UserPrincipal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api")
@@ -35,6 +47,7 @@ public class UserResouce {
 
     private final UserService userService;
 
+    private final RoleRepository roleRepository;
     UserDetailsService userDetailsService;
     UserRepository userRepository;
     @PostMapping("/login")
@@ -86,6 +99,50 @@ public class UserResouce {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/token/refresh")
+    public void refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
+        String authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")){
+            try {
+                String refresh_token = authorizationHeader.substring("Bearer ".length());
+                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+                JWTVerifier verifier = JWT.require(algorithm).build();
+                DecodedJWT decodedJWT = verifier.verify(refresh_token);
+                String username = decodedJWT.getSubject();
+                User user = userService.getUser(username);
+
+
+                Role role = userService.GetRoleByUser(username);
+                String access_token = JWT.create()
+                        .withSubject(user.getEmail())
+                        .withExpiresAt(new Date(System.currentTimeMillis()+30*60*1000))
+                        .withClaim("roles",role.getName())
+                        .sign(algorithm);
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("access_token",access_token);
+                tokens.put("refresh_token",refresh_token);
+                httpServletResponse.setContentType(APPLICATION_JSON_VALUE);
+
+                new ObjectMapper().writeValue(httpServletResponse.getOutputStream(),tokens);
+
+            }catch (Exception exception){
+                httpServletResponse.setHeader("error",exception.getMessage());
+                httpServletResponse.setStatus(FORBIDDEN.value());
+                //  response.sendError(FORBIDDEN.value());
+                Map<String, String> error = new HashMap<>();
+                error.put("error_message",exception.getMessage());
+                httpServletResponse.setContentType(APPLICATION_JSON_VALUE);
+                new ObjectMapper().writeValue(httpServletResponse.getOutputStream(),error);
+            }
+        }else{
+            throw new RuntimeException("Refresh token is missing");
+        }
+    }
+
+
+
+
+
     @GetMapping("/autoGenUser")
     public void autoGenerateUser() {
         MasterRole m = new MasterRole();
@@ -104,8 +161,6 @@ public class UserResouce {
         userService.addRoleToUser("hoan2", m.ROLE_COMPANY);
         userService.addRoleToUser("hoan3", m.ROLE_ADMIN);
     }
-
-
 }
 
 @Data
