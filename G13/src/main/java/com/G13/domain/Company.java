@@ -1,15 +1,58 @@
 package com.G13.domain;
 
+import com.G13.api.ResopnseContent;
+import com.G13.master.MasterStatus;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "company")
 public class Company {
+    public Company() {
+        Date date = new Date();
+        Instant timeStamp= Instant.now();
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        float nofloat =0;
+
+        this.cityID = 0;
+        this.operatingLisence = 0;
+        this.businessRegistration = 0;
+        this.otherDocument = 0;
+        this.contractDocument = 0;
+        this.addressID = "";
+        this.name = "";
+        this.businessType = "";
+        this.balance = 0.0;
+        this.requiredBalance = 0.0;
+        this.requiredProBalance = 0.0;
+        this.vATNumber = "";
+        this.phoneNo = "";
+        this.postalCode = "";
+        this.status = "";
+        this.bankNo = bankNo;
+        this.bankID = bankID;
+        this.currentPromotionCode = currentPromotionCode;
+        this.createdBy = createdBy;
+        this.createdDate = createdDate;
+        this.lastModifiedBy = lastModifiedBy;
+        this.lastModifiedDate = lastModifiedDate;
+        this.selfControlled = selfControlled;
+        this.companyLogo = companyLogo;
+        this.note = note;
+        this.includedTolls = includedTolls;
+        this.chargeBankFee = chargeBankFee;
+        this.companyGroupId = companyGroupId;
+        this.branchId = branchId;
+        this.accountHolder = accountHolder;
+    }
+
     @Id
     @Column(name = "CompanyID", nullable = false)
     private Integer id;

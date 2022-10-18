@@ -1,8 +1,6 @@
 package com.G13.api;
 
-import com.G13.domain.Driver;
-import com.G13.domain.Rider;
-import com.G13.domain.User;
+import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.repo.DriverRepository;
 import com.G13.repo.RiderRepository;
@@ -31,6 +29,40 @@ public class Register {
         private final UserService userService;
         private  final RiderRepository riderRepository;
 
+    @PostMapping("/RegisterCompany")
+    public  ResponseEntity<?> RegisterCompany(@RequestBody RegisterDriver rd){
+        Date date = new Date();
+        Instant timeStamp= Instant.now();
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        float nofloat =0;
+        short noShort = (short)0;
+        try {
+            Driver driver = new Driver();
+            driver.setId(rd.getEmail());
+            driver.setDriverCode(rd.getEmail());
+            driver.setEmail(rd.getEmail());
+            driver.setFirstName(rd.getFirstName());
+            driver.setLastName(rd.getLastName());
+            driver.setMobileNo(rd.phoneNumber);
+            driver.setLanguageCode("vi");
+            driver.setCountryCode(rd.getCountry());
+            driver.setLanguageCode(rd.getLanguage());
+            driverRepository.save(driver);
+            User u = new User();
+            u.setEmail(rd.email);
+            u.setPassword(rd.password);
+            userService.saveUser(u);
+
+            response.setStatus(masterStatus.SUCCESSFULL);
+
+            return ResponseEntity.ok().body(response);
+        }catch (Exception exception){
+            response.content=exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
     @PostMapping("/RegisterDriver")
         public  ResponseEntity<?> RegisterDriver(@RequestBody RegisterDriver rd){
             Date date = new Date();
@@ -41,6 +73,8 @@ public class Register {
             short noShort = (short)0;
             try {
                 Driver driver = new Driver();
+                driver.setId(rd.getEmail());
+                driver.setDriverCode("DR");
                 driver.setEmail(rd.getEmail());
                 driver.setFirstName(rd.getFirstName());
                 driver.setLastName(rd.getLastName());
@@ -52,7 +86,10 @@ public class Register {
                 User u = new User();
                 u.setEmail(rd.email);
                 u.setPassword(rd.password);
-                userService.saveUser(u);
+                User usersave = userService.saveUser(u);
+                UserRole userRole = new UserRole();
+                userRole.setUserId(new Long(usersave.getId()));
+                userRole.setRoleId(new Long(1));
 
                 response.setStatus(masterStatus.SUCCESSFULL);
 
@@ -107,7 +144,10 @@ public class Register {
                 User u = new User();
                 u.setEmail(rp.email);
                 u.setPassword(rp.password);
-                userService.saveUser(u);
+                User usersave = userService.saveUser(u);
+                UserRole userRole = new UserRole();
+                userRole.setUserId(new Long(usersave.getId()));
+                userRole.setRoleId(new Long(2));
 
                 response.setStatus(masterStatus.SUCCESSFULL);
 

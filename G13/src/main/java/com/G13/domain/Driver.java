@@ -16,6 +16,7 @@ public class Driver {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         float nofloat =0;
+        this.rate = nofloat;
         this.promotionBalance = 0.0;
         this.firstName = "";
         this.status = "";
@@ -54,161 +55,161 @@ public class Driver {
     }
 
     @Id
-    @Column(name = "DriverID", nullable = false, length = 50)
+    @Column(name = "driverid", nullable = false, length = 50)
     private String id;
 
-    @Column(name = "DriverLisense")
+    @Column(name = "driverlisense")
     private Integer driverLisense;
 
-    @Column(name = "CurrentVehicle")
+    @Column(name = "currentvehicle")
     private Integer currentVehicle;
 
-    @Column(name = "Rate", nullable = false)
+    @Column(name = "rate", nullable = false)
     private Float rate;
 
-    @Column(name = "PromotionBalance", nullable = false)
+    @Column(name = "promotionbalance", nullable = false)
     private Double promotionBalance;
 
-    @Column(name = "CompanyID")
+    @Column(name = "companyid")
     private Integer companyID;
 
-    @Column(name = "AddressID", length = 50)
+    @Column(name = "addressid", length = 50)
     private String addressID;
 
-    @Column(name = "VATCode", length = 15)
+    @Column(name = "vatcode", length = 15)
     private String vATCode;
 
-    @Column(name = "BankAccount", length = 15)
+    @Column(name = "bankaccount", length = 15)
     private String bankAccount;
 
-    @Column(name = "BankID")
+    @Column(name = "bankid")
     private Integer bankID;
 
-    @Column(name = "DriveExperience")
+    @Column(name = "driveexperience")
     private Integer driveExperience;
 
-    @Column(name = "FirstName", nullable = false, length = 30)
+    @Column(name = "firstname", nullable = false, length = 30)
     private String firstName;
 
-    @Column(name = "Status", nullable = false, length = 4)
+    @Column(name = "status", nullable = false, length = 4)
     private String status;
 
-    @Column(name = "Position", nullable = false, length = 3)
+    @Column(name = "position", nullable = false, length = 3)
     private String position;
 
-    @Column(name = "LastName", nullable = false, length = 50)
+    @Column(name = "lastname", nullable = false, length = 50)
     private String lastName;
 
-    @Column(name = "FullName", nullable = false, length = 81)
+    @Column(name = "fullname", nullable = false, length = 81)
     private String fullName;
 
-    @Column(name = "MobileNo", length = 12)
+    @Column(name = "mobileno", length = 12)
     private String mobileNo;
 
-    @Column(name = "Email", length = 50)
+    @Column(name = "email", length = 50)
     private String email;
 
-    @Column(name = "Balance", nullable = false)
+    @Column(name = "balance", nullable = false)
     private Double balance;
 
-    @Column(name = "CancelRate", nullable = false)
+    @Column(name = "cancelrate", nullable = false)
     private Float cancelRate;
 
-    @Column(name = "DriverCode", nullable = false, length = 16)
+    @Column(name = "drivercode", nullable = false, length = 16)
     private String driverCode;
 
-    @Column(name = "InvitationCode", length = 20)
+    @Column(name = "invitationcode", length = 20)
     private String invitationCode;
 
-    @Column(name = "MobileDiviceID", length = 200)
+    @Column(name = "mobilediviceid", length = 200)
     private String mobileDiviceID;
 
-    @Column(name = "DeviceType", length = 3)
+    @Column(name = "devicetype", length = 3)
     private String deviceType;
 
-    @Column(name = "DeactivatedDate")
+    @Column(name = "deactivateddate")
     private Instant deactivatedDate;
 
-    @Column(name = "ActivatedDate")
+    @Column(name = "activateddate")
     private Instant activatedDate;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
-    @Column(name = "CompanyName", nullable = false, length = 100)
+    @Column(name = "companyname", nullable = false, length = 100)
     private String companyName;
 
-    @Column(name = "Image")
+    @Column(name = "image")
     private String image;
 
-    @Column(name = "LanguageCode", nullable = false, length = 4)
+    @Column(name = "languagecode", nullable = false, length = 4)
     private String languageCode;
 
-    @Column(name = "CountryCode", nullable = false, length = 4)
+    @Column(name = "countrycode", nullable = false, length = 4)
     private String countryCode;
 
-    @Column(name = "RegistrationOption", nullable = false)
+    @Column(name = "registrationoption", nullable = false)
     private String registrationOption;
 
-    @Column(name = "KnownSource", nullable = false, length = 3)
+    @Column(name = "knownsource", nullable = false, length = 3)
     private String knownSource;
 
-    @Column(name = "RegistrationStep")
+    @Column(name = "registrationstep")
     private Integer registrationStep;
 
-    @Column(name = "TotalTrips", nullable = false)
+    @Column(name = "totaltrips", nullable = false)
     private Integer totalTrips;
 
-    @Column(name = "ProBalance1", nullable = false)
+    @Column(name = "probalance1", nullable = false)
     private Double proBalance1;
 
-    @Column(name = "PromotionBalance1", nullable = false)
+    @Column(name = "promotionbalance1", nullable = false)
     private Float promotionBalance1;
 
     @Column(name = "version")
     private String version;
 
-    @Column(name = "MobileDeviceID2", length = 200)
+    @Column(name = "mobiledeviceid2", length = 200)
     private String mobileDeviceID2;
 
-    @Column(name = "Note", length = 300)
+    @Column(name = "note", length = 300)
     private String note;
 
-    @Column(name = "Internal", nullable = false)
+    @Column(name = "internal", nullable = false)
     private Boolean internal = false;
 
-    @Column(name = "Point", nullable = false)
+    @Column(name = "point", nullable = false)
     private Integer point;
 
-    @Column(name = "ContactTimes")
+    @Column(name = "contacttimes")
     private Byte contactTimes;
 
-    @Column(name = "BranchId")
+    @Column(name = "branchid")
     private Integer branchId;
 
-    @Column(name = "BranchCityId")
+    @Column(name = "branchcityid")
     private Integer branchCityId;
 
-    @Column(name = "AccountHolder", length = 80)
+    @Column(name = "accountholder", length = 80)
     private String accountHolder;
 
-    @Column(name = "CheckContract")
+    @Column(name = "checkcontract")
     private Boolean checkContract;
 
     @Lob
-    @Column(name = "VoIPToken")
+    @Column(name = "voiptoken")
     private String voIPToken;
 
-    @Column(name = "KeyValue", length = 100)
+    @Column(name = "keyvalue", length = 100)
     private String keyValue;
 
     public String getId() {
