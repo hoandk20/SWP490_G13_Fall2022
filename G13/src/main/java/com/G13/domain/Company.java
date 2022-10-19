@@ -3,10 +3,7 @@ package com.G13.domain;
 import com.G13.api.ResopnseContent;
 import com.G13.master.MasterStatus;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
@@ -36,118 +33,114 @@ public class Company {
         this.phoneNo = "";
         this.postalCode = "";
         this.status = "";
-        this.bankNo = bankNo;
-        this.bankID = bankID;
-        this.currentPromotionCode = currentPromotionCode;
-        this.createdBy = createdBy;
-        this.createdDate = createdDate;
-        this.lastModifiedBy = lastModifiedBy;
-        this.lastModifiedDate = lastModifiedDate;
-        this.selfControlled = selfControlled;
-        this.companyLogo = companyLogo;
-        this.note = note;
-        this.includedTolls = includedTolls;
-        this.chargeBankFee = chargeBankFee;
-        this.companyGroupId = companyGroupId;
-        this.branchId = branchId;
-        this.accountHolder = accountHolder;
+        this.bankNo = "";
+        this.bankID = 0;
+        this.currentPromotionCode = "";
+        this.createdBy = "";
+        this.createdDate = timeStamp;
+        this.lastModifiedBy = "";
+        this.lastModifiedDate = timeStamp;
+        this.companyLogo = "";
+        this.note = "";
+        this.accountHolder = "";
     }
 
     @Id
-    @Column(name = "CompanyID", nullable = false)
+    @Column(name = "companyid", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "CityID", nullable = false)
+    @Column(name = "cityid", nullable = false)
     private Integer cityID;
 
-    @Column(name = "OperatingLisence")
+    @Column(name = "operatinglisence")
     private Integer operatingLisence;
 
-    @Column(name = "BusinessRegistration")
+    @Column(name = "businessregistration")
     private Integer businessRegistration;
 
-    @Column(name = "OtherDocument")
+    @Column(name = "otherdocument")
     private Integer otherDocument;
 
-    @Column(name = "ContractDocument")
+    @Column(name = "contractdocument")
     private Integer contractDocument;
 
-    @Column(name = "AddressID", length = 50)
+    @Column(name = "addressid", length = 50)
     private String addressID;
 
-    @Column(name = "Name", nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "BusinessType", nullable = false, length = 10)
+    @Column(name = "businesstype", nullable = false, length = 10)
     private String businessType;
 
-    @Column(name = "Balance", nullable = false)
+    @Column(name = "balance", nullable = false)
     private Double balance;
 
-    @Column(name = "RequiredBalance", nullable = false)
+    @Column(name = "requiredbalance", nullable = false)
     private Double requiredBalance;
 
-    @Column(name = "RequiredProBalance", nullable = false)
+    @Column(name = "requiredprobalance", nullable = false)
     private Double requiredProBalance;
 
-    @Column(name = "VATNumber", length = 20)
+    @Column(name = "vatnumber", length = 20)
     private String vATNumber;
 
-    @Column(name = "PhoneNo", length = 15)
+    @Column(name = "phoneno", length = 15)
     private String phoneNo;
 
-    @Column(name = "PostalCode", length = 6)
+    @Column(name = "postalcode", length = 6)
     private String postalCode;
 
-    @Column(name = "StartServiceDate")
+    @Column(name = "startservicedate")
     private LocalDate startServiceDate;
 
-    @Column(name = "Status", nullable = false, length = 2)
+    @Column(name = "status", nullable = false, length = 2)
     private String status;
 
-    @Column(name = "BankNo", length = 20)
+    @Column(name = "bankno", length = 20)
     private String bankNo;
 
-    @Column(name = "BankID")
+    @Column(name = "bankid")
     private Integer bankID;
 
-    @Column(name = "CurrentPromotionCode", length = 20)
+    @Column(name = "currentpromotioncode", length = 20)
     private String currentPromotionCode;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
-    @Column(name = "SelfControlled")
+    @Column(name = "selfcontrolled")
     private Boolean selfControlled;
 
-    @Column(name = "CompanyLogo", length = 120)
+    @Column(name = "companylogo", length = 120)
     private String companyLogo;
 
-    @Column(name = "Note", length = 250)
+    @Column(name = "note", length = 250)
     private String note;
 
-    @Column(name = "IncludedTolls")
+    @Column(name = "includedtolls")
     private Boolean includedTolls;
 
-    @Column(name = "ChargeBankFee")
+    @Column(name = "chargebankfee")
     private Boolean chargeBankFee;
 
-    @Column(name = "CompanyGroupId")
+    @Column(name = "companygroupid")
     private Integer companyGroupId;
 
-    @Column(name = "BranchId")
+    @Column(name = "branchid")
     private Integer branchId;
 
-    @Column(name = "AccountHolder", length = 80)
+    @Column(name = "accountholder", length = 80)
     private String accountHolder;
 
     public Integer getId() {

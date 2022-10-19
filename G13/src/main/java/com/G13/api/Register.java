@@ -2,10 +2,7 @@ package com.G13.api;
 
 import com.G13.domain.*;
 import com.G13.master.MasterStatus;
-import com.G13.repo.DriverRepository;
-import com.G13.repo.RiderRepository;
-import com.G13.repo.UserRepository;
-import com.G13.repo.UserRoleRepository;
+import com.G13.repo.*;
 import com.G13.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +25,9 @@ public class Register {
         private final DriverRepository driverRepository;
         private final UserService userService;
         private  final RiderRepository riderRepository;
-
+        private final CompanyRepository companyRepository;
     @PostMapping("/RegisterCompany")
-    public  ResponseEntity<?> RegisterCompany(@RequestBody RegisterDriver rd){
+    public  ResponseEntity<?> RegisterCompany(@RequestBody RegisterCompany rc){
         Date date = new Date();
         Instant timeStamp= Instant.now();
         ResopnseContent response = new ResopnseContent();
@@ -38,21 +35,18 @@ public class Register {
         float nofloat =0;
         short noShort = (short)0;
         try {
-            Driver driver = new Driver();
-            driver.setId(rd.getEmail());
-            driver.setDriverCode(rd.getEmail());
-            driver.setEmail(rd.getEmail());
-            driver.setFirstName(rd.getFirstName());
-            driver.setLastName(rd.getLastName());
-            driver.setMobileNo(rd.phoneNumber);
-            driver.setLanguageCode("vi");
-            driver.setCountryCode(rd.getCountry());
-            driver.setLanguageCode(rd.getLanguage());
-            driverRepository.save(driver);
+            Company company = new Company();
+            company.setNote(rc.getEmail());
+            company.setName(rc.getName());
+            company.setPhoneNo(rc.PhoneNumber);
+            companyRepository.save(company);
             User u = new User();
-            u.setEmail(rd.email);
-            u.setPassword(rd.password);
-            userService.saveUser(u);
+            u.setEmail(rc.email);
+            u.setPassword(rc.password);
+            User usersave = userService.saveUser(u);
+            UserRole userRole = new UserRole();
+            userRole.setUserId(new Long(usersave.getId()));
+            userRole.setRoleId(new Long(4));
 
             response.setStatus(masterStatus.SUCCESSFULL);
 
@@ -296,4 +290,56 @@ class RegisterPassenger{
     String LastName;
     String PhoneNumber;
     String Language;
+}
+
+class RegisterCompany{
+    String email;
+    String password;
+    String Name;
+
+    String PhoneNumber;
+
+    public String getName() {
+        return Name;
+    }
+
+    public void setName(String name) {
+        Name = name;
+    }
+
+    String Language;
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
+    }
+
+    public void setLanguage(String language) {
+        Language = language;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+
+    public String getPhoneNumber() {
+        return PhoneNumber;
+    }
+
+    public String getLanguage() {
+        return Language;
+    }
 }
