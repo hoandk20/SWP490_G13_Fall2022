@@ -19,8 +19,8 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class Register {
 
-    UserRepository userRepository;
-    UserRoleRepository userRoleRepository;
+        private final UserRepository userRepository;
+        private final UserRoleRepository userRoleRepository;
 
         private final DriverRepository driverRepository;
         private final UserService userService;
@@ -34,21 +34,24 @@ public class Register {
         MasterStatus masterStatus = new MasterStatus();
         float nofloat =0;
         short noShort = (short)0;
-        try {
-            Company company = new Company();
-            company.setNote(rc.getEmail());
-            company.setName(rc.getName());
-            company.setPhoneNo(rc.PhoneNumber);
-            companyRepository.save(company);
-            User u = new User();
-            u.setEmail(rc.email);
-            u.setPassword(rc.password);
-            User usersave = userService.saveUser(u);
-            UserRole userRole = new UserRole();
-            userRole.setUserId(new Long(usersave.getId()));
-            userRole.setRoleId(new Long(4));
+        Company company = new Company();
+        company.setNote(rc.getEmail());
+        company.setName(rc.getName());
+        company.setPhoneNo(rc.PhoneNumber);
+        company.setName(" ");
+        companyRepository.save(company);
+        User u = new User();
+        u.setEmail(rc.email);
+        u.setPassword(rc.password);
+        User usersave = userService.saveUser(u);
+        UserRole userRole = new UserRole();
+        userRole.setUserId(new Long(usersave.getId()));
+        userRole.setRoleId(new Long(4));
+        userRoleRepository.save(userRole);
 
-            response.setStatus(masterStatus.SUCCESSFULL);
+        response.setStatus(masterStatus.SUCCESSFULL);
+        try {
+
 
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
@@ -84,7 +87,7 @@ public class Register {
                 UserRole userRole = new UserRole();
                 userRole.setUserId(new Long(usersave.getId()));
                 userRole.setRoleId(new Long(1));
-
+                userRoleRepository.save(userRole);
                 response.setStatus(masterStatus.SUCCESSFULL);
 
                 return ResponseEntity.ok().body(response);
@@ -142,7 +145,7 @@ public class Register {
                 UserRole userRole = new UserRole();
                 userRole.setUserId(new Long(usersave.getId()));
                 userRole.setRoleId(new Long(2));
-
+                userRoleRepository.save(userRole);
                 response.setStatus(masterStatus.SUCCESSFULL);
 
                 return ResponseEntity.ok().body(response);

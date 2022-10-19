@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleRepository roleRepo;
     private final UserRoleRepository userRoleRepo;
     private final PasswordEncoder passwordEncoder;
-    UserRoleRepository userRoleRepository ;
 
 
     @Override
