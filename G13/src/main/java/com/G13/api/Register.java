@@ -1,5 +1,6 @@
 package com.G13.api;
 
+import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.repo.*;
@@ -12,6 +13,8 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -26,12 +29,24 @@ public class Register {
         private final UserService userService;
         private  final RiderRepository riderRepository;
         private final CompanyRepository companyRepository;
+        private final DocumentRepository documentRepository;
     @PostMapping("/RegisterCompany")
     public  ResponseEntity<?> RegisterCompany(@RequestBody RegisterCompany rc){
-        Date date = new Date();
-        Instant timeStamp= Instant.now();
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
+
+        if(IsEmailExisted(rc.email)){
+
+            Map<String,Boolean> err = new HashMap<>();
+            err.put("IsExistedEmail",true);
+            response.object = err;
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        Date date = new Date();
+        Instant timeStamp= Instant.now();
+
         float nofloat =0;
         short noShort = (short)0;
         Company company = new Company();
@@ -46,7 +61,7 @@ public class Register {
         User usersave = userService.saveUser(u);
         UserRole userRole = new UserRole();
         userRole.setUserId(new Long(usersave.getId()));
-        userRole.setRoleId(new Long(4));
+        userRole.setRoleId(new Long(3));
         userRoleRepository.save(userRole);
 
         response.setStatus(masterStatus.SUCCESSFULL);
@@ -68,6 +83,15 @@ public class Register {
             MasterStatus masterStatus = new MasterStatus();
             float nofloat =0;
             short noShort = (short)0;
+
+        if(IsEmailExisted(rd.email)){
+
+            Map<String,Boolean> err = new HashMap<>();
+            err.put("IsExistedEmail",true);
+            response.object = err;
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
             try {
                 Driver driver = new Driver();
                 driver.setId(rd.getEmail());
@@ -109,35 +133,17 @@ public class Register {
             MasterStatus masterStatus = new MasterStatus();
             float nofloat =0;
             short noShort = (short)0;
+
+            if(IsEmailExisted(rp.email)){
+
+                Map<String,Boolean> err = new HashMap<>();
+                err.put("IsExistedEmail",true);
+                response.object = err;
+                response.status = masterStatus.FAILURE;
+                return ResponseEntity.badRequest().body(response);
+            }
             try {
-                Rider rider = new Rider();
-                rider.setCountryCode("vi");
-                rider.setEmail(rp.email);
-                rider.setFirstName(rp.firstName);
-                rider.setLastName(rp.LastName);
-                rider.setMobileNo(rp.PhoneNumber);
-                rider.setLanguageCode(rp.Language);
-                rider.setId(rp.email);
-                rider.setBalance(nofloat);
-                rider.setCancelRate(nofloat);
-                rider.setStatus("at");
-                rider.setTotalTrips(noShort);
-                rider.setTotalPoint(0);
-                rider.setTotalRequests(noShort);
-                rider.setTotalCanelledTrips(noShort);
-                rider.setCreatedBy(rp.getFirstName()+rp.getLastName());
-                rider.setResentCount("0".getBytes()[0]);
-                rider.setPromoStatus("0".getBytes()[0]);
-                rider.setRewardedTrips(noShort);
-                rider.setTotalPoint(0);
-                rider.setCreatedDate(timeStamp);
-                rider.setLastModifiedBy(rp.firstName+rp.getLastName());
-                rider.setLastModifiedDate(timeStamp);
-                rider.setRate(nofloat);
-                rider.setFullName(rp.firstName+rp.getLastName());
-                rider.setPromotionBalance(nofloat);
-                rider.setTotalTripAdjustment(0.0);
-                riderRepository.save(rider);
+
                 User u = new User();
                 u.setEmail(rp.email);
                 u.setPassword(rp.password);
@@ -158,10 +164,98 @@ public class Register {
         }
 
 
+        @PostMapping("/Upload/Document")
+        public ResponseEntity<?> UploadDocument(@RequestBody DocumentRequest doc){
+
+            ResopnseContent response = new ResopnseContent();
+            MasterStatus masterStatus = new MasterStatus();
+
+            try{
+                Instant instant = Instant.now();
+                Document document = new Document();
+                document.setFileName(doc.file_name);
+                document.setCreatedBy(doc.createBy);
+                document.setExpiredDate(instant);
+                document.setExpiredMonth(doc.expired_month);
+                document.setExpiredYear(doc.expired_year);
+
+                Instant instant1 = Instant.now();
+                long time = instant1.toEpochMilli();
+                FileManage fileManage = new FileManage();
+                String filePath = fileManage.convertBase64ToImage(doc.Base64, time+"");
+                document.setLink(filePath);
+                document.setCreatedBy(doc.createBy);
+                documentRepository.save(document);
+
+                response.status = masterStatus.SUCCESSFULL;
+                return ResponseEntity.ok().body(response);
+            }catch (Exception exception){
+                response.content= exception.toString();
+                response.status = masterStatus.FAILURE;
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        }
+
+    public boolean IsEmailExisted(String email){
+        return userService.IsEmailExisted(email);
+    }
+
 
 
 }
 
+class DocumentRequest{
+
+
+    public String getExpired_month() {
+        return expired_month;
+    }
+
+    public void setExpired_month(String expired_month) {
+        this.expired_month = expired_month;
+    }
+
+    public String getExpired_year() {
+        return expired_year;
+    }
+
+    public void setExpired_year(String expired_year) {
+        this.expired_year = expired_year;
+    }
+
+    public String getFile_name() {
+        return file_name;
+    }
+
+    public void setFile_name(String file_name) {
+        this.file_name = file_name;
+    }
+
+    String Base64;
+
+
+    String expired_month;
+    String expired_year;
+    String file_name;
+    String createBy;
+
+    public String getBase64() {
+        return Base64;
+    }
+
+    public void setBase64(String base64) {
+        Base64 = base64;
+    }
+
+    public String getCreateBy() {
+        return createBy;
+    }
+
+    public void setCreateBy(String createBy) {
+        this.createBy = createBy;
+    }
+}
 class RegisterDriver{
 
     String email;
