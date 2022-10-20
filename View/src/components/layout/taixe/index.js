@@ -4,9 +4,11 @@ import '../layout.css';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  UserOutlined,
+  InfoCircleOutlined,
+  ContainerOutlined,
   LaptopOutlined,
-  SearchOutlined,
+  CarOutlined,
+  IdcardOutlined,
   HistoryOutlined,
   LogoutOutlined,
 } from '@ant-design/icons';
@@ -23,23 +25,23 @@ const { Header, Content } = Layout;
 const menuItem=[
   {
     key: '1',
-    icon: <UserOutlined />,
-    label: 'HỒ SƠ',
+    icon: <InfoCircleOutlined />,
+    label: 'THÔNG TIN LIÊN HỆ',
   },
   {
     key: '2',
-    icon: <LaptopOutlined rotate={180}/>,
-    label: 'CHUYẾN ĐI MIỄN PHÍ',
-  },
-  {
-    key: '3',
-    icon: <SearchOutlined rotate={90}/>,
-    label: 'TÌM CHUYẾN ĐI MIỄN PHÍ',
+    icon: <ContainerOutlined />,
+    label: 'TÀI LIỆU',
   },
   {
     key: '3',
     icon: <HistoryOutlined />,
     label: 'LỊCH SỬ CHUYẾN ĐI',
+  },
+  {
+    key: '3',
+    icon: <LaptopOutlined rotate={180}/>,
+    label: 'CHUYẾN ĐI MIỄN PHÍ',
   },
   {
     key: '3',

@@ -15,6 +15,7 @@ import InfoContactUser from "../../views/taixe/info-contact/info-contact-user";
 import TripHistoryDriver from "../../views/taixe/trip-history";
 import VehicoManagement from "../../views/taixe/vehico-mgt";
 import Login from "../login";
+import Home from "../../views/home";
 
 const routers = [
     {
@@ -105,6 +106,11 @@ const routers = [
         roleTarget: "ALL",
         element: DriverDetail
     },
+    {
+        path: '/home',
+        roleTarget: "ALL",
+        element: Home
+    }
 
 ]
 export default routers
