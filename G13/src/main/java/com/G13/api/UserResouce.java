@@ -203,7 +203,7 @@ public class UserResouce {
         userService.addRoleToUser("hoan3", m.ROLE_ADMIN);
     }
 }
-
+@Data
 class UserInfo{
     String username;
     String firstname;
