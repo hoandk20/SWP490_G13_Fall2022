@@ -15,6 +15,7 @@ import './register-driver.css'
 import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from 'react-router';
 
+import {  toast } from 'react-toastify';
 const { Option } = Select;
 
 // const onChangeCheck = (e) => {
@@ -79,7 +80,7 @@ const RegisterDriver = () => {
                                         <Select
                                             placeholder="*Lựa chọn quốc gia"
                                         >
-                                            <Option value="Việt Nam"></Option>
+                                            <Option value="vi">Việt Nam</Option>
 
                                         </Select>
 
@@ -119,9 +120,9 @@ const RegisterDriver = () => {
                                     >
                                     <Radio.Group  >
                                         <Space direction="vertical">
-                                            <Radio value={1}>Là tài xế chuyên nghiệp có giấy phép lái xe. Bạn sở hữu phương tiện hoặc có kế hoạch sở hữu phương tiện, nhưng không có giấy phép hoạt động vận tải bằng ô tô?</Radio>
-                                            <Radio value={2}>Công ty Taxi hoặc vận tải có giấy phép hoạt động, giấy phép kinh doanh vận tải bằng ô tô?</Radio>
-                                            <Radio value={3}>Là một tài xế với giấy phép điều khiển phương tiện theo luật định, không có phương tiện và tìm kiếm một công ty hoặc phương tiện trong hệ thống T.NET để lái xe?</Radio>
+                                            <Radio value={"ROLE_DRIVER"}>Là tài xế chuyên nghiệp có giấy phép lái xe. Bạn sở hữu phương tiện hoặc có kế hoạch sở hữu phương tiện, nhưng không có giấy phép hoạt động vận tải bằng ô tô?</Radio>
+                                            <Radio value={"ROLE_COMPANY"}>Công ty Taxi hoặc vận tải có giấy phép hoạt động, giấy phép kinh doanh vận tải bằng ô tô?</Radio>
+                                            {/* <Radio value={"ROLE_DRIVER"}>Là một tài xế với giấy phép điều khiển phương tiện theo luật định, không có phương tiện và tìm kiếm một công ty hoặc phương tiện trong hệ thống T.NET để lái xe?</Radio> */}
                                           
                                         </Space>
                                     </Radio.Group>

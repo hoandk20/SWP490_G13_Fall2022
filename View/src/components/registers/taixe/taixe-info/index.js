@@ -12,12 +12,17 @@ import ReCAPTCHA from "react-google-recaptcha";
 import '../../khachhang/register-passenger.css'
 import {useLocation} from 'react-router-dom';
 import { useNavigate} from 'react-router-dom';
+import { registerCompany, registerDriver } from '../../../../redux/apiRequest';
+import { useDispatch } from 'react-redux';
+
+import {  toast } from 'react-toastify';
 const { Option } = Select;
 
 
 const RegisterDriverInfo = () => {
     const [form] = Form.useForm();
     const navigate= useNavigate();
+    const dispatch =useDispatch();
     const location = useLocation();
     console.log(location.state.newUser)
     const onFinish = (values) => {
@@ -28,7 +33,14 @@ const RegisterDriverInfo = () => {
             email:values.email,
             password:values.password
         }
-        console.log('Received values of form: ', newUser);
+        if(newUser.role=="ROLE_DRIVER"){
+            registerDriver(newUser,dispatch,navigate,toast);
+        }
+        else{
+            registerCompany(newUser,dispatch,navigate,toast);
+        }
+      
+       
     };
 
     const prefixSelector = (

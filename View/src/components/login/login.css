@@ -1,11 +1,13 @@
-body{
+/* body{
     background: #60a3bc !important;
 
-}
+} */
 .container-info-login{
     padding-top: 100px;
     display: flex;
     justify-content: center;
+    background: #60a3bc !important;
+    min-height: 800px;
 }
 .user_card {
   

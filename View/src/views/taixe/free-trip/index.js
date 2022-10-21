@@ -1,6 +1,6 @@
 import { Layout } from 'antd';
 import FreeTripDrivers from '../../../components/contents/content-taixe/free-trip';
-import LayoutDriver from '../../../components/layout';
+import LayoutDriver from '../../../components/layout/taixe';
 
 const { Header, Content } = Layout;
 

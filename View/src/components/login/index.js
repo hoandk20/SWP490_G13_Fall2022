@@ -104,7 +104,7 @@ const Login = () => {
                             </div>
                             <div className=" links">
                                 <a href='#'>Bạn chưa có tài khoản?</a>
-                                <a style={{float:"right",marginRight:"40px"}} href='#'>ĐĂNG KÍ</a>
+                                <a style={{float:"right",marginRight:"40px"}} href='http://localhost:3000/signup/home'>ĐĂNG KÍ</a>
                             </div>
                         </div>
 

@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router';
 import { registerPassenger } from '../../../redux/apiRequest';
 
 
+import {  toast } from 'react-toastify';
 
 const { Option } = Select;
 const formItemLayout = {
@@ -64,8 +65,8 @@ const RegisterPassenger = () => {
             phoneNumber:values.phoneNumber,
 
         }
-        registerPassenger(newUser,dispatch,navigate);
-        console.log('Received values of form: ', newUser);
+        registerPassenger(newUser,dispatch,navigate,toast);
+       
 
     };
 

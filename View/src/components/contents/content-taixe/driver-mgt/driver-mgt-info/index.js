@@ -37,7 +37,7 @@ const DriverManagementInfo = () => {
                         <Col sm={24} md={16}>
                             <div className='info-left'>
                                 <div className='info-left-header'>
-                                    <p>Thông tin cá nhân</p>
+                                    Thông tin cá nhân
                                 </div>
                                 <Form
                                     labelCol={{
@@ -97,7 +97,7 @@ const DriverManagementInfo = () => {
                                                 />
                                             </Form.Item>
                                         </div>
-                                        <div className='form 2'>
+                                        <div className='form2'>
                                             <FormItem
                                                 name="account"
                                                 label="Tài khoản *"

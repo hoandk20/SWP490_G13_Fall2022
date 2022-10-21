@@ -54,23 +54,23 @@ const DriverDetail = () => {
                                 <tbody>
                                     <tr>
                                         <td className='title-name'><p>Tên : </p>  </td>
-                                        <td >Anh</td>
+                                        <td ><p>Anh</p></td>
                                     </tr>
                                     <tr>
                                         <td className='title-name'><p>Họ và Tên Đệm :</p>  </td>
-                                        <td>Trọng</td>
+                                        <td><p>Trọng</p></td>
                                     </tr>
                                     <tr>
                                         <td className='title-name'><p>Quốc gia : </p>  </td>
-                                        <td>Việt Nam</td>
+                                        <td><p>Việt Nam</p></td>
                                     </tr>
                                     <tr>
                                         <td className='title-name'><p>Email : </p>  </td>
-                                        <td>Anhdthe141459@fpt.edu.vn</td>
+                                        <td><p>Anhdthe141459@fpt.edu.vn</p></td>
                                     </tr>
                                     <tr>
                                         <td className='title-name'><p>Số di động : </p>  </td>
-                                        <td>(+84) 123123123</td>
+                                        <td><p>(+84) 123123123</p></td>
                                     </tr>
 
                                 </tbody>
@@ -80,17 +80,17 @@ const DriverDetail = () => {
                                 <tbody>
                                     <tr>
                                         <td className='title-name'><p>Tài khoản : </p>  </td>
-                                        <td>Anhdthe141459@fpt.edu.vn</td>
+                                        <td><p>Anhdthe141459@fpt.edu.vn</p></td>
                                     </tr>
                                     <tr>
                                         <td className='title-name'><p>Số dư (đ) : </p>  </td>
-                                        <td>0,00</td>
+                                        <td><p>0,00</p></td>
                                     </tr>
                                     <tr>
                                         <td className='title-name'><p>Số Dư Tài Khoản KM 1(đ) : </p>  </td>
-                                        <td>0,00</td>
+                                        <td><p>0,00</p></td>
                                         <td className='title-name'><p>Số Dư Tài Khoản KM 2(đ) : </p>  </td>
-                                        <td>0,00</td>
+                                        <td><p>0,00</p></td>
                                     </tr>
                                 </tbody>
                             </table>

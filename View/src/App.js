@@ -22,15 +22,17 @@ import RegisterCompanyDoc1 from './views/registers/register-congty/register-cong
 import RegisterCompanyDoc2 from './views/registers/register-congty/register-congty-document/register-congty-document2';
 import Login from './components/login';
 import { BrowserRouter } from 'react-router-dom';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import routers from './components/router';
+import PrivateRoute from './components/router/private-router';
 
 function App() {
   return (
     <div className="App">
       <div className="container">
 
-          {/* <Routes>
+        {/* <Routes>
           <Route path="/taixe" element={<Taixe />} />
           <Route path="/register-passenger" element={<RegisterPassenger />}/>
           <Route path="/register-driver" element={<RegisterDriver />}/>
@@ -54,22 +56,38 @@ function App() {
 
         </Routes> */}
 
-          <Routes>
-            {routers.map((route, index) => {
-              const Element = route.element;
-              const roleTarget = route.roleTarget;
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <Element />
-                  }
-                />
-              );
-            })}
-          </Routes>
-      
+        <Routes>
+          {routers.map((route, index) => {
+            const Element = route.element;
+            const roleTarget = route.roleTarget;
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <PrivateRoute roleTarget={roleTarget}>
+                  <Element />
+                    </PrivateRoute>
+               
+                }
+              />
+            );
+          })}
+        </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
       </div>
     </div>
   );

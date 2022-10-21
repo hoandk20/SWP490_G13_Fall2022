@@ -1,10 +1,11 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { loginSuccess } from "./redux/authSlice";
+const URL="http://26.200.45.58";
 
 const refreshTocken = () =>{
     try {
-        const res =axios.post("",{
+        const res =axios.get(`${URL}:8080/api/token/refresh`,{
             withCredentials:true
         });
         return res.data;

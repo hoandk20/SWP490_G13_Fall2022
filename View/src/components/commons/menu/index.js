@@ -37,7 +37,6 @@ const Menu1= () =>{
         <Sider width={250} trigger={null} collapsible collapsed={collapsed}>
         {/* <div className="logo">T.NET</div> */}
         <div className='menu'>
-          <div></div>
         {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
             className: 'trigger',
             onClick: () => setCollapsed(!collapsed),

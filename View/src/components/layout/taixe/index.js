@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import 'antd/dist/antd.css';
-import './layout.css';
+import '../layout.css';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -8,12 +9,15 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from '@ant-design/icons';
-import { Layout } from 'antd';
-import Footers from '../commons/footer/index';
+import { Layout,Menu } from 'antd';
+import Footers from '../../commons/footer/index';
 import { Footer } from 'antd/lib/layout/layout';
-import Headers from '../commons/header/index';
-import Menu from '../commons/menu/index'
+import Headers from '../../commons/header/index';
+
 const { Sider } = Layout;
+
+// import Menu from '../../commons/menu/index'
+
 const { Header, Content } = Layout;
 const menuItem=[
   {
@@ -33,13 +37,14 @@ const menuItem=[
   },
 ]
 
-
-const Layouts = (props) => {
-  const { content } = props
+const LayoutDriver = (props) => {
+  const {content}=props
   const [collapsed, setCollapsed] = useState(false);
+
   return (
     <Layout>
-       <Sider width={250} trigger={null} collapsible collapsed={collapsed}>
+      {/* <Menu/> */}
+      <Sider width={250} trigger={null} collapsible collapsed={collapsed}>
         {/* <div className="logo">T.NET</div> */}
         <div className='menu'>
         {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
@@ -54,15 +59,15 @@ const Layouts = (props) => {
           items={menuItem}
         />
       </Sider>
-      <Layout style={{ minHeight: "100vh" }} className="site-layout">
-        <Header style={{ backgroundColor: "#fff" }}>
-          <Headers />
+      <Layout  style={{ minHeight: "100vh" }} className="site-layout">
+        <Header  style={{backgroundColor:"#fff"}}>
+<Headers/>
         </Header>
         <Content
           className="site-layout-background"
           style={{
-            borderTopStyle: 'solid',
-            borderTopColor: ' rgb(187, 187, 187)',
+            borderTopStyle:'solid',
+            borderTopColor:' rgb(187, 187, 187)',
             padding: 24,
             // minHeight: 560,
           }}
@@ -70,11 +75,11 @@ const Layouts = (props) => {
           <div className='content'>{content}</div>
         </Content>
         <Footer>
-          <Footers />
+            <Footers/>
         </Footer>
       </Layout>
     </Layout>
   );
 };
 
-export default Layouts;
+export default LayoutDriver;

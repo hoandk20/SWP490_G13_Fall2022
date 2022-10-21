@@ -1,3 +1,9 @@
+import DriverManagement from "../../views/congty/driver-mgt";
+import AddDriver from "../../views/congty/driver-mgt/add-driver";
+import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
+import DriverManagementInfo from "../../views/congty/driver-mgt/driver-mgt-info";
+import VehicoManagement from "../../views/congty/vehico-mgt";
+import InfoContactUser from "../../views/khachhang/info-contact";
 import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-congty-document/register-congty-document1";
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
 import RegisterPassenger from "../../views/registers/register-khachhang";
@@ -5,16 +11,16 @@ import RegisterDriver from "../../views/registers/register-taixe";
 import RegisterDriverInfo from "../../views/registers/register-taixe/register-taixe-info";
 
 import RegisterDriverInfoVehico from "../../views/registers/register-taixe/tx-cty-infoVehico";
-import DriverManagement from "../../views/taixe/driver-mgt";
-import AddDriver from "../../views/taixe/driver-mgt/add-driver";
-import DriverDetail from "../../views/taixe/driver-mgt/driver-detail";
-import DriverManagementInfo from "../../views/taixe/driver-mgt/driver-mgt-info";
+
+
 import FreeTripDriver from "../../views/taixe/free-trip";
 import InfoContactTaixe from "../../views/taixe/info-contact/info-contact-taixe";
-import InfoContactUser from "../../views/taixe/info-contact/info-contact-user";
+
+
 import TripHistoryDriver from "../../views/taixe/trip-history";
-import VehicoManagement from "../../views/taixe/vehico-mgt";
+
 import Login from "../login";
+import RegisterHome from "../registers/home";
 
 const routers = [
     {
@@ -54,35 +60,35 @@ const routers = [
         element: RegisterDriverInfoVehico
     },
     {
-        path: '/taixe/driver-mgt',
-        roleTarget: "ALL",
+        path: '/congty/driver-mgt',
+        roleTarget: "ROLE_COMPANY",
         element: DriverManagement
     },
 
     {
-        path: '/taixe/driver-mgt/info',
-        roleTarget: "ALL",
+        path: '/congty/driver-mgt/info',
+        roleTarget: "ROLE_COMPANY",
         element: DriverManagementInfo
     },
     {
-        path: '/taixe/driver-mgt/add',
-        roleTarget: "ALL",
+        path: '/congty/driver-mgt/add',
+        roleTarget: "ROLE_COMPANY",
         element: AddDriver
     },
 
     {
         path: '/taixe/free-trip',
-        roleTarget: "ALL",
+        roleTarget: "ROLE_DRIVER",
         element: FreeTripDriver
     },
     {
         path: '/taixe/trip-history',
-        roleTarget: "ALL",
+        roleTarget: "ROLE_DRIVER",
         element: TripHistoryDriver
     },
     {
-        path: '/taixe/vehico-mgt',
-        roleTarget: "ALL",
+        path: '/congty/vehico-mgt',
+        roleTarget: "ROLE_COMPANY",
         element: VehicoManagement
     },
     // {
@@ -91,19 +97,24 @@ const routers = [
     //     element: FreeTripDriver
     // },
     {
-        path: '/taixe/info/driver',
-        roleTarget: "ALL",
+        path: '/taixe/info',
+        roleTarget: "ROLE_DRIVER",
         element: InfoContactTaixe
     },
     {
-        path: '/taixe/info/user',
-        roleTarget: "ALL",
+        path: '/khachhang/info',
+        roleTarget: "ROLE_PASSENGER",
         element: InfoContactUser
     },
     {
-        path: '/taixe/driver-detail',
-        roleTarget: "ALL",
+        path: '/congty/driver-detail',
+        roleTarget: "ROLE_COMPANY",
         element: DriverDetail
+    },
+    {
+        path: '/signup/home',
+        roleTarget: "ALL",
+        element: RegisterHome
     },
 
 ]
