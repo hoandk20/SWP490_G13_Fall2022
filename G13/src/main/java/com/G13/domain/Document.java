@@ -1,49 +1,62 @@
 package com.G13.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
 @Table(name = "document")
 public class Document {
     @Id
-    @Column(name = "DocumentID", nullable = false)
+    @Column(name = "documentid", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "FileName", nullable = false)
+    @Column(name = "filename", nullable = false)
     private String fileName;
 
-    @Column(name = "Link", nullable = false)
+    @Column(name = "link", nullable = false)
     private String link;
 
-    @Column(name = "ExpiredMonth", nullable = false, length = 2)
+    @Column(name = "expiredmonth", nullable = false, length = 2)
     private String expiredMonth;
 
-    @Column(name = "ExpiredYear", nullable = false, length = 4)
+    @Column(name = "expiredyear", nullable = false, length = 4)
     private String expiredYear;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "Status", nullable = false, length = 20)
+    @Column(name = "status", nullable = false, length = 20)
     private String status;
 
-    @Column(name = "EffectiveDate")
+    @Column(name = "effectivedate")
     private Instant effectiveDate;
 
-    @Column(name = "ExpiredDate")
+    public Document() {
+        Instant timeStamp= Instant.now();
+        this.id = 1;
+        this.fileName = "";
+        this.link = "";
+        this.expiredMonth = "";
+        this.expiredYear = "";
+        this.createdBy = "";
+        this.status = "";
+        this.expiredDate = timeStamp;
+        this.createdDate = timeStamp;
+        this.lastModifiedBy = "";
+        this.lastModifiedDate = timeStamp;
+    }
+
+    @Column(name = "expireddate")
     private Instant expiredDate;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
     public Integer getId() {

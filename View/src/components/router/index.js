@@ -20,7 +20,6 @@ import InfoContactTaixe from "../../views/taixe/info-contact/info-contact-taixe"
 import TripHistoryDriver from "../../views/taixe/trip-history";
 
 import Login from "../login";
-import RegisterHome from "../registers/home";
 
 const routers = [
     {
@@ -116,6 +115,11 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterHome
     },
+    {
+        path: '/home',
+        roleTarget: "ALL",
+        element: Home
+    }
 
 ]
 export default routers

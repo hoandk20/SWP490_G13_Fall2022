@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleRepository roleRepo;
     private final UserRoleRepository userRoleRepo;
     private final PasswordEncoder passwordEncoder;
-    UserRoleRepository userRoleRepository ;
 
 
     @Override
@@ -93,7 +92,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Boolean IsEmailExisted(String email) {
         User user = userRepo.findByEmail(email);
-        return user == null;
+        return user != null;
+    }
+
+    @Override
+    public Role GetRoleByUser(String email) {
+        User user = userRepo.findByEmail(email);
+        List<UserRole> list = userRoleRepo.findAllByUserId(new Long(user.getId()));
+        Role role = roleRepo.findById(Integer.parseInt(list.get(0).getRoleId()+""));
+        return role;
     }
 
 
