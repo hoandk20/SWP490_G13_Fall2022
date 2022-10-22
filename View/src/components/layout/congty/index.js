@@ -39,17 +39,17 @@ const menuItem=[
     label: 'TÀI XẾ',
   },
   {
-    key: '3',
+    key: '4',
     icon: <HistoryOutlined />,
     label: 'LỊCH SỬ CHUYẾN ĐI',
   },
   {
-    key: '3',
+    key: '5',
     icon: <LaptopOutlined rotate={180}/>,
     label: 'CHUYẾN ĐI MIỄN PHÍ',
   },
   {
-    key: '3',
+    key: '6',
     icon: <LogoutOutlined />,
     label: 'ĐĂNG XUẤT',
   },

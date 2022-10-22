@@ -8,7 +8,7 @@ function PrivateRoute({ roleTarget, children }) {
 
   const currentUser = useSelector((state)=>state.auth.login?.currentUser);
     
-  console.log(currentUser?.access_token);
+  // console.log(currentUser?.access_token);
   if(roleTarget === "ALL"){
     return children;
   }else{

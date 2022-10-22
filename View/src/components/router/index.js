@@ -3,6 +3,7 @@ import AddDriver from "../../views/congty/driver-mgt/add-driver";
 import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
 import DriverManagementInfo from "../../views/congty/driver-mgt/driver-mgt-info";
 import VehicoManagement from "../../views/congty/vehico-mgt";
+import Home from "../../views/home";
 import InfoContactUser from "../../views/khachhang/info-contact";
 import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-congty-document/register-congty-document1";
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
@@ -20,6 +21,7 @@ import InfoContactTaixe from "../../views/taixe/info-contact/info-contact-taixe"
 import TripHistoryDriver from "../../views/taixe/trip-history";
 
 import Login from "../login";
+import RegisterHome from "../registers/home";
 
 const routers = [
     {

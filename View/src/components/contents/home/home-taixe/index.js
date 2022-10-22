@@ -4,9 +4,7 @@ import React from 'react';
 import { FilterOutlined } from '@ant-design/icons';
 
 
-// const user=useSelector((state)=>state.user.userInfo.currentUser);
-
-const HomePassenger = () => {
+const HomeDriver = () => {
 
     return (
         <>
@@ -16,9 +14,9 @@ const HomePassenger = () => {
             <Button type="default" size='large' shape="round">
                 Số chuyến đi đã đi
             </Button> */}
-            <h1>Home Passenger</h1>
+            <h1>Home Driver</h1>
         </>
 
     )
 }
-export default HomePassenger
+export default HomeDriver

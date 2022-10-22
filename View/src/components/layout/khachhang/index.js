@@ -1,6 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import '../layout.css';
+import {Link, Navigate, useNavigate} from "react-router-dom";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -15,7 +16,10 @@ import Footers from '../../commons/footer/index';
 import { Footer } from 'antd/lib/layout/layout';
 import Headers from '../../commons/header/index';
 import { useState } from 'react';
+import { logoutUser } from '../../../redux/apiRequest';
+import { useDispatch } from 'react-redux';
 const { Sider } = Layout;
+
 
 // import Menu from '../../commons/menu/index'
 
@@ -37,21 +41,23 @@ const menuItem=[
     label: 'TÌM CHUYẾN ĐI MIỄN PHÍ',
   },
   {
-    key: '3',
+    key: '4',
     icon: <HistoryOutlined />,
     label: 'LỊCH SỬ CHUYẾN ĐI',
   },
   {
-    key: '3',
+    key: 'signOut',
     icon: <LogoutOutlined />,
     label: 'ĐĂNG XUẤT',
+    
   },
 ]
 
 const LayoutPassenger = (props) => {
+  const dispatch = useDispatch();
   const {content}=props
   const [collapsed, setCollapsed] = useState(false);
-
+  const navigate=useNavigate(dispatch);
   return (
     <Layout>
       {/* <Menu/> */}
@@ -66,6 +72,14 @@ const LayoutPassenger = (props) => {
         <Menu
           theme='dark'
           mode="inline"
+          onClick={({key})=>{
+            if(key==='signOut'){
+              logoutUser(dispatch,navigate);
+          
+            }else{
+              navigate(key);
+            }
+          }}
           defaultSelectedKeys={['1']}
           items={menuItem}
         />

@@ -13,6 +13,10 @@ const authSlice = createSlice({
             isFetching:false,
             error:false,
             success:false
+        },
+        logout:{
+            isFetching:false,
+            error:false,
         }
     },
 
@@ -29,18 +33,18 @@ const authSlice = createSlice({
             state.login.isFetching=false;
             state.login.error=true;
         },
-        logOutStart: (state) =>{
-            state.login.isFetching=true;
-        },
-        logOutSuccess: (state,action) => {
-            state.login.isFetching=false;
+        // logOutStart: (state) =>{
+        //     state.logout.isFetching=true;
+        // },
+        logOutSuccess: (state) => {
+            // state.logout.isFetching=false;
             state.login.currentUser=null;
-            state.login.error=false
+            // state.logout.error=false
         },
-        logOutFailed: (state) =>{
-            state.login.isFetching=false;
-            state.login.error=true;
-        },
+        // logOutFailed: (state) =>{
+        //     state.logout.isFetching=false;
+        //     state.logout.error=true;
+        // },
         registerStart: (state) =>{
             state.register.isFetching=true;
         },
