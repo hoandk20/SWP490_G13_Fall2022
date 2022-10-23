@@ -10,16 +10,11 @@ import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-
 import RegisterPassenger from "../../views/registers/register-khachhang";
 import RegisterDriver from "../../views/registers/register-taixe";
 import RegisterDriverInfo from "../../views/registers/register-taixe/register-taixe-info";
-
 import RegisterDriverInfoVehico from "../../views/registers/register-taixe/tx-cty-infoVehico";
-
-
 import FreeTripDriver from "../../views/taixe/free-trip";
+import CreateFreeTripForDriver from "../../views/taixe/free-trip/create-free-trip";
 import InfoContactTaixe from "../../views/taixe/info-contact/info-contact-taixe";
-
-
 import TripHistoryDriver from "../../views/taixe/trip-history";
-
 import Login from "../login";
 import RegisterHome from "../registers/home";
 
@@ -98,9 +93,14 @@ const routers = [
     //     element: FreeTripDriver
     // },
     {
-        path: '/taixe/info',
+        path: '     ',
         roleTarget: "ROLE_DRIVER",
         element: InfoContactTaixe
+    },
+    {
+        path: '/taixe/createTrip',
+        roleTarget: "ALL",
+        element: CreateFreeTripForDriver
     },
     {
         path: '/khachhang/info',

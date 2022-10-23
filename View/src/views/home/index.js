@@ -20,6 +20,9 @@ const Home = () => {
   const dispatch = useDispatch();
   const navigate =useNavigate();
 
+  const user=useSelector((state)=>state.user.userInfo?.currentUser);
+  console.log(user);
+
   const currentUser = useSelector((state)=>state.auth.login?.currentUser);
   const decodedTocken=jwtDecode(currentUser.access_token);
   const userName=decodedTocken.sub;

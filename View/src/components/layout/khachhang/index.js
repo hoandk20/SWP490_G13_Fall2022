@@ -57,7 +57,7 @@ const LayoutPassenger = (props) => {
   const dispatch = useDispatch();
   const {content}=props
   const [collapsed, setCollapsed] = useState(false);
-  const navigate=useNavigate(dispatch);
+  const navigate=useNavigate();
   return (
     <Layout>
       {/* <Menu/> */}
