@@ -1,0 +1,14 @@
+.list-passenger{
+    border-style: solid;
+    border-color: hsl(0, 0%, 73%);
+    width: 100%; 
+    padding: 10px;
+    margin-top: 20px;
+}
+.status{
+    float: right;
+    color: blue;
+}
+.content-list{
+    margin-top: 10px;
+}

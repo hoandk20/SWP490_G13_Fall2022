@@ -37,7 +37,7 @@ const menuItem=[
   {
     key: '3',
     icon: <SearchOutlined rotate={90}/>,
-    label: 'TÌM CHUYẾN ĐI MIỄN PHÍ',
+    label: 'THÔNG TIN CHUYẾN ĐI',
   },
   {
     key: '4',
@@ -75,10 +75,17 @@ const LayoutDriver = (props) => {
               logoutUser(dispatch,navigate);
           
             }else{
-              navigate(key);
+              if(key==2){
+                navigate('/taixe/freeTrip/create')
+              }
+              if(key==3){
+                navigate('/taixe/freeTrip/detail')
+              }
+              if(key==4){
+                navigate('/taixe/trip-history')
+              }
             }
           }}
-          defaultSelectedKeys={['1']}
           items={menuItem}
         />
       </Sider>

@@ -1,34 +1,30 @@
 import { Button, Checkbox, Form, Input, Row, Col, Select, Table, DatePicker } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTripHistoryDriver, tripHistoryDriver } from '../../../../redux/apiRequest';
-import { useState } from 'react';
+import { getTripHistoryPassenger } from '../../../../redux/apiRequest';
 
 
 const { Option } = Select;
-
 
 const data = [
 
 ];
 
-const TripHistoryDriver = () => {
-
+const TripHistoryPassenger = () => {
     const navigate=useNavigate();
     const dispatch=useDispatch();
-    // const [tripHistory,setTripHistory] =useState();
     const user=useSelector((state)=>state.user.userInfo?.currentUser);
-    console.log(user);
+
     const trips=useSelector((state)=>state.tripHistory.tripHistory?.trips);
     console.log(trips);
-   const tripHistory=trips.map((row)=> ({ ...row, seatRemind: row.seat-row.seatRegistered,key:row.id }))
-   
     useEffect(()=>{
-        getTripHistoryDriver(user.email,dispatch);
+        getTripHistoryPassenger(user?.email,dispatch);
        },[]) 
+
     const columns = [
         {
             key: 'index',
@@ -62,22 +58,25 @@ const TripHistoryDriver = () => {
         },
 
 
-        // {
-        //     title: 'Đăng ký',
-        //     dataIndex: '',
-        //     key: 'x',
-        //     render: (text, record, index) => {
-        //         return <div>
+        {
+            title: 'Đăng ký',
+            dataIndex: '',
+            key: 'x',
+            render: (text, record, index) => {
+                return <div>
 
-        //             <EyeOutlined onClick={() => {
-        //                 navigate('/khachhang/freeTrip/detail-of-taixe', { state: { record } })
+                    <EyeOutlined onClick={() => {
+                        navigate('/khachhang/freeTrip/detail-of-taixe', { state: { record } })
 
-        //             }} />
+                    }} />
 
-        //         </div>
-        //     },
-        // }
+                </div>
+            },
+        }
     ];
+
+
+
     return (
         <div className='container'>
             <div className='container-infos' style={{
@@ -140,10 +139,10 @@ const TripHistoryDriver = () => {
                     </Form>
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={tripHistory} size="middle" />
+                    <Table columns={columns} dataSource={data} size="middle" />
                 </div>
             </div>
         </div>
     )
 }
-export default TripHistoryDriver
+export default TripHistoryPassenger
