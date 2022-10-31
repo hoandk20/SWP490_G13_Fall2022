@@ -26,6 +26,7 @@ const Home = () => {
   const currentUser = useSelector((state)=>state.auth.login?.currentUser);
   const decodedTocken=jwtDecode(currentUser.access_token);
   const userName=decodedTocken.sub;
+//  console.log(userName);
   const role=decodedTocken.roles[0];
   useEffect(()=>{
     getUser(userName,dispatch);

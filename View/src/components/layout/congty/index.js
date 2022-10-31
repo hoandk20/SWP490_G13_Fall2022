@@ -58,7 +58,7 @@ const menuItem=[
   },
 ]
 
-const LayoutPassenger = (props) => {
+const LayoutCompany = (props) => {
   const {content}=props
   const [collapsed, setCollapsed] = useState(false);
   const navigate=useNavigate();
@@ -85,7 +85,7 @@ const LayoutPassenger = (props) => {
               navigate(key);
             }
           }}
-          defaultSelectedKeys={['1']}
+   
           items={menuItem}
         />
       </Sider>
@@ -112,4 +112,4 @@ const LayoutPassenger = (props) => {
   );
 };
 
-export default LayoutPassenger;
+export default LayoutCompany;

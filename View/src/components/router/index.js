@@ -4,7 +4,10 @@ import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
 import DriverManagementInfo from "../../views/congty/driver-mgt/driver-mgt-info";
 import VehicoManagement from "../../views/congty/vehico-mgt";
 import Home from "../../views/home";
+import FreeTripDetailOfDriver from "../../views/khachhang/free-trips/free-trip-detail-taixe";
+import SerachFreeTripForPassenger from "../../views/khachhang/free-trips/search-free-trip";
 import InfoContactUser from "../../views/khachhang/info-contact";
+import TripHistoryPassenger from "../../views/khachhang/trip-history";
 import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-congty-document/register-congty-document1";
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
 import RegisterPassenger from "../../views/registers/register-khachhang";
@@ -13,8 +16,10 @@ import RegisterDriverInfo from "../../views/registers/register-taixe/register-ta
 import RegisterDriverInfoVehico from "../../views/registers/register-taixe/tx-cty-infoVehico";
 import FreeTripDriver from "../../views/taixe/free-trip";
 import CreateFreeTripForDriver from "../../views/taixe/free-trip/create-free-trip";
+import FreeTripDetail from "../../views/taixe/free-trip/free-trip-detail";
 import InfoContactTaixe from "../../views/taixe/info-contact/info-contact-taixe";
 import TripHistoryDriver from "../../views/taixe/trip-history";
+import UploadAndDisplayImage from "../commons/uploadImage";
 import Login from "../login";
 import RegisterHome from "../registers/home";
 
@@ -79,7 +84,7 @@ const routers = [
     },
     {
         path: '/taixe/trip-history',
-        roleTarget: "ROLE_DRIVER",
+        roleTarget: "ALL",
         element: TripHistoryDriver
     },
     {
@@ -87,25 +92,42 @@ const routers = [
         roleTarget: "ROLE_COMPANY",
         element: VehicoManagement
     },
-    // {
-    //     path: '/taixe/vehico-mgt/add',
-    //    roleTarget:"ALL",
-    //     element: FreeTripDriver
-    // },
+
     {
-        path: '     ',
+        path: '/taixe/info',
         roleTarget: "ROLE_DRIVER",
         element: InfoContactTaixe
     },
     {
-        path: '/taixe/createTrip',
+        path: '/taixe/freeTrip/create',
         roleTarget: "ALL",
         element: CreateFreeTripForDriver
     },
     {
+        path: '/taixe/freeTrip/detail',
+        roleTarget: "ALL",
+        element: FreeTripDetail
+    },
+    //khach hang
+    {
         path: '/khachhang/info',
         roleTarget: "ROLE_PASSENGER",
         element: InfoContactUser
+    },
+    {
+        path: '/khachhang/search-freeTrip',
+        roleTarget: "ALL",
+        element: SerachFreeTripForPassenger
+    },
+    {
+        path: '/khachhang/freeTrip/detail-of-taixe',
+        roleTarget: "ALL",
+        element: FreeTripDetailOfDriver
+    },
+    {
+        path: '/khachhang/trip-history',
+        roleTarget: "ALL",
+        element: TripHistoryPassenger
     },
     {
         path: '/congty/driver-detail',
@@ -121,7 +143,11 @@ const routers = [
         path: '/home',
         roleTarget: "ALL",
         element: Home
-    }
-
+    },
+    // {
+    //     path: '/uploadImage',
+    //     roleTarget: "ALL",
+    //     element: UploadAndDisplayImage
+    // }
 ]
 export default routers

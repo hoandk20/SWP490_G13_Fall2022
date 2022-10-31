@@ -19,6 +19,9 @@ const userSlice=createSlice({
         },
         getUserFailed:(state)=>{
             state.userInfo.error=true;
+        },
+        deleteUser:(state)=>{
+            state.userInfo.currentUser=null;
         }
     }
 
@@ -27,7 +30,8 @@ const userSlice=createSlice({
 export const{
     getUserStart,
     getUserSuccess,
-    getUserFailed
+    getUserFailed,
+    deleteUser,
 }=userSlice.actions;
 
 export default userSlice.reducer;

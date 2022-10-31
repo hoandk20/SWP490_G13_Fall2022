@@ -77,10 +77,15 @@ const LayoutPassenger = (props) => {
               logoutUser(dispatch,navigate);
           
             }else{
-              navigate(key);
+              if(key==3){
+                navigate('/khachhang/search-freeTrip')
+              }
+              if(key==4){
+                navigate('/khachhang/trip-history')
+              }
             }
           }}
-          defaultSelectedKeys={['1']}
+   
           items={menuItem}
         />
       </Sider>
