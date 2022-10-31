@@ -10,325 +10,440 @@ import java.time.Instant;
 @Table(name = "trip")
 public class Trip {
     @Id
-    @Column(name = "RequestID", nullable = false, length = 50)
+    @Column(name = "requestid", nullable = false, length = 50)
     private String id;
 
-    @Column(name = "ToCity")
+    @Column(name = "tocity")
     private Integer toCity;
 
-    @Column(name = "FromCity")
+    @Column(name = "fromcity")
     private Integer fromCity;
 
-    @Column(name = "CompanyID")
+    @Column(name = "companyid")
     private Integer companyID;
 
-    @Column(name = "DriverID", length = 50)
+    @Column(name = "driverid", length = 50)
     private String driverID;
 
-    @Column(name = "RiderID", nullable = false, length = 50)
+    @Column(name = "riderid", nullable = false, length = 50)
     private String riderID;
 
-    @Column(name = "VehicleID")
+    @Column(name = "vehicleid")
     private Integer vehicleID;
 
-    @Column(name = "PricePanelID")
+    @Column(name = "pricepanelid")
     private Integer pricePanelID;
 
-    @Column(name = "PaymentID")
+    @Column(name = "paymentid")
     private Integer paymentID;
 
-    @Column(name = "Code", length = 20)
+    @Column(name = "code", length = 20)
     private String code;
 
-    @Column(name = "ProgramCode", length = 30)
+    @Column(name = "programcode", length = 30)
     private String programCode;
 
-    @Column(name = "CompanyCode", length = 11)
+    @Column(name = "companycode", length = 11)
     private String companyCode;
 
-    @Column(name = "RequestDatetime", nullable = false)
+    @Column(name = "requestdatetime", nullable = false)
     private Instant requestDatetime;
 
-    @Column(name = "CountryID", length = 4)
+    @Column(name = "countryid", length = 4)
     private String countryID;
 
-    @Column(name = "FromAddress")
+    @Column(name = "fromaddress")
     private String fromAddress;
 
-    @Column(name = "ToAddress")
+    @Column(name = "toaddress")
     private String toAddress;
 
-    @Column(name = "TimeStart")
+    @Column(name = "timestart")
     private Instant timeStart;
 
-    @Column(name = "TimeEnd")
+    @Column(name = "timeend")
     private Instant timeEnd;
 
-    @Column(name = "OpenPrice", nullable = false)
+    @Column(name = "openprice", nullable = false)
     private Float openPrice;
 
-    @Column(name = "StartLatitude", nullable = false)
+    @Column(name = "startlatitude", nullable = false)
     private Double startLatitude;
 
-    @Column(name = "StartLongtitude", nullable = false)
+    @Column(name = "startlongtitude", nullable = false)
     private Double startLongtitude;
 
-    @Column(name = "EndLatitude", nullable = false)
+    @Column(name = "endlatitude", nullable = false)
     private Double endLatitude;
 
-    @Column(name = "EndLongtitude", nullable = false)
+    @Column(name = "endlongtitude", nullable = false)
     private Double endLongtitude;
 
-    @Column(name = "Status", nullable = false, length = 4)
+    @Column(name = "status", nullable = false, length = 4)
     private String status;
 
-    @Column(name = "Distance", nullable = false)
+    @Column(name = "distance", nullable = false)
     private Float distance;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Long lastModifiedDate;
 
-    @Column(name = "FromCityName", length = 100)
+    @Column(name = "fromcityname", length = 100)
     private String fromCityName;
 
-    @Column(name = "ToCityName", length = 100)
+    @Column(name = "tocityname", length = 100)
     private String toCityName;
 
-    @Column(name = "Currency", length = 10)
+    @Column(name = "currency", length = 10)
     private String currency;
 
-    @Column(name = "CardNo", length = 70)
+    @Column(name = "cardno", length = 70)
     private String cardNo;
 
-    @Column(name = "PaymentType", length = 3)
+    @Column(name = "paymenttype", length = 3)
     private String paymentType;
 
-    @Column(name = "CancelReasonCode", length = 4)
+    @Column(name = "cancelreasoncode", length = 4)
     private String cancelReasonCode;
 
-    @Column(name = "Reason", length = 100)
+    @Column(name = "reason", length = 100)
     private String reason;
 
-    @Column(name = "adjustAmount", nullable = false)
+    @Column(name = "adjustamount", nullable = false)
     private Float adjustAmount;
 
-    @Column(name = "CancelLatitude", nullable = false)
+    @Column(name = "cancellatitude", nullable = false)
     private Double cancelLatitude;
 
-    @Column(name = "CancelLongtitude", nullable = false)
+    @Column(name = "cancellongtitude", nullable = false)
     private Double cancelLongtitude;
 
-    @Column(name = "VehicleLevel", length = 3)
+    @Column(name = "vehiclelevel", length = 3)
     private String vehicleLevel;
 
-    @Column(name = "DriverFee", nullable = false)
+    @Column(name = "driverfee", nullable = false)
     private Double driverFee;
 
-    @Column(name = "FareRate", nullable = false)
+    @Column(name = "farerate", nullable = false)
     private Double fareRate;
 
-    @Column(name = "Fee", nullable = false)
+    @Column(name = "fee", nullable = false)
     private Double fee;
 
-    @Column(name = "Paid", nullable = false)
+    @Column(name = "paid", nullable = false)
     private Double paid;
 
-    @Column(name = "Promotion", nullable = false)
+    @Column(name = "promotion", nullable = false)
     private Double promotion;
 
-    @Column(name = "DriverCalPromotion", nullable = false)
+    @Column(name = "drivercalpromotion", nullable = false)
     private Float driverCalPromotion;
 
-    @Column(name = "EstPaid", nullable = false)
+    @Column(name = "estpaid", nullable = false)
     private Float estPaid;
 
-    @Column(name = "Tolls", nullable = false)
+    @Column(name = "tolls", nullable = false)
     private Double tolls;
 
-    @Column(name = "DistanceFee", nullable = false)
+    @Column(name = "distancefee", nullable = false)
     private Double distanceFee;
 
-    @Column(name = "TimeFee", nullable = false)
+    @Column(name = "timefee", nullable = false)
     private Double timeFee;
 
-    @Column(name = "InvoiceNumber", length = 30)
+    @Column(name = "invoicenumber", length = 30)
     private String invoiceNumber;
 
-    @Column(name = "Issuer", length = 4)
+    @Column(name = "issuer", length = 4)
     private String issuer;
 
-    @Column(name = "DistanceUnit", length = 4)
+    @Column(name = "distanceunit", length = 4)
     private String distanceUnit;
 
-    @Column(name = "RiderBankFee", nullable = false)
+    @Column(name = "riderbankfee", nullable = false)
     private Float riderBankFee;
 
-    @Column(name = "DriverBankFee", nullable = false)
+    @Column(name = "driverbankfee", nullable = false)
     private Float driverBankFee;
 
-    @Column(name = "DriverWaitingTime", nullable = false)
+    @Column(name = "driverwaitingtime", nullable = false)
     private Short driverWaitingTime;
 
-    @Column(name = "RiderWaitingTime", nullable = false)
+    @Column(name = "riderwaitingtime", nullable = false)
     private Short riderWaitingTime;
 
-    @Column(name = "DriverRating", nullable = false)
+    @Column(name = "driverrating", nullable = false)
     private Byte driverRating;
 
-    @Column(name = "RiderRating", nullable = false)
+    @Column(name = "riderrating", nullable = false)
     private Byte riderRating;
 
-    @Column(name = "Duration")
+    @Column(name = "duration")
     private Short duration;
 
-    @Column(name = "RequestLatitude", nullable = false)
+    @Column(name = "requestlatitude", nullable = false)
     private Double requestLatitude;
 
-    @Column(name = "RequestLongitude", nullable = false)
+    public Trip() {
+        byte [] bytes =new byte[] { (byte)0};
+        Instant instant = Instant.now();
+        float NoFloat =0;
+        Long longNo = Long.valueOf(0);
+        short shortNo = (short)0;
+        this.id = "";
+        this.toCity = 0;
+        this.fromCity = 0;
+        this.companyID = 0;
+        this.driverID = "";
+        this.riderID = "";
+        this.vehicleID = 0;
+        this.pricePanelID = 0;
+        this.paymentID = 0;
+        this.code = "";
+        this.programCode = "";
+        this.companyCode = "";
+        this.requestDatetime = instant;
+        this.countryID = "";
+        this.fromAddress = "";
+        this.toAddress = "";
+        this.timeStart = instant;
+        this.timeEnd = instant;
+        this.openPrice = NoFloat;
+        this.startLatitude = 0.0;
+        this.startLongtitude = 0.0;
+        this.endLatitude = 0.0;
+        this.endLongtitude = 0.0;
+        this.status = "";
+        this.distance = NoFloat;
+        this.createdBy = "";
+        this.createdDate = instant;
+        this.lastModifiedBy = "";
+        this.lastModifiedDate = longNo;
+        this.fromCityName = "";
+        this.toCityName = "";
+        this.currency = "";
+        this.cardNo = "";
+        this.paymentType = "";
+        this.cancelReasonCode = "";
+        this.reason = "";
+        this.adjustAmount = NoFloat;
+        this.cancelLatitude = 0.0;
+        this.cancelLongtitude = 0.0;
+        this.vehicleLevel = "";
+        this.driverFee = 0.0;
+        this.fareRate = 0.0;
+        this.fee = 0.0;
+        this.paid = 0.0;
+        this.promotion = 0.0;
+        this.driverCalPromotion = NoFloat;
+        this.estPaid = NoFloat;
+        this.tolls = 0.0;
+        this.distanceFee = 0.0;
+        this.timeFee = 0.0;
+        this.invoiceNumber = "";
+        this.issuer = "";
+        this.distanceUnit = "";
+        this.riderBankFee = NoFloat;
+        this.driverBankFee = NoFloat;
+        this.driverWaitingTime = shortNo;
+        this.riderWaitingTime = shortNo;
+        this.driverRating = bytes[0];
+        this.riderRating = bytes[0];
+        this.duration = shortNo;
+        this.requestLatitude = 0.0;
+        this.requestLongitude = 0.0;
+        this.acceptLatitude = 0.0;
+        this.acceptLongitude = 0.0;
+        this.selectedToAddress = "";
+        this.selectedEndLatitude = 0.0;
+        this.selectedEndLongtitude = 0.0;
+        this.promotionEstimate = NoFloat;
+        this.durationEstimate = 0.0;
+        this.distanceEstimate = 0.0;
+        this.fareEstimate = 0.0;
+        this.fixedFare = false;
+        this.selectedFromAddress = "";
+        this.selectedStartLatitude = 0.0;
+        this.selectedStartLongtitude = 0.0;
+        this.selectedPaymentType = "";
+        this.isReturn = false;
+        this.cash = NoFloat;
+        this.note = "";
+        this.returnFare = NoFloat;
+        this.estReturnFare = NoFloat;
+        this.mobileRelative = "";
+        this.extraDistance = NoFloat;
+        this.driverSelectedExtra = false;
+        this.calExtraFare = false;
+        this.stopFare = 0.0;
+        this.extraFare = 0.0;
+        this.extraStopFare = 0.0;
+        this.extraStopDuration = shortNo;
+        this.extraTravelTime = shortNo;
+        this.debtFare = 0.0;
+        this.disForCalExtraFare = NoFloat;
+        this.disCompleteToSelectedEnd = NoFloat;
+        this.stopTimeLimitted = shortNo;
+        this.tripNote = "";
+        this.tripCode = "";
+        this.organizationId = "";
+        this.riderVersion = "";
+        this.driverVersion = "";
+        this.riderDeviceType = "";
+        this.driverDeviceType = "";
+        this.recipientName = "";
+        this.recipientMobile = "";
+        this.recipientLocation = "";
+        this.progPayMethod = "";
+        this.groupId = 0;
+        this.driverPoint = shortNo;
+    }
+
+    @Column(name = "requestlongitude", nullable = false)
     private Double requestLongitude;
 
-    @Column(name = "AcceptLatitude", nullable = false)
+    @Column(name = "acceptlatitude", nullable = false)
     private Double acceptLatitude;
 
-    @Column(name = "AcceptLongitude", nullable = false)
+    @Column(name = "acceptlongitude", nullable = false)
     private Double acceptLongitude;
 
-    @Column(name = "SelectedToAddress")
+    @Column(name = "selectedtoaddress")
     private String selectedToAddress;
 
-    @Column(name = "SelectedEndLatitude", nullable = false)
+    @Column(name = "selectedendlatitude", nullable = false)
     private Double selectedEndLatitude;
 
-    @Column(name = "SelectedEndLongtitude", nullable = false)
+    @Column(name = "selectedendlongtitude", nullable = false)
     private Double selectedEndLongtitude;
 
-    @Column(name = "PromotionEstimate", nullable = false)
+    @Column(name = "promotionestimate", nullable = false)
     private Float promotionEstimate;
 
-    @Column(name = "DurationEstimate", nullable = false)
+    @Column(name = "durationestimate", nullable = false)
     private Double durationEstimate;
 
-    @Column(name = "DistanceEstimate", nullable = false)
+    @Column(name = "distanceestimate", nullable = false)
     private Double distanceEstimate;
 
-    @Column(name = "FareEstimate", nullable = false)
+    @Column(name = "fareestimate", nullable = false)
     private Double fareEstimate;
 
-    @Column(name = "FixedFare", nullable = false)
+    @Column(name = "fixedfare", nullable = false)
     private Boolean fixedFare = false;
 
-    @Column(name = "SelectedFromAddress")
+    @Column(name = "selectedfromaddress")
     private String selectedFromAddress;
 
-    @Column(name = "SelectedStartLatitude", nullable = false)
+    @Column(name = "selectedstartlatitude", nullable = false)
     private Double selectedStartLatitude;
 
-    @Column(name = "SelectedStartLongtitude", nullable = false)
+    @Column(name = "selectedstartlongtitude", nullable = false)
     private Double selectedStartLongtitude;
 
-    @Column(name = "SelectedPaymentType", length = 3)
+    @Column(name = "selectedpaymenttype", length = 3)
     private String selectedPaymentType;
 
-    @Column(name = "IsReturn")
+    @Column(name = "isreturn")
     private Boolean isReturn;
 
-    @Column(name = "Cash", nullable = false)
+    @Column(name = "cash", nullable = false)
     private Float cash;
 
-    @Column(name = "Note", length = 150)
+    @Column(name = "note", length = 150)
     private String note;
 
-    @Column(name = "ReturnFare", nullable = false)
+    @Column(name = "returnfare", nullable = false)
     private Float returnFare;
 
-    @Column(name = "EstReturnFare", nullable = false)
+    @Column(name = "estreturnfare", nullable = false)
     private Float estReturnFare;
 
-    @Column(name = "MobileRelative", length = 50)
+    @Column(name = "mobilerelative", length = 50)
     private String mobileRelative;
 
-    @Column(name = "ExtraDistance", nullable = false)
+    @Column(name = "extradistance", nullable = false)
     private Float extraDistance;
 
-    @Column(name = "DriverSelectedExtra", nullable = false)
+    @Column(name = "driverselectedextra", nullable = false)
     private Boolean driverSelectedExtra = false;
 
-    @Column(name = "calExtraFare")
+    @Column(name = "calextrafare")
     private Boolean calExtraFare;
 
-    @Column(name = "StopFare", nullable = false)
+    @Column(name = "stopfare", nullable = false)
     private Double stopFare;
 
-    @Column(name = "ExtraFare", nullable = false)
+    @Column(name = "extrafare", nullable = false)
     private Double extraFare;
 
-    @Column(name = "ExtraStopFare", nullable = false)
+    @Column(name = "extrastopfare", nullable = false)
     private Double extraStopFare;
 
-    @Column(name = "ExtraStopDuration")
+    @Column(name = "extrastopduration")
     private Short extraStopDuration;
 
-    @Column(name = "ExtraTravelTime", nullable = false)
+    @Column(name = "extratraveltime", nullable = false)
     private Short extraTravelTime;
 
-    @Column(name = "DebtFare", nullable = false)
+    @Column(name = "debtfare", nullable = false)
     private Double debtFare;
 
-    @Column(name = "DisForCalExtraFare", nullable = false)
+    @Column(name = "disforcalextrafare", nullable = false)
     private Float disForCalExtraFare;
 
-    @Column(name = "DisCompleteToSelectedEnd", nullable = false)
+    @Column(name = "discompletetoselectedend", nullable = false)
     private Float disCompleteToSelectedEnd;
 
-    @Column(name = "StopTimeLimitted", nullable = false)
+    @Column(name = "stoptimelimitted", nullable = false)
     private Short stopTimeLimitted;
 
-    @Column(name = "TripNote", length = 150)
+    @Column(name = "tripnote", length = 150)
     private String tripNote;
 
-    @Column(name = "TripCode", length = 50)
+    @Column(name = "tripcode", length = 50)
     private String tripCode;
 
-    @Column(name = "OrganizationId", length = 50)
+    @Column(name = "organizationid", length = 50)
     private String organizationId;
 
-    @Column(name = "RiderVersion", length = 10)
+    @Column(name = "riderversion", length = 10)
     private String riderVersion;
 
-    @Column(name = "DriverVersion", length = 10)
+    @Column(name = "driverversion", length = 10)
     private String driverVersion;
 
-    @Column(name = "RiderDeviceType", length = 10)
+    @Column(name = "riderdevicetype", length = 10)
     private String riderDeviceType;
 
-    @Column(name = "DriverDeviceType", length = 10)
+    @Column(name = "driverdevicetype", length = 10)
     private String driverDeviceType;
 
-    @Column(name = "RecipientName", length = 80)
+    @Column(name = "recipientname", length = 80)
     private String recipientName;
 
-    @Column(name = "RecipientMobile", length = 20)
+    @Column(name = "recipientmobile", length = 20)
     private String recipientMobile;
 
-    @Column(name = "RecipientLocation", length = 150)
+    @Column(name = "recipientlocation", length = 150)
     private String recipientLocation;
 
-    @Column(name = "ProgPayMethod", length = 4)
+    @Column(name = "progpaymethod", length = 4)
     private String progPayMethod;
 
-    @Column(name = "GroupId", nullable = false)
+    @Column(name = "groupid", nullable = false)
     private Integer groupId;
 
-    @Column(name = "DriverPoint", nullable = false)
+    @Column(name = "driverpoint", nullable = false)
     private Short driverPoint;
 
     public String getId() {

@@ -7,86 +7,86 @@ import java.time.Instant;
 @Table(name = "promotiontripriders")
 public class Promotiontriprider {
     @Id
-    @Column(name = "PromotionTripRiderID", nullable = false, length = 50)
+    @Column(name = "promotiontripriderid", nullable = false, length = 50)
     private String id;
 
-    @Column(name = "ToCity")
+    @Column(name = "tocity")
     private Integer toCity;
 
-    @Column(name = "FromCity")
+    @Column(name = "fromcity")
     private Integer fromCity;
 
-    @Column(name = "RiderID", length = 50)
+    @Column(name = "riderid", length = 50)
     private String riderID;
 
-    @Column(name = "PromotionTripID", nullable = false, length = 50)
+    @Column(name = "promotiontripid", nullable = false, length = 50)
     private String promotionTripID;
 
-    @Column(name = "Status", length = 2)
+    @Column(name = "status", length = 2)
     private String status;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "StartAddress")
+    @Column(name = "startaddress")
     private String startAddress;
 
-    @Column(name = "EndAddress")
+    @Column(name = "endaddress")
     private String endAddress;
 
-    @Column(name = "NumberOfSeats")
+    @Column(name = "numberofseats")
     private Integer numberOfSeats;
 
-    @Column(name = "TimeStart")
+    @Column(name = "timestart")
     private Instant timeStart;
 
-    @Column(name = "TimeGap")
+    @Column(name = "timegap")
     private Integer timeGap;
 
-    @Column(name = "StartLatitude")
+    @Column(name = "startlatitude")
     private Double startLatitude;
 
-    @Column(name = "StartLongtitude")
+    @Column(name = "startlongtitude")
     private Double startLongtitude;
 
-    @Column(name = "EndLatitude")
+    @Column(name = "endlatitude")
     private Double endLatitude;
 
-    @Column(name = "EndLongtitude")
+    @Column(name = "endlongtitude")
     private Double endLongtitude;
 
-    @Column(name = "Action", nullable = false)
+    @Column(name = "action", nullable = false)
     private Byte action;
 
-    @Column(name = "Note", length = 500)
+    @Column(name = "note", length = 500)
     private String note;
 
     @Lob
-    @Column(name = "DriverNote")
+    @Column(name = "drivernote")
     private String driverNote;
 
-    @Column(name = "DriverAction", nullable = false)
+    @Column(name = "driveraction", nullable = false)
     private Byte driverAction;
 
-    @Column(name = "FirstName", length = 30)
+    @Column(name = "firstname", length = 30)
     private String firstName;
 
-    @Column(name = "LastName", length = 50)
+    @Column(name = "lastname", length = 50)
     private String lastName;
 
-    @Column(name = "MobileNo", length = 12)
+    @Column(name = "mobileno", length = 12)
     private String mobileNo;
 
-    @Column(name = "Fare", nullable = false)
+    @Column(name = "fare", nullable = false)
     private Double fare;
 
     public String getId() {

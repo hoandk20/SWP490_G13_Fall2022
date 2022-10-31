@@ -171,6 +171,8 @@ public class Register {
             MasterStatus masterStatus = new MasterStatus();
 
             try{
+                Date date = new Date();
+                long time = date.getTime();
                 Instant instant = Instant.now();
                 Document document = new Document();
                 document.setFileName(doc.file_name);
@@ -180,7 +182,6 @@ public class Register {
                 document.setExpiredYear(doc.expired_year);
 
                 Instant instant1 = Instant.now();
-                long time = instant1.toEpochMilli();
                 FileManage fileManage = new FileManage();
                 String filePath = fileManage.convertBase64ToImage(doc.Base64, time+"");
                 document.setLink(filePath);

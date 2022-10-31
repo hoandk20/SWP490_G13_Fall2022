@@ -7,128 +7,176 @@ import java.time.Instant;
 @Table(name = "promotiontrip")
 public class Promotiontrip {
     @Id
-    @Column(name = "PromotionTripID", nullable = false, length = 50)
+    @Column(name = "promotiontripid", nullable = false, length = 50)
     private String id;
 
-    @Column(name = "ToCity", nullable = false)
+    @Column(name = "tocity", nullable = false)
     private Integer toCity;
 
-    @Column(name = "FromCity", nullable = false)
+    @Column(name = "fromcity", nullable = false)
     private Integer fromCity;
 
-    @Column(name = "VehicleID")
+    @Column(name = "vehicleid")
     private Integer vehicleID;
 
-    @Column(name = "DriverID", length = 50)
+    @Column(name = "driverid", length = 50)
     private String driverID;
 
-    @Column(name = "PaymentID")
+    @Column(name = "paymentid")
     private Integer paymentID;
 
-    @Column(name = "Capacity")
+    @Column(name = "capacity")
     private Integer capacity;
 
-    @Column(name = "NumberCapacityRegistered")
+    @Column(name = "numbercapacityregistered")
     private Integer numberCapacityRegistered;
 
-    @Column(name = "RequestDatetime")
+    @Column(name = "requestdatetime")
     private Instant requestDatetime;
 
-    @Column(name = "CountryCode", length = 4)
+    @Column(name = "countrycode", length = 4)
     private String countryCode;
 
-    @Column(name = "FromAddress")
+    @Column(name = "fromaddress")
     private String fromAddress;
 
-    @Column(name = "ToAddress")
+    @Column(name = "toaddress")
     private String toAddress;
 
-    @Column(name = "TimeStart")
+    @Column(name = "timestart")
     private Instant timeStart;
 
-    @Column(name = "TimeEnd")
+    @Column(name = "timeend")
     private Instant timeEnd;
 
-    @Column(name = "StartLatitude")
+    @Column(name = "startlatitude")
     private Double startLatitude;
 
-    @Column(name = "StartLongitude")
+    @Column(name = "startlongitude")
     private Double startLongitude;
 
-    @Column(name = "EndLongitude")
+    @Column(name = "endlongitude")
     private Double endLongitude;
 
-    @Column(name = "EngLatitude")
+    @Column(name = "englatitude")
     private Double engLatitude;
 
-    @Column(name = "Fee")
+    @Column(name = "fee")
     private Double fee;
-
-    @Column(name = "Status", length = 4)
+    @Column(name = "status", length = 4)
     private String status;
 
-    @Column(name = "MaxTimeStart")
+    @Column(name = "maxtimestart")
     private Instant maxTimeStart;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
-    @Column(name = "Distance")
+    @Column(name = "distance")
     private Double distance;
 
-    @Column(name = "Duration")
+    @Column(name = "duration")
     private Integer duration;
 
-    @Column(name = "ProposedFare")
+    @Column(name = "proposedfare")
     private Double proposedFare;
 
-    @Column(name = "AcceptedFare")
+    @Column(name = "acceptedfare")
     private Double acceptedFare;
 
-    @Column(name = "EstDistance")
+    @Column(name = "estdistance")
     private Float estDistance;
 
-    @Column(name = "SellDriverId", length = 50)
+    @Column(name = "selldriverid", length = 50)
     private String sellDriverId;
 
-    @Column(name = "OpenBidTime")
+    @Column(name = "openbidtime")
     private Instant openBidTime;
 
-    @Column(name = "ClosedBidTime")
+    @Column(name = "closedbidtime")
     private Instant closedBidTime;
 
-    @Column(name = "ReturnTrip", nullable = false)
+    @Column(name = "returntrip", nullable = false)
     private Boolean returnTrip = false;
 
-    @Column(name = "RiderBooked", nullable = false)
+    @Column(name = "riderbooked", nullable = false)
     private Boolean riderBooked = false;
 
-    @Column(name = "RiderRate", nullable = false)
+    @Column(name = "riderrate", nullable = false)
     private Byte riderRate;
 
-    @Column(name = "BidTime", nullable = false)
+    public Promotiontrip() {
+        byte [] bytes =new byte[] { (byte)0};
+        Instant instant = Instant.now();
+        float NoFloat =0;
+        Long longNo = Long.valueOf(0);
+        short shortNo = (short)0;
+        this.id = "";
+        this.toCity = 0;
+        this.fromCity = 0;
+        this.vehicleID = 0;
+        this.driverID = "";
+        this.paymentID = 0;
+        this.capacity = 0;
+        this.numberCapacityRegistered = 0;
+        this.requestDatetime = instant;
+        this.countryCode = "";
+        this.fromAddress = "";
+        this.toAddress = "";
+        this.timeStart = instant;
+        this.timeEnd = instant;
+        this.startLatitude = 0.0;
+        this.startLongitude = 0.0;
+        this.endLongitude = 0.0;
+        this.engLatitude = 0.0;
+        this.fee = 0.0;
+        this.status = "";
+        this.maxTimeStart = instant;
+        this.createdBy = "";
+        this.createdDate = instant;
+        this.lastModifiedBy = "";
+        this.lastModifiedDate = instant;
+        this.distance = 0.0;
+        this.duration = 0;
+        this.proposedFare = 0.0;
+        this.acceptedFare = 0.0;
+        this.estDistance = NoFloat;
+        this.sellDriverId = "";
+        this.openBidTime = instant;
+        this.closedBidTime = instant;
+        this.returnTrip = false;
+        this.riderBooked = false;
+        this.riderRate = bytes[0];
+        this.bidTime = bytes[0];
+        this.note = "";
+        this.reasonCode = "";
+        this.estFare = NoFloat;
+        this.farePerRider = false;
+    }
+
+    @Column(name = "bidtime", nullable = false)
     private Byte bidTime;
 
     @Lob
-    @Column(name = "Note")
+    @Column(name = "note")
     private String note;
 
-    @Column(name = "ReasonCode", length = 4)
+    @Column(name = "reasoncode", length = 4)
     private String reasonCode;
 
-    @Column(name = "EstFare", nullable = false)
+    @Column(name = "estfare", nullable = false)
     private Float estFare;
 
-    @Column(name = "FarePerRider", nullable = false)
+    @Column(name = "fareperrider", nullable = false)
     private Boolean farePerRider = false;
 
     public String getId() {
