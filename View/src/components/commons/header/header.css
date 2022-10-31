@@ -7,3 +7,11 @@
     margin: 0; */
     
 }
+.ant-layout-header {
+    height: 100px;
+}
+
+.ant-avatar{
+    width: 45px;
+    height: 45px;
+}

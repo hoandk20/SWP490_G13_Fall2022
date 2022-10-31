@@ -1,11 +1,11 @@
 import { Layout } from 'antd';
-import InfoContactUsers from '../../../components/contents/content-taixe/info-contact/info-contact-user/index'
-import LayoutDriver from '../../../components/layout/taixe'
+import InfoContactUsers from '../../../components/contents/content-khachhang/info-contact';
+import LayoutPassenger from '../../../components/layout/khachhang';
 
 const InfoContactUser = () => {
 
   return (
-    <LayoutDriver content={<InfoContactUsers/>}/>
+    <LayoutPassenger content={<InfoContactUsers/>}/>
   );
 };
 

@@ -26,7 +26,7 @@ const { Sider } = Layout;
 const { Header, Content } = Layout;
 const menuItem=[
   {
-    key: '1',
+    key: '/khachhang/info',
     icon: <UserOutlined />,
     label: 'HỒ SƠ',
   },
@@ -80,7 +80,7 @@ const LayoutPassenger = (props) => {
               navigate(key);
             }
           }}
-          defaultSelectedKeys={['1']}
+          // defaultSelectedKeys={['1']}
           items={menuItem}
         />
       </Sider>

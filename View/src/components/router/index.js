@@ -93,7 +93,7 @@ const routers = [
     //     element: FreeTripDriver
     // },
     {
-        path: '     ',
+        path: '/taixe/info',
         roleTarget: "ROLE_DRIVER",
         element: InfoContactTaixe
     },
@@ -104,7 +104,7 @@ const routers = [
     },
     {
         path: '/khachhang/info',
-        roleTarget: "ROLE_PASSENGER",
+        roleTarget: "ALL",
         element: InfoContactUser
     },
     {

@@ -1,21 +1,26 @@
 import {
     Button,
     Checkbox,
+    Upload,
     Col,
     Form,
     Input,
+    Image,
     Row,
     Select,
 } from 'antd';
+import './infor.css';
 import FormItem from 'antd/es/form/FormItem';
 import React from 'react';
-import { SaveOutlined } from '@ant-design/icons';
+import { SaveOutlined, UploadOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 const { Option } = Select;
 
+
 const InfoContactUsers = () => {
+    
     const user = useSelector((state) => state.user.userInfo.currentUser)
-console.log(user)
+    console.log(user)
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
             <Select
@@ -28,6 +33,7 @@ console.log(user)
         </Form.Item>
     );
     return (
+        
         <div className='container'>
             <h2>Hồ sơ</h2>
             <div className='container-infos'>
@@ -50,21 +56,21 @@ console.log(user)
                                 label="Tên *"
                             >
                                 <Input.Group >
-                                    <Input style={{ width: "35%", marginRight: "5%" }} />
-                                    <Input style={{ width: "60%" }} />
+                                    <Input defaultValue={user.firstname} style={{ width: "35%", marginRight: "5%" }} />
+                                    <Input defaultValue={user.lastname} style={{ width: "60%" }} />
                                 </Input.Group>
                             </FormItem>
 
                             <FormItem
                                 label="Email *"
                             >
-                                <Input />
+                                <Input defaultValue={user.email} />
                             </FormItem>
                             <Form.Item
                                 name="phone"
                                 label="Số di động *"
                             >
-                                <Input
+                                <Input defaultValue={user.phone}
                                     addonBefore={prefixSelector}
                                 />
                             </Form.Item>
@@ -74,15 +80,15 @@ console.log(user)
                                 <Input />
                             </FormItem>
                             <FormItem
-                                style={{float:"right", }}
+                                style={{ float: "right", }}
                             >
                                 <Button className='btn' type="primary" htmlType="submit">
-                                <SaveOutlined /> Lưu
+                                    <SaveOutlined /> Lưu
                                 </Button>
                             </FormItem>
                         </Col>
                         <Col sm={16} md={8}  >
-                           
+
                             <FormItem
                                 name="country"
                                 label="Quốc gia *"
@@ -91,23 +97,33 @@ console.log(user)
                                 }}
                             >
                                 <Select
-                                    allowClear
+
+                                    defaultValue={user.country}
                                 >
-                                    <Option value="Tất cả"></Option>
-                                    <Option value="Việt Nam"></Option>
+                                    <Option value="vi">Việt Nam</Option>
                                 </Select>
                             </FormItem>
                         </Col>
                         <Col sm={16} md={8}>
-                            <img/>
+                            <div style={{position: 'absolute',right: '50px'}}>
+                                <Image 
+                                    id='avatarImage'
+                                    width={148}
+                                    src={user.avatarBase64}
+                                />
+                                <br/>
+                                <Upload><Button icon={<UploadOutlined />}>Click to Upload</Button></Upload>
+                            </div>
                         </Col>
                     </Row>
                 </Form>
-                 <div>
+                <div>
                     <h3>Địa chỉ thường dùng</h3>
-                </div>                   
+                </div>
             </div>
         </div>
+        
     )
+    
 }
 export default InfoContactUsers
