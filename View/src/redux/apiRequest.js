@@ -254,46 +254,87 @@ export const getTripDetailDriver = async (id, dispatch) => {
 
 }
 
-export const changeStatusPassengerRegister = async (id,status) => {
+export const changeStatusPassengerRegister = async (id, status) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/tripPassenger/updateRegisterStatus`,{
-      id:id,
-      status:status
+    const res = await axios.post(`${URL}:8080/api/tripPassenger/updateRegisterStatus`, {
+      id: id,
+      status: status
     }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
 
   } catch (error) {
 
   }
 }
 
-export const getTripHistoryDriver = async (email,dispatch) => {
+export const getTripHistoryDriver = async (email, dispatch) => {
   // dispatch(getTripHistoryStart());
   try {
-    const res = await axios.get(`${URL}:8080/api/tripdriver/listTrip?driverEmail=${email}`,{
+    const res = await axios.get(`${URL}:8080/api/tripdriver/listTrip?driverEmail=${email}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     console.log(res);
     dispatch(getTripHistorySuccess(res.data.object));
-    
+
   } catch (error) {
     // dispatch(getTripHistoryFailed());
   }
 }
 
-export const getTripHistoryPassenger = async (email,dispatch) => {
+export const getTripHistoryPassenger = async (email, dispatch) => {
   // dispatch(getTripHistoryStart());
   try {
-    const res = await axios.get(`${URL}:8080/api/tripPassenger/listTrip?passengerEmail${email}`,{
+    const res = await axios.get(`${URL}:8080/api/tripPassenger/listTrip?passengerEmail${email}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     console.log(res);
     dispatch(getTripHistorySuccess(res.data));
-  
+
   } catch (error) {
     // dispatch(getTripHistoryFailed());
   }
 }
+
+export const editInforPassenger = async (object,toast) => {
+
+  try {
+    const res = await axios.post(`${URL}:8080/api/user/changeinfoPassenger`, {
+      username: object.email,
+      firstname: object.firstName,
+      lastname: object.lastName,
+      avatarBase64: object.avatarBase64,
+      address: object.address,
+      email: object.email,
+      phone: object.phone,
+      country: object.country
+    },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      toast.success("Thay đổi thông tin thành công.");
+  } catch (error) {
+    toast.error(error);
+  }
+}
+
+export const changePassword = async (object, toast) => {
+
+  try {
+    const res = await axios.post(`${URL}:8080/api/user/changePassword`,
+      {
+        email: object.email,
+        oldPassword: object.oldPassword,
+        newPassword: object.newPassword,
+      },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    toast.success("Đổi mật khẩu thành công.");
+  } catch (error) {
+    toast.error(error);
+  }
+}
+
 
