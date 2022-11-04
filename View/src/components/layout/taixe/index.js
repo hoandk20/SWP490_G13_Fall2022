@@ -75,6 +75,9 @@ const LayoutDriver = (props) => {
               logoutUser(dispatch,navigate);
           
             }else{
+              if(key==1){
+                navigate('/taixe/info')
+              }
               if(key==2){
                 navigate('/taixe/freeTrip/create')
               }

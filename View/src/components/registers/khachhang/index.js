@@ -63,7 +63,6 @@ const RegisterPassenger = () => {
             firstName:values.firstName,
             lastName:values.lastName,
             phoneNumber:values.phoneNumber,
-
         }
         registerPassenger(newUser,dispatch,navigate,toast);
        
@@ -139,6 +138,8 @@ const RegisterPassenger = () => {
                                             {
                                                 required: true,
                                                 message: 'Please input your password!',
+                                                min: 6,
+                                                max: 32
                                             },
                                         ]}
                                         hasFeedback
@@ -215,6 +216,7 @@ const RegisterPassenger = () => {
                                             {
                                                 required: true,
                                                 message: 'Please input your phone number!',
+                                                pattern: new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g),
                                             },
                                         ]}
                                     >
