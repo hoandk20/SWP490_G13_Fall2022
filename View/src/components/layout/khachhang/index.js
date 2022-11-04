@@ -17,7 +17,7 @@ import { Footer } from 'antd/lib/layout/layout';
 import Headers from '../../commons/header/index';
 import { useState } from 'react';
 import { logoutUser } from '../../../redux/apiRequest';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 const { Sider } = Layout;
 
 
@@ -58,6 +58,8 @@ const LayoutPassenger = (props) => {
   const {content}=props
   const [collapsed, setCollapsed] = useState(false);
   const navigate=useNavigate();
+  const user = useSelector((state) => state.user.userInfo?.currentUser)
+  console.log(user);
   return (
     <Layout>
       {/* <Menu/> */}

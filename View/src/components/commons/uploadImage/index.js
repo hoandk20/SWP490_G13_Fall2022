@@ -1,47 +1,42 @@
-// import React from 'react';
-// import { useState } from 'react';
+import React, { useState } from "react";
 
 
-// const UploadAndDisplayImage = () => {
-//     const base64code=''
-//   const [selectedImage, setSelectedImage] = useState(null);
-//   const onLoad = fileString => {
-//     console.log(fileString);
-//     base64code = fileString
-//   };
+function App() {
+  const [baseImage, setBaseImage] = useState("");
 
-//   const getBase64 = file => {
-//     let reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = () => {
-//       onLoad(reader.result);
-//     };
-//   };
-//   getBase64(selectedImage);
-//   console.log()
-//   return (
-//     <div>
-//       <h1>Upload and Display Image usign React Hook's</h1>
-//       {selectedImage && (
-//         <div>
-//         <img alt="not fount" width={"250px"} src={URL.createObjectURL(selectedImage)} />
-//         <br />
-//         <button onClick={()=>setSelectedImage(null)}>Remove</button>
-//         </div>
-//       )}
-//       <br />
-     
-//       <br /> 
-//       <input
-//         type="file"
-//         name="myImage"
-//         onChange={(event) => {
-//           console.log(event.target.files[0]);
-//           setSelectedImage(event.target.files[0]);
-//         }}
-//       />
-//     </div>
-//   );
-// };
+  const uploadImage = async (e) => {
+    const file = e.target.files[0];
+    const base64 = await convertBase64(file);
+    setBaseImage(base64);
+  };
 
-// export default UploadAndDisplayImage;
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  return (
+    <div className="App">
+      <input
+        type="file"
+        onChange={(e) => {
+          uploadImage(e);
+        }}
+      />
+      <br></br>
+      <img src={baseImage} height="200px" />
+    </div>
+  );
+}
+
+export default App;

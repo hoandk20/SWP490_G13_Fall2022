@@ -60,22 +60,7 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterDriverInfoVehico
     },
-    {
-        path: '/congty/driver-mgt',
-        roleTarget: "ROLE_COMPANY",
-        element: DriverManagement
-    },
 
-    {
-        path: '/congty/driver-mgt/info',
-        roleTarget: "ROLE_COMPANY",
-        element: DriverManagementInfo
-    },
-    {
-        path: '/congty/driver-mgt/add',
-        roleTarget: "ROLE_COMPANY",
-        element: AddDriver
-    },
 
     {
         path: '/taixe/free-trip',
@@ -87,11 +72,7 @@ const routers = [
         roleTarget: "ALL",
         element: TripHistoryDriver
     },
-    {
-        path: '/congty/vehico-mgt',
-        roleTarget: "ROLE_COMPANY",
-        element: VehicoManagement
-    },
+
 
     {
         path: '/taixe/info',
@@ -129,6 +110,28 @@ const routers = [
         roleTarget: "ALL",
         element: TripHistoryPassenger
     },
+    //cong ty
+    {
+        path: '/congty/vehico-mgt',
+        roleTarget: "ALL",
+        element: VehicoManagement
+    },
+    {
+        path: '/congty/driver-mgt',
+        roleTarget: "ALL",
+        element: DriverManagement
+    },
+
+    {
+        path: '/congty/driver-mgt/info',
+        roleTarget: "ROLE_COMPANY",
+        element: DriverManagementInfo
+    },
+    {
+        path: '/congty/driver-mgt/add',
+        roleTarget: "ALL",
+        element: AddDriver
+    },
     {
         path: '/congty/driver-detail',
         roleTarget: "ROLE_COMPANY",
@@ -144,10 +147,10 @@ const routers = [
         roleTarget: "ALL",
         element: Home
     },
-    // {
-    //     path: '/uploadImage',
-    //     roleTarget: "ALL",
-    //     element: UploadAndDisplayImage
-    // }
+    {
+        path: '/uploadImage',
+        roleTarget: "ALL",
+        element: UploadAndDisplayImage
+    }
 ]
 export default routers

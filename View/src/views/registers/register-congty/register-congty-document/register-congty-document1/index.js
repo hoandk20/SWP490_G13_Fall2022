@@ -4,7 +4,8 @@ import RegisterCompanyDoc1s from '../../../../../components/registers/congty/reg
 
 const RegisterCompanyDoc1 = () =>{
     return(
-      <Layouts content={<RegisterCompanyDoc1s/>}/>
+      // <Layouts content={<RegisterCompanyDoc1s/>}/>
+      <RegisterCompanyDoc1s/>
     );
 };
 export default RegisterCompanyDoc1

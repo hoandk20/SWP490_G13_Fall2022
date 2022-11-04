@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { loginFailed, loginStart, loginSuccess, logOutFailed, logOutStart, logOutSuccess, registerFailed, registerStart, registerSuccess } from './authSlice'
 import { createTripFailed, createTripStart, createTripSuccess, getListFreeTripFailed, getListFreeTripStart, getListFreeTripSuccess, getTripDetailDriverFailed, getTripDetailDriverStart, getTripDetailDriverSuccess, passengerRegisterTripSuccess } from './freeTripSlice';
 import { getTripHistoryFailed, getTripHistoryOfDriverFailed, getTripHistoryOfDriverStart, getTripHistoryOfDriverSuccess, getTripHistoryStart, getTripHistorySuccess } from './tripHistorySlice';
-import { getUserStart, getUserSuccess, deleteUser, getUserFailed } from './userSlice';
+import { getUserStart, getUserSuccess, deleteUser, getUserFailed, getALlDriverForCompany, getAllDriverForCompany } from './userSlice';
+import { getAllVehicos } from './vehicoSlice';
 const BASE_URL = "http://localhost"
 const URL = "http://26.36.110.116";
 
@@ -154,18 +155,17 @@ export const registerCompany = async (user, dispatch, navigate, toast) => {
 }
 
 export const getUser = async (userName, dispatch) => {
-  dispatch(getUserStart())
-  const res = await axios.get(`${URL}:8080/api/user/info?username=${userName}`, {
-    headers: { 'Content-Type': 'application/json' }
-  })
-    .then(function (response) {
-      console.log(response)
-      dispatch(getUserSuccess(response.data))
-      //  navigate("/signin")
-    })
-    .catch(function (error) {
+    try {
+      dispatch(getUserStart())
+      const res = await axios.get(`${URL}:8080/api/user/info?username=${userName}`, {
+        headers: { 'Content-Type': 'application/json' }
+      })
+      console.log(res.data);
+      dispatch(getUserSuccess(res.data))
+      
+    } catch (error) {
       dispatch(getUserFailed())
-    });
+    }
 }
 
 export const CreateFreeTrip = async (trip, dispatch, navigate, toast) => {
@@ -294,6 +294,156 @@ export const getTripHistoryPassenger = async (email,dispatch) => {
   
   } catch (error) {
     // dispatch(getTripHistoryFailed());
+  }
+}
+
+
+export const getAllVehico = async (email,dispatch) => {
+  try {
+    const res = await axios.get(`${URL}:8080/api/company/getVehicle?companyEmail=${email}`,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+     dispatch(getAllVehicos(res.data.object));
+  
+  } catch (error) {
+  }
+}
+
+export const AddVehicoByCompany = async (vehicle,toast,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/company/addVehicle`,
+    {
+      companyEmail:vehicle.companyEmail,
+      producer:vehicle.producer,
+      produceYear:vehicle.produceYear,
+      interiorColor:vehicle.interiorColor,
+      exteriorColor:vehicle.exteriorColor,
+      plate:vehicle.plate,
+      platState:vehicle.platState,
+      plateCountry:vehicle.plateCountry,
+      typeId:1
+    }
+    ,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    getAllVehico(vehicle.companyEmail,dispatch);
+    toast.success("Tạo phương tiện thành công")
+  } catch (error) {
+    toast.error("Tạo phương tiện thất bại")
+  }
+}
+export const getDriversForCompany = async (email,dispatch) => {
+  try {
+    const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${email}`,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    console.log(res);
+     dispatch(getAllDriverForCompany(res.data.object));
+    console.log("object");
+  } catch (error) {
+  }
+}
+
+
+export const AddDriverByCompany = async (driver,toast,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/company/RegisterDriver`,
+    {
+      companyEmail:driver.companyEmail,
+      email:driver.email,
+      password:driver.password,
+      firstName:driver.firstName,
+      lastName:driver.lastName,
+      phoneNumber:driver.phoneNumber,
+      language:"vi",
+      country:driver.country,
+      city:driver.city,
+
+    }
+    ,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    getDriversForCompany(driver.companyEmail,dispatch);
+    toast.success("Tạo tài khoản tài xế thành công")
+  } catch (error) {
+    toast.error("Tạo tài khoản tài xế thất bại")
+  }
+}
+export const EditVehicoByCompany = async (vehicle,toast,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/company/editVehicle`,
+    {
+      producer:vehicle.producer,
+      produceYear:vehicle.produceYear,
+      interiorColor:vehicle.interiorColor,
+      exteriorColor:vehicle.exteriorColor,
+      plate:vehicle.plate,
+      platState:vehicle.platState,
+      plateCountry:vehicle.plateCountry,
+      typeId:1,
+      id:vehicle.id
+    }
+    ,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    getAllVehico(vehicle.companyEmail,dispatch);
+    toast.success("Thay đổi thông tin phương tiện thành công")
+  } catch (error) {
+    toast.error("Thay đổi thông tin phương tiện thất bại")
+  }
+}
+
+
+
+export const EditDriverByCompany = async (driver,toast,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/company/editDriver`,
+    {
+      email:driver.email,
+      firstName:driver.firstName,
+      lastName:driver.lastName,
+      phoneNumber:driver.phoneNumber,
+      language:"vi",
+      country:driver.country,
+      city:driver.city,
+
+    }
+    ,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    getDriversForCompany(driver.companyEmail,dispatch);
+    toast.success("Thay đổi thông tin tài khoản tài xế thành công")
+  } catch (error) {
+    toast.error("Thay đổi thông tin tài khoản tài xế thất bại")
+  }
+}
+
+
+
+export const deleteDriverByCompany = async (id,companyEmail,toast,dispatch) => {
+  try {
+    const res = await axios.delete(`${URL}:8080/api/company/deleteDriver`,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    getDriversForCompany(companyEmail,dispatch);
+    toast.success("Xóa tài khoản tài xế thành công")
+  } catch (error) {
+    toast.error("Xóa tài khoản tài xế thất bại")
+  }
+}
+export const deleteVehicelByCompany = async (driverID,companyEmail,toast,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/company/deleteVehicle`,
+    {
+      driverID:driverID
+    }
+    ,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    getAllVehico(companyEmail,dispatch);
+    toast.success("Xóa tài khoản tài xế thành công")
+  } catch (error) {
+    toast.error("Xóa tài khoản tài xế thất bại")
   }
 }
 

@@ -1,55 +1,114 @@
-import { Button, Checkbox, Form, Input, Row, Col, Select, Table } from 'antd';
+import { Button, Checkbox, Form, Input, Row, Col, Select, Table, Popconfirm } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React from 'react';
-import { FilterOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
+import AddVehico from '../../../commons/drawers/drawer-vehico-mgt/drawer-add--vehico';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteDriverByCompany, getDriversForCompany } from '../../../../redux/apiRequest';
+import { useEffect } from 'react';
+import AddDriverForCompany from '../../../commons/drawers/drawer-driverCompany-mgt/drawer-add-driver'
+import EditDriverForCompany from '../../../commons/drawers/drawer-driverCompany-mgt/drawer-edit-driver';
+import { toast } from 'react-toastify';
 
 const { Option } = Select;
 
-const columns = [
-    {
-        title: 'Số',
-        dataIndex: 'index',
-    },
-    {
-        title: 'Tài khoản',
-        dataIndex: 'account',
-    },
-    {
-        title: 'Tên đầy đủ',
-        dataIndex: 'name',
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-    },
-    {
-        title: 'Số di động',
-        dataIndex: 'phoneNumber',
-    },
-    {
-        title: 'Phương tiện',
-        dataIndex: 'vehico',
-      },
-      {
-        title: 'Trạng thái',
-        dataIndex: 'status',
-      },
-      {
-        title: 'View detail',
-        dataIndex: 'view',
-      },
-];
 const data = [
 
 ];
 
 const DriverManagement = () => {
+    const dispatch = useDispatch();
+    const user=useSelector((state)=>state.user.userInfo?.currentUser);
+    const all=useSelector((state)=>state.user.drivers?.all);
+    console.log(all);
+     const drivers=all?.map((row)=> ({ ...row,key:row.driverID,name:row.firstName+" "+row.lastName }));
+   
+    const handleDelete = (key) => {
+         deleteDriverByCompany(key,user.email,toast,dispatch);
+    };
+    const cancel = (e) => {
 
+    };
+
+    useEffect(()=>{
+        getDriversForCompany(user.email,dispatch);
+         
+      },[])
+const columns = [
+    {
+        key: 'index',
+        title: 'Số',
+        dataIndex: 'index',
+    },
+    {
+        key: 'email',
+        title: 'Tài khoản',
+        dataIndex: 'email',
+    },
+    {
+        key: 'name',
+        title: 'Tên đầy đủ',
+        dataIndex: 'name',
+    },
+    {
+        key: 'email',
+        title: 'Email',
+        dataIndex: 'email',
+    },
+    {
+        key: 'phoneNumber',
+        title: 'Số di động',
+        dataIndex: 'phoneNumber',
+    },
+    {
+        key: 'vehico',
+        title: 'Phương tiện',
+        dataIndex: 'vehico',
+    },
+    {
+        key: 'status',
+        title: 'Trạng thái',
+        dataIndex: 'status',
+    },
+
+    
+    {
+        title: '',
+        dataIndex: '',
+        key: 'x',
+        render: (text, record, index) => {
+            return <div>
+                     <EditDriverForCompany state={record}/> 
+
+            </div>
+        },
+    },
+    {
+        title: '',
+        dataIndex: '',
+        key: 'y',
+        render: (record) => {
+            return <div>
+                <Popconfirm
+                    title="Bạn có muốn xóa tài khoản này?"
+                    onConfirm={() => handleDelete(record.key)}
+                    onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                    <DeleteOutlined/>
+                </Popconfirm>
+            </div>
+
+        },
+    },
+    
+
+];
     return (
         <div className='container'>
             <div className='container-infos'>
                 <h2>TÀI XẾ</h2>
-                <h3>Trạng thái</h3>
                 <div className='driver-info'>
 
                     <Form
@@ -111,13 +170,18 @@ const DriverManagement = () => {
                                         <FilterOutlined />  Lọc tài xế
                                     </Button>
                                 </FormItem>
+                              
                             </Col>
                         </Row>
                     </Form>
                 </div>
-                <div className='table-info' style={{marginTop:"5%"}}>
-                <Table columns={columns} dataSource={data} size="middle" />
+                <div style={{marginLeft:"50px",float:"left"}}>
+                    <AddDriverForCompany/>
                 </div>
+                <div className='table-info' style={{marginTop:"5%"}}>
+                <Table columns={columns} dataSource={drivers} size="middle" />
+                </div>
+
             </div>
         </div>
     )

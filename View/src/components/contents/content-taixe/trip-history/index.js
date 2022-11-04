@@ -21,9 +21,7 @@ const TripHistoryDriver = () => {
     const dispatch=useDispatch();
     // const [tripHistory,setTripHistory] =useState();
     const user=useSelector((state)=>state.user.userInfo?.currentUser);
-    console.log(user);
     const trips=useSelector((state)=>state.tripHistory.tripHistory?.trips);
-    console.log(trips);
    const tripHistory=trips.map((row)=> ({ ...row, seatRemind: row.seat-row.seatRegistered,key:row.id }))
    
     useEffect(()=>{
@@ -61,22 +59,6 @@ const TripHistoryDriver = () => {
             dataIndex: 'seatRemind',
         },
 
-
-        // {
-        //     title: 'Đăng ký',
-        //     dataIndex: '',
-        //     key: 'x',
-        //     render: (text, record, index) => {
-        //         return <div>
-
-        //             <EyeOutlined onClick={() => {
-        //                 navigate('/khachhang/freeTrip/detail-of-taixe', { state: { record } })
-
-        //             }} />
-
-        //         </div>
-        //     },
-        // }
     ];
     return (
         <div className='container'>

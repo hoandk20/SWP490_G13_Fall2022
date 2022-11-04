@@ -4,10 +4,13 @@ const userSlice=createSlice({
     name:'user',
     initialState:{
         userInfo:{
-            currentUser :null,
+            currentUser :"",
             isFetching:false,
             error:false
         },
+        drivers:{
+            all:null,
+        }
     },
     reducers:{
         getUserStart:(state)=>{
@@ -20,8 +23,12 @@ const userSlice=createSlice({
         getUserFailed:(state)=>{
             state.userInfo.error=true;
         },
+        getAllDriverForCompany:(state,action)=>{
+            state.drivers.all=action.payload;
+         
+        },
         deleteUser:(state)=>{
-            state.userInfo.currentUser=null;
+            state.userInfo.currentUser="";
         }
     }
 
@@ -32,6 +39,7 @@ export const{
     getUserSuccess,
     getUserFailed,
     deleteUser,
+    getAllDriverForCompany,
 }=userSlice.actions;
 
 export default userSlice.reducer;

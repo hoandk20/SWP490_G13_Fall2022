@@ -14,10 +14,10 @@ const FreeTripDetail = () => {
     const createTrip=useSelector((state)=>state.freeTrip.createTrip?.detail);
     const tripDriverDetail=useSelector((state)=>state.freeTrip.tripDriverDetail?.detail);
     const listPassengerRegister=tripDriverDetail?.listPassenger;
-    console.log(listPassengerRegister);
-    console.log("freeTrip: ", freeTrip);
-    console.log("createTrip: ", createTrip);
-    console.log("tripDriverDetail: ", tripDriverDetail);
+    // console.log(listPassengerRegister);
+    // console.log("freeTrip: ", freeTrip);
+    // console.log("createTrip: ", createTrip);
+    // console.log("tripDriverDetail: ", tripDriverDetail);
   //  const [detailTrip,setDetailTrip]=useState();
     useEffect(()=>{
         getTripDetailDriver(createTrip.id,dispatch);

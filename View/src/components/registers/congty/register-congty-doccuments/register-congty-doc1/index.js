@@ -4,9 +4,54 @@ import "../register-congty-document.css"
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
 
 import ImageAvatar from '../../../../../assets/image-app/avatar.jpg'
+import { useState } from 'react';
 
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
+
+    const [baseImage1, setBaseImage1] = useState("");
+    const [baseImage2, setBaseImage2] = useState("");
+    const [baseImage3, setBaseImage3] = useState("");
+    const [baseImage4, setBaseImage4] = useState("");
+
+    const uploadImage1 = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertBase64(file);
+        setBaseImage1(base64);
+    };
+    const uploadImage2 = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertBase64(file);
+        setBaseImage2(base64);
+    };
+    const uploadImage3 = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertBase64(file);
+        setBaseImage3(base64);
+    };
+
+    const uploadImage4 = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertBase64(file);
+        setBaseImage4(base64);
+    };
+
+
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+
     return (
         <div className='container'>
             <div className='container-info'>
@@ -64,12 +109,18 @@ const RegisterCompanyDoc1 = () => {
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-
+                                        <img src={baseImage1} height="220px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span>
+                                        <span style={{marginRight:"20px"}}>
                                             Ngày hết hạn <DatePicker picker='month' />
                                         </span>
+                                        <input
+                                            type="file"
+                                            onChange={(e) => {
+                                                uploadImage1(e);
+                                            }}
+                                        />
                                         <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
@@ -94,10 +145,17 @@ const RegisterCompanyDoc1 = () => {
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-
+                                    <img src={baseImage2} height="220px" />
                                     </div>
+                                   
                                     <div className='content-bottom'>
-                                        <Button className='btn-submit' type='primary'>+ Tải lên</Button>
+                                    <input
+                                            type="file"
+                                            onChange={(e) => {
+                                                uploadImage2(e);
+                                            }}
+                                        />
+                                        <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -108,19 +166,25 @@ const RegisterCompanyDoc1 = () => {
                             <div className='card-doc'>
                                 <div className='form-header'>
                                     <span>
-                                    Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                        Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
                                         <div className='status'>Đã gửi</div>
                                     </span>
 
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-
+                                    <img src={baseImage3} height="220px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span>
+                                        <span style={{marginRight:"20px"}}>
                                             Ngày hết hạn <DatePicker picker='month' />
                                         </span>
+                                        <input
+                                            type="file"
+                                            onChange={(e) => {
+                                                uploadImage3(e);
+                                            }}
+                                        />
                                         <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
@@ -130,19 +194,26 @@ const RegisterCompanyDoc1 = () => {
                             <div className='card-doc'>
                                 <div className='form-header'>
                                     <span>
-                                    Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                        Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
                                         <div className='status'>Đã gửi</div>
                                     </span>
 
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-
+                                    <img src={baseImage4} height="220px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span>
+                                        <span style={{marginRight:"20px"}}>
                                             Ngày hết hạn <DatePicker picker='month' />
                                         </span>
+                                        <input
+                                            type="file"
+                                            onChange={(e) => {
+                                                uploadImage4(e);
+                                            }}
+                                            
+                                        />
                                         <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>

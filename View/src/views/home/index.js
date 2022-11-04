@@ -19,24 +19,21 @@ const { Header, Content } = Layout;
 const Home = () => {
   const dispatch = useDispatch();
   const navigate =useNavigate();
-
-  const user=useSelector((state)=>state.user.userInfo?.currentUser);
-  console.log(user);
-
   const currentUser = useSelector((state)=>state.auth.login?.currentUser);
   const decodedTocken=jwtDecode(currentUser.access_token);
-  const userName=decodedTocken.sub;
-//  console.log(userName);
+  const userName=decodedTocken.sub; 
+  const user=useSelector((state)=>state.user.userInfo?.currentUser);
   const role=decodedTocken.roles[0];
   useEffect(()=>{
     getUser(userName,dispatch);
+   
   },[])
 
   if(!role){
     return <Forbidden/>
   }else{
     if(role==='ROLE_PASSENGER'){
-      return <LayoutPassenger content={<HomePassenger/>}/>
+      return <LayoutPassenger  content={<HomePassenger/>}/>
     }else if(role==='ROLE_DRIVER'){
       return <LayoutDriver content={<HomeDriver/>}/>
     }else if(role==='ROLE_COMPANY'){
