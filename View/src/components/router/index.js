@@ -1,3 +1,4 @@
+import DriverManagementAdmin from "../../views/admin/taixe-mgt";
 import DriverManagement from "../../views/congty/driver-mgt";
 import AddDriver from "../../views/congty/driver-mgt/add-driver";
 import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
@@ -151,6 +152,15 @@ const routers = [
         path: '/uploadImage',
         roleTarget: "ALL",
         element: UploadAndDisplayImage
-    }
+    },
+
+    //admin
+    {
+        path: '/admin/taixe-mgt',
+        roleTarget: "ALL",
+        element: DriverManagementAdmin
+    },
+    
+
 ]
 export default routers
