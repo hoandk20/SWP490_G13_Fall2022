@@ -1,70 +1,91 @@
 package com.G13.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
 @Table(name = "vehicle")
 public class Vehicle {
     @Id
-    @Column(name = "VehicleID", nullable = false)
+    @Column(name = "vehicleid", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "InsuranceCertificate")
+    public Vehicle() {
+        Instant instant = Instant.now();
+        this.id = 0;
+        this.insuranceCertificate = 0;
+        this.companyID = 0;
+        this.registrationStamp = 0;
+        this.carTypeID = 0;
+        this.plate = plate;
+        this.interiorColor = "";
+        this.exteriorColor = "";
+        this.produceYear = "";
+        this.lisencePlatCountry = "";
+        this.lisencePlatState = "";
+        this.level = "";
+        this.level2 = "";
+        this.level3 = "";
+        this.status = "";
+        this.createdBy = "";
+        this.createdDate = instant;
+        this.lastModifiedBy = "";
+        this.lastModifiedDate = instant;
+    }
+
+    @Column(name = "insurancecertificate")
     private Integer insuranceCertificate;
 
-    @Column(name = "CompanyID")
+    @Column(name = "companyid")
     private Integer companyID;
 
-    @Column(name = "RegistrationStamp")
+    @Column(name = "registrationstamp")
     private Integer registrationStamp;
 
-    @Column(name = "CarTypeID", nullable = false)
+    @Column(name = "cartypeid", nullable = false)
     private Integer carTypeID;
 
-    @Column(name = "Plate", nullable = false, length = 20)
+    @Column(name = "plate", nullable = false, length = 20)
     private String plate;
 
-    @Column(name = "InteriorColor", length = 20)
+    @Column(name = "interiorcolor", length = 20)
     private String interiorColor;
 
-    @Column(name = "ExteriorColor", length = 20)
+    @Column(name = "exteriorcolor", length = 20)
     private String exteriorColor;
 
-    @Column(name = "ProduceYear", length = 4)
+    @Column(name = "produceyear", length = 4)
     private String produceYear;
 
-    @Column(name = "LisencePlatCountry", length = 4)
+    @Column(name = "lisenceplatcountry", length = 4)
     private String lisencePlatCountry;
 
-    @Column(name = "LisencePlatState", length = 20)
+    @Column(name = "lisenceplatstate", length = 20)
     private String lisencePlatState;
 
-    @Column(name = "Level", length = 4)
+    @Column(name = "level", length = 4)
     private String level;
 
-    @Column(name = "Level2", length = 4)
+    @Column(name = "level2", length = 4)
     private String level2;
 
-    @Column(name = "Level3", length = 4)
+    @Column(name = "level3", length = 4)
     private String level3;
 
-    @Column(name = "Status", nullable = false, length = 2)
+    @Column(name = "status", nullable = false, length = 2)
     private String status;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
     public Integer getId() {
