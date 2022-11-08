@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import ModalViewDetail from '../../../../commons/modals/modal-view-detail';
 import { toast } from 'react-toastify';
-import { CreateFreeTrip, RegisterTripForPassenger } from '../../../../../redux/apiRequest';
+import { CreateFreeTrip, getListFreeTripIsOpen, RegisterTripForPassenger } from '../../../../../redux/apiRequest';
 const { Option } = Select;
 
 
@@ -40,6 +40,7 @@ const FreeTripDetailOfDriver = () => {
             }
 
             RegisterTripForPassenger(trip, dispatch, navigate, toast);
+            getListFreeTripIsOpen(dispatch);
         }else{
             toast.error('Không đủ số ghế để đăng ký')
         }

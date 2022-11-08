@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import '../layout.css';
+// import '../layout.css';
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -24,6 +24,11 @@ const { Sider } = Layout;
 
 const { Header, Content } = Layout;
 const menuItem=[
+  {
+    key: '0',
+    icon: <UserOutlined />,
+    label: 'TRANG CHỦ',
+  },
   {
     key: '1',
     icon: <UserOutlined />,
@@ -75,6 +80,12 @@ const LayoutDriver = (props) => {
               logoutUser(dispatch,navigate);
           
             }else{
+              if(key==0){
+                navigate('/home')
+              }
+              if(key==1){
+                navigate('/taixe/info')
+              }
               if(key==2){
                 navigate('/taixe/freeTrip/create')
               }

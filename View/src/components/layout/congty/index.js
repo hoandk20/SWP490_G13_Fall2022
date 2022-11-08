@@ -29,7 +29,7 @@ const menuItem=[
   {
     key: '1',
     icon: <InfoCircleOutlined />,
-    label: 'THÔNG TIN LIÊN HỆ',
+    label: 'TRANG CHỦ',
   },
   {
     key: '2',
@@ -82,7 +82,15 @@ const LayoutCompany = (props) => {
               logoutUser(dispatch,navigate);
           
             }else{
-              navigate(key);
+              if(key==1){
+                navigate('/home')
+              }
+              if(key==2){
+                navigate('/congty/vehico-mgt')
+              }
+              if(key==3){
+                navigate('/congty/driver-mgt')
+              }
             }
           }}
    

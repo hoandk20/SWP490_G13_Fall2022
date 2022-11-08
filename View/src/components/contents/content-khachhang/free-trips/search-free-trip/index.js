@@ -13,33 +13,28 @@ const { Option } = Select;
 
 const SerachFreeTripForPassenger = () => {
     
-    const [freeTrips,setFreeTrips] =useState([]);
+    // const [freeTrips,setFreeTrips] =useState([]);
     const dispatch=useDispatch();
     
     const trips = useSelector((state) => state.freeTrip.trips?.allTrip) ; 
-     console.log(trips)
- 
-
-
+    const freeTrips=trips.object.map(row=>({
+        key:row.id,
+        timeStart:row.timeStart,
+        from:row.from,
+        to:row.to,
+        price:row.price,
+        //  seatRemind:`${row.seatRegistered}/${row.seat}`,
+        driverEmail:row.driverEmail,
+        seatRegistered:row.seatRegistered,
+        status:row.status,
+        listPassenger:row.listPassenger,
+        tripID:row.tripID,
+        waitingTime:row.waitingTime,
+        seatRemind:row.seat
+    }))
     useEffect(()=>{
        getListFreeTripIsOpen(dispatch);
-       setFreeTrips(
-        trips.object.map(row=>({
-            key:row.id,
-            timeStart:row.timeStart,
-            from:row.from,
-            to:row.to,
-            price:row.price,
-            //  seatRemind:`${row.seatRegistered}/${row.seat}`,
-            driverEmail:row.driverEmail,
-            seatRegistered:row.seatRegistered,
-            status:row.status,
-            listPassenger:row.listPassenger,
-            tripID:row.tripID,
-            waitingTime:row.waitingTime,
-            seatRemind:row.seat
-        }))
-    );
+  
       },[]) 
 //  const getListFreeTripIsOpen =async () =>{
 
@@ -70,7 +65,7 @@ const SerachFreeTripForPassenger = () => {
 //     });
 //   }
 
-       console.log(freeTrips)
+
       
 const columns = [
     {

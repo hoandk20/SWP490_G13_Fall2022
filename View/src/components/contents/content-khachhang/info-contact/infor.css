@@ -1,0 +1,14 @@
+.container-edit-info{
+    text-align: center;
+}
+.avatar{
+    vertical-align: middle;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+.inputFile{
+    margin-top: 10px;
+    margin-left: 41%;
+    /* opacity:0     */
+}
