@@ -5,17 +5,35 @@ import { RightOutlined, CheckOutlined } from '@ant-design/icons';
 
 import ImageAvatar from '../../../../../assets/image-app/avatar.jpg'
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { UploadFile } from '../../../../../redux/apiRequest';
+import { toast } from 'react-toastify';
 
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
-
+    const user = useSelector((state) => state.user.userInfo?.currentUser)
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage3, setBaseImage3] = useState("");
     const [baseImage4, setBaseImage4] = useState("");
+    const [date1,setDate1]=useState();
+    const [date2,setDate2]=useState();
+    const [date3,setDate3]=useState();
+    const [date4,setDate4]=useState();
 
+    function getTime1(date,dateString) {
+        setDate1(dateString);
+    }
+    function getTime3(date,dateString) {
+        setDate3(dateString);
+    }
+    function getTime4(date,dateString) {
+        setDate4(dateString);
+    }
+    
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
+        console.log(file);
         const base64 = await convertBase64(file);
         setBaseImage1(base64);
     };
@@ -36,6 +54,62 @@ const RegisterCompanyDoc1 = () => {
         setBaseImage4(base64);
     };
 
+    const uploadfile1 = () => {
+        const arr=date1.split("-");
+        const year=arr[0];
+        const month=arr[1];
+        const object={
+            base64:baseImage1,
+            createBy:user.email,
+            fileName:"Bang_lai_xe",
+            year:year,
+            month:month
+        }
+        UploadFile(object,toast);
+    };
+    
+
+
+    const uploadfile2 = () => {
+        const object={
+            base64:baseImage2,
+            createBy:user.email,
+            fileName:"Chung_Nhan_Kinh_nghiem",
+            year:'',
+            month:''
+        }
+        UploadFile(object,toast);
+    };
+    
+    const uploadfile3 = () => {
+        const arr=date3.split("-");
+        const year=arr[0];
+        const month=arr[1];
+        const object={
+            base64:baseImage3,
+            createBy:user.email,
+            fileName:"GP_Kinh_Doanh",
+            year:year,
+            month:month
+        }
+        console.log(object);
+        UploadFile(object,toast);
+    };
+    
+    const uploadfile4 = () => {
+        const arr=date4.split("-");
+        const year=arr[0];
+        const month=arr[1];
+        const object={
+            base64:baseImage4,
+            createBy:user.email,
+            fileName:"GP_Hoat_Dong",
+            year:year,
+            month:month
+        }
+        console.log(object);
+        UploadFile(object,toast);
+    };
 
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -64,7 +138,7 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Ảnh
-                                        <div className='status'>Đã gửi</div>
+                                        <div className='status'>Chưa gửi</div>
                                     </span>
 
                                 </div>
@@ -103,7 +177,7 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                        <div className='status'>Đã gửi</div>
+                                        <div className='status'>Chưa gửi</div>
                                     </span>
 
                                 </div>
@@ -113,15 +187,16 @@ const RegisterCompanyDoc1 = () => {
                                     </div>
                                     <div className='content-bottom'>
                                         <span style={{marginRight:"20px"}}>
-                                            Ngày hết hạn <DatePicker picker='month' />
+                                            Ngày hết hạn <DatePicker onChange={getTime1} picker='month' />
                                         </span>
                                         <input
                                             type="file"
+                                            style={{color:"#fff"}}
                                             onChange={(e) => {
                                                 uploadImage1(e);
                                             }}
                                         />
-                                        <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
+                                        <Button className='btn-submit' onClick={uploadfile1} type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +214,7 @@ const RegisterCompanyDoc1 = () => {
                                             hoặc lý lịch tư pháp
                                         </Col>
                                         <Col sm={8} md={4}>
-                                            <div className='status'>Đã gửi</div>
+                                            <div className='status'>Chưa gửi</div>
                                         </Col>
                                     </Row>
                                 </div>
@@ -151,11 +226,12 @@ const RegisterCompanyDoc1 = () => {
                                     <div className='content-bottom'>
                                     <input
                                             type="file"
+                                            style={{color:"#fff"}}
                                             onChange={(e) => {
                                                 uploadImage2(e);
                                             }}
                                         />
-                                        <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
+                                        <Button className='btn-submit' onClick={uploadfile2} type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +243,7 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
-                                        <div className='status'>Đã gửi</div>
+                                        <div className='status'>Chưa gửi</div>
                                     </span>
 
                                 </div>
@@ -177,15 +253,16 @@ const RegisterCompanyDoc1 = () => {
                                     </div>
                                     <div className='content-bottom'>
                                         <span style={{marginRight:"20px"}}>
-                                            Ngày hết hạn <DatePicker picker='month' />
+                                            Ngày hết hạn <DatePicker onChange={getTime3} picker='month' />
                                         </span>
                                         <input
                                             type="file"
+                                            style={{color:"#fff"}}
                                             onChange={(e) => {
                                                 uploadImage3(e);
                                             }}
                                         />
-                                        <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
+                                        <Button className='btn-submit' onClick={uploadfile3} type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +272,7 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
-                                        <div className='status'>Đã gửi</div>
+                                        <div className='status'>Chưa gửi</div>
                                     </span>
 
                                 </div>
@@ -205,16 +282,17 @@ const RegisterCompanyDoc1 = () => {
                                     </div>
                                     <div className='content-bottom'>
                                         <span style={{marginRight:"20px"}}>
-                                            Ngày hết hạn <DatePicker picker='month' />
+                                            Ngày hết hạn <DatePicker onChange={getTime4} picker='month' />
                                         </span>
                                         <input
                                             type="file"
+                                            style={{color:"#fff"}}
                                             onChange={(e) => {
                                                 uploadImage4(e);
                                             }}
                                             
                                         />
-                                        <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
+                                        <Button className='btn-submit' onClick={uploadfile4} type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
                             </div>

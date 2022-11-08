@@ -15,6 +15,7 @@ const VehicoManagement = () => {
 
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
+    console.log(user);
     const all = useSelector((state) => state.vehico.vehicos?.all);
     const vehicos = all?.map((row) => ({ ...row, key: row.id }))
     console.log(user);

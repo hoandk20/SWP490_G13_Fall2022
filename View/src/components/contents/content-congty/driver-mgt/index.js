@@ -24,6 +24,7 @@ const DriverManagement = () => {
      const drivers=all?.map((row)=> ({ ...row,key:row.driverID,name:row.firstName+" "+row.lastName }));
    
     const handleDelete = (key) => {
+        console.log(key);
          deleteDriverByCompany(key,user.email,toast,dispatch);
     };
     const cancel = (e) => {

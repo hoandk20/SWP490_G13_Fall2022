@@ -343,7 +343,7 @@ export const getDriversForCompany = async (email,dispatch) => {
     console.log("object");
   } catch (error) {}}
 
-export const editInforPassenger = async (object,toast) => {
+export const editInforPassenger = async (object,email,toast,dispatch) => {
 
   try {
     const res = await axios.post(`${URL}:8080/api/user/changeinfoPassenger`, {
@@ -359,6 +359,7 @@ export const editInforPassenger = async (object,toast) => {
       {
         headers: { 'Content-Type': 'application/json' }
       });
+       getUser(email,dispatch);
       toast.success("Thay đổi thông tin thành công.");
   } catch (error) {
     toast.error(error);
@@ -462,7 +463,9 @@ export const EditDriverByCompany = async (driver,toast,dispatch) => {
 
 export const deleteDriverByCompany = async (id,companyEmail,toast,dispatch) => {
   try {
-    const res = await axios.delete(`${URL}:8080/api/company/deleteDriver`,{
+    const res = await axios.post(`${URL}:8080/api/company/deleteDriver`,{
+      driverID:id,
+    },{
       headers: { 'Content-Type': 'application/json' }
     });
     getDriversForCompany(companyEmail,dispatch);
@@ -471,11 +474,12 @@ export const deleteDriverByCompany = async (id,companyEmail,toast,dispatch) => {
     toast.error("Xóa tài khoản tài xế thất bại")
   }
 }
+
 export const deleteVehicelByCompany = async (driverID,companyEmail,toast,dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/deleteVehicle`,
     {
-      driverID:driverID
+      id:driverID
     }
     ,{
       headers: { 'Content-Type': 'application/json' }
@@ -488,3 +492,27 @@ export const deleteVehicelByCompany = async (driverID,companyEmail,toast,dispatc
 }
 
 
+
+export const UploadFile = async (object,toast,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+    {
+      base64:object.base64,
+      expired_month:object.month,
+      expired_year:object.year,
+      file_name:object.fileName,
+      createBy:object.createBy
+    }
+    ,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if(object.fileName==='Avatar'){
+      getUser(object.createBy,dispatch)
+    }else{
+      toast.success("Upload file thành công")
+    }
+   
+  } catch (error) {
+    toast.error("Upload file thất bại")
+  }
+}

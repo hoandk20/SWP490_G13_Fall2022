@@ -29,7 +29,7 @@ const menuItem=[
   {
     key: '1',
     icon: <InfoCircleOutlined />,
-    label: 'Home',
+    label: 'TRANG CHỦ',
   },
   {
     key: '2',
