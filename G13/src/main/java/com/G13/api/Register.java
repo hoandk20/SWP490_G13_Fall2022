@@ -5,6 +5,7 @@ import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.repo.*;
 import com.G13.service.UserService;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -186,6 +187,7 @@ public class Register {
                 String filePath = fileManage.convertBase64ToImage(doc.Base64, time+"");
                 document.setLink(filePath);
                 document.setCreatedBy(doc.createBy);
+                document.setCreatedDate(instant);
                 documentRepository.save(document);
 
                 response.status = masterStatus.SUCCESSFULL;
@@ -197,6 +199,31 @@ public class Register {
             }
 
         }
+        @GetMapping("/Upload/GetDocument")
+        public ResponseEntity<?> GetDocument(@RequestBody DocumentRequest doc){
+
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+
+        try{
+            FileManage fileManage = new FileManage();
+            Document document = documentRepository
+                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(doc.createBy,doc.file_name);
+            doc.setExpired_month(document.getExpiredMonth());
+            doc.setExpired_year(document.getExpiredYear());
+            doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
+
+
+            response.object = doc;
+            response.status = masterStatus.SUCCESSFULL;
+            return ResponseEntity.ok().body(response);
+        }catch (Exception exception){
+            response.content= exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
 
     public boolean IsEmailExisted(String email){
         return userService.IsEmailExisted(email);
@@ -205,34 +232,8 @@ public class Register {
 
 
 }
-
+@Data
 class DocumentRequest{
-
-
-    public String getExpired_month() {
-        return expired_month;
-    }
-
-    public void setExpired_month(String expired_month) {
-        this.expired_month = expired_month;
-    }
-
-    public String getExpired_year() {
-        return expired_year;
-    }
-
-    public void setExpired_year(String expired_year) {
-        this.expired_year = expired_year;
-    }
-
-    public String getFile_name() {
-        return file_name;
-    }
-
-    public void setFile_name(String file_name) {
-        this.file_name = file_name;
-    }
-
     String Base64;
 
 
@@ -240,22 +241,6 @@ class DocumentRequest{
     String expired_year;
     String file_name;
     String createBy;
-
-    public String getBase64() {
-        return Base64;
-    }
-
-    public void setBase64(String base64) {
-        Base64 = base64;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
 }
 class RegisterDriver{
 
