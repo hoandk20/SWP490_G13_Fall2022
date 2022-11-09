@@ -7,14 +7,27 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 import { toast } from 'react-toastify';
+import { getDriversByAdmin } from '../../../../redux/apiRequest';
+import EditDriverForCompany from '../../../commons/drawers/drawer-admin-mgt/drawer-edit-driver';
+import { useNavigate } from 'react-router';
 
 
 const { Option } = Select;
 const DriverManagementAdmin = () => {
 
+    const navigate =useNavigate();
+
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     console.log(user);
+    const all=useSelector((state)=>state.user.drivers?.all);
+    console.log(all);
+    const drivers=all?.map((row)=> ({ ...row,key:row.driverID,name:row.firstName+" "+row.lastName }));
+
+    useEffect(()=>{
+        getDriversByAdmin(dispatch);
+         
+      },[])
 
     const data=[];
 
@@ -26,34 +39,49 @@ const DriverManagementAdmin = () => {
         //     dataIndex: 'index',
         // },
         {
-            key: 'producer',
+            key: 'email',
             title: 'Tài khoản',
-            dataIndex: 'producer',
+            dataIndex: 'eamil',
         },
         {
-            key: 'plate',
-            title: 'Biển số',
-            dataIndex: 'plate',
+            key: 'name',
+            title: 'Tên tài xế',
+            dataIndex: 'name',
         },
         {
-            key: 'produceYear',
-            title: 'Năm sản xuất',
-            dataIndex: 'produceYear',
+            key: 'phoneNumber',
+            title: 'Số di động',
+            dataIndex: 'phoneNumber',
         },
         {
-            key: 'price',
-            title: 'Giấy chứng nhận bảo hiểm',
-            dataIndex: 'price',
+            key: 'deviceType',
+            title: 'Loại',
+            dataIndex: 'deviceType',
         },
         {
-            key: 'irs',
-            title: 'Giấy đăng kiểm',
-            dataIndex: 'irs',
+            key: 'companyName',
+            title: 'Công ty',
+            dataIndex: 'companyName',
         },
         {
             key: 'status',
             title: 'Trạng thái',
             dataIndex: 'status',
+        },
+        {
+            key: 'createDate',
+            title: 'Ngày đăng ký',
+            dataIndex: 'createDate',
+        },
+        {
+            key: 'docStatus',
+            title: 'Tài liệu',
+            dataIndex: 'docStatus',
+        },
+        {
+            key: 'lh',
+            title: 'LH',
+            dataIndex: 'lh',
         },
 
 
@@ -62,11 +90,13 @@ const DriverManagementAdmin = () => {
             dataIndex: '',
             key: 'x',
             render: (text, record, index) => {
-                // return <div>
-                //     <EditVehico state={record} />
+                return <div>
+                    <EyeOutlined onClick={() => {
+                    navigate('/admin/taixe-mgt/detail',{state:{record}})
 
-                // </div>
-
+                }} />
+    
+                </div>
             },
         },
 
@@ -166,7 +196,7 @@ const DriverManagementAdmin = () => {
                     {/* <AddVehico /> */}
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={data} size="middle" />
+                    <Table columns={columns} dataSource={drivers} size="middle" />
                 </div>
             </div>
         </div >

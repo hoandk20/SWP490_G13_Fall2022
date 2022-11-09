@@ -1,4 +1,5 @@
 import DriverManagementAdmin from "../../views/admin/taixe-mgt";
+import DriverDetailAdmin from "../../views/admin/taixe-mgt/taixe-detail";
 import DriverManagement from "../../views/congty/driver-mgt";
 import AddDriver from "../../views/congty/driver-mgt/add-driver";
 import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
@@ -13,6 +14,7 @@ import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
 import RegisterPassenger from "../../views/registers/register-khachhang";
 import RegisterDriver from "../../views/registers/register-taixe";
+import RegisterDriverDocument from "../../views/registers/register-taixe/register-taixe-document";
 import RegisterDriverInfo from "../../views/registers/register-taixe/register-taixe-info";
 import RegisterDriverInfoVehico from "../../views/registers/register-taixe/tx-cty-infoVehico";
 import FreeTripDriver from "../../views/taixe/free-trip";
@@ -45,7 +47,11 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterPassenger
     },
-
+    {
+        path: '/signup/driver-doc',
+        roleTarget: "ALL",
+        element: RegisterDriverDocument
+    },
     {
         path: '/signup/company-doc1',
         roleTarget: "ALL",
@@ -160,6 +166,11 @@ const routers = [
         roleTarget: "ALL",
         element: DriverManagementAdmin
     },
+    {
+        path: '/admin/taixe-mgt/detail',
+        roleTarget: "ALL",
+        element: DriverDetailAdmin
+    }
     
 
 ]

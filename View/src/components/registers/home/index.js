@@ -65,7 +65,7 @@ const RegisterHome = () => {
                             >
                                 <Meta title="ĐẠI LÝ" description="Quản lý đối tác lái xe, nạp tiền, quản lý tài khoản, theo dõi lịch sử giao dịch và các hoạt động khác" />
                                 <div>
-                                    <Button className='btn-regiter-home' type="primary">Register Company</Button>
+                                    <Button className='btn-regiter-home' type="primary" onClick={onClickDriver}>Register Company</Button>
                                 </div>
                             </Card>
                         </div>
