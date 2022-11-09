@@ -1,3 +1,5 @@
+import CompanyManagementAdmin from "../../views/admin/congty-mgt";
+import CompanyDetailAdmin from "../../views/admin/congty-mgt/congty-mgt-detail";
 import DriverManagementAdmin from "../../views/admin/taixe-mgt";
 import DriverDetailAdmin from "../../views/admin/taixe-mgt/taixe-detail";
 import DriverManagement from "../../views/congty/driver-mgt";
@@ -170,6 +172,16 @@ const routers = [
         path: '/admin/taixe-mgt/detail',
         roleTarget: "ALL",
         element: DriverDetailAdmin
+    },
+    {
+        path: '/admin/company-mgt',
+        roleTarget: "ALL",
+        element: CompanyManagementAdmin
+    },
+    {
+        path: '/admin/company-mgt/detail',
+        roleTarget: "ALL",
+        element: CompanyDetailAdmin
     }
     
 

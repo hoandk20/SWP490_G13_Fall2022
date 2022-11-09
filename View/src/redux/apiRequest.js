@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { loginFailed, loginStart, loginSuccess, logOutFailed, logOutStart, logOutSuccess, registerFailed, registerStart, registerSuccess } from './authSlice'
 import { createTripFailed, createTripStart, createTripSuccess, getListFreeTripFailed, getListFreeTripStart, getListFreeTripSuccess, getTripDetailDriverFailed, getTripDetailDriverStart, getTripDetailDriverSuccess, passengerRegisterTripSuccess } from './freeTripSlice';
 import { getTripHistoryFailed, getTripHistoryOfDriverFailed, getTripHistoryOfDriverStart, getTripHistoryOfDriverSuccess, getTripHistoryStart, getTripHistorySuccess } from './tripHistorySlice';
-import { getUserStart, getUserSuccess, deleteUser, getUserFailed, getALlDriverForCompany, getAllDriverForCompany, getAllDrivers } from './userSlice';
+import { getUserStart, getUserSuccess, deleteUser, getUserFailed, getALlDriverForCompany, getAllDriverForCompany, getAllDrivers, getAllCompanyForAdmin } from './userSlice';
 import { getAllVehicos } from './vehicoSlice';
 const BASE_URL = "http://localhost"
 const URL = "http://26.36.110.116";
@@ -106,7 +106,6 @@ export const registerDriver = async (user, dispatch, navigate, toast) => {
       .then(function (response) {
         console.log(response)
         dispatch(registerSuccess(response.data))
-        navigate("/signin")
       })
       .catch(function (error) {
         if (error.response.data.object.IsExistedEmail) {
@@ -140,7 +139,6 @@ export const registerCompany = async (user, dispatch, navigate, toast) => {
       .then(function (response) {
         console.log(response)
         dispatch(registerSuccess(response.data))
-        navigate("/signin")
       })
       .catch(function (error) {
         if (error.response.data.object.IsExistedEmail) {
@@ -350,6 +348,14 @@ export const getDriversForCompany = async (email,dispatch) => {
       });
        dispatch(getAllDriverForCompany(res.data.object));
     } catch (error) {}}
+
+    export const getCompanysByAdmin = async (dispatch) => {
+      try {
+        const res = await axios.get(`${URL}:8080/api/admin/GetCompanies`,{
+          headers: { 'Content-Type': 'application/json' }
+        });
+         dispatch(getAllCompanyForAdmin(res.data.object));
+      } catch (error) {}}
   
 
 export const editInforPassenger = async (object,email,toast,dispatch) => {
