@@ -8,10 +8,11 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { UploadFile } from '../../../../../redux/apiRequest';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
+    const location = useLocation();
     const user = useSelector((state) => state.user.userInfo?.currentUser)
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -126,10 +127,10 @@ const RegisterCompanyDoc1 = () => {
             };
         });
     };
-
+    const newUser = location.state.newUser;
     const navigate =useNavigate();
     const onClickNext = () => {
-        navigate('/signup/company-doc2')       
+        navigate('/signup/company-doc2',{state:{newUser}});  
     };
 
     return (

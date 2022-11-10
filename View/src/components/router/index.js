@@ -60,7 +60,7 @@ const routers = [
         element: RegisterCompanyDoc1
     },
     {
-        path: '/signup/company-doc2',
+        path: '/signup/add-vehico',
         roleTarget: "ALL",
         element: RegisterCompanyDoc2
     },
