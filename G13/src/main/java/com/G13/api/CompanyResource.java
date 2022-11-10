@@ -178,7 +178,9 @@ public class CompanyResource {
         }
         try {
             Driver driver = new Driver();
-            driver.setCompanyID(companyRepository.findByNote(rd.companyEmail).getId());
+            Company company = companyRepository.findByNote(rd.companyEmail);
+            driver.setCompanyID(company.getId());
+            driver.setCompanyName(company.getName());
             driver.setId(rd.getEmail());
             driver.setLanguageCode("vi");
             driver.setDriverCode("DR");
@@ -251,8 +253,10 @@ public class CompanyResource {
                 response.status = masterStatus.FAILURE;
                 return ResponseEntity.badRequest().body(response);
             }
+            Vehicle vehicle = vehicleRepository.findById(rd.vehicle);
 
             driver.setCurrentVehicle(rd.vehicle);
+            driver.setDeviceType("N/A");
             driverRepository.save(driver);
 
             response.setStatus(masterStatus.SUCCESSFULL);
@@ -310,6 +314,7 @@ public class CompanyResource {
                 r.setLanguage(driver.getLanguageCode());
                 r.setCountry(driver.getCountryCode());
                 r.setDriverID(driver.getId());
+                r.setCompanyName(driver.getCompanyName());
                 registerDriverCompanies.add(r);
             }
 
@@ -332,6 +337,7 @@ public class CompanyResource {
 @Data
 class VehicleRequest{
 
+    String driverEmail;
     int id;
     String companyEmail;
     String producer;
@@ -358,4 +364,14 @@ class RegisterDriverCompany {
     String country;
     String city;
     int vehicle;
+    String companyName;
+    Instant createDate;
+    String docStatus;
+    String Status;
+    String lh;
+    String DeviceType;
+    CompanyInfo companyInfo;
+    List<DocumentRequest> listDocs;
+    VehicleRequest vehicleInfo;
+
 }
