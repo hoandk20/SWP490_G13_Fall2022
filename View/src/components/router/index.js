@@ -1,5 +1,6 @@
 import CompanyManagementAdmin from "../../views/admin/congty-mgt";
 import CompanyDetailAdmin from "../../views/admin/congty-mgt/congty-mgt-detail";
+import FreeTripManagementAdmin from "../../views/admin/free-trips-mgt";
 import DriverManagementAdmin from "../../views/admin/taixe-mgt";
 import DriverDetailAdmin from "../../views/admin/taixe-mgt/taixe-detail";
 import DriverManagement from "../../views/congty/driver-mgt";
@@ -14,6 +15,7 @@ import InfoContactUser from "../../views/khachhang/info-contact";
 import TripHistoryPassenger from "../../views/khachhang/trip-history";
 import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-congty-document/register-congty-document1";
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
+import RegisterCompanyInfo from "../../views/registers/register-congty/register-congty-info";
 import RegisterPassenger from "../../views/registers/register-khachhang";
 import RegisterDriver from "../../views/registers/register-taixe";
 import RegisterDriverDocument from "../../views/registers/register-taixe/register-taixe-document";
@@ -35,7 +37,7 @@ const routers = [
         element: Login
     },
     {
-        path: '/signup/driver',
+        path: '/signup/driver&company',
         roleTarget: "ALL",
         element: RegisterDriver
     },
@@ -43,6 +45,11 @@ const routers = [
         path: '/signup/driver-info',
         roleTarget: "ALL",
         element: RegisterDriverInfo
+    },
+    {
+        path: '/signup/company-info',
+        roleTarget: "ALL",
+        element: RegisterCompanyInfo
     },
     {
         path: '/signup/passenger',
@@ -69,8 +76,6 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterDriverInfoVehico
     },
-
-
     {
         path: '/taixe/free-trip',
         roleTarget: "ROLE_DRIVER",
@@ -81,8 +86,6 @@ const routers = [
         roleTarget: "ALL",
         element: TripHistoryDriver
     },
-
-
     {
         path: '/taixe/info',
         roleTarget: "ROLE_DRIVER",
@@ -182,6 +185,11 @@ const routers = [
         path: '/admin/company-mgt/detail',
         roleTarget: "ALL",
         element: CompanyDetailAdmin
+    },
+    {
+        path: '/admin/free-trip-mgt',
+        roleTarget: "ALL",
+        element: FreeTripManagementAdmin
     }
     
 

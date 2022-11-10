@@ -13,7 +13,7 @@ const RegisterHome = () => {
         
     };
     const onClickDriver = () => {
-        navigate('/signup/driver')
+        navigate('/signup/driver&company')
         
     };
     return (
