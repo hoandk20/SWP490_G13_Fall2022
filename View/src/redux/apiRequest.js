@@ -331,6 +331,30 @@ export const AddVehicoByCompany = async (vehicle,toast,dispatch) => {
     toast.error("Tạo phương tiện thất bại")
   }
 }
+
+export const AddVehicoByDriver = async (vehicle,toast) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/driver/addVehicle`,
+    {
+      driverEmail:vehicle.driverEmail,
+      producer:vehicle.producer,
+      produceYear:vehicle.produceYear,
+      interiorColor:vehicle.interiorColor,
+      exteriorColor:vehicle.exteriorColor,
+      plate:vehicle.plate,
+      platState:vehicle.platState,
+      plateCountry:vehicle.plateCountry,
+      typeId:1
+    }
+    ,{
+      headers: { 'Content-Type': 'application/json' }
+    });
+    toast.success("Tạo phương tiện thành công")
+  } catch (error) {
+    toast.error("Tạo phương tiện thất bại")
+  }
+}
+
 export const getDriversForCompany = async (email,dispatch) => {
   try {
     const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${email}`,{

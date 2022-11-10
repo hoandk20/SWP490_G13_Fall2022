@@ -1,7 +1,12 @@
 import React from 'react';
 import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router';
 const RegisterDriverInfoVehico = () => {
+    const navigate =useNavigate();
+    const onClickFinish = () => {
+        navigate('/signin');   
+    };
 
     return (
         <div className='container'>
@@ -76,7 +81,7 @@ const RegisterDriverInfoVehico = () => {
                     </Row>
                 </div>
                 <div style={{ marginTop: "50px" }}>
-                    <Button type='primary'>Tiếp tục <RightOutlined /> </Button>
+                    <Button type='primary' onClick={onClickFinish}>Finish <RightOutlined /> </Button>
                 </div>
             </div>
         </div>

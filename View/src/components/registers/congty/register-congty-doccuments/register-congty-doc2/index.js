@@ -1,13 +1,15 @@
 import { RightOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import AddVehico from '../../../../vehicos/add-vehico';
 
 const RegisterCompanyDoc2 = () => {
     const navigate =useNavigate();
+    const location = useLocation();
+    const newUser = location.state.newUser;
     const onClickNext = () => {
-        navigate('/signup/vehico-info')       
+        navigate('/signup/vehico-info',{state:{newUser}});      
     };
     return (
         <div className='container'>
