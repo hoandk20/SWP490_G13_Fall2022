@@ -35,9 +35,11 @@ const RegisterDriverInfo = () => {
         }
         if(newUser.role=="ROLE_DRIVER"){
             registerDriver(newUser,dispatch,navigate,toast);
+            navigate('/signup/driver-doc',{state:{newUser}});
         }
         else{
             registerCompany(newUser,dispatch,navigate,toast);
+            navigate('/signup/company-doc1',{state:{newUser}});
         }
       
        
@@ -180,7 +182,7 @@ const RegisterDriverInfo = () => {
                                     />,
                                     <Form.Item
                                     >
-                                        <Button className='btn-register' type="primary" htmlType="submit">
+                                        <Button className='btn-register' type="primary" htmlType="submit" >
                                             Register
                                         </Button>
                                     </Form.Item>

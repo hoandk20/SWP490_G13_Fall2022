@@ -1,3 +1,7 @@
+import CompanyManagementAdmin from "../../views/admin/congty-mgt";
+import CompanyDetailAdmin from "../../views/admin/congty-mgt/congty-mgt-detail";
+import DriverManagementAdmin from "../../views/admin/taixe-mgt";
+import DriverDetailAdmin from "../../views/admin/taixe-mgt/taixe-detail";
 import DriverManagement from "../../views/congty/driver-mgt";
 import AddDriver from "../../views/congty/driver-mgt/add-driver";
 import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
@@ -12,6 +16,7 @@ import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
 import RegisterPassenger from "../../views/registers/register-khachhang";
 import RegisterDriver from "../../views/registers/register-taixe";
+import RegisterDriverDocument from "../../views/registers/register-taixe/register-taixe-document";
 import RegisterDriverInfo from "../../views/registers/register-taixe/register-taixe-info";
 import RegisterDriverInfoVehico from "../../views/registers/register-taixe/tx-cty-infoVehico";
 import FreeTripDriver from "../../views/taixe/free-trip";
@@ -44,14 +49,18 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterPassenger
     },
-
+    {
+        path: '/signup/driver-doc',
+        roleTarget: "ALL",
+        element: RegisterDriverDocument
+    },
     {
         path: '/signup/company-doc1',
         roleTarget: "ALL",
         element: RegisterCompanyDoc1
     },
     {
-        path: '/signup/company-doc2',
+        path: '/signup/add-vehico',
         roleTarget: "ALL",
         element: RegisterCompanyDoc2
     },
@@ -151,6 +160,30 @@ const routers = [
         path: '/uploadImage',
         roleTarget: "ALL",
         element: UploadAndDisplayImage
+    },
+
+    //admin
+    {
+        path: '/admin/taixe-mgt',
+        roleTarget: "ALL",
+        element: DriverManagementAdmin
+    },
+    {
+        path: '/admin/taixe-mgt/detail',
+        roleTarget: "ALL",
+        element: DriverDetailAdmin
+    },
+    {
+        path: '/admin/company-mgt',
+        roleTarget: "ALL",
+        element: CompanyManagementAdmin
+    },
+    {
+        path: '/admin/company-mgt/detail',
+        roleTarget: "ALL",
+        element: CompanyDetailAdmin
     }
+    
+
 ]
 export default routers

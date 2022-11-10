@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { AddDriverByCompany, getDriversForCompany } from '../../../../../redux/apiRequest';
+import ModalUploadDocument from '../../../modals/modal-upload-document';
 const { Option } = Select;
 const AddDriverForCompany = () => {
-    const dispatch =useDispatch();
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
@@ -23,7 +24,7 @@ const AddDriverForCompany = () => {
             ...values,
             companyEmail: user.email,
         }
-        AddDriverByCompany(driver,toast,dispatch);
+        AddDriverByCompany(driver, toast, dispatch);
         // getDriversForCompany(user.email,dispatch);
         setOpen(false);
     };
@@ -76,7 +77,7 @@ const AddDriverForCompany = () => {
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                        <Form.Item
+                            <Form.Item
                                 name="confirm"
                                 label="Confirm Password"
                                 dependencies={['password']}
@@ -115,7 +116,7 @@ const AddDriverForCompany = () => {
                                 <Input />
                             </Form.Item>
                         </Col>
-                        
+
                         <Col span={12}>
                             <Form.Item
                                 name="lastName"
@@ -181,8 +182,10 @@ const AddDriverForCompany = () => {
                                     <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item
-                            >
+                            <Form.Item>
+                                <ModalUploadDocument/>
+                            </Form.Item>
+                            <Form.Item>
                                 <Button className='btn-register' type="primary" htmlType="submit">
                                     Submit
                                 </Button>

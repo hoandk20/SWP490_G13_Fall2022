@@ -1,18 +1,15 @@
 import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
 import React from 'react';
-import "../register-congty-document.css"
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
 
-import ImageAvatar from '../../../../../assets/image-app/avatar.jpg'
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { UploadFile } from '../../../../../redux/apiRequest';
+import { UploadFile } from '../../../../redux/apiRequest';
 import { toast } from 'react-toastify';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 
 const { Option } = Select;
-const RegisterCompanyDoc1 = () => {
-    const location = useLocation();
+const RegisterDriverDoc = () => {
     const user = useSelector((state) => state.user.userInfo?.currentUser)
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -127,10 +124,10 @@ const RegisterCompanyDoc1 = () => {
             };
         });
     };
-    const newUser = location.state.newUser;
+
     const navigate =useNavigate();
     const onClickNext = () => {
-        navigate('/signup/company-doc2',{state:{newUser}});  
+        navigate('/signup/company-doc2')       
     };
 
     return (
@@ -243,68 +240,7 @@ const RegisterCompanyDoc1 = () => {
                                 </div>
                             </div>
                         </Col>
-                    </Row>
-                    <Row>
-                        <Col sm={24} md={12}>
-                            <div className='card-doc'>
-                                <div className='form-header'>
-                                    <span>
-                                        Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
-                                        <div className='status'>Chưa gửi</div>
-                                    </span>
-
-                                </div>
-                                <div className='form-content'>
-                                    <div className='form-image' style={{ height: "230px" }}>
-                                    <img src={baseImage3} height="220px" />
-                                    </div>
-                                    <div className='content-bottom'>
-                                        <span style={{marginRight:"20px"}}>
-                                            Ngày hết hạn <DatePicker onChange={getTime3} picker='month' />
-                                        </span>
-                                        <input
-                                            type="file"
-                                            style={{color:"#fff"}}
-                                            onChange={(e) => {
-                                                uploadImage3(e);
-                                            }}
-                                        />
-                                        <Button className='btn-submit' onClick={uploadfile3} type='primary'>Gửi <CheckOutlined /></Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col sm={24} md={12}>
-                            <div className='card-doc'>
-                                <div className='form-header'>
-                                    <span>
-                                        Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
-                                        <div className='status'>Chưa gửi</div>
-                                    </span>
-
-                                </div>
-                                <div className='form-content'>
-                                    <div className='form-image' style={{ height: "230px" }}>
-                                    <img src={baseImage4} height="220px" />
-                                    </div>
-                                    <div className='content-bottom'>
-                                        <span style={{marginRight:"20px"}}>
-                                            Ngày hết hạn <DatePicker onChange={getTime4} picker='month' />
-                                        </span>
-                                        <input
-                                            type="file"
-                                            style={{color:"#fff"}}
-                                            onChange={(e) => {
-                                                uploadImage4(e);
-                                            }}
-                                            
-                                        />
-                                        <Button className='btn-submit' onClick={uploadfile4} type='primary'>Gửi <CheckOutlined /></Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
+                    </Row>                   
                 </div>
                 <div style={{ marginTop: "50px" }}>
                     <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
@@ -313,4 +249,4 @@ const RegisterCompanyDoc1 = () => {
         </div>
     )
 }
-export default RegisterCompanyDoc1
+export default RegisterDriverDoc
