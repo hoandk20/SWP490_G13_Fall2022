@@ -45,9 +45,14 @@ const RegisterDriver = () => {
             phoneNumber:values.phoneNumber,
             role:values.role
         }
-        
-        console.log('Received values of form: ', newUser);
-        navigate('/signup/driver-info',{state:{newUser}});
+        if (newUser.role == "ROLE_DRIVER") {
+            console.log('Received values of form: ', newUser);
+            navigate('/signup/driver-info',{state:{newUser}});
+        }
+        else {
+            console.log('Received values of form: ', newUser);
+            navigate('/signup/company-info',{state:{newUser}});
+        }
     };
 
     return (
