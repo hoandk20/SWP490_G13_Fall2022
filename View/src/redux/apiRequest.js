@@ -153,17 +153,17 @@ export const registerCompany = async (user, dispatch, navigate, toast) => {
 }
 
 export const getUser = async (userName, dispatch) => {
-    try {
-      dispatch(getUserStart())
-      const res = await axios.get(`${URL}:8080/api/user/info?username=${userName}`, {
-        headers: { 'Content-Type': 'application/json' }
-      })
-      console.log(res.data);
-      dispatch(getUserSuccess(res.data))
-      
-    } catch (error) {
-      dispatch(getUserFailed())
-    }
+  try {
+    dispatch(getUserStart())
+    const res = await axios.get(`${URL}:8080/api/user/info?username=${userName}`, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+    console.log(res.data);
+    dispatch(getUserSuccess(res.data))
+
+  } catch (error) {
+    dispatch(getUserFailed())
+  }
 }
 
 export const CreateFreeTrip = async (trip, dispatch, navigate, toast) => {
@@ -297,92 +297,96 @@ export const getTripHistoryPassenger = async (email, dispatch) => {
 
 
 
-export const getAllVehico = async (email,dispatch) => {
+export const getAllVehico = async (email, dispatch) => {
   try {
-    const res = await axios.get(`${URL}:8080/api/company/getVehicle?companyEmail=${email}`,{
+    const res = await axios.get(`${URL}:8080/api/company/getVehicle?companyEmail=${email}`, {
       headers: { 'Content-Type': 'application/json' }
     });
-     dispatch(getAllVehicos(res.data.object));
-  
+    dispatch(getAllVehicos(res.data.object));
+
   } catch (error) {
   }
 }
 
-export const AddVehicoByCompany = async (vehicle,toast,dispatch) => {
+export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/addVehicle`,
-    {
-      companyEmail:vehicle.companyEmail,
-      producer:vehicle.producer,
-      produceYear:vehicle.produceYear,
-      interiorColor:vehicle.interiorColor,
-      exteriorColor:vehicle.exteriorColor,
-      plate:vehicle.plate,
-      platState:vehicle.platState,
-      plateCountry:vehicle.plateCountry,
-      typeId:1
-    }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
-    getAllVehico(vehicle.companyEmail,dispatch);
+      {
+        companyEmail: vehicle.companyEmail,
+        producer: vehicle.producer,
+        produceYear: vehicle.produceYear,
+        interiorColor: vehicle.interiorColor,
+        exteriorColor: vehicle.exteriorColor,
+        plate: vehicle.plate,
+        platState: vehicle.platState,
+        plateCountry: vehicle.plateCountry,
+        typeId: 1
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    getAllVehico(vehicle.companyEmail, dispatch);
     toast.success("Tạo phương tiện thành công")
   } catch (error) {
     toast.error("Tạo phương tiện thất bại")
   }
 }
 
-export const AddVehicoByDriver = async (vehicle,toast) => {
+export const AddVehicoByDriver = async (vehicle, toast) => {
   try {
     const res = await axios.post(`${URL}:8080/api/driver/addVehicle`,
-    {
-      driverEmail:vehicle.driverEmail,
-      producer:vehicle.producer,
-      produceYear:vehicle.produceYear,
-      interiorColor:vehicle.interiorColor,
-      exteriorColor:vehicle.exteriorColor,
-      plate:vehicle.plate,
-      platState:vehicle.platState,
-      plateCountry:vehicle.plateCountry,
-      typeId:1
-    }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
+      {
+        driverEmail: vehicle.driverEmail,
+        producer: vehicle.producer,
+        produceYear: vehicle.produceYear,
+        interiorColor: vehicle.interiorColor,
+        exteriorColor: vehicle.exteriorColor,
+        plate: vehicle.plate,
+        platState: vehicle.platState,
+        plateCountry: vehicle.plateCountry,
+        typeId: 1
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
     toast.success("Tạo phương tiện thành công")
   } catch (error) {
     toast.error("Tạo phương tiện thất bại")
   }
 }
 
-export const getDriversForCompany = async (email,dispatch) => {
+export const getDriversForCompany = async (email, dispatch) => {
   try {
-    const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${email}`,{
+    const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${email}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     console.log(res);
-     dispatch(getAllDriverForCompany(res.data.object));
+    dispatch(getAllDriverForCompany(res.data.object));
     console.log("object");
-  } catch (error) {}}
+  } catch (error) { }
+}
 
-  export const getDriversByAdmin = async (dispatch) => {
-    try {
-      const res = await axios.get(`${URL}:8080/api/admin/GetDrivers`,{
-        headers: { 'Content-Type': 'application/json' }
-      });
-       dispatch(getAllDriverForCompany(res.data.object));
-    } catch (error) {}}
+export const getDriversByAdmin = async (dispatch) => {
+  try {
+    const res = await axios.get(`${URL}:8080/api/admin/GetDrivers`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    dispatch(getAllDriverForCompany(res.data.object));
+    console.log("ok");
+  } catch (error) { }
+}
 
-    export const getCompanysByAdmin = async (dispatch) => {
-      try {
-        const res = await axios.get(`${URL}:8080/api/admin/GetCompanies`,{
-          headers: { 'Content-Type': 'application/json' }
-        });
-         dispatch(getAllCompanyForAdmin(res.data.object));
-      } catch (error) {}}
-  
+export const getCompanysByAdmin = async (dispatch) => {
+  try {
+    const res = await axios.get(`${URL}:8080/api/admin/GetCompanies`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    dispatch(getAllCompanyForAdmin(res.data.object));
+  } catch (error) { }
+}
 
-export const editInforPassenger = async (object,email,toast,dispatch) => {
+
+export const editInforPassenger = async (object, email, toast, dispatch) => {
 
   try {
     const res = await axios.post(`${URL}:8080/api/user/changeinfoPassenger`, {
@@ -398,8 +402,8 @@ export const editInforPassenger = async (object,email,toast,dispatch) => {
       {
         headers: { 'Content-Type': 'application/json' }
       });
-       getUser(email,dispatch);
-      toast.success("Thay đổi thông tin thành công.");
+    getUser(email, dispatch);
+    toast.success("Thay đổi thông tin thành công.");
   } catch (error) {
     toast.error(error);
   }
@@ -425,48 +429,48 @@ export const changePassword = async (object, toast) => {
 }
 
 
-export const AddDriverByCompany = async (driver,toast,dispatch) => {
+export const AddDriverByCompany = async (driver, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/RegisterDriver`,
-    {
-      companyEmail:driver.companyEmail,
-      email:driver.email,
-      password:driver.password,
-      firstName:driver.firstName,
-      lastName:driver.lastName,
-      phoneNumber:driver.phoneNumber,
-      language:"vi",
-      country:driver.country,
-      city:driver.city,
+      {
+        companyEmail: driver.companyEmail,
+        email: driver.email,
+        password: driver.password,
+        firstName: driver.firstName,
+        lastName: driver.lastName,
+        phoneNumber: driver.phoneNumber,
+        language: "vi",
+        country: driver.country,
+        city: driver.city,
 
-    }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
-    getDriversForCompany(driver.companyEmail,dispatch);
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    getDriversForCompany(driver.companyEmail, dispatch);
     toast.success("Tạo tài khoản tài xế thành công")
   } catch (error) {
     toast.error("Tạo tài khoản tài xế thất bại")
   }
 }
-export const EditVehicoByCompany = async (vehicle,toast,dispatch) => {
+export const EditVehicoByCompany = async (vehicle, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/editVehicle`,
-    {
-      producer:vehicle.producer,
-      produceYear:vehicle.produceYear,
-      interiorColor:vehicle.interiorColor,
-      exteriorColor:vehicle.exteriorColor,
-      plate:vehicle.plate,
-      platState:vehicle.platState,
-      plateCountry:vehicle.plateCountry,
-      typeId:1,
-      id:vehicle.id
-    }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
-    getAllVehico(vehicle.companyEmail,dispatch);
+      {
+        producer: vehicle.producer,
+        produceYear: vehicle.produceYear,
+        interiorColor: vehicle.interiorColor,
+        exteriorColor: vehicle.exteriorColor,
+        plate: vehicle.plate,
+        platState: vehicle.platState,
+        plateCountry: vehicle.plateCountry,
+        typeId: 1,
+        id: vehicle.id
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    getAllVehico(vehicle.companyEmail, dispatch);
     toast.success("Thay đổi thông tin phương tiện thành công")
   } catch (error) {
     toast.error("Thay đổi thông tin phương tiện thất bại")
@@ -475,23 +479,23 @@ export const EditVehicoByCompany = async (vehicle,toast,dispatch) => {
 
 
 
-export const EditDriverByCompany = async (driver,toast,dispatch) => {
+export const EditDriverByCompany = async (driver, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/editDriver`,
-    {
-      email:driver.email,
-      firstName:driver.firstName,
-      lastName:driver.lastName,
-      phoneNumber:driver.phoneNumber,
-      language:"vi",
-      country:driver.country,
-      city:driver.city,
+      {
+        email: driver.email,
+        firstName: driver.firstName,
+        lastName: driver.lastName,
+        phoneNumber: driver.phoneNumber,
+        language: "vi",
+        country: driver.country,
+        city: driver.city,
 
-    }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
-    getDriversForCompany(driver.companyEmail,dispatch);
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    getDriversForCompany(driver.companyEmail, dispatch);
     toast.success("Thay đổi thông tin tài khoản tài xế thành công")
   } catch (error) {
     toast.error("Thay đổi thông tin tài khoản tài xế thất bại")
@@ -500,30 +504,30 @@ export const EditDriverByCompany = async (driver,toast,dispatch) => {
 
 
 
-export const deleteDriverByCompany = async (id,companyEmail,toast,dispatch) => {
+export const deleteDriverByCompany = async (id, companyEmail, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/deleteDriver`,{
-      driverID:id,
-    },{
+    const res = await axios.post(`${URL}:8080/api/company/deleteDriver`, {
+      driverID: id,
+    }, {
       headers: { 'Content-Type': 'application/json' }
     });
-    getDriversForCompany(companyEmail,dispatch);
+    getDriversForCompany(companyEmail, dispatch);
     toast.success("Xóa tài khoản tài xế thành công")
   } catch (error) {
     toast.error("Xóa tài khoản tài xế thất bại")
   }
 }
 
-export const deleteVehicelByCompany = async (driverID,companyEmail,toast,dispatch) => {
+export const deleteVehicelByCompany = async (driverID, companyEmail, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/deleteVehicle`,
-    {
-      id:driverID
-    }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
-    getAllVehico(companyEmail,dispatch);
+      {
+        id: driverID
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    getAllVehico(companyEmail, dispatch);
     toast.success("Xóa tài khoản tài xế thành công")
   } catch (error) {
     toast.error("Xóa tài khoản tài xế thất bại")
@@ -532,26 +536,50 @@ export const deleteVehicelByCompany = async (driverID,companyEmail,toast,dispatc
 
 
 
-export const UploadFile = async (object,toast,dispatch) => {
+export const UploadFile = async (object, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/Upload/Document`,
-    {
-      base64:object.base64,
-      expired_month:object.month,
-      expired_year:object.year,
-      file_name:object.fileName,
-      createBy:object.createBy
-    }
-    ,{
-      headers: { 'Content-Type': 'application/json' }
-    });
-    if(object.fileName==='Avatar'){
-      getUser(object.createBy,dispatch)
-    }else{
+      {
+        base64: object.base64,
+        expired_month: object.month,
+        expired_year: object.year,
+        file_name: object.fileName,
+        createBy: object.createBy
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    if (object.fileName === 'Avatar') {
+      getUser(object.createBy, dispatch)
+    } else {
       toast.success("Upload file thành công")
     }
-   
+
   } catch (error) {
     toast.error("Upload file thất bại")
+  }
+}
+
+
+export const ChaangeStatusDoc = async (id, status, toast,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/admin/DocumentChangeStatus`,
+      {
+        id: id,
+        status: status
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    if (status == "VALID") {
+      toast.success("Tài liệu được chấp thuận")
+    }
+    if (status == "INVALID"){
+      toast.error("Tài liệu không được chấp thuận")
+    }
+      getDriversByAdmin(dispatch); 
+      console.log("object");
+  } catch (error) {
+    toast.error("Thay đổi thất bại")
   }
 }

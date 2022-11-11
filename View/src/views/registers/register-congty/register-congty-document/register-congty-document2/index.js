@@ -1,9 +1,9 @@
 import React from 'react';
 import Layouts from '../../../../../components/layout';
-import RegisterCompanyDoc2s from '../../../../../components/registers/congty/register-congty-doccuments/register-congty-doc2';
-const RegisterCompanyDoc2 = () =>{
+import RegisterAddVehicles from '../../../../../components/registers/congty/register-congty-doccuments/register-congty-doc2';
+const RegisterAddVehicle = () =>{
     return(
-      <Layouts content={<RegisterCompanyDoc2s/>}/>
+      <Layouts content={<RegisterAddVehicles/>}/>
     );
 };
-export default RegisterCompanyDoc2
+export default RegisterAddVehicle

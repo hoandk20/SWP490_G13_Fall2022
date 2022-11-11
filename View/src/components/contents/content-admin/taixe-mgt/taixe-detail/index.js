@@ -1,10 +1,11 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Row, Select, Space, Image, } from 'antd';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
-import { AddDriverByCompany, EditDriverByCompany, getDriversForCompany } from '../../../../../redux/apiRequest';
+import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, getDriversForCompany } from '../../../../../redux/apiRequest';
 import './taixe-detail.css'
 const { Option } = Select;
 const DriverDetailAdmin = (props) => {
@@ -16,15 +17,79 @@ const DriverDetailAdmin = (props) => {
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
+    const URL = "http://26.36.110.116";
+    const [baseImage1, setBaseImage1] = useState("");
+    const [baseImage2, setBaseImage2] = useState("");
+    const [baseImage6, setBaseImage6] = useState("");
+    const [baseImage7, setBaseImage7] = useState("");
+    const getFile1 = async () => {
+        const file_name = "Bang_lai_xe";
+        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers.email}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        // console.log(res.data.object.base64);
+        setBaseImage1(res.data.object.base64)
+    }
+    const getFile2 = async () => {
+        const file_name = "Chung_Nhan_Kinh_nghiem";
+        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers.email}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        // console.log(res.data.object.base64);
+        setBaseImage2(res.data.object.base64)
+    }
+    const getFile6 = async () => {
+        const file_name = "Chung_Nhan_Bao_Hiem";
+        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers.email}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        // console.log(res.data.object.base64);
+        setBaseImage6(res.data.object.base64)
+    }
+    const getFile7 = async () => {
+        const file_name = "Chung_Nhan_Dang_Kiem";
+        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers.email}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        // console.log(res.data.object.base64);
+        setBaseImage7(res.data.object.base64)
+    }
 
-
+    const changeStatusValid1 = () => {
+        ChaangeStatusDoc(drivers.listDocs[0].id, "VALID", toast, dispatch);
+    }
+    const changeStatusInValid1 = () => {
+        ChaangeStatusDoc(drivers.listDocs[0].id, "INVALID", toast, dispatch);
+    }
+    const changeStatusValid2 = () => {
+        ChaangeStatusDoc(drivers.listDocs[1].id, "VALID", toast, dispatch);
+    }
+    const changeStatusInValid2 = () => {
+        ChaangeStatusDoc(drivers.listDocs[1].id, "INVALID", toast, dispatch);
+    }
+    const changeStatusValid6 = () => {
+        ChaangeStatusDoc(drivers.listDocs[2].id, "VALID", toast, dispatch);
+    }
+    const changeStatusInValid6 = () => {
+        ChaangeStatusDoc(drivers.listDocs[2].id, "INVALID", toast, dispatch);
+    }
+    const changeStatusValid7 = () => {
+        ChaangeStatusDoc(drivers.listDocs[3].id, "VALID", toast, dispatch);
+    }
+    const changeStatusInValid7 = () => {
+        ChaangeStatusDoc(drivers.listDocs[3].id, "INVALID", toast, dispatch);
+    }
     const onfinish = (values) => {
         console.log(values);
         const driver = {
             ...values,
             companyEmail: user.email,
         }
-        EditDriverByCompany(driver, toast, dispatch)
+        // EditDriverByCompany(driver, toast, dispatch)
         // getDriversForCompany(user.email,dispatch);
         setOpen(false);
     };
@@ -208,7 +273,13 @@ const DriverDetailAdmin = (props) => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col span={8}>
+                    <Col  span={8}>
+                        <Image
+                            id='avatarImage'
+                            src={drivers.avatar}
+                            className='avatar'
+                        />
+
                     </Col>
                 </Row>
                 <p>Thôn tin Tài khoản</p>
@@ -243,25 +314,52 @@ const DriverDetailAdmin = (props) => {
                     <div className='form-header-ad' style={{ height: "40px" }}>
                         <span>
                             Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                            <div className='status-ad'>Chưa gửi</div>
+                            <div className='status-ad'>{drivers.listDocs[0].status}</div>
                         </span>
 
                     </div>
                     <div className='form-content-ad' style={{ minHeight: "100px" }}>
                         <div className='form-image-ad' style={{ minHeight: "50px" }} >
-
+                            <img src={baseImage1} height="150px" />
                         </div>
                         <div className='upload-doc'>
                             <span>
-                                <Button style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                <span style={{ fontSize: "20px" }}>Ngày hết hạn :</span>
+                                <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                <span style={{ fontSize: "20px" }}>Ngày hết hạn : {drivers.listDocs[0].expired_month}-{drivers.listDocs[0].expired_year}</span>
                             </span>
 
 
                         </div>
                         <div className='form-bottom-ad' >
-                            <Button style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                            <Button type="primary"> <CloseOutlined /> Từ chối</Button>
+                            <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                            <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
+                        </div>
+                    </div>
+                </div>
+                <div className='card-doc-ad'>
+                    <div className='form-header-ad' style={{ height: "40px" }}>
+                        <span>
+                            Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên)
+                            hoặc lý lịch tư pháp
+                            <div className='status-ad'>{drivers.listDocs[1].status}</div>
+                        </span>
+
+                    </div>
+                    <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                        <div className='form-image-ad' style={{ minHeight: "50px" }} >
+                            <img src={baseImage2} height="150px" />
+                        </div>
+                        <div className='upload-doc'>
+                            <span>
+                                <Button onClick={getFile2} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                <span style={{ fontSize: "20px" }}>Ngày hết hạn : {drivers.listDocs[1].expired_month}-{drivers.listDocs[1].expired_year}</span>
+                            </span>
+
+
+                        </div>
+                        <div className='form-bottom-ad' >
+                            <Button onClick={changeStatusValid2} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                            <Button onClick={changeStatusInValid2} type="primary"> <CloseOutlined /> Từ chối</Button>
                         </div>
                     </div>
                 </div>
@@ -269,11 +367,11 @@ const DriverDetailAdmin = (props) => {
             <p style={{ marginTop: "20px" }}>Thông tin phương tiện</p>
             <div className='vehico-info'>
                 <Collapse accordion>
-                    <Panel header="This is panel header 1" key="1" extra={<div className='status-ad'>Chưa gửi</div>}>
+                    <Panel header={drivers.vehicleInfo.plate} key="1" extra={<div className='status-ad'>Chưa gửi</div>}>
                         <>
                             <Form onFinish={onfinishUploadVehicle}
                                 labelCol={{
-                                    span: 4,
+                                    span: 6,
                                 }}
                                 wrapperCol={{
                                     span: 14,
@@ -286,7 +384,7 @@ const DriverDetailAdmin = (props) => {
                                         <Form.Item
                                             name=""
                                             initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
+                                            label="Hạng phương tiện"
                                             rules={[
                                                 {
                                                     required: true,
@@ -297,9 +395,9 @@ const DriverDetailAdmin = (props) => {
                                             <Input />
                                         </Form.Item>
                                         <Form.Item
-                                            name=""
-                                            initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
+                                            name="produceYear"
+                                            initialValue={drivers.vehicleInfo.produceYear}
+                                            label="Năm sản xuất"
                                             rules={[
                                                 {
                                                     required: true,
@@ -310,9 +408,9 @@ const DriverDetailAdmin = (props) => {
                                             <Input />
                                         </Form.Item>
                                         <Form.Item
-                                            name=""
-                                            initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
+                                            name="plate"
+                                            initialValue={drivers.vehicleInfo.plate}
+                                            label="Biển số"
                                             rules={[
                                                 {
                                                     required: true,
@@ -323,9 +421,9 @@ const DriverDetailAdmin = (props) => {
                                             <Input />
                                         </Form.Item>
                                         <Form.Item
-                                            name=""
-                                            initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
+                                            name="exteriorColor"
+                                            initialValue={drivers.vehicleInfo.exteriorColor}
+                                            label="Màu sơn"
                                             rules={[
                                                 {
                                                     required: true,
@@ -338,9 +436,9 @@ const DriverDetailAdmin = (props) => {
                                     </Col>
                                     <Col sm={24} md={12}>
                                         <Form.Item
-                                            name=""
-                                            initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
+                                            name="interiorColor"
+                                            initialValue={drivers.vehicleInfo.interiorColor}
+                                            label="Màu nội thất"
                                             rules={[
                                                 {
                                                     required: true,
@@ -351,9 +449,9 @@ const DriverDetailAdmin = (props) => {
                                             <Input />
                                         </Form.Item>
                                         <Form.Item
-                                            name=""
-                                            initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
+                                            name="plateCountry"
+                                            initialValue={drivers.vehicleInfo.plateCountry}
+                                            label="Quốc gia đăng ký"
                                             rules={[
                                                 {
                                                     required: true,
@@ -364,9 +462,9 @@ const DriverDetailAdmin = (props) => {
                                             <Input />
                                         </Form.Item>
                                         <Form.Item
-                                            name=""
-                                            initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
+                                            name="platState"
+                                            initialValue={drivers.vehicleInfo.platState}
+                                            label="Thành phố đăng ký"
                                             rules={[
                                                 {
                                                     required: true,
@@ -376,20 +474,9 @@ const DriverDetailAdmin = (props) => {
                                         >
                                             <Input />
                                         </Form.Item>
-                                        <Form.Item
-                                            name=""
-                                            initialValue={drivers.vehicle.a}
-                                            label="Ngôn ngữ"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
+
                                     </Col>
+
                                 </Row>
                                 <p>Thông tin tài liệu của phương tiện</p>
                                 <div className='doc-taixe'>
@@ -397,25 +484,25 @@ const DriverDetailAdmin = (props) => {
                                         <div className='form-header-ad' style={{ height: "40px" }}>
                                             <span>
                                                 Giấy chứng nhận bảo hiểm
-                                                <div className='status-ad'>Chưa gửi</div>
+                                                <div className='status-ad'>{drivers.listDocs[2].status}</div>
                                             </span>
 
                                         </div>
                                         <div className='form-content-ad' style={{ minHeight: "100px" }}>
                                             <div className='form-image-ad' style={{ minHeight: "50px" }} >
-
+                                                <img src={baseImage6} height="150px" />
                                             </div>
                                             <div className='upload-doc'>
                                                 <span>
-                                                    <Button style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :</span>
+                                                    <Button onClick={getFile6} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :{drivers.listDocs[2].expired_month}-{drivers.listDocs[2].expired_year}</span>
                                                 </span>
 
 
                                             </div>
                                             <div className='form-bottom-ad' >
-                                                <Button style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                                <Button type="primary"> <CloseOutlined /> Từ chối</Button>
+                                                <Button onClick={changeStatusValid6} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                <Button onClick={changeStatusInValid6} type="primary"> <CloseOutlined /> Từ chối</Button>
                                             </div>
                                         </div>
                                     </div>
@@ -425,30 +512,30 @@ const DriverDetailAdmin = (props) => {
                                         <div className='form-header-ad' style={{ height: "40px" }}>
                                             <span>
                                                 Giấy chứng nhận đăng kiểm
-                                                <div className='status-ad'>Chưa gửi</div>
+                                                <div className='status-ad'>{drivers.listDocs[3].status}</div>
                                             </span>
 
                                         </div>
                                         <div className='form-content-ad' style={{ minHeight: "100px" }}>
                                             <div className='form-image-ad' style={{ minHeight: "50px" }} >
-
+                                                <img src={baseImage7} height="150px" />
                                             </div>
                                             <div className='upload-doc'>
                                                 <span>
-                                                    <Button style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :</span>
+                                                    <Button onClick={getFile7} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :{drivers.listDocs[3].expired_month}-{drivers.listDocs[3].expired_year}</span>
                                                 </span>
 
 
                                             </div>
                                             <div className='form-bottom-ad' >
-                                                <Button style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                                <Button type="primary"> <CloseOutlined /> Từ chối</Button>
+                                                <Button onClick={changeStatusValid7} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                <Button onClick={changeStatusInValid7} type="primary"> <CloseOutlined /> Từ chối</Button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                               
+
                             </Form>
                         </>
                     </Panel>

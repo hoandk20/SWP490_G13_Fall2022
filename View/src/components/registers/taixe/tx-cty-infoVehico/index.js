@@ -1,11 +1,82 @@
 import React from 'react';
 import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { UploadFile } from '../../../../redux/apiRequest';
 const RegisterDriverInfoVehico = () => {
-    const navigate =useNavigate();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const newUser = location.state.newUser;
+    const vehicle = location.state.vehicle;
+    const [baseImage1, setBaseImage1] = useState("");
+    const [baseImage2, setBaseImage2] = useState("");
+    const [date1, setDate1] = useState();
+    const [date2, setDate2] = useState();
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
     const onClickFinish = () => {
-        navigate('/signin');   
+        navigate('/signin');
+    };
+    function getTime1(date, dateString) {
+        setDate1(dateString);
+    }
+    function getTime2(date, dateString) {
+        setDate2(dateString);
+    }
+    const uploadImage1 = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertBase64(file);
+        setBaseImage1(base64);
+    };
+    const uploadImage2 = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertBase64(file);
+        setBaseImage2(base64);
+    };
+    const uploadfile1 = () => {
+        const arr = date1.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage1,
+            createBy: newUser.email,
+            fileName: "Chung_Nhan_Bao_Hiem",
+            year: year,
+            month: month
+        }
+        UploadFile(object, toast);
+    };
+
+
+
+    const uploadfile2 = () => {
+        const arr = date2.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage2,
+            createBy: newUser.email,
+            fileName: "Chung_Nhan_Dang_Kiem",
+            year: year,
+            month: month
+        }
+        UploadFile(object, toast);
     };
 
     return (
@@ -27,31 +98,51 @@ const RegisterDriverInfoVehico = () => {
 
                     </div>
                     <div className='form-content'>
-                        <div className='form-image'>
-
+                        <div className='form-info'>
+                            <Row>
+                                <Col sm={12} md={6} >
+                                    <p>Năm sản xuất:</p> {vehicle.produceYear}
+                                </Col>
+                                <Col sm={12} md={6} >
+                                    <p>Màu sơn:</p> {vehicle.exteriorColor}
+                                </Col>
+                                <Col sm={12} md={6} >
+                                    <p>Màu nội thất:</p> {vehicle.interiorColor}
+                                </Col>
+                                <Col sm={12} md={6} >
+                                    <p>Nơi đăng ký:</p> {vehicle.platState}
+                                </Col>
+                            </Row>
                         </div>
                     </div>
                 </div>
                 <div>
-                <Row>
+                    <Row>
                         <Col sm={24} md={12}>
                             <div className='card-doc'>
                                 <div className='form-header'>
                                     <span>
-                                    Giấy chứng nhận bảo hiểm.
+                                        Giấy chứng nhận bảo hiểm.
                                         <div className='status'>Đã gửi</div>
                                     </span>
 
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "170px" }}>
-
+                                        <img src={baseImage1} height="160px" />
                                     </div>
                                     <div className='content-bottom'>
                                         <span>
-                                            Ngày hết hạn <DatePicker picker='month' />
+                                            Ngày hết hạn <DatePicker onChange={getTime1}  picker='month' />
                                         </span>
-                                        <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
+                                        <input
+                                            type="file"
+                                            style={{ color: "#fff" }}
+                                            onChange={(e) => {
+                                                uploadImage1(e);
+                                            }}
+                                        />
+                                        <Button className='btn-submit' onClick={uploadfile1} type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
                             </div>
@@ -60,20 +151,27 @@ const RegisterDriverInfoVehico = () => {
                             <div className='card-doc'>
                                 <div className='form-header'>
                                     <span>
-                                    Giấy chứng nhận đăng kiểm
+                                        Giấy chứng nhận đăng kiểm
                                         <div className='status'>Đã gửi</div>
                                     </span>
 
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "170px" }}>
-
+                                        <img src={baseImage2} height="160px" />
                                     </div>
                                     <div className='content-bottom'>
                                         <span>
-                                            Ngày hết hạn <DatePicker picker='month' />
+                                            Ngày hết hạn <DatePicker onChange={getTime2} picker='month' />
                                         </span>
-                                        <Button className='btn-submit' type='primary'>Gửi <CheckOutlined /></Button>
+                                        <input
+                                            type="file"
+                                            style={{ color: "#fff" }}
+                                            onChange={(e) => {
+                                                uploadImage2(e);
+                                            }}
+                                        />
+                                        <Button className='btn-submit' onClick={uploadfile2} type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>
                                 </div>
                             </div>

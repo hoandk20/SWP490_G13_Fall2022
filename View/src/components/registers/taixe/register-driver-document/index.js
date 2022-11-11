@@ -6,11 +6,14 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { UploadFile } from '../../../../redux/apiRequest';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 const { Option } = Select;
 const RegisterDriverDoc = () => {
-    const user = useSelector((state) => state.user.userInfo?.currentUser)
+
+    const location = useLocation();
+    const newUser = location.state.newUser;
+    const navigate =useNavigate();
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage3, setBaseImage3] = useState("");
@@ -59,7 +62,7 @@ const RegisterDriverDoc = () => {
         const month=arr[1];
         const object={
             base64:baseImage1,
-            createBy:user.email,
+            createBy:newUser.email,
             fileName:"Bang_lai_xe",
             year:year,
             month:month
@@ -72,7 +75,7 @@ const RegisterDriverDoc = () => {
     const uploadfile2 = () => {
         const object={
             base64:baseImage2,
-            createBy:user.email,
+            createBy:newUser.email,
             fileName:"Chung_Nhan_Kinh_nghiem",
             year:'',
             month:''
@@ -86,7 +89,7 @@ const RegisterDriverDoc = () => {
         const month=arr[1];
         const object={
             base64:baseImage3,
-            createBy:user.email,
+            createBy:newUser.email,
             fileName:"GP_Kinh_Doanh",
             year:year,
             month:month
@@ -101,7 +104,7 @@ const RegisterDriverDoc = () => {
         const month=arr[1];
         const object={
             base64:baseImage4,
-            createBy:user.email,
+            createBy:newUser.email,
             fileName:"GP_Hoat_Dong",
             year:year,
             month:month
@@ -125,9 +128,8 @@ const RegisterDriverDoc = () => {
         });
     };
 
-    const navigate =useNavigate();
     const onClickNext = () => {
-        navigate('/signup/company-doc2')       
+        navigate('/signup/add-vehico' ,{state:{newUser}})       
     };
 
     return (

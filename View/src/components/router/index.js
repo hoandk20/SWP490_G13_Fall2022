@@ -13,6 +13,7 @@ import SerachFreeTripForPassenger from "../../views/khachhang/free-trips/search-
 import InfoContactUser from "../../views/khachhang/info-contact";
 import TripHistoryPassenger from "../../views/khachhang/trip-history";
 import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-congty-document/register-congty-document1";
+import RegisterAddVehicle from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
 import RegisterPassenger from "../../views/registers/register-khachhang";
 import RegisterDriver from "../../views/registers/register-taixe";
@@ -62,7 +63,7 @@ const routers = [
     {
         path: '/signup/add-vehico',
         roleTarget: "ALL",
-        element: RegisterCompanyDoc2
+        element: RegisterAddVehicle
     },
     {
         path: '/signup/vehico-info',
