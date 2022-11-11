@@ -126,12 +126,10 @@ export const registerCompany = async (user, dispatch, navigate, toast) => {
       .post(`${URL}:8080/api/RegisterCompany`, {
         email: user.email,
         password: user.password,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        name: user.name,
+        address: user.address + ', ' + user.city,
         phoneNumber: user.phoneNumber,
         language: "vi",
-        country: user.country,
-        city: user.city
       },
         {
           headers: { 'Content-Type': 'application/json' }

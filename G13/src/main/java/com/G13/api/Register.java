@@ -2,6 +2,7 @@ package com.G13.api;
 
 import com.G13.File.FileManage;
 import com.G13.domain.*;
+import com.G13.master.DocumentStatus;
 import com.G13.master.MasterStatus;
 import com.G13.repo.*;
 import com.G13.service.UserService;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,6 +57,7 @@ public class Register {
         company.setName(rc.getName());
         company.setPhoneNo(rc.PhoneNumber);
         company.setName(" ");
+        company.setAddressID("N/A");
         companyRepository.save(company);
         User u = new User();
         u.setEmail(rc.email);
@@ -170,7 +173,7 @@ public class Register {
 
             ResopnseContent response = new ResopnseContent();
             MasterStatus masterStatus = new MasterStatus();
-
+            DocumentStatus documentStatus = new DocumentStatus();
             try{
                 Date date = new Date();
                 long time = date.getTime();
@@ -188,6 +191,7 @@ public class Register {
                 document.setLink(filePath);
                 document.setCreatedBy(doc.createBy);
                 document.setCreatedDate(instant);
+                document.setStatus(documentStatus.DOCUMENT_SENDED);
                 documentRepository.save(document);
 
                 response.status = masterStatus.SUCCESSFULL;
@@ -234,16 +238,17 @@ public class Register {
 }
 @Data
 class DocumentRequest{
+    int id;
     String Base64;
-
-
     String expired_month;
     String expired_year;
     String file_name;
     String createBy;
-}
-class RegisterDriver{
+    String status;
 
+}
+@Data
+class RegisterDriver{
     String email;
     String password;
 
@@ -253,70 +258,18 @@ class RegisterDriver{
     String language;
     String country;
     String city;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
+    String CompanyName;
+    CompanyInfo companyInfo;
+}
+@Data
+class CompanyInfo{
+    String companyName;
+    String companyStatus;
+    String companyAddress;
+    String phone;
+    String email;
+    Instant createDate;
+    List<DocumentRequest> listDoc;
 }
 class RegisterPassenger{
     public void setEmail(String email) {

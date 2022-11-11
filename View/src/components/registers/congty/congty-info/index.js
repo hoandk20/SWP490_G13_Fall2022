@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 const { Option } = Select;
 
 
-const RegisterDriverInfo = () => {
+const RegisterCompanyInfo = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,13 +28,13 @@ const RegisterDriverInfo = () => {
     const onFinish = (values) => {
         const newUser = {
             ...location.state.newUser,
-            firstName: values.firstName,
-            lastName: values.lastName,
+            name: values.name,
+            address: values.address,
             email: values.email,
             password: values.password
         }
-        registerDriver(newUser, dispatch, navigate, toast);
-        navigate('/signup/driver-doc', { state: { newUser } });
+        registerCompany(newUser, dispatch, navigate, toast);
+        navigate('/signup/company-doc1', { state: { newUser } });
     };
 
     const prefixSelector = (
@@ -48,9 +48,10 @@ const RegisterDriverInfo = () => {
             </Select>
         </Form.Item>
     );
+
     return (
         <div className='container'>
-            <h2>ĐĂNG KÝ ĐỂ ĐI XE</h2    >
+            <h2>ĐĂNG KÝ ĐỂ ĐI XE</h2>
             <div className='container-info'>
                 <Row>
                     <Col sm={24} md={12} >
@@ -76,13 +77,14 @@ const RegisterDriverInfo = () => {
                                     <h3>
                                         THÔNG TIN LIÊN HỆ
                                     </h3>
+                                    <p>Tên công ty *</p>
                                     <Form.Item
                                         style={{
                                             display: 'inline-block',
-                                            width: '50%',
+                                            width: '100%',
 
                                         }}
-                                        name="firstName"
+                                        name="name"
                                         rules={[
                                             {
                                                 required: true,
@@ -90,15 +92,16 @@ const RegisterDriverInfo = () => {
                                             },
                                         ]}
                                     >
-                                        <Input placeholder='*Tên' />
+                                        <Input placeholder='Tên công ty' />
                                     </Form.Item>
+                                    <p>Địa chỉ *</p>
                                     <Form.Item
                                         style={{
                                             display: 'inline-block',
-                                            width: '50%',
+                                            width: '100%',
 
                                         }}
-                                        name="lastName"
+                                        name="address"
                                         rules={[
                                             {
                                                 required: true,
@@ -106,7 +109,7 @@ const RegisterDriverInfo = () => {
                                             },
                                         ]}
                                     >
-                                        <Input placeholder='*Họ và Tên Đệm' />
+                                        <Input placeholder='Địa chỉ' />
                                     </Form.Item>
 
                                     <h3>
@@ -184,12 +187,9 @@ const RegisterDriverInfo = () => {
                     </Col>
                 </Row>
             </div>
-
-
-
         </div>
     );
 
 };
 
-export default RegisterDriverInfo;
+export default RegisterCompanyInfo;
