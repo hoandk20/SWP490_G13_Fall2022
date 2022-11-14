@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
-import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, getDriversForCompany } from '../../../../../redux/apiRequest';
+import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, editInforDriver, getDriversForCompany, UploadFile } from '../../../../../redux/apiRequest';
 import ModalSendEmail from '../../../../commons/modals/modal-send-email';
 import './taixe-detail.css'
 const { Option } = Select;
@@ -14,14 +14,14 @@ const DriverDetailAdmin = (props) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const drivers = location.state?.record;
-    
-    const listDoc=drivers.listDocs;
+
+    const listDoc = drivers.listDocs;
     console.log(drivers);
     console.log(listDoc);
-    const Bang_lai_xe=listDoc.find(doc =>doc.file_name==="Bang_lai_xe");
-    const Chung_Nhan_Kinh_nghiem=listDoc.find(doc =>doc.file_name==="Chung_Nhan_Kinh_nghiem");
-    const Chung_Nhan_Bao_Hiem=listDoc.find(doc =>doc.file_name==="Chung_Nhan_Bao_Hiem");
-    const Chung_Nhan_Dang_Kiem=listDoc.find(doc =>doc.file_name==="Chung_Nhan_Dang_Kiem");
+    const Bang_lai_xe = listDoc.find(doc => doc.file_name === "Bang_lai_xe");
+    const Chung_Nhan_Kinh_nghiem = listDoc.find(doc => doc.file_name === "Chung_Nhan_Kinh_nghiem");
+    const Chung_Nhan_Bao_Hiem = listDoc.find(doc => doc.file_name === "Chung_Nhan_Bao_Hiem");
+    const Chung_Nhan_Dang_Kiem = listDoc.find(doc => doc.file_name === "Chung_Nhan_Dang_Kiem");
 
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
@@ -32,7 +32,7 @@ const DriverDetailAdmin = (props) => {
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage6, setBaseImage6] = useState("");
     const [baseImage7, setBaseImage7] = useState("");
-   
+
     const getFileAvatar = async () => {
         const file_name = "Avatar";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers.email}`
@@ -102,14 +102,49 @@ const DriverDetailAdmin = (props) => {
     const changeStatusInValid7 = () => {
         ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "INVALID", toast, dispatch);
     }
+
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+
+    const uploadAvatar = async (e) => {
+        const file = await  e.target.files[0];
+        const base64 = await convertBase64(file);        
+        await setBaseImageAvatar(base64);
+    };
+
     const onfinish = (values) => {
         console.log(values);
-        const driver = {
-            ...values,
-            companyEmail: user.email,
+        const image= {
+            base64:baseImageAvatar,
+            createBy:drivers.email,
+            fileName:"Avatar",
+            year:'',
+            month:''
         }
-        // EditDriverByCompany(driver, toast, dispatch)
-        // getDriversForCompany(user.email,dispatch);
+        UploadFile(image,toast,dispatch);
+        const driver = {
+            username: values.email,
+            firstname: values.firstName,
+            lastname: values.lastName,
+            avatarBase64: values.avatarBase64,
+            address: values.address,
+            email: values.email,
+            phone: values.phoneNumber,
+            country: 'vi'
+        }
+        editInforDriver(driver, toast, dispatch)
         setOpen(false);
     };
 
@@ -132,27 +167,15 @@ const DriverDetailAdmin = (props) => {
                     <Col span={8}>
                         <Form.Item
                             name="companyName"
-                            initialValue={drivers.companyName}
+                            // initialValue={drivers.companyInfo.companyName}
                             label="Tên công ty"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please select an owner',
-                                },
-                            ]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="address"
-                            initialValue={drivers.companyName}
+                            name="companyAddress"
+                            // initialValue={drivers.companyInfo.companyAddress}
                             label="Địa chỉ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please select an owner',
-                                },
-                            ]}
                         >
                             <Input />
                         </Form.Item>
@@ -161,39 +184,37 @@ const DriverDetailAdmin = (props) => {
                     <Col span={8}>
                         <Form.Item
                             name="status"
-                            initialValue={drivers.status}
+                            // initialValue={drivers.companyInfo.companyStatus}
                             label="Trạng thái"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name=""
-                            initialValue={drivers.lastName}
+                            name="companyPhone"
+                            // initialValue={drivers.companyInfo.phone}
                             label="Số ĐT"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
                         >
                             <Input />
                         </Form.Item>
 
                     </Col>
-                    <Col  span={8}>
-                        <Image
-                            id='avatarImage'
-                            src={baseImageAvatar}
-                            className='avatar'
-                            style={{marginLeft:"50%"}}
-                        />
+                    <Col span={8}>
+                        <div >
+                                <Image
+                                    id='avatarImage'
+                                    src={baseImageAvatar}
+                                    className='avatar'
+                                />
+                                <div className='inputFile'>
+                                    <input
+                                        type="file"
+                                        style={{ color: "#fff" }}
+                                        onChange={(e) => {
+                                            uploadAvatar(e);
+                                        }}
+                                    />
+                                </div>
+                            </div>
 
                     </Col>
                 </Row>
@@ -201,9 +222,9 @@ const DriverDetailAdmin = (props) => {
                 <Row>
                     <Col span={8}>
                         <Form.Item
-                            name="name"
+                            name="firstName"
                             initialValue={drivers.firstName}
-                            label="Tên đầy đủ"
+                            label="Họ và tên đệm"
                             rules={[
                                 {
                                     required: true,
@@ -224,12 +245,44 @@ const DriverDetailAdmin = (props) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input disabled/>
                         </Form.Item>
                         <Form.Item
-                            name=""
-                            initialValue={drivers.firstName}
+                            name="language"
+                            initialValue={drivers.language}
                             label="Ngôn ngữ"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select an owner',
+                                },
+                            ]}
+                        >
+                            <Input disabled />
+                        </Form.Item>
+                        <Form.Item
+                            name="city"
+                            initialValue={drivers.city}
+                            label="Thành phố"
+                            // rules={[
+                            //     {
+                            //         required: true,
+                            //         message: 'please enter  description',
+                            //     },
+                            // ]}
+                        >
+                            <Select>
+                                <Option value="Hà nội">Hà nội</Option>
+                                <Option value="Đà nẵng">Đà nẵng </Option>
+                                <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                        <Form.Item
+                            name="lastName"
+                            initialValue={drivers.lastName}
+                            label="Tên"
                             rules={[
                                 {
                                     required: true,
@@ -239,67 +292,32 @@ const DriverDetailAdmin = (props) => {
                         >
                             <Input />
                         </Form.Item>
-                    </Col>
-                    <Col span={8}>
                         <Form.Item
-                            name="lastName"
-                            initialValue={drivers.lastName}
+                            name="address"
+                            initialValue={drivers.address}
                             label="Địa chỉ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
-                            name="email"
-                            initialValue={drivers.email}
+                            name="phoneNumber"
+                            initialValue={drivers.phoneNumber}
                             label="Số di động"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter user name',
-                                },
-                            ]}
                         >
-                            <Input />
+                            <Input disabled/>
                         </Form.Item>
                         <Form.Item
-                            name=""
-                            initialValue={drivers.lastName}
+                            name="status"
+                            initialValue={drivers.status}
                             label="Trạng thái"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
                         >
-                            <Input />
+                            <Input disabled/>
                         </Form.Item>
-                        <Form.Item
-                            name="city"
-                            initialValue={drivers.city}
-                            label="Thành phố"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'please enter  description',
-                                },
-                            ]}
-                        >
-                            <Select>
-                                <Option value="Hà nội">Hà nội</Option>
-                                <Option value="Đà nẵng">Đà nẵng </Option>
-                                <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                            </Select>
-                        </Form.Item>
+                        <Button type="primary" htmlType="submit">Thay đổi thông tin cá nhân</Button>
                     </Col>
 
                 </Row>
+
                 <p>Thôn tin Tài khoản</p>
                 <Row>
                     <Col span={8}>
@@ -324,7 +342,6 @@ const DriverDetailAdmin = (props) => {
 
                     </Col>
                 </Row>
-
             </Form>
             <div className='doc-taixe'>
                 <p>Các tài liệu</p>
@@ -560,8 +577,8 @@ const DriverDetailAdmin = (props) => {
 
                 </Collapse>
             </div>
-            <div style={{marginTop:"50px"}}>
-                <ModalSendEmail email={drivers.email}/>
+            <div style={{ marginTop: "50px" }}>
+                <ModalSendEmail email={drivers.email} />
             </div>
         </>
 

@@ -407,6 +407,29 @@ export const editInforPassenger = async (object, email, toast, dispatch) => {
   }
 }
 
+export const editInforDriver = async (object, toast, dispatch) => {
+
+  try {
+    const res = await axios.post(`${URL}:8080/api/user/changeinfoDriver`, {
+      username: object.email,
+      firstname: object.firstname,
+      lastname: object.lastname,
+      avatarBase64: object.avatarBase64,
+      address: object.address,
+      email: object.email,
+      phone: object.phone,
+      country: object.country
+    },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    // getUser(email, dispatch);
+    toast.success("Thay đổi thông tin thành công.");
+  } catch (error) {
+    toast.error(error);
+  }
+}
+
 export const changePassword = async (object, toast) => {
 
   try {

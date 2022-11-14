@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
-import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, getDriversForCompany} from '../../../../../../redux/apiRequest'
+import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, getDriversForCompany, UploadFile} from '../../../../../../redux/apiRequest'
 // import '../taixe-detail.css'
 const { Option } = Select;
 const TabCompanyInfo = (props) => {
@@ -26,10 +26,20 @@ const TabCompanyInfo = (props) => {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const URL = "http://26.36.110.116";
+    const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage6, setBaseImage6] = useState("");
     const [baseImage7, setBaseImage7] = useState("");
+
+    const getFileAvatar = async () => {
+        const file_name = "Avatar";
+        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        setBaseImageAvatar(res.data.object.base64)
+    }
     const getFile1 = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
@@ -91,8 +101,35 @@ const TabCompanyInfo = (props) => {
     const changeStatusInValid7 = () => {
         ChaangeStatusDoc(GP_Hoat_Dong.id, "INVALID", toast, dispatch);
     }
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            };
+        });
+    };
+    const uploadAvatar = async (e) => {
+        const file = await  e.target.files[0];
+        const base64 = await convertBase64(file);        
+        await setBaseImageAvatar(base64);
+    };
     const onfinish = (values) => {
         console.log(values);
+        const image= {
+            base64:baseImageAvatar,
+            createBy:companys.email,
+            fileName:"Avatar",
+            year:'',
+            month:''
+        }
+        UploadFile(image,toast,dispatch);
         const driver = {
             ...values,
             companyEmail: user.email,
@@ -101,6 +138,7 @@ const TabCompanyInfo = (props) => {
         // getDriversForCompany(user.email,dispatch);
         setOpen(false);
     };
+    getFileAvatar();
 
     const onfinishUploadVehicle = (values) => {
 
@@ -130,11 +168,11 @@ const TabCompanyInfo = (props) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input  disabled/>
                         </Form.Item>
                         <Form.Item
-                            name="address"
-                            initialValue={companys.companyName}
+                            name="companyAddress"
+                            initialValue={companys.companyAddress}
                             label="Địa chỉ"
                             rules={[
                                 {
@@ -145,154 +183,6 @@ const TabCompanyInfo = (props) => {
                         >
                             <Input />
                         </Form.Item>
-
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item
-                            name="status"
-                            initialValue={companys.status}
-                            label="Trạng thái"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name=""
-                            initialValue={companys.lastName}
-                            label="Số ĐT"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                    </Col>
-                    <Col span={8}>
-
-                    </Col>
-                </Row>
-                <p>Thông tin cá nhân</p>
-                <Row>
-                    <Col span={8}>
-                        <Form.Item
-                            name="name"
-                            initialValue={companys.firstName}
-                            label="Tên đầy đủ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please select an owner',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            initialValue={companys.email}
-                            label="Email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter user name',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name=""
-                            initialValue={companys.firstName}
-                            label="Ngôn ngữ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please select an owner',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item
-                            name="lastName"
-                            initialValue={companys.lastName}
-                            label="Địa chỉ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            initialValue={companys.email}
-                            label="Số di động"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter user name',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name=""
-                            initialValue={companys.lastName}
-                            label="Trạng thái"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="city"
-                            initialValue={companys.city}
-                            label="Thành phố"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'please enter  description',
-                                },
-                            ]}
-                        >
-                            <Select>
-                                <Option value="Hà nội">Hà nội</Option>
-                                <Option value="Đà nẵng">Đà nẵng </Option>
-                                <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col  span={8}>
-                        <Image
-                            id='avatarImage'
-                            src={companys.avatar}
-                            className='avatar'
-                        />
-
-                    </Col>
-                </Row>
-                <p>Thôn tin Tài khoản</p>
-                <Row>
-                    <Col span={8}>
                         <Form.Item
                             name="abc"
                             initialValue={companys.email}
@@ -304,16 +194,51 @@ const TabCompanyInfo = (props) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input disabled/>
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-
+                        <Form.Item
+                            name="companyStatus"
+                            initialValue={companys.companyStatus}
+                            label="Trạng thái"
+                        >
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item
+                            name="phone"
+                            initialValue={companys.phone}
+                            label="Số ĐT"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please choose the type',
+                                },
+                            ]}
+                        >
+                            <Input disabled/>
+                        </Form.Item>
                     </Col>
                     <Col span={8}>
-
+                    <div >
+                                <Image
+                                    id='avatarImage'
+                                    src={baseImageAvatar}
+                                    className='avatar'
+                                />
+                                <div className='inputFile'>
+                                    <input
+                                        type="file"
+                                        style={{ color: "#fff" }}
+                                        onChange={(e) => {
+                                            uploadAvatar(e);
+                                        }}
+                                    />
+                                </div>
+                            </div>
                     </Col>
                 </Row>
+                <Button type="primary" htmlType="submit">Thay đổi thông tin</Button>
 
             </Form>
             <div className='doc-taixe'>
