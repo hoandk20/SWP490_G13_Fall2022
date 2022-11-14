@@ -5,6 +5,8 @@ import com.G13.domain.Promotiontriprider;
 import com.G13.domain.Trip;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
+import com.G13.model.TripDriver;
+import com.G13.model.TripPassenger;
 import com.G13.repo.PromotiontripRepository;
 import com.G13.repo.PromotiontripriderRepository;
 import com.G13.repo.TripRepository;
@@ -30,7 +32,7 @@ public class DriverTrip {
     @PostMapping("/create")
     public ResponseEntity<?> CreateTrip (@RequestBody TripDriver rp) {
         Date date = new Date();
-        Instant timeStamp= rp.timeStart.toInstant();
+        Instant timeStamp= rp.getTimeStart().toInstant();
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         MasterTripStatus masterTripStatus = new MasterTripStatus();
@@ -42,12 +44,12 @@ public class DriverTrip {
             MasterTripStatus m = new MasterTripStatus();
             Promotiontrip t = new Promotiontrip();
             t.setId(timeMilli+"");
-            t.setFromAddress(rp.from);
-            t.setToAddress(rp.to);
-            t.setFee(rp.price);
+            t.setFromAddress(rp.getFrom());
+            t.setToAddress(rp.getTo());
+            t.setFee(rp.getPrice());
             t.setTimeStart(timeStamp);
-            t.setDriverID(rp.driverEmail);
-            t.setDuration(rp.WaitingTime);
+            t.setDriverID(rp.getDriverEmail());
+            t.setDuration(rp.getWaitingTime());
             t.setCapacity(rp.getSeat());
             t.setStatus(masterTripStatus.TRIP_OPEN);
             response.content= promotiontripRepository.save(t).toString();
@@ -75,16 +77,16 @@ public class DriverTrip {
             ) {
                 if(detail.getStatus().equals(masterTripStatus.TRIP_OPEN)){
                     TripDriver tripDriver = new TripDriver();
-                    tripDriver.id = detail.getId();
-                    tripDriver.driverEmail = detail.getDriverID();
-                    tripDriver.from = detail.getFromAddress();
-                    tripDriver.to = detail.getToAddress();
+                    tripDriver.setId(detail.getId());
+                    tripDriver.setDriverEmail(detail.getDriverID());
+                    tripDriver.setFrom(detail.getFromAddress());
+                    tripDriver.setTo(detail.getToAddress());
                     tripDriver.setSeat(detail.getCapacity());
                     tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());
-                    tripDriver.status = detail.getStatus();
-                    tripDriver.timeStart = Date.from(detail.getTimeStart());
+                    tripDriver.setStatus(detail.getStatus());
+                    tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                     tripDriver.setWaitingTime(detail.getDuration());
-                    tripDriver.price = detail.getFee();
+                    tripDriver.setPrice(detail.getFee());
                     driverTripHistory.add(tripDriver);
                 }
             }
@@ -111,16 +113,16 @@ public class DriverTrip {
             for (Promotiontrip detail:list
             ) {
                 TripDriver tripDriver = new TripDriver();
-                tripDriver.driverEmail = detail.getDriverID();
-                tripDriver.from = detail.getFromAddress();
-                tripDriver.to = detail.getToAddress();
+                tripDriver.setDriverEmail(detail.getDriverID());
+                tripDriver.setFrom(detail.getFromAddress());
+                tripDriver.setTo(detail.getToAddress());
                 tripDriver.setSeat(detail.getCapacity());
-                tripDriver.id = detail.getId();
+                tripDriver.setId(detail.getId());
                 tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());
-                tripDriver.status = detail.getStatus();
-                tripDriver.timeStart = Date.from(detail.getTimeStart());
+                tripDriver.setStatus(detail.getStatus());
+                tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                 tripDriver.setWaitingTime(detail.getDuration());
-                tripDriver.price = detail.getFee();
+                tripDriver.setPrice(detail.getFee());
                 driverTrips.add(tripDriver);
             }
 
@@ -146,16 +148,16 @@ public class DriverTrip {
             ) {
                 if(detail.getStatus().equals(masterTripStatus.TRIP_CLOSE)){
                     TripDriver tripDriver = new TripDriver();
-                    tripDriver.id = detail.getId();
-                    tripDriver.driverEmail = detail.getDriverID();
-                    tripDriver.from = detail.getFromAddress();
-                    tripDriver.to = detail.getToAddress();
+                    tripDriver.setId(detail.getId());
+                    tripDriver.setDriverEmail(detail.getDriverID());
+                    tripDriver.setFrom(detail.getFromAddress());
+                    tripDriver.setTo(detail.getToAddress());
                     tripDriver.setSeat(detail.getCapacity());
                     tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());
-                    tripDriver.status = detail.getStatus();
-                    tripDriver.timeStart = Date.from(detail.getTimeStart());
+                    tripDriver.setStatus(detail.getStatus());
+                    tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                     tripDriver.setWaitingTime(detail.getDuration());
-                    tripDriver.price = detail.getFee();
+                    tripDriver.setPrice(detail.getFee());
                     driverTripHistory.add(tripDriver);
                 }
             }
@@ -181,32 +183,32 @@ public class DriverTrip {
             TripDriver tripDriver = new TripDriver();
             tripDriver.setSeat(detail.getCapacity());
 
-            tripDriver.status = detail.getStatus();
-            tripDriver.driverEmail = detail.getDriverID();
-            tripDriver.from = detail.getFromAddress();
-            tripDriver.to = detail.getToAddress();
+            tripDriver.setStatus(detail.getStatus());
+            tripDriver.setDriverEmail(detail.getDriverID());
+            tripDriver.setFrom(detail.getFromAddress());
+            tripDriver.setTo(detail.getToAddress());
             tripDriver.setTripID(detail.getId());
-            tripDriver.id = detail.getId();
+            tripDriver.setId(detail.getId());
 
-            tripDriver.timeStart = Date.from(detail.getTimeStart());
+            tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
             tripDriver.setWaitingTime(detail.getDuration());
-            tripDriver.price = detail.getFee();
+            tripDriver.setPrice(detail.getFee());
             List<Trip> listPassengers = tripRepository.findAllByTripCodeOrderByCreatedDateDesc(id);
             List<TripPassenger> tripPassengers = new ArrayList<>();
             for (Trip t:listPassengers) {
                 TripPassenger tripPassenger = new TripPassenger();
-                tripPassenger.seatRegister = t.getDuration();
-                tripPassenger.id = t.getId();
-                tripPassenger.tripID = t.getTripCode();
-                tripPassenger.passengerEmail = t.getRiderID();
-                tripPassenger.status = t.getStatus();
-                tripPassenger.driverEmail = t.getDriverID();
-                tripPassenger.from = t.getFromAddress();
-                tripPassenger.to = t.getToAddress();
-                tripPassenger.note = t.getNote();
-                tripPassenger.timeStart = Date.from(t.getTimeStart());
+                tripPassenger.setSeatRegister(t.getDuration());
+                tripPassenger.setId(t.getId());
+                tripPassenger.setTripID(t.getTripCode());
+                tripPassenger.setPassengerEmail(t.getRiderID());
+                tripPassenger.setStatus( t.getStatus());
+                tripPassenger.setDriverEmail(t.getDriverID());
+                tripPassenger.setFrom(t.getFromAddress());
+                tripPassenger.setTo(t.getToAddress());
+                tripPassenger.setNote(t.getNote());
+                tripPassenger.setTimeStart(Date.from(t.getTimeStart()));
                 tripPassenger.setWaitingTime(t.getDriverWaitingTime());
-                tripPassenger.price = t.getOpenPrice();
+                tripPassenger.setPrice(t.getOpenPrice());
                 tripPassengers.add(tripPassenger);
             }
             tripDriver.setListPassenger(tripPassengers);
@@ -222,19 +224,4 @@ public class DriverTrip {
         }
     }
 }
-@Data
-class  TripDriver{
-    String id;
 
-    String TripID;
-    String driverEmail ;
-    String from;
-    String to;
-    int seatRegistered;
-    int seat;
-    Date timeStart;
-    int WaitingTime;
-    double price;
-    String status;
-    List<TripPassenger> listPassenger;
-}

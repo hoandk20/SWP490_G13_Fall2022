@@ -3,7 +3,9 @@ package com.G13.api;
 import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.DocumentStatus;
+import com.G13.master.GenerateGUID;
 import com.G13.master.MasterStatus;
+import com.G13.model.*;
 import com.G13.repo.*;
 import com.G13.service.UserService;
 import lombok.Data;
@@ -33,12 +35,14 @@ public class Register {
         private  final RiderRepository riderRepository;
         private final CompanyRepository companyRepository;
         private final DocumentRepository documentRepository;
+        private  final VehicleRepository vehicleRepository;
+        private  final  VerifyaccountRepository verifyaccountRepository;
     @PostMapping("/RegisterCompany")
     public  ResponseEntity<?> RegisterCompany(@RequestBody RegisterCompany rc){
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
 
-        if(IsEmailExisted(rc.email)){
+        if(IsEmailExisted(rc.getEmail())){
 
             Map<String,Boolean> err = new HashMap<>();
             err.put("IsExistedEmail",true);
@@ -49,29 +53,34 @@ public class Register {
 
         Date date = new Date();
         Instant timeStamp= Instant.now();
-
-        float nofloat =0;
-        short noShort = (short)0;
-        Company company = new Company();
-        company.setNote(rc.getEmail());
-        company.setName(rc.getName());
-        company.setPhoneNo(rc.PhoneNumber);
-        company.setName(" ");
-        company.setAddressID("N/A");
-        companyRepository.save(company);
-        User u = new User();
-        u.setEmail(rc.email);
-        u.setPassword(rc.password);
-        User usersave = userService.saveUser(u);
-        UserRole userRole = new UserRole();
-        userRole.setUserId(new Long(usersave.getId()));
-        userRole.setRoleId(new Long(3));
-        userRoleRepository.save(userRole);
-
-        response.setStatus(masterStatus.SUCCESSFULL);
         try {
-
-
+            float nofloat =0;
+            short noShort = (short)0;
+            Company company = new Company();
+            company.setNote(rc.getEmail());
+            company.setName(rc.getName());
+            company.setPhoneNo(rc.getPhoneNumber());
+            company.setAddressID(rc.getAddress());
+            companyRepository.save(company);
+            User u = new User();
+            u.setEmail(rc.getEmail());
+            u.setPassword(rc.getPassword());
+            User usersave = userService.saveUser(u);
+            UserRole userRole = new UserRole();
+            userRole.setUserId(new Long(usersave.getId()));
+            userRole.setRoleId(new Long(3));
+            userRoleRepository.save(userRole);
+            response.object = company;
+            response.setStatus(masterStatus.SUCCESSFULL);
+            Verifyaccount verifyaccount = new Verifyaccount();
+            GenerateGUID guid = new GenerateGUID();
+            verifyaccount.setUserid(usersave.getId());
+            verifyaccount.setStatus("0");
+            verifyaccount.setVerificode(guid.getRandomNumberString());
+            verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
+            MailAPI mailAPI = new MailAPI();
+            mailAPI.SendEmailVerifyAccount(rc.getEmail(),verifyaccount.getVerificode());
+            verifyaccountRepository.save(verifyaccount);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
             response.content=exception.toString();
@@ -79,6 +88,38 @@ public class Register {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    @PostMapping("ChangeStatusVerify")
+    public ResponseEntity<?> ChangeStatusVerify(@RequestBody VerifyCode verifyCode){
+
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        DocumentStatus documentStatus = new DocumentStatus();
+
+        try{
+            User user = userRepository.findByEmail(verifyCode.getEmail());
+            Date date = new Date();
+            Instant instant1 = Instant.now();
+            Verifyaccount verifyaccount =verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+            if(verifyaccount==null){
+                response.status = masterStatus.FAILURE;
+                return ResponseEntity.badRequest().body(response);
+
+            }else{
+                verifyaccount.setStatus(verifyCode.getStatus());
+                Verifyaccount verifyaccount1=verifyaccountRepository.saveAndFlush(verifyaccount);
+                response.setObject(verifyaccount1);
+                response.status = masterStatus.SUCCESSFULL;
+                return ResponseEntity.ok().body(response);
+            }
+
+        }catch (Exception exception){
+            response.content= exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+
     @PostMapping("/RegisterDriver")
         public  ResponseEntity<?> RegisterDriver(@RequestBody RegisterDriver rd){
             Date date = new Date();
@@ -88,7 +129,7 @@ public class Register {
             float nofloat =0;
             short noShort = (short)0;
 
-        if(IsEmailExisted(rd.email)){
+        if(IsEmailExisted(rd.getEmail())){
 
             Map<String,Boolean> err = new HashMap<>();
             err.put("IsExistedEmail",true);
@@ -103,19 +144,28 @@ public class Register {
                 driver.setEmail(rd.getEmail());
                 driver.setFirstName(rd.getFirstName());
                 driver.setLastName(rd.getLastName());
-                driver.setMobileNo(rd.phoneNumber);
+                driver.setMobileNo(rd.getPhoneNumber());
                 driver.setLanguageCode("vi");
                 driver.setCountryCode(rd.getCountry());
                 driver.setLanguageCode(rd.getLanguage());
                 driverRepository.save(driver);
                 User u = new User();
-                u.setEmail(rd.email);
-                u.setPassword(rd.password);
+                u.setEmail(rd.getEmail());
+                u.setPassword(rd.getPassword());
                 User usersave = userService.saveUser(u);
                 UserRole userRole = new UserRole();
                 userRole.setUserId(new Long(usersave.getId()));
                 userRole.setRoleId(new Long(1));
                 userRoleRepository.save(userRole);
+                Verifyaccount verifyaccount = new Verifyaccount();
+                GenerateGUID guid = new GenerateGUID();
+                verifyaccount.setUserid(usersave.getId());
+                verifyaccount.setStatus("0");
+                verifyaccount.setVerificode(guid.getRandomNumberString());
+                verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
+                MailAPI mailAPI = new MailAPI();
+                mailAPI.SendEmailVerifyAccount(rd.getEmail(),verifyaccount.getVerificode());
+                verifyaccountRepository.save(verifyaccount);
                 response.setStatus(masterStatus.SUCCESSFULL);
 
                 return ResponseEntity.ok().body(response);
@@ -138,7 +188,7 @@ public class Register {
             float nofloat =0;
             short noShort = (short)0;
 
-            if(IsEmailExisted(rp.email)){
+            if(IsEmailExisted(rp.getEmail())){
 
                 Map<String,Boolean> err = new HashMap<>();
                 err.put("IsExistedEmail",true);
@@ -149,13 +199,23 @@ public class Register {
             try {
 
                 User u = new User();
-                u.setEmail(rp.email);
-                u.setPassword(rp.password);
+                u.setEmail(rp.getEmail());
+                u.setPassword(rp.getPassword());
                 User usersave = userService.saveUser(u);
                 UserRole userRole = new UserRole();
                 userRole.setUserId(new Long(usersave.getId()));
                 userRole.setRoleId(new Long(2));
                 userRoleRepository.save(userRole);
+
+                Verifyaccount verifyaccount = new Verifyaccount();
+                GenerateGUID guid = new GenerateGUID();
+                verifyaccount.setUserid(usersave.getId());
+                verifyaccount.setStatus("0");
+                verifyaccount.setVerificode(guid.getRandomNumberString());
+                verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
+                MailAPI mailAPI = new MailAPI();
+                mailAPI.SendEmailVerifyAccount(rp.getEmail(),verifyaccount.getVerificode());
+                verifyaccountRepository.save(verifyaccount);
                 response.setStatus(masterStatus.SUCCESSFULL);
 
                 return ResponseEntity.ok().body(response);
@@ -179,17 +239,17 @@ public class Register {
                 long time = date.getTime();
                 Instant instant = Instant.now();
                 Document document = new Document();
-                document.setFileName(doc.file_name);
-                document.setCreatedBy(doc.createBy);
+                document.setFileName(doc.getFile_name());
+                document.setCreatedBy(doc.getCreateBy());
                 document.setExpiredDate(instant);
-                document.setExpiredMonth(doc.expired_month);
-                document.setExpiredYear(doc.expired_year);
+                document.setExpiredMonth(doc.getExpired_month());
+                document.setExpiredYear(doc.getExpired_year());
 
                 Instant instant1 = Instant.now();
                 FileManage fileManage = new FileManage();
-                String filePath = fileManage.convertBase64ToImage(doc.Base64, time+"");
+                String filePath = fileManage.convertBase64ToImage(doc.getBase64(), time+"");
                 document.setLink(filePath);
-                document.setCreatedBy(doc.createBy);
+                document.setCreatedBy(doc.getCreateBy());
                 document.setCreatedDate(instant);
                 document.setStatus(documentStatus.DOCUMENT_SENDED);
                 documentRepository.save(document);
@@ -204,7 +264,8 @@ public class Register {
 
         }
         @GetMapping("/Upload/GetDocument")
-        public ResponseEntity<?> GetDocument(@RequestBody DocumentRequest doc){
+        public ResponseEntity<?> GetDocument(String createBy, String file_name){
+        DocumentRequest doc = new DocumentRequest();
 
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
@@ -212,11 +273,11 @@ public class Register {
         try{
             FileManage fileManage = new FileManage();
             Document document = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(doc.createBy,doc.file_name);
+                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(createBy,file_name);
             doc.setExpired_month(document.getExpiredMonth());
             doc.setExpired_year(document.getExpiredYear());
             doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
-
+            doc.setId(document.getId());
 
             response.object = doc;
             response.status = masterStatus.SUCCESSFULL;
@@ -229,6 +290,74 @@ public class Register {
 
     }
 
+    @PostMapping("/VerifyCode")
+    public ResponseEntity<?> VerifyCode(@RequestBody VerifyCode verifyCode){
+
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        DocumentStatus documentStatus = new DocumentStatus();
+
+        try{
+            User user = userRepository.findByEmail(verifyCode.getEmail());
+            Date date = new Date();
+            Instant instant1 = Instant.now();
+            Verifyaccount verifyaccount =verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+            if(verifyCode.getCode().equals(verifyaccount.getVerificode())&&verifyaccount.getExpiredate().isAfter(Instant.now())){
+                verifyaccount.setStatus("1");
+                verifyaccountRepository.save(verifyaccount);
+                verifyCode.setExpired(false);
+                verifyCode.setStatus("1");
+                response.content= "verify sussessfull";
+                response.object = verifyCode;
+                response.status = masterStatus.SUCCESSFULL;
+                return ResponseEntity.ok().body(response);
+            }else{
+                verifyCode.setExpired(true);
+                verifyCode.setStatus("0");
+                response.content= "code is expired or invalid";
+                response.status = masterStatus.FAILURE;
+                return ResponseEntity.badRequest().body(response);
+            }
+
+        }catch (Exception exception){
+            response.content= exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+    @GetMapping("/getResendCode")
+    public ResponseEntity<?> ResendCode(String email){
+
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        DocumentStatus documentStatus = new DocumentStatus();
+        Instant now = Instant.now();
+
+        try{
+            User user = userRepository.findByEmail(email);
+            Date date = new Date();
+            Instant instant1 = Instant.now();
+            Verifyaccount verifyaccount =verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+            GenerateGUID guid = new GenerateGUID();
+            verifyaccount.setVerificode(guid.getRandomNumberString());
+            verifyaccount.setExpiredate(now.plusSeconds(60));
+            MailAPI mailAPI = new MailAPI();
+            mailAPI.SendEmailVerifyAccount(email,verifyaccount.getVerificode());
+            verifyaccountRepository.save(verifyaccount);
+            response.content= "send successfull";
+            response.status = masterStatus.SUCCESSFULL;
+            return ResponseEntity.ok().body(response);
+
+        }catch (Exception exception){
+            response.content= exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+
+
     public boolean IsEmailExisted(String email){
         return userService.IsEmailExisted(email);
     }
@@ -236,146 +365,9 @@ public class Register {
 
 
 }
-@Data
-class DocumentRequest{
-    int id;
-    String Base64;
-    String expired_month;
-    String expired_year;
-    String file_name;
-    String createBy;
-    String status;
-
-}
-@Data
-class RegisterDriver{
-    String email;
-    String password;
-
-    String firstName;
-    String lastName;
-    String phoneNumber;
-    String language;
-    String country;
-    String city;
-    String CompanyName;
-    CompanyInfo companyInfo;
-}
-@Data
-class CompanyInfo{
-    String companyName;
-    String companyStatus;
-    String companyAddress;
-    String phone;
-    String email;
-    Instant createDate;
-    List<DocumentRequest> listDoc;
-}
-class RegisterPassenger{
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setFistName(String fistName) {
-        this.firstName = fistName;
-    }
-
-    public void setLastName(String lastName) {
-        LastName = lastName;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
-    }
-
-    public void setLanguage(String language) {
-        Language = language;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return LastName;
-    }
-
-    public String getPhoneNumber() {
-        return PhoneNumber;
-    }
-
-    public String getLanguage() {
-        return Language;
-    }
-
-    String email;
-    String password;
-    String firstName;
-    String LastName;
-    String PhoneNumber;
-    String Language;
-}
-
-class RegisterCompany{
-    String email;
-    String password;
-    String Name;
-
-    String PhoneNumber;
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    String Language;
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 
-    public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
-    }
-
-    public void setLanguage(String language) {
-        Language = language;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
 
 
-    public String getPhoneNumber() {
-        return PhoneNumber;
-    }
 
-    public String getLanguage() {
-        return Language;
-    }
-}
+
