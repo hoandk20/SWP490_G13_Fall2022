@@ -15,28 +15,26 @@ const RegisterAddVehicle = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const [count, setCount] = useState(0);
-    const newUser = location.state.newUser;
+    // const newUser = location.state.newUser;
     const user = useSelector((state) => state.user.userInfo?.currentUser)
-    console.log(newUser);
     const [vehicle,setVehicle]=useState("");
 
     const onfinish = (values) => {
-        if (newUser.role == "ROLE_DRIVER") {
+        if (user.role == "ROLE_DRIVER") {
             console.log(values);
             const vehico = {
                 ...values,
-                driverEmail: newUser.email,
+                driverEmail: user.email,
             }
             setVehicle(vehico)
            
-            AddVehicoByDriver(vehico,toast);
+            AddVehicoByDriver(vehico,toast,dispatch);
             setCount(count+1);
         }
         else {
-            console.log(values);
             const vehico = {
                 ...values,
-                companyEmail: newUser.email,
+                companyEmail: user.email,
             }
             setVehicle(vehico)
             AddVehicoByCompany(vehico, toast, dispatch);
@@ -45,8 +43,8 @@ const RegisterAddVehicle = () => {
     };
     console.log(count);
     const onClickNext = () => {
-        ChangeStatusSignUp(newUser.email,3);
-        navigate('/signup/vehico-info',{state:{newUser,vehicle}});      
+        ChangeStatusSignUp(user.email,3);
+        navigate('/signup/vehico-info');      
     };
     return (
         <div className='container'>

@@ -5,16 +5,23 @@ import { RightOutlined, CheckOutlined } from '@ant-design/icons';
 
 import ImageAvatar from '../../../../../assets/image-app/avatar.jpg'
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { UploadFile } from '../../../../../redux/apiRequest';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser, UploadFile } from '../../../../../redux/apiRequest';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router';
+import { useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
     const location = useLocation();
-    const newUser = location.state.newUser;
+    const dispatch=useDispatch();
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+    const decodedTocken = jwtDecode(currentUser.access_token);
+    const userName = decodedTocken.sub;
+    const newUser = useSelector((state) => state.user.userInfo?.currentUser);
     const navigate = useNavigate();
+    const [count, setCount] = useState(0);
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage3, setBaseImage3] = useState("");
@@ -91,6 +98,7 @@ const RegisterCompanyDoc1 = () => {
             month: month
         }
         UploadFile(object, toast);
+        setCount(count + 1);
     };
 
 
@@ -107,6 +115,7 @@ const RegisterCompanyDoc1 = () => {
             month: month,
         }
         UploadFile(object, toast);
+        setCount(count + 1);
     };
 
     const uploadfile3 = () => {
@@ -122,6 +131,7 @@ const RegisterCompanyDoc1 = () => {
         }
         console.log(object);
         UploadFile(object, toast);
+        setCount(count + 1);
     };
 
     const uploadfile4 = () => {
@@ -137,6 +147,7 @@ const RegisterCompanyDoc1 = () => {
         }
         console.log(object);
         UploadFile(object, toast);
+        setCount(count + 1);
     };
 
     const convertBase64 = (file) => {
@@ -155,9 +166,13 @@ const RegisterCompanyDoc1 = () => {
     };
 
     const onClickNext = () => {
-        navigate('/signup/add-vehico', { state: { newUser } });
+        navigate('/signup/add-vehico');
     };
-
+    
+    useEffect(()=>{
+        getUser(userName,dispatch);
+       
+      },[])
     return (
         <div className='container'>
             <div className='container-info'>
@@ -269,7 +284,7 @@ const RegisterCompanyDoc1 = () => {
 
                                     <div className='content-bottom'>
                                         <span style={{ marginRight: "20px" }}>
-                                            Ngày hết hạn <DatePicker onChange={getTime1} picker='month' />
+                                            Ngày hết hạn <DatePicker onChange={getTime2} picker='month' />
                                         </span>
                                         <input
                                             type="file"
@@ -347,7 +362,11 @@ const RegisterCompanyDoc1 = () => {
                     </Row>
                 </div>
                 <div style={{ marginTop: "50px" }}>
-                    <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
+                {count == 4 ? (
+                        <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
+                    ) : (
+                        <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>
+                    )}
                 </div>
             </div>
         </div>

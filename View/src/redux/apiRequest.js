@@ -17,7 +17,6 @@ export const loginUser = async (user, dispatch, navigate) => {
 
     const res = await axios({
       method: "post",
-      // url: "http://localhost:8080/api/login",
       url: `${URL}:8080/api/login`,
       data: user,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -74,7 +73,6 @@ export const registerPassenger = async (user, dispatch, navigate, toast) => {
       .then(function (response) {
         console.log(response)
         dispatch(registerSuccess(response.data))
-        navigate('/signin')
       })
       .catch(function (error) {
         if (error.response.data.object.IsExistedEmail) {
@@ -324,13 +322,14 @@ export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
         headers: { 'Content-Type': 'application/json' }
       });
     getAllVehico(vehicle.companyEmail, dispatch);
+    getUser(vehicle.companyEmail,dispatch);
     toast.success("Tạo phương tiện thành công")
   } catch (error) {
     toast.error("Tạo phương tiện thất bại")
   }
 }
 
-export const AddVehicoByDriver = async (vehicle, toast) => {
+export const AddVehicoByDriver = async (vehicle, toast,dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/driver/addVehicle`,
       {
@@ -347,6 +346,7 @@ export const AddVehicoByDriver = async (vehicle, toast) => {
       , {
         headers: { 'Content-Type': 'application/json' }
       });
+      getUser(vehicle.driverEmail,dispatch);
     toast.success("Tạo phương tiện thành công")
   } catch (error) {
     toast.error("Tạo phương tiện thất bại")
@@ -619,7 +619,15 @@ export const VerifyCodeEmail = async (newUser,code,toast,navigate) => {
       , {
         headers: { 'Content-Type': 'application/json' }
       });
-      navigate('/signup/driver-doc', { state: { newUser } });
+      if(newUser.role== "ROLE_DRIVER"){
+        navigate('/signup/driver-doc');
+      }
+      if(newUser.role== "ROLE_COMPANY"){
+        navigate('/signup/company-doc1');
+      }
+      if(newUser.role== "ROLE_PASSENGER"){
+        navigate('/home');
+      }
   } catch (error) {
       toast.error("Vui lòng nhập lại mã xác nhận")
   }
@@ -641,3 +649,15 @@ export const ChangeStatusSignUp = async (email,status,dispatch) => {
   }
 }
 
+
+export const getDriverDetail = async (userName) => {
+  try {
+
+    const res = await axios.get(`${URL}:8080/api/driver/detail?driverEmail=${userName}`, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+    console.log(res.data);
+  } catch (error) {
+
+  }
+}

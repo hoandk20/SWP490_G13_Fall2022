@@ -2,16 +2,19 @@ import React from 'react';
 import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
 import { useLocation, useNavigate } from 'react-router';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { UploadFile } from '../../../../redux/apiRequest';
+import { getUser, UploadFile } from '../../../../redux/apiRequest';
+import { useEffect } from 'react';
 const RegisterDriverInfoVehico = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    const newUser = location.state.newUser;
-    const vehicle = location.state.vehicle;
+    const newUser = useSelector((state) => state.user.userInfo?.currentUser);
+    console.log(newUser);
+    // const newUser = location.state.newUser;
+     const vehicle = newUser?.vehicleRequest;
     const [count, setCount] = useState(0);
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -81,7 +84,10 @@ const RegisterDriverInfoVehico = () => {
         UploadFile(object, toast);
         setCount(count+1);
     };
-
+    useEffect(()=>{
+        getUser(newUser.email,dispatch);
+       
+      },[])
     return (
         <div className='container'>
             <div className='info-vehico'>
