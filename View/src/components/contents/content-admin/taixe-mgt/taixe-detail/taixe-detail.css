@@ -31,5 +31,8 @@
     text-align: center;
 }
 .avatar{
-    text-align: center;
+    vertical-align: middle;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
 }

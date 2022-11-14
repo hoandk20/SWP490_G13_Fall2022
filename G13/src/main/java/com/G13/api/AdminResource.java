@@ -3,6 +3,7 @@ package com.G13.api;
 import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.master.UploadFileMaster;
+import com.G13.model.*;
 import com.G13.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -242,16 +243,16 @@ public class AdminResource {
             for (Promotiontrip detail : list
             ) {
                 TripDriver tripDriver = new TripDriver();
-                tripDriver.driverEmail = detail.getDriverID();
-                tripDriver.from = detail.getFromAddress();
-                tripDriver.to = detail.getToAddress();
+                tripDriver.setDriverEmail(detail.getDriverID());
+                tripDriver.setFrom(detail.getFromAddress());
+                tripDriver.setTo(detail.getToAddress());
                 tripDriver.setSeat(detail.getCapacity());
-                tripDriver.id = detail.getId();
+                tripDriver.setId(detail.getId());
                 tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());
-                tripDriver.status = detail.getStatus();
-                tripDriver.timeStart = Date.from(detail.getTimeStart());
+                tripDriver.setStatus(detail.getStatus());
+                tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                 tripDriver.setWaitingTime(detail.getDuration());
-                tripDriver.price = detail.getFee();
+                tripDriver.setPrice(detail.getFee());
                 driverTrips.add(tripDriver);
             }
 

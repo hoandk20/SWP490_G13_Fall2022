@@ -93,7 +93,6 @@ const DriverManagementAdmin = () => {
                 return <div>
                     <EyeOutlined onClick={() => {
                     navigate('/admin/taixe-mgt/detail',{state:{record}})
-
                 }} />
     
                 </div>

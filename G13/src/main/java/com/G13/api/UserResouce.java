@@ -7,6 +7,9 @@ import com.G13.domain.*;
 import com.G13.master.MasterRole;
 import com.G13.master.MasterStatus;
 import com.G13.master.UploadFileMaster;
+import com.G13.model.RoleToUserForm;
+import com.G13.model.UserChangePassword;
+import com.G13.model.UserInfo;
 import com.G13.repo.*;
 import com.G13.service.UserService;
 import com.auth0.jwt.JWT;
@@ -35,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.attribute.UserPrincipal;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -56,6 +60,7 @@ public class UserResouce {
     private final CompanyRepository companyRepository;
     private final RiderRepository riderRepository;
     private final DocumentRepository documentRepository;
+    private  final VerifyaccountRepository verifyaccountRepository;
 
     @GetMapping("/checkEmailExist")
     public ResponseEntity<?> checkEmailExisted(String email){
@@ -80,6 +85,8 @@ public class UserResouce {
 
     public ResponseEntity<?> getUserInfo(String username){
         UserInfo userInfo = new UserInfo();
+        userInfo.setEmail(username);
+        userInfo.setUsername(username);
         User user = new User();
         user = userRepository.findByEmail(username);
         UploadFileMaster uploadFileMaster = new UploadFileMaster();
@@ -88,53 +95,59 @@ public class UserResouce {
 
         if(document!=null){
             FileManage fileManage = new FileManage();
-            userInfo.avatarBase64 = fileManage.GetBase64FromPath(document.getLink());
-            userInfo.email = username;
+            userInfo.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
+            userInfo.setEmail(username);
         }
 
 
         Driver driver = driverRepository.findByEmailOrderByCreatedDateDesc(username);
         if(driver!=null){
-            userInfo.firstname = driver.getFirstName();
-            userInfo.lastname = driver.getLastName();
-            userInfo.address = driver.getAddressID();
-            userInfo.phone = driver.getMobileNo();
-            userInfo.country = driver.getCountryCode();
+            userInfo.setFirstname(driver.getFirstName());
+            userInfo.setLastname(driver.getLastName());
+            userInfo.setAddress(driver.getAddressID());
+            userInfo.setPhone(driver.getMobileNo());
+            userInfo.setCountry(driver.getCountryCode());
 
         }
         Rider rider = riderRepository.findByEmail(username);
         if(rider!=null){
-            userInfo.firstname = rider.getFirstName();
-            userInfo.lastname = rider.getLastName();
-            userInfo.address = rider.getHomeAddressID();
-            userInfo.phone = rider.getMobileNo();
-            userInfo.country = rider.getCountryCode();
-            userInfo.username = rider.getEmail();
-            userInfo.email = rider.getEmail();
+            userInfo.setFirstname(rider.getFirstName());
+            userInfo.setLastname(rider.getLastName());
+            userInfo.setAddress(rider.getHomeAddressID());
+            userInfo.setPhone(rider.getMobileNo());
+            userInfo.setCountry(rider.getCountryCode());
+            userInfo.setUsername(rider.getEmail());
+            userInfo.setEmail(rider.getEmail());
         }
         Company company = companyRepository.findByNote(username);
         if(company!=null){
-            userInfo.firstname = company.getName();
-            userInfo.address = company.getAddressID();
-            userInfo.phone = company.getPhoneNo();
-            userInfo.username = company.getNote();
-            userInfo.email = company.getNote();
+            userInfo.setFirstname(company.getName());
+            userInfo.setAddress(company.getAddressID());
+            userInfo.setPhone(company.getPhoneNo());
+            userInfo.setUsername(company.getNote());
+            userInfo.setEmail(company.getNote());
+        }
+
+
+        Verifyaccount verifyaccount = verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+        if(verifyaccount!=null){
+            userInfo.setStatusVerify(verifyaccount.getStatus());
         }
         return ResponseEntity.ok().body(userInfo);
     }
 
     @PostMapping("user/changeinfoDriver")
     public ResponseEntity<?> changeDriver(@RequestBody UserInfo userInfo){
-        Driver driver = driverRepository.findByEmail(userInfo.username);
+        Driver driver = driverRepository.findByEmail(userInfo.getUsername());
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try{
             if(driver!=null){
-                driver.setFirstName(userInfo.firstname);
-                driver.setLastName(userInfo.lastname);
-                driver.setAddressID(userInfo.address);
-                driver.setMobileNo(userInfo.phone);
-                driver.setCountryCode(userInfo.country);
+                driver.setFirstName(userInfo.getFirstname());
+                driver.setLastName(userInfo.getLastname());
+                driver.setAddressID(userInfo.getAddress());
+                driver.setMobileNo(userInfo.getPhone());
+                driver.setCountryCode(userInfo.getCountry());
 
                 response.status = masterStatus.SUCCESSFULL;
                 response.object = driverRepository.save(driver);
@@ -152,16 +165,16 @@ public class UserResouce {
     }
     @PostMapping("user/changeinfoPassenger")
     public ResponseEntity<?> changePassenger(@RequestBody UserInfo userInfo){
-        Rider rider = riderRepository.findByEmail(userInfo.username);
+        Rider rider = riderRepository.findByEmail(userInfo.getUsername());
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try{
             if(rider!=null){
-                rider.setFirstName(userInfo.firstname);
-                rider.setLastName(userInfo.lastname);
-                rider.setHomeAddressID(userInfo.address);
-                rider.setMobileNo(userInfo.phone);
-                rider.setCountryCode(userInfo.country);
+                rider.setFirstName(userInfo.getFirstname());
+                rider.setLastName(userInfo.getLastname());
+                rider.setHomeAddressID(userInfo.getAddress());
+                rider.setMobileNo(userInfo.getPhone());
+                rider.setCountryCode(userInfo.getCountry());
                 response.status = masterStatus.SUCCESSFULL;
                 response.object = riderRepository.save(rider);
                 return ResponseEntity.ok().body(response);
@@ -243,10 +256,6 @@ public class UserResouce {
         }
     }
 
-
-
-
-
     @GetMapping("/autoGenUser")
     public void autoGenerateUser() {
         MasterRole m = new MasterRole();
@@ -266,25 +275,5 @@ public class UserResouce {
         userService.addRoleToUser("hoan3", m.ROLE_ADMIN);
     }
 }
-@Data
-class UserInfo{
-    String username;
-    String firstname;
-    String lastname;
-    String avatarBase64;
-    String address;
-    String email;
-    String phone;
-    String country;
-}
-@Data
-class RoleToUserForm {
-    private String username;
-    private String roleName;
-}
-@Data
-class UserChangePassword{
-    String email;
-    String oldPassword;
-    String newPassword;
-}
+
+

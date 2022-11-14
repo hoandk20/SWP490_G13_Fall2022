@@ -4,6 +4,8 @@ import com.G13.domain.*;
 import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
+import com.G13.model.RegisterDriverCompany;
+import com.G13.model.VehicleRequest;
 import com.G13.repo.CompanyRepository;
 import com.G13.repo.DriverRepository;
 import com.G13.repo.UserRoleRepository;
@@ -41,15 +43,15 @@ public class CompanyResource {
         try {
             Vehicle vehicle = new Vehicle();
 
-            vehicle.setCompanyID(companyRepository.findByNote(vr.companyEmail).getId());
-            vehicle.setProduceYear(vr.produceYear);
+            vehicle.setCompanyID(companyRepository.findByNote(vr.getCompanyEmail()).getId());
+            vehicle.setProduceYear(vr.getProduceYear());
             vehicle.setInteriorColor(vr.getInteriorColor());
             vehicle.setExteriorColor(vr.getExteriorColor());
             vehicle.setPlate(vr.getPlate());
             vehicle.setLisencePlatState(vr.getPlatState());
             vehicle.setLisencePlatCountry(vr.getPlateCountry());
-            vehicle.setCarTypeID(vr.typeId);
-            vehicle.setCreatedBy(vr.producer);
+            vehicle.setCarTypeID(vr.getTypeId());
+            vehicle.setCreatedBy(vr.getProducer());
             vehicle.setStatus(carStatus.Car_Pending);
 
 
@@ -76,15 +78,15 @@ public class CompanyResource {
 
         try {
 
-            Vehicle vehicle  = vehicleRepository.findById(vr.id);
-            vehicle.setProduceYear(vr.produceYear);
+            Vehicle vehicle  = vehicleRepository.findById(vr.getId());
+            vehicle.setProduceYear(vr.getProduceYear());
             vehicle.setInteriorColor(vr.getInteriorColor());
             vehicle.setExteriorColor(vr.getExteriorColor());
             vehicle.setPlate(vr.getPlate());
             vehicle.setLisencePlatState(vr.getPlatState());
             vehicle.setLisencePlatCountry(vr.getPlateCountry());
-            vehicle.setCarTypeID(vr.typeId);
-            vehicle.setCreatedBy(vr.producer);
+            vehicle.setCarTypeID(vr.getTypeId());
+            vehicle.setCreatedBy(vr.getProducer());
 
 
             response.content= vehicleRepository.save(vehicle).toString();
@@ -168,7 +170,7 @@ public class CompanyResource {
         float nofloat =0;
         short noShort = (short)0;
 
-        if(IsEmailExisted(rd.email)){
+        if(IsEmailExisted(rd.getEmail())){
 
             Map<String,Boolean> err = new HashMap<>();
             err.put("IsExistedEmail",true);
@@ -178,7 +180,7 @@ public class CompanyResource {
         }
         try {
             Driver driver = new Driver();
-            Company company = companyRepository.findByNote(rd.companyEmail);
+            Company company = companyRepository.findByNote(rd.getCompanyEmail());
             driver.setCompanyID(company.getId());
             driver.setCompanyName(company.getName());
             driver.setId(rd.getEmail());
@@ -187,13 +189,13 @@ public class CompanyResource {
             driver.setEmail(rd.getEmail());
             driver.setFirstName(rd.getFirstName());
             driver.setLastName(rd.getLastName());
-            driver.setMobileNo(rd.phoneNumber);
+            driver.setMobileNo(rd.getPhoneNumber());
             driver.setLanguageCode(rd.getLanguage());
             driver.setCountryCode(rd.getCountry());
             driverRepository.save(driver);
             User u = new User();
-            u.setEmail(rd.email);
-            u.setPassword(rd.password);
+            u.setEmail(rd.getEmail());
+            u.setPassword(rd.getPassword());
             User usersave = userService.saveUser(u);
             UserRole userRole = new UserRole();
             userRole.setUserId(new Long(usersave.getId()));
@@ -218,12 +220,12 @@ public class CompanyResource {
         float nofloat =0;
         short noShort = (short)0;
         try {
-            Driver driver  = driverRepository.findByEmail(rd.email);
+            Driver driver  = driverRepository.findByEmail(rd.getEmail());
             driver.setLanguageCode("vi");
             driver.setDriverCode("DR");
             driver.setFirstName(rd.getFirstName());
             driver.setLastName(rd.getLastName());
-            driver.setMobileNo(rd.phoneNumber);
+            driver.setMobileNo(rd.getPhoneNumber());
             driver.setLanguageCode(rd.getLanguage());
             driver.setCountryCode(rd.getCountry());
             driverRepository.save(driver);
@@ -247,15 +249,15 @@ public class CompanyResource {
         float nofloat =0;
         short noShort = (short)0;
         try {
-            Driver driver  = driverRepository.findByEmail(rd.email);
+            Driver driver  = driverRepository.findByEmail(rd.getEmail());
             if(driver==null){
                 response.content="driver not existed";
                 response.status = masterStatus.FAILURE;
                 return ResponseEntity.badRequest().body(response);
             }
-            Vehicle vehicle = vehicleRepository.findById(rd.vehicle);
+            Vehicle vehicle = vehicleRepository.findById(rd.getVehicle());
 
-            driver.setCurrentVehicle(rd.vehicle);
+            driver.setCurrentVehicle(rd.getVehicle());
             driver.setDeviceType("N/A");
             driverRepository.save(driver);
 
@@ -334,44 +336,5 @@ public class CompanyResource {
 
 
 }
-@Data
-class VehicleRequest{
 
-    String driverEmail;
-    int id;
-    String companyEmail;
-    String producer;
-    String produceYear;
-    String interiorColor;
-    String exteriorColor;
-    String plate;
-    String platState;
-    String plateCountry;
-    int typeId;
-}
-@Data
-class RegisterDriverCompany {
-    String driverID;
-    String companyEmail;
 
-    String email;
-    String password;
-
-    String firstName;
-    String lastName;
-    String phoneNumber;
-    String language;
-    String country;
-    String city;
-    int vehicle;
-    String companyName;
-    Instant createDate;
-    String docStatus;
-    String Status;
-    String lh;
-    String DeviceType;
-    CompanyInfo companyInfo;
-    List<DocumentRequest> listDocs;
-    VehicleRequest vehicleInfo;
-
-}

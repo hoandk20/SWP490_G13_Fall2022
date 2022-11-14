@@ -5,7 +5,9 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
-import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, getDriversForCompany, UploadFile } from '../../../../../../redux/apiRequest'
+
+import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, getDriversForCompany, UploadFile} from '../../../../../../redux/apiRequest'
+
 // import '../taixe-detail.css'
 const { Option } = Select;
 const TabCompanyInfo = (props) => {
@@ -26,10 +28,12 @@ const TabCompanyInfo = (props) => {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const URL = "http://26.36.110.116";
+    const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage6, setBaseImage6] = useState("");
     const [baseImage7, setBaseImage7] = useState("");
+
     const [date1, setDate1] = useState();
     const [date2, setDate2] = useState();
     const [date6, setDate6] = useState();
@@ -38,6 +42,17 @@ const TabCompanyInfo = (props) => {
     const [checkdoc2, setCheckdoc2] = useState(false);
     const [checkdoc6, setCheckdoc6] = useState(false);
     const [checkdoc7, setCheckdoc7] = useState(false);
+// =======
+
+//     const getFileAvatar = async () => {
+//         const file_name = "Avatar";
+//         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
+//             , {
+//                 headers: { 'Content-Type': 'application/json' }
+//             });
+//         setBaseImageAvatar(res.data.object.base64)
+//     }
+// >>>>>>> main
     const getFile1 = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
@@ -99,31 +114,6 @@ const TabCompanyInfo = (props) => {
     const changeStatusInValid7 = () => {
         ChaangeStatusDoc(GP_Hoat_Dong.id, "INVALID", toast, dispatch);
     }
-    const onfinish = (values) => {
-        console.log(values);
-        const driver = {
-            ...values,
-            companyEmail: user.email,
-        }
-        // EditDriverByCompany(driver, toast, dispatch)
-        // getDriversForCompany(user.email,dispatch);
-        setOpen(false);
-    };
-    const editDocument1 = () => {
-        setCheckdoc1(true);
-    }
-    const editDocument2 = () => {
-        setCheckdoc2(true);
-    }
-    const editDocument6 = () => {
-        setCheckdoc6(true);
-    }
-    const editDocument7 = () => {
-        setCheckdoc7(true);
-    }
-    const onfinishUploadVehicle = (values) => {
-
-    }
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
@@ -138,6 +128,60 @@ const TabCompanyInfo = (props) => {
             };
         });
     };
+    const uploadAvatar = async (e) => {
+        const file = await  e.target.files[0];
+        const base64 = await convertBase64(file);        
+        await setBaseImageAvatar(base64);
+    };
+    const onfinish = (values) => {
+        console.log(values);
+        const image= {
+            base64:baseImageAvatar,
+            createBy:companys.email,
+            fileName:"Avatar",
+            year:'',
+            month:''
+        }
+        UploadFile(image,toast,dispatch);
+        const driver = {
+            ...values,
+            companyEmail: user.email,
+        }
+        // EditDriverByCompany(driver, toast, dispatch)
+        // getDriversForCompany(user.email,dispatch);
+        setOpen(false);
+    };
+
+    const editDocument1 = () => {
+        setCheckdoc1(true);
+    }
+    const editDocument2 = () => {
+        setCheckdoc2(true);
+    }
+    const editDocument6 = () => {
+        setCheckdoc6(true);
+    }
+    const editDocument7 = () => {
+        setCheckdoc7(true);
+    }
+
+    const onfinishUploadVehicle = (values) => {
+
+    }
+    // const convertBase64 = (file) => {
+    //     return new Promise((resolve, reject) => {
+    //         const fileReader = new FileReader();
+    //         fileReader.readAsDataURL(file);
+
+    //         fileReader.onload = () => {
+    //             resolve(fileReader.result);
+    //         };
+
+    //         fileReader.onerror = (error) => {
+    //             reject(error);
+    //         };
+    //     });
+    // };
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
         console.log(file);
@@ -254,11 +298,11 @@ const TabCompanyInfo = (props) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input  disabled/>
                         </Form.Item>
                         <Form.Item
-                            name="address"
-                            initialValue={companys.companyName}
+                            name="companyAddress"
+                            initialValue={companys.companyAddress}
                             label="Địa chỉ"
                             rules={[
                                 {
@@ -269,6 +313,7 @@ const TabCompanyInfo = (props) => {
                         >
                             <Input />
                         </Form.Item>
+
 
                     </Col>
                     <Col span={8}>
@@ -417,6 +462,7 @@ const TabCompanyInfo = (props) => {
                 <p>Thôn tin Tài khoản</p>
                 <Row>
                     <Col span={8}>
+
                         <Form.Item
                             name="abc"
                             initialValue={companys.email}
@@ -428,16 +474,51 @@ const TabCompanyInfo = (props) => {
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input disabled/>
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-
+                        <Form.Item
+                            name="companyStatus"
+                            initialValue={companys.companyStatus}
+                            label="Trạng thái"
+                        >
+                            <Input disabled/>
+                        </Form.Item>
+                        <Form.Item
+                            name="phone"
+                            initialValue={companys.phone}
+                            label="Số ĐT"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please choose the type',
+                                },
+                            ]}
+                        >
+                            <Input disabled/>
+                        </Form.Item>
                     </Col>
                     <Col span={8}>
-
+                    <div >
+                                <Image
+                                    id='avatarImage'
+                                    src={baseImageAvatar}
+                                    className='avatar'
+                                />
+                                <div className='inputFile'>
+                                    <input
+                                        type="file"
+                                        style={{ color: "#fff" }}
+                                        onChange={(e) => {
+                                            uploadAvatar(e);
+                                        }}
+                                    />
+                                </div>
+                            </div>
                     </Col>
                 </Row>
+                <Button type="primary" htmlType="submit">Thay đổi thông tin</Button>
 
             </Form>
             <div className='doc-taixe'>
