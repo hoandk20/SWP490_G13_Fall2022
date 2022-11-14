@@ -13,6 +13,7 @@ import FreeTripDetailOfDriver from "../../views/khachhang/free-trips/free-trip-d
 import SerachFreeTripForPassenger from "../../views/khachhang/free-trips/search-free-trip";
 import InfoContactUser from "../../views/khachhang/info-contact";
 import TripHistoryPassenger from "../../views/khachhang/trip-history";
+import RegisterConfirmEmail from "../../views/registers/confirm-email";
 import RegisterCompanyDoc1 from "../../views/registers/register-congty/register-congty-document/register-congty-document1";
 import RegisterAddVehicle from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
 import RegisterCompanyDoc2 from "../../views/registers/register-congty/register-congty-document/register-congty-document2";
@@ -77,6 +78,12 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterDriverInfoVehico
     },
+    {
+        path: '/signup/confirm-email',
+        roleTarget: "ALL",
+        element: RegisterConfirmEmail
+    },
+
     {
         path: '/taixe/free-trip',
         roleTarget: "ROLE_DRIVER",

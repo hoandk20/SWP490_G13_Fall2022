@@ -3,39 +3,38 @@ import React from 'react';
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
 
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { UploadFile } from '../../../../redux/apiRequest';
+import { useDispatch, useSelector } from 'react-redux';
+import { ChangeStatusSignUp, getUser, UploadFile } from '../../../../redux/apiRequest';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router';
+import { useEffect } from 'react';
 
 const { Option } = Select;
 const RegisterDriverDoc = () => {
-
+   
     const location = useLocation();
-    const newUser = location.state.newUser;
-    const navigate =useNavigate();
+    const newUser=useSelector((state)=>state.user.userInfo?.currentUser);
+    console.log(newUser);
+    const navigate = useNavigate();
+    const [count, setCount] = useState(0);
+    const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
-    const [baseImage3, setBaseImage3] = useState("");
-    const [baseImage4, setBaseImage4] = useState("");
-    const [date1,setDate1]=useState();
-    const [date2,setDate2]=useState();
-    const [date3,setDate3]=useState();
-    const [date4,setDate4]=useState();
 
-    function getTime1(date,dateString) {
+    const [date1, setDate1] = useState();
+    const [date2, setDate2] = useState();
+
+
+    function getTime1(date, dateString) {
         setDate1(dateString);
     }
-    function getTime3(date,dateString) {
-        setDate3(dateString);
+    function getTime2(date, dateString) {
+        setDate2(dateString);
     }
-    function getTime4(date,dateString) {
-        setDate4(dateString);
-    }
-    
+
+
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
-        console.log(file);
         const base64 = await convertBase64(file);
         setBaseImage1(base64);
     };
@@ -44,74 +43,60 @@ const RegisterDriverDoc = () => {
         const base64 = await convertBase64(file);
         setBaseImage2(base64);
     };
-    const uploadImage3 = async (e) => {
-        const file = e.target.files[0];
-        const base64 = await convertBase64(file);
-        setBaseImage3(base64);
-    };
 
-    const uploadImage4 = async (e) => {
+    const uploadImageAvatar = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertBase64(file);
-        setBaseImage4(base64);
+        setBaseImageAvatar(base64);
     };
 
     const uploadfile1 = () => {
-        const arr=date1.split("-");
-        const year=arr[0];
-        const month=arr[1];
-        const object={
-            base64:baseImage1,
-            createBy:newUser.email,
-            fileName:"Bang_lai_xe",
-            year:year,
-            month:month
+        const arr = date1.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage1,
+            createBy: newUser.email,
+            fileName: "Bang_lai_xe",
+            year: year,
+            month: month
         }
-        UploadFile(object,toast);
+        UploadFile(object, toast);
+        setCount(count+1);
     };
-    
+
 
 
     const uploadfile2 = () => {
-        const object={
-            base64:baseImage2,
-            createBy:newUser.email,
-            fileName:"Chung_Nhan_Kinh_nghiem",
-            year:'',
-            month:''
+        const arr = date2.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage2,
+            createBy: newUser.email,
+            fileName: "Chung_Nhan_Kinh_nghiem",
+            year: year,
+            month: month
         }
-        UploadFile(object,toast);
+        UploadFile(object, toast);
+        setCount(count+1);
     };
-    
-    const uploadfile3 = () => {
-        const arr=date3.split("-");
-        const year=arr[0];
-        const month=arr[1];
-        const object={
-            base64:baseImage3,
-            createBy:newUser.email,
-            fileName:"GP_Kinh_Doanh",
-            year:year,
-            month:month
-        }
-        console.log(object);
-        UploadFile(object,toast);
-    };
-    
-    const uploadfile4 = () => {
-        const arr=date4.split("-");
-        const year=arr[0];
-        const month=arr[1];
-        const object={
-            base64:baseImage4,
-            createBy:newUser.email,
-            fileName:"GP_Hoat_Dong",
-            year:year,
-            month:month
+
+console.log(count);
+    const uploadfileAvatar = () => {
+        const year = "";
+        const month = "";
+        const object = {
+            base64: baseImageAvatar,
+            createBy: newUser.email,
+            fileName: "Avatar",
+            year: year,
+            month: month
         }
         console.log(object);
-        UploadFile(object,toast);
+        UploadFile(object, toast);
     };
+
 
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -129,9 +114,11 @@ const RegisterDriverDoc = () => {
     };
 
     const onClickNext = () => {
-        navigate('/signup/add-vehico' ,{state:{newUser}})       
+        ChangeStatusSignUp(newUser.email,2);
+        navigate('/signup/add-vehico', { state: { newUser } })
     };
-
+    const dispatch = useDispatch();
+ 
     return (
         <div className='container'>
             <div className='container-info'>
@@ -148,17 +135,29 @@ const RegisterDriverDoc = () => {
                                     </span>
 
                                 </div>
-                                <div className='form-content'>
+                                <div className='form-content' >
                                     <Row>
-                                        <Col sm={12} md={6} style={{ textAlign: "center" }}>
-                                            {/* <ImageAvatar/> */}
+                                        <Col sm={24} md={12} style={{ textAlign: "center", height: "230px" }}>
+                                            <img src={baseImageAvatar} height="220px" />
                                         </Col>
-                                        <Col sm={34} md={18} >
+                                        <Col sm={24} md={12} >
                                             Ghi Chú: Ảnh chụp kiểu chân dung, mới nhất, thẳng mặt và rõ nét.
                                             Kích thước ảnh tối đa là 256 kilô byte (256 KB)
                                         </Col>
                                     </Row>
+                                    <div className='content-bottom'>
+
+                                        <input
+                                            type="file"
+                                            style={{ color: "#fff" }}
+                                            onChange={(e) => {
+                                                uploadImageAvatar(e);
+                                            }}
+                                        />
+                                        <Button className='btn-submit' onClick={uploadfileAvatar} type='primary'>Gửi <CheckOutlined /></Button>
+                                    </div>
                                 </div>
+
                             </div>
                         </Col>
                         <Col sm={24} md={12}>
@@ -166,7 +165,7 @@ const RegisterDriverDoc = () => {
                                 <div className='form-header'>
                                     Ghi chú
                                 </div>
-                                <div className='form-content'>
+                                <div className='form-content' style={{ textAlign: "left" }}>
                                     <p>1. Đối với tài xế xe mô tô là sinh viên thì hồ sơ tư pháp có thể thay thế bằng thẻ sinh viên, sơ yếu lý lịch có chứng nhận của địa phương</p>
                                     <p> 2. Các giấy tờ chụp phải rõ nét, không tẩy xóa. Các tài liệu có thể bị coi là không hợp lệ nếu:</p>
                                     <p> . Tài liệu không rõ ràng hoặc bị mờ</p>
@@ -192,12 +191,12 @@ const RegisterDriverDoc = () => {
                                         <img src={baseImage1} height="220px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span style={{marginRight:"20px"}}>
+                                        <span style={{ marginRight: "20px" }}>
                                             Ngày hết hạn <DatePicker onChange={getTime1} picker='month' />
                                         </span>
                                         <input
                                             type="file"
-                                            style={{color:"#fff"}}
+                                            style={{ color: "#fff" }}
                                             onChange={(e) => {
                                                 uploadImage1(e);
                                             }}
@@ -226,13 +225,16 @@ const RegisterDriverDoc = () => {
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-                                    <img src={baseImage2} height="220px" />
+                                        <img src={baseImage2} height="220px" />
                                     </div>
-                                   
+
                                     <div className='content-bottom'>
-                                    <input
+                                        <span style={{ marginRight: "20px" }}>
+                                            Ngày hết hạn <DatePicker onChange={getTime2} picker='month' />
+                                        </span>
+                                        <input
                                             type="file"
-                                            style={{color:"#fff"}}
+                                            style={{ color: "#fff" }}
                                             onChange={(e) => {
                                                 uploadImage2(e);
                                             }}
@@ -242,10 +244,15 @@ const RegisterDriverDoc = () => {
                                 </div>
                             </div>
                         </Col>
-                    </Row>                   
+                    </Row>
                 </div>
-                <div style={{ marginTop: "50px" }}>
-                    <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
+                <div style={{ marginTop: "50px" }} >
+
+                    {count == 2 ? (
+                        <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
+                    ) : (
+                        <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>
+                    )}
                 </div>
             </div>
         </div>

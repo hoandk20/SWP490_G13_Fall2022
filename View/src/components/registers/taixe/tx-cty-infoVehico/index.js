@@ -12,6 +12,7 @@ const RegisterDriverInfoVehico = () => {
     const location = useLocation();
     const newUser = location.state.newUser;
     const vehicle = location.state.vehicle;
+    const [count, setCount] = useState(0);
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [date1, setDate1] = useState();
@@ -61,6 +62,7 @@ const RegisterDriverInfoVehico = () => {
             month: month
         }
         UploadFile(object, toast);
+        setCount(count+1);
     };
 
 
@@ -77,6 +79,7 @@ const RegisterDriverInfoVehico = () => {
             month: month
         }
         UploadFile(object, toast);
+        setCount(count+1);
     };
 
     return (
@@ -179,7 +182,12 @@ const RegisterDriverInfoVehico = () => {
                     </Row>
                 </div>
                 <div style={{ marginTop: "50px" }}>
-                    <Button type='primary' onClick={onClickFinish}>Finish <RightOutlined /> </Button>
+                    
+                    {count == 2 ? (
+                       <Button type='primary' onClick={onClickFinish}>Finish <RightOutlined /> </Button>
+                    ) : (
+                        <Button type='primary' disabled>Finish <RightOutlined /> </Button>
+                    )}
                 </div>
             </div>
         </div>

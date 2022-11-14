@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
 import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, getDriversForCompany } from '../../../../../redux/apiRequest';
+import ModalSendEmail from '../../../../commons/modals/modal-send-email';
 import './taixe-detail.css'
 const { Option } = Select;
 const DriverDetailAdmin = (props) => {
@@ -13,15 +14,33 @@ const DriverDetailAdmin = (props) => {
     const location = useLocation();
     const dispatch = useDispatch();
     const drivers = location.state?.record;
+    
+    const listDoc=drivers.listDocs;
     console.log(drivers);
+    console.log(listDoc);
+    const Bang_lai_xe=listDoc.find(doc =>doc.file_name==="Bang_lai_xe");
+    const Chung_Nhan_Kinh_nghiem=listDoc.find(doc =>doc.file_name==="Chung_Nhan_Kinh_nghiem");
+    const Chung_Nhan_Bao_Hiem=listDoc.find(doc =>doc.file_name==="Chung_Nhan_Bao_Hiem");
+    const Chung_Nhan_Dang_Kiem=listDoc.find(doc =>doc.file_name==="Chung_Nhan_Dang_Kiem");
+
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const URL = "http://26.36.110.116";
+    const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage6, setBaseImage6] = useState("");
     const [baseImage7, setBaseImage7] = useState("");
+   
+    const getFileAvatar = async () => {
+        const file_name = "Avatar";
+        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers.email}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        setBaseImageAvatar(res.data.object.base64)
+    }
     const getFile1 = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers.email}`
@@ -60,28 +79,28 @@ const DriverDetailAdmin = (props) => {
     }
 
     const changeStatusValid1 = () => {
-        ChaangeStatusDoc(drivers.listDocs[0].id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(Bang_lai_xe.id, "VALID", toast, dispatch);
     }
     const changeStatusInValid1 = () => {
-        ChaangeStatusDoc(drivers.listDocs[0].id, "INVALID", toast, dispatch);
+        ChaangeStatusDoc(Bang_lai_xe.id, "INVALID", toast, dispatch);
     }
     const changeStatusValid2 = () => {
-        ChaangeStatusDoc(drivers.listDocs[1].id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "VALID", toast, dispatch);
     }
     const changeStatusInValid2 = () => {
-        ChaangeStatusDoc(drivers.listDocs[1].id, "INVALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID", toast, dispatch);
     }
     const changeStatusValid6 = () => {
-        ChaangeStatusDoc(drivers.listDocs[2].id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "VALID", toast, dispatch);
     }
     const changeStatusInValid6 = () => {
-        ChaangeStatusDoc(drivers.listDocs[2].id, "INVALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "INVALID", toast, dispatch);
     }
     const changeStatusValid7 = () => {
-        ChaangeStatusDoc(drivers.listDocs[3].id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "VALID", toast, dispatch);
     }
     const changeStatusInValid7 = () => {
-        ChaangeStatusDoc(drivers.listDocs[3].id, "INVALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "INVALID", toast, dispatch);
     }
     const onfinish = (values) => {
         console.log(values);
@@ -97,7 +116,7 @@ const DriverDetailAdmin = (props) => {
     const onfinishUploadVehicle = (values) => {
 
     }
-
+    getFileAvatar();
     return (
         <>
             <Form onFinish={onfinish} layout="vertical" hideRequiredMark name="basic" form={form}
@@ -168,7 +187,13 @@ const DriverDetailAdmin = (props) => {
                         </Form.Item>
 
                     </Col>
-                    <Col span={8}>
+                    <Col  span={8}>
+                        <Image
+                            id='avatarImage'
+                            src={baseImageAvatar}
+                            className='avatar'
+                            style={{marginLeft:"50%"}}
+                        />
 
                     </Col>
                 </Row>
@@ -273,14 +298,7 @@ const DriverDetailAdmin = (props) => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col  span={8}>
-                        <Image
-                            id='avatarImage'
-                            src={drivers.avatar}
-                            className='avatar'
-                        />
 
-                    </Col>
                 </Row>
                 <p>Thôn tin Tài khoản</p>
                 <Row>
@@ -314,7 +332,7 @@ const DriverDetailAdmin = (props) => {
                     <div className='form-header-ad' style={{ height: "40px" }}>
                         <span>
                             Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                            <div className='status-ad'>{drivers.listDocs[0].status}</div>
+                            <div className='status-ad'>{Bang_lai_xe.status}</div>
                         </span>
 
                     </div>
@@ -325,7 +343,7 @@ const DriverDetailAdmin = (props) => {
                         <div className='upload-doc'>
                             <span>
                                 <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                <span style={{ fontSize: "20px" }}>Ngày hết hạn : {drivers.listDocs[0].expired_month}-{drivers.listDocs[0].expired_year}</span>
+                                <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Bang_lai_xe.expired_month}-{Bang_lai_xe.expired_year}</span>
                             </span>
 
 
@@ -341,7 +359,7 @@ const DriverDetailAdmin = (props) => {
                         <span>
                             Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên)
                             hoặc lý lịch tư pháp
-                            <div className='status-ad'>{drivers.listDocs[1].status}</div>
+                            <div className='status-ad'>{Chung_Nhan_Kinh_nghiem.status}</div>
                         </span>
 
                     </div>
@@ -352,7 +370,7 @@ const DriverDetailAdmin = (props) => {
                         <div className='upload-doc'>
                             <span>
                                 <Button onClick={getFile2} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                <span style={{ fontSize: "20px" }}>Ngày hết hạn : {drivers.listDocs[1].expired_month}-{drivers.listDocs[1].expired_year}</span>
+                                <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Chung_Nhan_Kinh_nghiem.expired_month}-{Chung_Nhan_Kinh_nghiem.expired_year}</span>
                             </span>
 
 
@@ -484,7 +502,7 @@ const DriverDetailAdmin = (props) => {
                                         <div className='form-header-ad' style={{ height: "40px" }}>
                                             <span>
                                                 Giấy chứng nhận bảo hiểm
-                                                <div className='status-ad'>{drivers.listDocs[2].status}</div>
+                                                <div className='status-ad'>{Chung_Nhan_Bao_Hiem.status}</div>
                                             </span>
 
                                         </div>
@@ -495,7 +513,7 @@ const DriverDetailAdmin = (props) => {
                                             <div className='upload-doc'>
                                                 <span>
                                                     <Button onClick={getFile6} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :{drivers.listDocs[2].expired_month}-{drivers.listDocs[2].expired_year}</span>
+                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Bao_Hiem.expired_month}-{Chung_Nhan_Bao_Hiem.expired_year}</span>
                                                 </span>
 
 
@@ -512,7 +530,7 @@ const DriverDetailAdmin = (props) => {
                                         <div className='form-header-ad' style={{ height: "40px" }}>
                                             <span>
                                                 Giấy chứng nhận đăng kiểm
-                                                <div className='status-ad'>{drivers.listDocs[3].status}</div>
+                                                <div className='status-ad'>{Chung_Nhan_Dang_Kiem.status}</div>
                                             </span>
 
                                         </div>
@@ -523,7 +541,7 @@ const DriverDetailAdmin = (props) => {
                                             <div className='upload-doc'>
                                                 <span>
                                                     <Button onClick={getFile7} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :{drivers.listDocs[3].expired_month}-{drivers.listDocs[3].expired_year}</span>
+                                                    <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Dang_Kiem.expired_month}-{Chung_Nhan_Dang_Kiem.expired_year}</span>
                                                 </span>
 
 
@@ -541,6 +559,9 @@ const DriverDetailAdmin = (props) => {
                     </Panel>
 
                 </Collapse>
+            </div>
+            <div style={{marginTop:"50px"}}>
+                <ModalSendEmail email={drivers.email}/>
             </div>
         </>
 

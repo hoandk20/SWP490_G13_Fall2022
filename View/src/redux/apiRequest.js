@@ -581,3 +581,63 @@ export const ChaangeStatusDoc = async (id, status, toast,dispatch) => {
     toast.error("Thay đổi thất bại")
   }
 }
+
+
+export const SendEmail = async (object, toast) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/admin/sendEmail`,
+      {
+        subject:object.subject,
+        emailTo:object.email,
+        body:object.body
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      toast.success("Gửi Email thành công")
+  } catch (error) {
+      toast.error("Gửi Email thất bại")
+  }
+}
+
+
+export const resendCode = async (email) => {
+  try {
+    const res = await axios.get(`${URL}:8080/api/getResendCode?email=${email}`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (error) { }
+}
+
+export const VerifyCodeEmail = async (newUser,code,toast,navigate) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/VerifyCode`,
+      {
+        email:newUser.email,
+        code:code,
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      navigate('/signup/driver-doc', { state: { newUser } });
+  } catch (error) {
+      toast.error("Vui lòng nhập lại mã xác nhận")
+  }
+}
+
+export const ChangeStatusSignUp = async (email,status,dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/ChangeStatusVerify`,
+      {
+        email:email,
+        status:status,
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      getUser(email,dispatch)
+  } catch (error) {
+
+  }
+}
+

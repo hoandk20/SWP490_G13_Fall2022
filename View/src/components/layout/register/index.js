@@ -29,21 +29,26 @@ const menuItem=[
   {
     key: '1',
     icon: <InfoCircleOutlined />,
-    label: 'TÀI XẾ',
+    label: 'TRANG CHỦ',
   },
   {
     key: '2',
     icon: <CarOutlined />,
-    label: 'HÀNH KHÁCH',
+    label: 'PHƯƠNG TIỆN',
   },
   {
     key: '3',
     icon: <IdcardOutlined />,
-    label: 'ĐỐI TÁC',
+    label: 'TÀI XẾ',
   },
   {
     key: '4',
     icon: <HistoryOutlined />,
+    label: 'LỊCH SỬ CHUYẾN ĐI',
+  },
+  {
+    key: '5',
+    icon: <LaptopOutlined rotate={180}/>,
     label: 'CHUYẾN ĐI MIỄN PHÍ',
   },
   {
@@ -53,7 +58,7 @@ const menuItem=[
   },
 ]
 
-const LayoutAdmin = (props) => {
+const LayoutSignup = (props) => {
   const {content}=props
   const [collapsed, setCollapsed] = useState(false);
   const navigate=useNavigate();
@@ -72,22 +77,23 @@ const LayoutAdmin = (props) => {
         <Menu
           theme='dark'
           mode="inline"
-          onClick={({key})=>{
-            if(key==='signOut'){
-              logoutUser(dispatch,navigate);
+        //   onClick={({key})=>{
+        //     if(key==='signOut'){
+        //       logoutUser(dispatch,navigate);
           
-            }else{
-              if(key==1){
-                navigate('/admin/taixe-mgt')
-              }
-              if(key==3){
-                navigate('/admin/company-mgt')
-              }
-            //   if(key==3){
-            //     navigate('/congty/driver-mgt')
-            //   }
-            }
-          }}
+        //     }else{
+        //       if(key==1){
+        //         navigate('/home')
+        //       }
+        //       if(key==2){
+        //         navigate('/congty/vehico-mgt')
+        //       }
+        //       if(key==3){
+        //         navigate('/congty/driver-mgt')
+        //       }
+        //     }
+        //   }
+        // }
    
           items={menuItem}
         />
@@ -115,4 +121,4 @@ const LayoutAdmin = (props) => {
   );
 };
 
-export default LayoutAdmin;
+export default LayoutSignup;

@@ -1,0 +1,18 @@
+.content-confirm-email{
+    margin-top: 7%;
+    margin-bottom: 7%;
+    display: flex;
+  justify-content: center;
+}
+
+.box-cf-email{
+    width: 60%;
+    height: 200px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.content-cf-email{
+    margin: 20px;
+}
+.bottom-cf-email{
+    display: inline-block;
+}

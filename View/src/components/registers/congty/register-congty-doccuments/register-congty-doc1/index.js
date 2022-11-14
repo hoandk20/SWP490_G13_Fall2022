@@ -13,26 +13,36 @@ import { useLocation, useNavigate } from 'react-router';
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
     const location = useLocation();
-    const user = useSelector((state) => state.user.userInfo?.currentUser)
+    const newUser = location.state.newUser;
+    const navigate = useNavigate();
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage3, setBaseImage3] = useState("");
     const [baseImage4, setBaseImage4] = useState("");
-    const [date1,setDate1]=useState();
-    const [date2,setDate2]=useState();
-    const [date3,setDate3]=useState();
-    const [date4,setDate4]=useState();
+    const [baseImageAvatar, setBaseImageAvatar] = useState("");
+    const [date1, setDate1] = useState();
+    const [date2, setDate2] = useState();
+    const [date3, setDate3] = useState();
+    const [date4, setDate4] = useState();
 
-    function getTime1(date,dateString) {
+    function getTime1(date, dateString) {
         setDate1(dateString);
     }
-    function getTime3(date,dateString) {
+    function getTime3(date, dateString) {
         setDate3(dateString);
     }
-    function getTime4(date,dateString) {
+    function getTime2(date, dateString) {
+        setDate2(dateString);
+    }
+    function getTime4(date, dateString) {
         setDate4(dateString);
     }
-    
+    const uploadImageAvatar = async (e) => {
+        const file = e.target.files[0];
+        const base64 = await convertBase64(file);
+        setBaseImageAvatar(base64);
+    };
+
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
         console.log(file);
@@ -55,62 +65,78 @@ const RegisterCompanyDoc1 = () => {
         const base64 = await convertBase64(file);
         setBaseImage4(base64);
     };
+    const uploadfileAvatar = () => {
+        const year = "";
+        const month = "";
+        const object = {
+            base64: baseImageAvatar,
+            createBy: newUser.email,
+            fileName: "Avatar",
+            year: year,
+            month: month
+        }
+        console.log(object);
+        UploadFile(object, toast);
+    };
 
     const uploadfile1 = () => {
-        const arr=date1.split("-");
-        const year=arr[0];
-        const month=arr[1];
-        const object={
-            base64:baseImage1,
-            createBy:user.email,
-            fileName:"Bang_lai_xe",
-            year:year,
-            month:month
+        const arr = date1.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage1,
+            createBy: newUser.email,
+            fileName: "Bang_lai_xe",
+            year: year,
+            month: month
         }
-        UploadFile(object,toast);
+        UploadFile(object, toast);
     };
-    
+
 
 
     const uploadfile2 = () => {
-        const object={
-            base64:baseImage2,
-            createBy:user.email,
-            fileName:"Chung_Nhan_Kinh_nghiem",
-            year:'',
-            month:''
+        const arr = date2.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage2,
+            createBy: newUser.email,
+            fileName: "Chung_Nhan_Kinh_nghiem",
+            year: year,
+            month: month,
         }
-        UploadFile(object,toast);
+        UploadFile(object, toast);
     };
-    
+
     const uploadfile3 = () => {
-        const arr=date3.split("-");
-        const year=arr[0];
-        const month=arr[1];
-        const object={
-            base64:baseImage3,
-            createBy:user.email,
-            fileName:"GP_Kinh_Doanh",
-            year:year,
-            month:month
+        const arr = date3.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage3,
+            createBy: newUser.email,
+            fileName: "GP_Kinh_Doanh",
+            year: year,
+            month: month
         }
         console.log(object);
-        UploadFile(object,toast);
+        UploadFile(object, toast);
     };
-    
+
     const uploadfile4 = () => {
-        const arr=date4.split("-");
-        const year=arr[0];
-        const month=arr[1];
-        const object={
-            base64:baseImage4,
-            createBy:user.email,
-            fileName:"GP_Hoat_Dong",
-            year:year,
-            month:month
+        const arr = date4.split("-");
+        const year = arr[0];
+        const month = arr[1];
+        const object = {
+            base64: baseImage4,
+            createBy: newUser.email,
+            fileName: "GP_Hoat_Dong",
+            year: year,
+            month: month
         }
         console.log(object);
-        UploadFile(object,toast);
+        UploadFile(object, toast);
     };
 
     const convertBase64 = (file) => {
@@ -127,10 +153,9 @@ const RegisterCompanyDoc1 = () => {
             };
         });
     };
-    const newUser = location.state.newUser;
-    const navigate =useNavigate();
+
     const onClickNext = () => {
-        navigate('/signup/company-doc2',{state:{newUser}});  
+        navigate('/signup/add-vehico', { state: { newUser } });
     };
 
     return (
@@ -141,7 +166,7 @@ const RegisterCompanyDoc1 = () => {
                 <div className='contents'>
                     <Row>
                         <Col sm={24} md={12}>
-                            <div className='card-doc'>
+                        <div className='card-doc'>
                                 <div className='form-header'>
                                     <span>
                                         Ảnh
@@ -149,17 +174,29 @@ const RegisterCompanyDoc1 = () => {
                                     </span>
 
                                 </div>
-                                <div className='form-content'>
+                                <div className='form-content' >
                                     <Row>
-                                        <Col sm={12} md={6} style={{ textAlign: "center" }}>
-                                            {/* <ImageAvatar/> */}
+                                        <Col sm={24} md={12} style={{ textAlign: "center",height:"230px"}}>
+                                            <img src={baseImageAvatar} height="220px" />
                                         </Col>
-                                        <Col sm={34} md={18} >
+                                        <Col sm={24} md={12} >
                                             Ghi Chú: Ảnh chụp kiểu chân dung, mới nhất, thẳng mặt và rõ nét.
                                             Kích thước ảnh tối đa là 256 kilô byte (256 KB)
                                         </Col>
                                     </Row>
+                                    <div className='content-bottom'>
+
+                                        <input
+                                            type="file"
+                                            style={{ color: "#fff" }}
+                                            onChange={(e) => {
+                                                uploadImageAvatar(e);
+                                            }}
+                                        />
+                                        <Button className='btn-submit' onClick={uploadfileAvatar} type='primary'>Gửi <CheckOutlined /></Button>
+                                    </div>
                                 </div>
+
                             </div>
                         </Col>
                         <Col sm={24} md={12}>
@@ -193,12 +230,12 @@ const RegisterCompanyDoc1 = () => {
                                         <img src={baseImage1} height="220px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span style={{marginRight:"20px"}}>
+                                        <span style={{ marginRight: "20px" }}>
                                             Ngày hết hạn <DatePicker onChange={getTime1} picker='month' />
                                         </span>
                                         <input
                                             type="file"
-                                            style={{color:"#fff"}}
+                                            style={{ color: "#fff" }}
                                             onChange={(e) => {
                                                 uploadImage1(e);
                                             }}
@@ -227,13 +264,16 @@ const RegisterCompanyDoc1 = () => {
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-                                    <img src={baseImage2} height="220px" />
+                                        <img src={baseImage2} height="220px" />
                                     </div>
-                                   
+
                                     <div className='content-bottom'>
-                                    <input
+                                        <span style={{ marginRight: "20px" }}>
+                                            Ngày hết hạn <DatePicker onChange={getTime1} picker='month' />
+                                        </span>
+                                        <input
                                             type="file"
-                                            style={{color:"#fff"}}
+                                            style={{ color: "#fff" }}
                                             onChange={(e) => {
                                                 uploadImage2(e);
                                             }}
@@ -256,15 +296,15 @@ const RegisterCompanyDoc1 = () => {
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-                                    <img src={baseImage3} height="220px" />
+                                        <img src={baseImage3} height="220px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span style={{marginRight:"20px"}}>
+                                        <span style={{ marginRight: "20px" }}>
                                             Ngày hết hạn <DatePicker onChange={getTime3} picker='month' />
                                         </span>
                                         <input
                                             type="file"
-                                            style={{color:"#fff"}}
+                                            style={{ color: "#fff" }}
                                             onChange={(e) => {
                                                 uploadImage3(e);
                                             }}
@@ -285,19 +325,19 @@ const RegisterCompanyDoc1 = () => {
                                 </div>
                                 <div className='form-content'>
                                     <div className='form-image' style={{ height: "230px" }}>
-                                    <img src={baseImage4} height="220px" />
+                                        <img src={baseImage4} height="220px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span style={{marginRight:"20px"}}>
+                                        <span style={{ marginRight: "20px" }}>
                                             Ngày hết hạn <DatePicker onChange={getTime4} picker='month' />
                                         </span>
                                         <input
                                             type="file"
-                                            style={{color:"#fff"}}
+                                            style={{ color: "#fff" }}
                                             onChange={(e) => {
                                                 uploadImage4(e);
                                             }}
-                                            
+
                                         />
                                         <Button className='btn-submit' onClick={uploadfile4} type='primary'>Gửi <CheckOutlined /></Button>
                                     </div>

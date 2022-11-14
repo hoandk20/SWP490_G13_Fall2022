@@ -1,82 +1,83 @@
-import { Button, Form, Input, Row, Col, Select, Table, Popconfirm } from 'antd';
+import { Button, Checkbox, Form, Input, Row, Col, Select, Table, DatePicker, Popconfirm } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect, useState } from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
-
+import AddVehico from '../../../../../commons/drawers/drawer-vehico-mgt/drawer-add--vehico';
 import { useDispatch, useSelector } from 'react-redux';
-
-
+import { deleteVehicelByCompany, getAllVehico } from '../../../../../../redux/apiRequest';
+import EditVehico from '../../../../../commons/drawers/drawer-vehico-mgt/drawer-edit-vehico';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router';
-import { getCompanysByAdmin } from '../../../../redux/apiRequest';
 
 
 const { Option } = Select;
-const CompanyManagementAdmin = () => {
-
-    const navigate =useNavigate();
+const VehicleOfCompany = (props) => {
 
     const dispatch = useDispatch();
+    const [companys,setCompanys]=useState(props.companys);
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
-    const all=useSelector((state)=>state.user.companys?.all);
-    console.log(all);
-    const drivers=all?.map((row)=> ({ ...row,key:row.companyID,bangphi:'Không'}));
 
-    useEffect(()=>{
-        getCompanysByAdmin(dispatch);        
-    },[])
-
-    const data=[];
+    const all = useSelector((state) => state.vehico.vehicos?.all);
+    const vehicos = all?.map((row) => ({ ...row, key: row.id }))
 
 
+    const handleDelete = (key) => {
+        console.log(key);
+         deleteVehicelByCompany(key,companys.email,toast,dispatch);
+    };
+    const cancel = (e) => {
+
+    };
+    useEffect(() => {
+        getAllVehico(companys.email, dispatch);
+    }, [])
     const columns = [
+        // {
+        //     key: 'index',
+        //     title: 'Số',
+        //     dataIndex: 'index',
+        // },
         {
-            key: 'email',
-            title: 'Tài Khoản Quản Trị',
-            dataIndex: 'email',
+            key: 'producer',
+            title: 'Kiểu phương tiện',
+            dataIndex: 'producer',
         },
         {
-            key: 'companyName',
-            title: 'Tên Công Ty',
-            dataIndex: 'companyName',
+            key: 'plate',
+            title: 'Biển số',
+            dataIndex: 'plate',
         },
         {
-            key: 'companyAddress',
-            title: 'Địa Chỉ',
-            dataIndex: 'companyAddress',
+            key: 'produceYear',
+            title: 'Năm sản xuất',
+            dataIndex: 'produceYear',
         },
         {
-            key: 'companyStatus',
+            key: 'price',
+            title: 'Giấy chứng nhận bảo hiểm',
+            dataIndex: 'price',
+        },
+        {
+            key: 'irs',
+            title: 'Giấy đăng kiểm',
+            dataIndex: 'irs',
+        },
+        {
+            key: 'status',
             title: 'Trạng thái',
-            dataIndex: 'companyStatus',
+            dataIndex: 'status',
         },
-        {
-            key: 'createDate',
-            title: 'Ngày Đăng Ký',
-            dataIndex: 'createDate',
-        },
-        {
-            key: 'docStatus',
-            title: 'Nhóm Công Ty',
-            dataIndex: 'docStatus',
-        },
-        {
-            key: 'bangphi',
-            title: 'Bảng Phí',
-            dataIndex: 'bangphi',
-        },
+
+
         {
             title: '',
             dataIndex: '',
             key: 'x',
             render: (text, record, index) => {
                 return <div>
-                    <EyeOutlined onClick={() => {
-                    navigate('/admin/company-mgt/detail',{state:{record}})
-                }} />
-    
+                    <EditVehico state={record} />
+
                 </div>
+
             },
         },
 
@@ -88,7 +89,8 @@ const CompanyManagementAdmin = () => {
                 return <div>
                     <Popconfirm
                         title="Bạn có muốn xóa phương tiện này?"
-                       
+                        onConfirm={() => handleDelete(record.key)}
+                        onCancel={cancel}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -102,18 +104,14 @@ const CompanyManagementAdmin = () => {
 
     return (
         <div className='container'>
-            <div className='container-infos' style={{
-                textAlign: "left",
-                marginLeft: "20px"
-            }}>
-                <h2>QUẢN TRỊ VÀ NHÂN VIÊN</h2>
-                <h3>TÌM ĐỐI Tác</h3>
+            <div className='container-infos' >
+                <h2>PHƯƠNG TIỆN</h2>
                 <div className='driver-info'>
                     <Form labelCol={{
                         span: 4,
                     }}
                         wrapperCol={{
-                            span: 12,
+                            span: 16,
                         }}
                     >
                         <Row>
@@ -173,13 +171,13 @@ const CompanyManagementAdmin = () => {
                     </div> */}
                 </div>
                 <div style={{ marginLeft: "50px", float: "left" }}>
-                    {/* <AddVehico /> */}
+                    <AddVehico />
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={drivers} size="middle" />
+                    <Table columns={columns} dataSource={vehicos} size="middle" />
                 </div>
             </div>
         </div >
     )
 }
-export default CompanyManagementAdmin
+export default VehicleOfCompany

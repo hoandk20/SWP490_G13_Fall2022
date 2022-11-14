@@ -3,17 +3,21 @@ import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { Option } from 'antd/lib/mentions';
 import React from 'react';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import { AddVehicoByCompany, AddVehicoByDriver } from '../../../../../redux/apiRequest';
+import { AddVehicoByCompany, AddVehicoByDriver, ChangeStatusSignUp } from '../../../../../redux/apiRequest';
 import AddVehico from '../../../../vehicos/add-vehico';
 
 const RegisterAddVehicle = () => {
+
     const navigate =useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
+    const [count, setCount] = useState(0);
     const newUser = location.state.newUser;
+    const user = useSelector((state) => state.user.userInfo?.currentUser)
+    console.log(newUser);
     const [vehicle,setVehicle]=useState("");
 
     const onfinish = (values) => {
@@ -26,6 +30,7 @@ const RegisterAddVehicle = () => {
             setVehicle(vehico)
            
             AddVehicoByDriver(vehico,toast);
+            setCount(count+1);
         }
         else {
             console.log(values);
@@ -35,11 +40,12 @@ const RegisterAddVehicle = () => {
             }
             setVehicle(vehico)
             AddVehicoByCompany(vehico, toast, dispatch);
+            setCount(count+1);
         }
     };
-    console.log(vehicle);
+    console.log(count);
     const onClickNext = () => {
-
+        ChangeStatusSignUp(newUser.email,3);
         navigate('/signup/vehico-info',{state:{newUser,vehicle}});      
     };
     return (
@@ -188,7 +194,12 @@ const RegisterAddVehicle = () => {
             </div>
             </div>
             <div style={{ marginTop: "50px" }}>
-                    <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined/> </Button>
+                    {/* <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined/> </Button> */}
+                    {count == 1 ? (
+                        <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
+                    ) : (
+                        <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>
+                    )}
                 </div>
         </div>
     )

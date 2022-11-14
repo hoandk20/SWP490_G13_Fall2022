@@ -11,6 +11,9 @@ const userSlice=createSlice({
         drivers:{
             all:null,
         },
+        driver:{
+            info:null,
+        },
         companys:{
             all:null,
         }
@@ -35,6 +38,9 @@ const userSlice=createSlice({
         },
         getAllCompanyForAdmin:(state,action)=>{
             state.companys.all=action.payload;        
+        },
+        getDriverByDriverId(state,action){
+            state.driver.info=action.payload
         }
     }
 
@@ -46,7 +52,8 @@ export const{
     getUserFailed,
     deleteUser,
     getAllDriverForCompany,
-    getAllCompanyForAdmin
+    getAllCompanyForAdmin,
+    getDriverByDriverId
 }=userSlice.actions;
 
 export default userSlice.reducer;

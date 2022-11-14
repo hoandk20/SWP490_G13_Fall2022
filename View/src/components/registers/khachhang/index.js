@@ -65,7 +65,7 @@ const RegisterPassenger = () => {
             phoneNumber:values.phoneNumber,
         }
         registerPassenger(newUser,dispatch,navigate,toast);
-       
+        navigate("/signup/confirm-email");
 
     };
 
