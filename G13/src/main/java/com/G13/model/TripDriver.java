@@ -2,6 +2,7 @@ package com.G13.model;
 
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -19,5 +20,11 @@ public class  TripDriver{
      int WaitingTime;
      double price;
      String status;
+     Instant InstantTimeStart;
      List<TripPassenger> listPassenger;
+     String phoneDriver;
+     String phonePassenger;
+     String listPolyline;
+     int NoOfPolyline;
+
 }

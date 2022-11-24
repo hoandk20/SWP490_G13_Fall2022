@@ -10,6 +10,7 @@ import com.G13.master.UploadFileMaster;
 import com.G13.model.RoleToUserForm;
 import com.G13.model.UserChangePassword;
 import com.G13.model.UserInfo;
+import com.G13.model.VehicleRequest;
 import com.G13.repo.*;
 import com.G13.service.UserService;
 import com.auth0.jwt.JWT;
@@ -61,7 +62,7 @@ public class UserResouce {
     private final RiderRepository riderRepository;
     private final DocumentRepository documentRepository;
     private  final VerifyaccountRepository verifyaccountRepository;
-
+    private final VehicleRepository vehicleRepository;
     @GetMapping("/checkEmailExist")
     public ResponseEntity<?> checkEmailExisted(String email){
         boolean IsExisted = userService.IsEmailExisted(email);
@@ -107,7 +108,26 @@ public class UserResouce {
             userInfo.setAddress(driver.getAddressID());
             userInfo.setPhone(driver.getMobileNo());
             userInfo.setCountry(driver.getCountryCode());
+            userInfo.setRole("ROLE_DRIVER");
+            try{
+                Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                if(vehicle!=null){
+                    VehicleRequest vehicleRequest = new VehicleRequest();
+                    vehicleRequest.setId(vehicle.getId());
+                    vehicleRequest.setCompanyEmail("");
+                    vehicleRequest.setProducer(vehicle.getCreatedBy());
+                    vehicleRequest.setProduceYear(vehicle.getProduceYear());
+                    vehicleRequest.setInteriorColor(vehicle.getInteriorColor());
+                    vehicleRequest.setExteriorColor(vehicle.getExteriorColor());
+                    vehicleRequest.setPlate(vehicle.getPlate());
+                    vehicleRequest.setPlatState(vehicle.getLisencePlatState());
+                    vehicleRequest.setPlateCountry(vehicle.getLisencePlatCountry());
+                    vehicleRequest.setTypeId(vehicle.getCarTypeID());
+                    userInfo.setVehicleRequest(vehicleRequest);
+                }
+            }catch (Exception e){
 
+            }
         }
         Rider rider = riderRepository.findByEmail(username);
         if(rider!=null){
@@ -118,6 +138,7 @@ public class UserResouce {
             userInfo.setCountry(rider.getCountryCode());
             userInfo.setUsername(rider.getEmail());
             userInfo.setEmail(rider.getEmail());
+            userInfo.setRole("ROLE_PASSENGER");
         }
         Company company = companyRepository.findByNote(username);
         if(company!=null){
@@ -126,6 +147,26 @@ public class UserResouce {
             userInfo.setPhone(company.getPhoneNo());
             userInfo.setUsername(company.getNote());
             userInfo.setEmail(company.getNote());
+            userInfo.setRole("ROLE_COMPANY");
+            try{
+                Vehicle vehicle = vehicleRepository.findFirstByOrderByCreatedDateDesc();
+                if(vehicle!=null){
+                    VehicleRequest vehicleRequest = new VehicleRequest();
+                    vehicleRequest.setId(vehicle.getId());
+                    vehicleRequest.setCompanyEmail("");
+                    vehicleRequest.setProducer(vehicle.getCreatedBy());
+                    vehicleRequest.setProduceYear(vehicle.getProduceYear());
+                    vehicleRequest.setInteriorColor(vehicle.getInteriorColor());
+                    vehicleRequest.setExteriorColor(vehicle.getExteriorColor());
+                    vehicleRequest.setPlate(vehicle.getPlate());
+                    vehicleRequest.setPlatState(vehicle.getLisencePlatState());
+                    vehicleRequest.setPlateCountry(vehicle.getLisencePlatCountry());
+                    vehicleRequest.setTypeId(vehicle.getCarTypeID());
+                    userInfo.setVehicleRequest(vehicleRequest);
+                }
+            }catch (Exception e){
+
+            }
         }
 
 

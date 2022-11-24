@@ -1,11 +1,15 @@
 package com.G13.api;
 
+import com.G13.domain.Promotiontrip;
+import com.G13.domain.Rider;
 import com.G13.domain.Trip;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
 import com.G13.master.RegisterStatus;
 import com.G13.model.ChangeStatus;
 import com.G13.model.TripPassenger;
+import com.G13.repo.PromotiontripRepository;
+import com.G13.repo.RiderRepository;
 import com.G13.repo.TripRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,8 @@ import java.util.*;
 public class PassengerTrip {
 
     private final TripRepository tripRepository;
+    private final RiderRepository riderRepository;
+    private final PromotiontripRepository promotiontripRepository;
 
 
     @PostMapping("/updateRegisterStatus")
@@ -72,7 +78,9 @@ public class PassengerTrip {
         Date date = new Date();
         long time = date.getTime();
 
+
         try {
+            Rider rider = riderRepository.findByEmail(rp.getPassengerEmail());
             MasterTripStatus m = new MasterTripStatus();
             Trip t = new Trip();
             t.setRiderID(rp.getPassengerEmail());
@@ -87,6 +95,17 @@ public class PassengerTrip {
             t.setDriverWaitingTime((short)rp.getWaitingTime());
             t.setDuration((short)rp.getSeatRegister());
             t.setStatus(masterTripStatus.TRIP_PENDING);
+            t.setMobileRelative(rider.getMobileNo());
+
+            Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(t.getTripCode());
+            if(promotiontrip.getCapacity()-promotiontrip.getNumberCapacityRegistered()<t.getDuration()){
+                response.content="do not enough seat";
+                response.status = masterStatus.FAILURE;
+                return ResponseEntity.badRequest().body(response);
+            }else{
+                promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+t.getDuration());
+                promotiontripRepository.save(promotiontrip);
+            }
             response.content= tripRepository.save(t).toString();
             response.object=t;
             response.status = masterStatus.SUCCESSFULL;
@@ -167,33 +186,34 @@ public class PassengerTrip {
         }
     }
 
-    @GetMapping("/detail")
-    public ResponseEntity<?> CreateTrip (String id){
+//    @GetMapping("/detail")
+//    public ResponseEntity<?> TripDetail (String id){
+//
+//        ResopnseContent response = new ResopnseContent();
+//        MasterStatus masterStatus = new MasterStatus();
+//
+//        try{
+//        Trip detail = tripRepository.findTripByIdOrderByCreatedDateDesc(id);
+//            TripPassenger tripPassenger = new TripPassenger();
+//            tripPassenger.setSeatRegister(detail.getDuration()) ;
+//            tripPassenger.setStatus(detail.getStatus()); ;
+//            tripPassenger.setDriverEmail(detail.getDriverID());
+//            tripPassenger.setFrom(detail.getFromAddress());
+//            tripPassenger.setTo( detail.getToAddress());
+//            tripPassenger.setPassengerEmail(detail.getRiderID());
+//            tripPassenger.setTimeStart(Date.from(detail.getTimeStart()));
+//            tripPassenger.setWaitingTime(detail.getDriverWaitingTime());
+//            tripPassenger.setPrice(detail.getOpenPrice());
+//        response.object=tripPassenger;
+//        response.status = masterStatus.SUCCESSFULL;
+//        return ResponseEntity.ok().body(response);
+//        }catch (Exception exception) {
+//            response.content = exception.toString();
+//            response.status = masterStatus.FAILURE;
+//            return ResponseEntity.badRequest().body(response);
+//        }
+//    }
 
-        ResopnseContent response = new ResopnseContent();
-        MasterStatus masterStatus = new MasterStatus();
-
-        try{
-        Trip detail = tripRepository.findTripByIdOrderByCreatedDateDesc(id);
-            TripPassenger tripPassenger = new TripPassenger();
-            tripPassenger.setSeatRegister(detail.getDuration()) ;
-            tripPassenger.setStatus(detail.getStatus()); ;
-            tripPassenger.setDriverEmail(detail.getDriverID());
-            tripPassenger.setFrom(detail.getFromAddress());
-            tripPassenger.setTo( detail.getToAddress());
-            tripPassenger.setPassengerEmail(detail.getRiderID());
-            tripPassenger.setTimeStart(Date.from(detail.getTimeStart()));
-            tripPassenger.setWaitingTime(detail.getDriverWaitingTime());
-            tripPassenger.setPrice(detail.getOpenPrice());
-        response.object=tripPassenger;
-        response.status = masterStatus.SUCCESSFULL;
-        return ResponseEntity.ok().body(response);
-        }catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
 }
 
 

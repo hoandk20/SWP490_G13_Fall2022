@@ -13,4 +13,6 @@ public class UserInfo {
     String phone;
     String country;
     String statusVerify;
+    String Role;
+    VehicleRequest vehicleRequest;
 }

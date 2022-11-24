@@ -4,12 +4,12 @@ import com.G13.domain.*;
 import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
+import com.G13.master.UploadFileMaster;
+import com.G13.model.CompanyInfo;
+import com.G13.model.DocumentRequest;
 import com.G13.model.RegisterDriverCompany;
 import com.G13.model.VehicleRequest;
-import com.G13.repo.CompanyRepository;
-import com.G13.repo.DriverRepository;
-import com.G13.repo.UserRoleRepository;
-import com.G13.repo.VehicleRepository;
+import com.G13.repo.*;
 import com.G13.service.UserServiceImpl;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +30,7 @@ public class CompanyResource {
     private final DriverRepository driverRepository;
     private final UserServiceImpl userService;
     private final UserRoleRepository userRoleRepository;
+    private final DocumentRepository documentRepository;
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle (@RequestBody VehicleRequest vr) {
         Date date = new Date();
@@ -332,6 +333,82 @@ public class CompanyResource {
     }
     public boolean IsEmailExisted(String email){
         return userService.IsEmailExisted(email);
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<?> CompanyDetail(String companyEmail){
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try {
+                Company c = companyRepository.findByNote(companyEmail);
+
+                CompanyInfo companyInfo = new CompanyInfo();
+                companyInfo.setCompanyStatus(c.getStatus());
+                companyInfo.setCreateDate(c.getCreatedDate());
+                companyInfo.setCompanyAddress(c.getAddressID());
+                companyInfo.setEmail(c.getNote());
+                companyInfo.setPhone(c.getPhoneNo());
+                companyInfo.setCompanyName(c.getName());
+                List<DocumentRequest> documentRequests = new ArrayList<>();
+                UploadFileMaster uploadFileMaster = new UploadFileMaster();
+                Document document1 = documentRepository
+                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Bang_lai_xe);
+                if (document1 != null) {
+                    DocumentRequest documentRequest = new DocumentRequest();
+                    documentRequest.setExpired_month(document1.getExpiredMonth());
+                    documentRequest.setExpired_year(document1.getExpiredYear());
+                    documentRequest.setId(document1.getId());
+                    documentRequest.setStatus(document1.getStatus());
+                    documentRequest.setFile_name(document1.getFileName());
+                    documentRequest.setCreateBy(document1.getCreatedBy());
+                    documentRequests.add(documentRequest);
+                }
+                Document document2 = documentRepository
+                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
+                if (document2 != null) {
+                    DocumentRequest documentRequest = new DocumentRequest();
+                    documentRequest.setExpired_month(document2.getExpiredMonth());
+                    documentRequest.setExpired_year(document2.getExpiredYear());
+                    documentRequest.setId(document2.getId());
+                    documentRequest.setStatus(document2.getStatus());
+                    documentRequest.setFile_name(document2.getFileName());
+                    documentRequest.setCreateBy(document2.getCreatedBy());
+                    documentRequests.add(documentRequest);
+                }
+                Document document3 = documentRepository
+                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Kinh_Doanh);
+                if (document3 != null) {
+                    DocumentRequest documentRequest = new DocumentRequest();
+                    documentRequest.setExpired_month(document3.getExpiredMonth());
+                    documentRequest.setExpired_year(document3.getExpiredYear());
+                    documentRequest.setId(document3.getId());
+                    documentRequest.setStatus(document3.getStatus());
+                    documentRequest.setFile_name(document3.getFileName());
+                    documentRequest.setCreateBy(document3.getCreatedBy());
+                    documentRequests.add(documentRequest);
+                }
+                Document document4 = documentRepository
+                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Hoat_Dong);
+                if (document3 != null) {
+                    DocumentRequest documentRequest = new DocumentRequest();
+                    documentRequest.setExpired_month(document4.getExpiredMonth());
+                    documentRequest.setExpired_year(document4.getExpiredYear());
+                    documentRequest.setId(document4.getId());
+                    documentRequest.setStatus(document4.getStatus());
+                    documentRequest.setFile_name(document4.getFileName());
+                    documentRequest.setCreateBy(document4.getCreatedBy());
+                    documentRequests.add(documentRequest);
+                }
+                companyInfo.setListDoc(documentRequests);
+            response.status = masterStatus.SUCCESSFULL;
+            response.object = companyInfo;
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.content = exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+
     }
 
 

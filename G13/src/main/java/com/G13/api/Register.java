@@ -80,7 +80,7 @@ public class Register {
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
             MailAPI mailAPI = new MailAPI();
             mailAPI.SendEmailVerifyAccount(rc.getEmail(),verifyaccount.getVerificode());
-            verifyaccountRepository.save(verifyaccount);
+            response.object=verifyaccountRepository.saveAndFlush(verifyaccount);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
             response.content=exception.toString();
@@ -148,6 +148,7 @@ public class Register {
                 driver.setLanguageCode("vi");
                 driver.setCountryCode(rd.getCountry());
                 driver.setLanguageCode(rd.getLanguage());
+                driver.setAddressID(rd.getCity()+" ");
                 driverRepository.save(driver);
                 User u = new User();
                 u.setEmail(rd.getEmail());
@@ -165,9 +166,8 @@ public class Register {
                 verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
                 MailAPI mailAPI = new MailAPI();
                 mailAPI.SendEmailVerifyAccount(rd.getEmail(),verifyaccount.getVerificode());
-                verifyaccountRepository.save(verifyaccount);
+                response.object=verifyaccountRepository.saveAndFlush(verifyaccount);
                 response.setStatus(masterStatus.SUCCESSFULL);
-
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
                 response.content=exception.toString();
@@ -215,7 +215,7 @@ public class Register {
                 verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
                 MailAPI mailAPI = new MailAPI();
                 mailAPI.SendEmailVerifyAccount(rp.getEmail(),verifyaccount.getVerificode());
-                verifyaccountRepository.save(verifyaccount);
+                response.object=verifyaccountRepository.saveAndFlush(verifyaccount);
                 response.setStatus(masterStatus.SUCCESSFULL);
 
                 return ResponseEntity.ok().body(response);
