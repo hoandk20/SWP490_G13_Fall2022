@@ -9,9 +9,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -19,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminResource {
     private final DriverRepository driverRepository;
+    private final TripRepository tripRepository;
     private final CompanyRepository companyRepository;
     private final PromotiontripRepository promotiontripRepository;
 
@@ -26,15 +32,12 @@ public class AdminResource {
     private final VehicleRepository vehicleRepository;
 
     @GetMapping("/GetDrivers")
-    public ResponseEntity<?> getDrivers() {
+    public ResponseEntity<?> getDrivers(String regFrom, String regTo, String phone, String driverName, String email, String Status, String city, String plate) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try {
-
-
             List<Driver> drivers = driverRepository.findAll();
             List<RegisterDriverCompany> registerDriverCompanies = new ArrayList<>();
-
             for (Driver driver : drivers) {
                 RegisterDriverCompany r = new RegisterDriverCompany();
                 r.setEmail(driver.getEmail());
@@ -63,58 +66,6 @@ public class AdminResource {
                 } catch (Exception e) {
 
                 }
-                List<DocumentRequest> documentRequests = new ArrayList<>();
-                UploadFileMaster uploadFileMaster = new UploadFileMaster();
-                Document document1 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Bang_lai_xe);
-                if (document1 != null) {
-                    DocumentRequest documentRequest1 = new DocumentRequest();
-                    documentRequest1.setExpired_month(document1.getExpiredMonth());
-                    documentRequest1.setExpired_year(document1.getExpiredYear());
-                    documentRequest1.setId(document1.getId());
-                    documentRequest1.setStatus(document1.getStatus());
-                    documentRequest1.setFile_name(document1.getFileName());
-                    documentRequest1.setCreateBy(document1.getCreatedBy());
-                    documentRequests.add(documentRequest1);
-                }
-                Document document2 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
-                if (document2 != null) {
-                    DocumentRequest documentRequest2 = new DocumentRequest();
-                    documentRequest2.setExpired_month(document2.getExpiredMonth());
-                    documentRequest2.setExpired_year(document2.getExpiredYear());
-                    documentRequest2.setId(document2.getId());
-                    documentRequest2.setStatus(document2.getStatus());
-                    documentRequest2.setFile_name(document2.getFileName());
-                    documentRequest2.setCreateBy(document2.getCreatedBy());
-                    documentRequests.add(documentRequest2);
-                }
-                Document document3 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Bao_Hiem);
-                if (document3 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document3.getExpiredMonth());
-                    documentRequest.setExpired_year(document3.getExpiredYear());
-                    documentRequest.setId(document3.getId());
-                    documentRequest.setStatus(document3.getStatus());
-                    documentRequest.setFile_name(document3.getFileName());
-                    documentRequest.setCreateBy(document3.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                Document document4 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Dang_Kiem);
-                if (document4 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document4.getExpiredMonth());
-                    documentRequest.setExpired_year(document4.getExpiredYear());
-                    documentRequest.setId(document4.getId());
-                    documentRequest.setStatus(document4.getStatus());
-                    documentRequest.setFile_name(document4.getFileName());
-                    documentRequest.setCreateBy(document4.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                r.setListDocs(documentRequests);
-
                 try {
                     Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
                     if (vehicle != null) {
@@ -133,13 +84,11 @@ public class AdminResource {
                     }
                 } catch (Exception e) {
                 }
-
-
                 registerDriverCompanies.add(r);
             }
 
             response.status = masterStatus.SUCCESSFULL;
-            response.object = registerDriverCompanies;
+            response.object = filterListDriverCompany(registerDriverCompanies, regFrom, regTo, phone, driverName, email, Status, city, plate);
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -149,8 +98,72 @@ public class AdminResource {
         }
     }
 
+    List<RegisterDriverCompany> filterListDriverCompany(List<RegisterDriverCompany> list, String regFrom, String regTo, String phone, String driverName, String email, String Status, String city, String plate) {
+
+
+        List<RegisterDriverCompany> listResult = list;
+        if (regFrom.equals(regTo) && !regFrom.equals("")) {
+            try {
+                listResult = listResult.stream().filter(c -> c.getCreateDate().equals(Instant.parse(regFrom))).collect(toList());
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+
+        } else {
+            if (!regFrom.equals("")) {
+                try {
+                    listResult = listResult.stream().filter(c -> c.getCreateDate().isAfter(Instant.parse(regFrom))).collect(toList());
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+            if (!regTo.equals("")) {
+                try {
+                    listResult = listResult.stream().filter(c -> c.getCreateDate().isAfter(Instant.parse(regTo))).collect(toList());
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+        }
+
+        if (!phone.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getPhoneNumber().equals(phone)).collect(toList());
+        }
+        if (!driverName.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getFirstName().contains(driverName) || c.getLastName().contains(driverName)).collect(toList());
+        }
+        if (!email.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getEmail().contains(email)).collect(toList());
+
+        }
+        if (!Status.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getStatus().contains(email)).collect(toList());
+
+        }
+        if (!city.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getAddress().contains(city)).collect(toList());
+
+        }
+
+        if (!plate.equals("")) {
+            try {
+                List<RegisterDriverCompany> list1 = new ArrayList<>();
+                for (RegisterDriverCompany r : listResult
+                ) {
+                    if (r.getVehicleInfo() != null && r.getVehicleInfo().getPlate().contains(plate)) {
+                        list1.add(r);
+                    }
+                }
+                listResult = list1;
+            } catch (Exception e) {
+            }
+        }
+        return listResult;
+    }
+
+
     @GetMapping("/GetCompanies")
-    public ResponseEntity<?> getCompanies() {
+    public ResponseEntity<?> getCompanies(String regFrom, String regTo, String companyName, String email, String Status, String city) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try {
@@ -165,63 +178,11 @@ public class AdminResource {
                 companyInfo.setEmail(c.getNote());
                 companyInfo.setPhone(c.getPhoneNo());
                 companyInfo.setCompanyName(c.getName());
-                List<DocumentRequest> documentRequests = new ArrayList<>();
-                UploadFileMaster uploadFileMaster = new UploadFileMaster();
-                Document document1 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Bang_lai_xe);
-                if (document1 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document1.getExpiredMonth());
-                    documentRequest.setExpired_year(document1.getExpiredYear());
-                    documentRequest.setId(document1.getId());
-                    documentRequest.setStatus(document1.getStatus());
-                    documentRequest.setFile_name(document1.getFileName());
-                    documentRequest.setCreateBy(document1.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                Document document2 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
-                if (document2 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document2.getExpiredMonth());
-                    documentRequest.setExpired_year(document2.getExpiredYear());
-                    documentRequest.setId(document2.getId());
-                    documentRequest.setStatus(document2.getStatus());
-                    documentRequest.setFile_name(document2.getFileName());
-                    documentRequest.setCreateBy(document2.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                Document document3 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Kinh_Doanh);
-                if (document3 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document3.getExpiredMonth());
-                    documentRequest.setExpired_year(document3.getExpiredYear());
-                    documentRequest.setId(document3.getId());
-                    documentRequest.setStatus(document3.getStatus());
-                    documentRequest.setFile_name(document3.getFileName());
-                    documentRequest.setCreateBy(document3.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                Document document4 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Hoat_Dong);
-                if (document3 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document4.getExpiredMonth());
-                    documentRequest.setExpired_year(document4.getExpiredYear());
-                    documentRequest.setId(document4.getId());
-                    documentRequest.setStatus(document4.getStatus());
-                    documentRequest.setFile_name(document4.getFileName());
-                    documentRequest.setCreateBy(document4.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                companyInfo.setListDoc(documentRequests);
                 companyInfos.add(companyInfo);
-
             }
 
             response.status = masterStatus.SUCCESSFULL;
-            response.object = companyInfos;
+            response.object = filterListCompany(companyInfos, regFrom, regTo, companyName, email, Status, city);
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -232,8 +193,54 @@ public class AdminResource {
 
     }
 
+    List<CompanyInfo> filterListCompany(List<CompanyInfo> list, String regFrom, String regTo, String companyName, String email, String Status, String city) {
+
+
+        List<CompanyInfo> listResult = list;
+        if (regFrom.equals(regTo) && !regFrom.equals("")) {
+            try {
+                listResult = listResult.stream().filter(c -> c.getCreateDate().equals(Instant.parse(regFrom))).collect(toList());
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        } else {
+            if (!regFrom.equals("")) {
+                try {
+                    listResult = listResult.stream().filter(c -> c.getCreateDate().isAfter(Instant.parse(regFrom))).collect(toList());
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+            if (!regTo.equals("")) {
+                try {
+                    listResult = listResult.stream().filter(c -> c.getCreateDate().isAfter(Instant.parse(regTo))).collect(toList());
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+        }
+
+
+        if (!companyName.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getCompanyName().contains(companyName)).collect(toList());
+        }
+        if (!email.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getEmail().contains(email)).collect(toList());
+
+        }
+        if (!Status.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getCompanyStatus().contains(Status)).collect(toList());
+
+        }
+        if (!city.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getCompanyAddress().contains(city)).collect(toList());
+
+        }
+        return listResult;
+    }
+
     @GetMapping("/GetAllTrip")
-    public ResponseEntity<?> listTrip() {
+    public ResponseEntity<?> listTrip(String regFrom, String regTo, String phoneDriver, String phonePassenger, String Status) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
 
@@ -253,10 +260,21 @@ public class AdminResource {
                 tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                 tripDriver.setWaitingTime(detail.getDuration());
                 tripDriver.setPrice(detail.getFee());
+                tripDriver.setInstantTimeStart(detail.getTimeStart());
+                tripDriver.setTripID(detail.getId());
+                Driver driver = driverRepository.findDriverById(detail.getDriverID());
+                if (driver != null) {
+                    tripDriver.setPhoneDriver(driver.getMobileNo());
+                }
+                List<Trip> listTripPassenger = tripRepository.findAllByTripCodeOrderByCreatedDateDesc(detail.getId());
+                for (Trip i : listTripPassenger
+                ) {
+                    tripDriver.setPhonePassenger(tripDriver.getPhonePassenger() + "," + i.getMobileRelative());
+                }
                 driverTrips.add(tripDriver);
             }
 
-            response.object = driverTrips;
+            response.object = filterlistTrips(driverTrips, regFrom, regTo, phoneDriver, phonePassenger, Status);
             response.status = masterStatus.SUCCESSFULL;
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -266,13 +284,66 @@ public class AdminResource {
         }
     }
 
+    List<TripDriver> filterlistTrips(List<TripDriver> list, String regFrom, String regTo, String phoneDriver, String phonePassenger, String Status) {
+
+
+        List<TripDriver> listResult = list;
+        if (regFrom.equals(regTo) && !regFrom.equals("")) {
+            try {
+                listResult = listResult.stream().filter(c -> c.getInstantTimeStart().equals(Instant.parse(regFrom))).collect(toList());
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        } else {
+            if (!regFrom.equals("")) {
+                try {
+                    listResult = listResult.stream().filter(c -> c.getInstantTimeStart().isAfter(Instant.parse(regFrom))).collect(toList());
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+            if (!regTo.equals("")) {
+                try {
+                    listResult = listResult.stream().filter(c -> c.getInstantTimeStart().isAfter(Instant.parse(regTo))).collect(toList());
+                } catch (Exception e) {
+                    System.out.println(e.toString());
+                }
+            }
+        }
+
+
+        if (!phoneDriver.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getPhoneDriver().contains(phoneDriver)).collect(toList());
+        }
+        try {
+            if (!phonePassenger.equals("")) {
+                List<TripDriver> list1 = new ArrayList<>();
+                for (TripDriver t : listResult
+                ) {
+                    if (t.getPhonePassenger() != null && t.getPhonePassenger().contains(phonePassenger)) {
+                        list1.add(t);
+                    }
+                }
+                listResult = list1;
+            }
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
+        if (!Status.equals("")) {
+            listResult = listResult.stream().filter(c -> c.getStatus().contains(Status)).collect(toList());
+
+        }
+        return listResult;
+    }
+
     @PostMapping("DocumentChangeStatus")
     public ResponseEntity<?> DocumentChangeStatus(@RequestBody DocumentRequest doc) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try {
             Document docExist = documentRepository.findDocumentById(doc.getId());
-            if(docExist==null){
+            if (docExist == null) {
                 response.content = "document not existed";
                 response.status = masterStatus.FAILURE;
                 return ResponseEntity.badRequest().body(response);

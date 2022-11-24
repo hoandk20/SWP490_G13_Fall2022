@@ -15,6 +15,7 @@ public interface TripRepository extends JpaRepository<Trip, String> {
 
     List<Trip> findAllByRiderIDOrderByCreatedDateDesc(String DriverID);
 
+    List<Trip> findAllByStatus(String Status);
     List<Trip> findAllByRiderID(String DriverID);
     List<Trip> findAllByTripCodeOrderByCreatedDateDesc(String TripCode);
 

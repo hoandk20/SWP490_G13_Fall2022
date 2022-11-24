@@ -19,6 +19,7 @@ public class RegisterDriverCompany {
     String language;
     String country;
     String city;
+    String address;
     int vehicle;
     String companyName;
     Instant createDate;
