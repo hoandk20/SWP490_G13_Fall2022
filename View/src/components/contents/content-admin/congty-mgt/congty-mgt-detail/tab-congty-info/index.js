@@ -14,8 +14,8 @@ const TabCompanyInfo = (props) => {
     const { Panel } = Collapse;
     const location = useLocation();
     const dispatch = useDispatch();
-    const [companys, setCompanys] = useState(props.companys);
-
+    // const [companys, setCompanys] = useState(props.companys);
+    const companys = useSelector((state) => state.user.company?.info);
     const listDoc = companys.listDoc;
     console.log(companys);
     console.log(listDoc);
@@ -28,6 +28,7 @@ const TabCompanyInfo = (props) => {
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
     const URL = "http://26.36.110.116";
+    // if(check1!="SEND")
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -91,28 +92,29 @@ const TabCompanyInfo = (props) => {
     }
 
     const changeStatusValid1 = () => {
-        ChaangeStatusDoc(Bang_lai_xe.id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(Bang_lai_xe.id, "VALID",companys?.email, toast, dispatch);
     }
     const changeStatusInValid1 = () => {
-        ChaangeStatusDoc(Bang_lai_xe.id, "INVALID", toast, dispatch);
+
+        ChaangeStatusDoc(Bang_lai_xe.id, "INVALID",companys?.email, toast, dispatch);
     }
     const changeStatusValid2 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id,companys?.email, "VALID", toast, dispatch);
     }
     const changeStatusInValid2 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID", toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id,companys?.email, "INVALID", toast, dispatch);
     }
     const changeStatusValid6 = () => {
-        ChaangeStatusDoc(GP_Kinh_Doanh.id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(GP_Kinh_Doanh.id, "VALID",companys?.email, toast, dispatch);
     }
     const changeStatusInValid6 = () => {
-        ChaangeStatusDoc(GP_Kinh_Doanh.id, "INVALID", toast, dispatch);
+        ChaangeStatusDoc(GP_Kinh_Doanh.id, "INVALID",companys?.email, toast, dispatch);
     }
     const changeStatusValid7 = () => {
-        ChaangeStatusDoc(GP_Hoat_Dong.id, "VALID", toast, dispatch);
+        ChaangeStatusDoc(GP_Hoat_Dong.id, "VALID",companys?.email, toast, dispatch);
     }
     const changeStatusInValid7 = () => {
-        ChaangeStatusDoc(GP_Hoat_Dong.id, "INVALID", toast, dispatch);
+        ChaangeStatusDoc(GP_Hoat_Dong.id, "INVALID",companys?.email, toast, dispatch);
     }
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -128,11 +130,11 @@ const TabCompanyInfo = (props) => {
             };
         });
     };
-    const uploadAvatar = async (e) => {
-        const file = await  e.target.files[0];
-        const base64 = await convertBase64(file);        
-        await setBaseImageAvatar(base64);
-    };
+    // const uploadAvatar = async (e) => {
+    //     const file = await  e.target.files[0];
+    //     const base64 = await convertBase64(file);        
+    //     await setBaseImageAvatar(base64);
+    // };
     const onfinish = (values) => {
         console.log(values);
         const image= {
@@ -506,7 +508,7 @@ const TabCompanyInfo = (props) => {
                                     src={baseImageAvatar}
                                     className='avatar'
                                 />
-                                <div className='inputFile'>
+                                {/* <div className='inputFile'>
                                     <input
                                         type="file"
                                         style={{ color: "#fff" }}
@@ -514,7 +516,7 @@ const TabCompanyInfo = (props) => {
                                             uploadAvatar(e);
                                         }}
                                     />
-                                </div>
+                                </div> */}
                             </div>
                     </Col>
                 </Row>
@@ -530,7 +532,7 @@ const TabCompanyInfo = (props) => {
                             <div className='form-header'>
                                 <span>
                                     Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                    <div className='status'>Chưa gửi</div>
+                                   
                                 </span>
 
                             </div>
@@ -577,10 +579,16 @@ const TabCompanyInfo = (props) => {
 
 
                                 </div>
-                                <div className='form-bottom-ad' >
-                                    <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                    <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                </div>
+                                {
+                                    Bang_lai_xe.status === "SENDED" ? (
+                                        <div className='form-bottom-ad' >
+                                            <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                            <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )
+                                }
                             </div>
                         </div>
 
@@ -595,7 +603,7 @@ const TabCompanyInfo = (props) => {
                                 <span>
                                     Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên)
                                     hoặc lý lịch tư pháp
-                                    <div className='status'>Chưa gửi</div>
+                                   
                                 </span>
 
                             </div>
@@ -642,10 +650,16 @@ const TabCompanyInfo = (props) => {
 
 
                                 </div>
-                                <div className='form-bottom-ad' >
-                                    <Button onClick={changeStatusValid2} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                    <Button onClick={changeStatusInValid2} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                </div>
+                                {
+                                    Chung_Nhan_Kinh_nghiem.status === "SENDED" ? (
+                                        <div className='form-bottom-ad' >
+                                            <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                            <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )
+                                }
                             </div>
                         </div>
 
@@ -659,7 +673,7 @@ const TabCompanyInfo = (props) => {
                             <div className='form-header'>
                                 <span>
                                 Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
-                                    <div className='status'>Chưa gửi</div>
+                                   
                                 </span>
 
                             </div>
@@ -704,10 +718,16 @@ const TabCompanyInfo = (props) => {
 
 
                                 </div>
-                                <div className='form-bottom-ad' >
-                                    <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                    <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                </div>
+                                {
+                                    GP_Kinh_Doanh.status === "SENDED" ? (
+                                        <div className='form-bottom-ad' >
+                                            <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                            <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )
+                                }
                             </div>
                         </div>
                     )
@@ -720,7 +740,7 @@ const TabCompanyInfo = (props) => {
                             <div className='form-header'>
                                 <span>
                                 Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
-                                    <div className='status'>Chưa gửi</div>
+                                    {/* <div className='status'>Chưa gửi</div> */}
                                 </span>
 
                             </div>
@@ -765,10 +785,16 @@ const TabCompanyInfo = (props) => {
 
 
                                 </div>
-                                <div className='form-bottom-ad' >
-                                    <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                    <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                </div>
+                                {
+                                    GP_Hoat_Dong.status === "SENDED" ? (
+                                        <div className='form-bottom-ad' >
+                                            <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                            <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )
+                                }
                             </div>
                         </div>
                     )

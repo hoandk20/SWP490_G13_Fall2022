@@ -80,7 +80,7 @@ const columns = [
         render: (text, record, index) => {
             return <div>
                      <EditDriverForCompany state={record}/> 
-
+                    
             </div>
         },
     },

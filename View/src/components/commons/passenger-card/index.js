@@ -1,48 +1,79 @@
 import { Badge, Button } from 'antd';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { changeStatusPassengerRegister } from '../../../redux/apiRequest';
 
-const PassengerCard = (props) =>{
-    const passengerDetail=props;
-    
+const PassengerCard = (props) => {
 
-    const handleAccept = () =>{
-        changeStatusPassengerRegister(passengerDetail.id,2);
-    }
-    
-    const handleReject = () =>{
-        changeStatusPassengerRegister(passengerDetail.id,1);
-    }
+    const dispatch = useDispatch();
+    const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
+    const listPassengerRegister = tripDriverDetail?.listPassenger;
+    // const handleAccept = () => {
+    //     changeStatusPassengerRegister(obj?.id, 2);
+    // }
 
-    return(
-        <div className='list-passenger'>
-        <div className='header-list'>
-            <span>
-                {passengerDetail.passengerEmail}
-                <div className='status'>{passengerDetail.status}</div>
+    // const handleReject = () => {
+    //     changeStatusPassengerRegister(obj?.id, 1);
+    // }
+    console.log(tripDriverDetail);
+    return (
+        <div className='scroll-bg'>
+            <div className='scroll-div'>
+                <div className='scroll-object'>
+                    {
+                        listPassengerRegister && listPassengerRegister.length > 0 &&
+                        listPassengerRegister.map((obj) => {
+                            return (
+                                <>
+                                    <div key={obj.id}>
+                                        {
+                                            obj?.status !== 'REJE' ? (
+                                                <div className='list-passenger'>
+                                                    <div className='header-list'>
+                                                        <span>
+                                                            {obj?.passengerEmail}
+                                                            <div className='status'>{obj?.status}</div>
 
-            </span>
-            <div className='content-list'>
-               <div> <Badge color="hsl(102, 53%, 61%)" text={passengerDetail.from}/></div>
-                <div><Badge color="#f50" text={passengerDetail.to} /></div>
-                <p>Số ghế:{passengerDetail.seatRegister}</p>
-                {
-                    passengerDetail.status==='PEND' ?(
-                        <span >
-                        <Button type="primary" onClick={handleReject} danger style={{ marginLeft: "27%" }}>
-                            Hủy
-                        </Button>
-                        <Button type="primary" onClick={handleAccept} style={{ marginLeft: "20px" }}  >Xác nhận</Button>
-                    </span>
-                    )
-                    :(
-                        <></>
-                    )
-                }
+                                                        </span>
+                                                        <div className='content-list'>
+                                                            <div> <Badge color="hsl(102, 53%, 61%)" text={obj?.from} /></div>
+                                                            <div><Badge color="#f50" text={obj?.to} /></div>
+                                                            <p>Số ghế:{obj?.seatRegister}</p>
+                                                            {
+                                                                obj?.status === 'PEND' ? (
+                                                                    <span >
+                                                                        <Button type="primary" onClick={() => {
+                                                                            changeStatusPassengerRegister(obj?.id, 1,toast,dispatch,tripDriverDetail.id);
+                                                                        }} danger style={{ marginLeft: "27%" }}>
+                                                                            Hủy
+                                                                        </Button>
+                                                                        <Button type="primary" onClick={() => {
+                                                                            changeStatusPassengerRegister(obj?.id, 2,toast,dispatch,tripDriverDetail.id);
+                                                                        }} style={{ marginLeft: "20px" }}  >Xác nhận</Button>
+                                                                    </span>
+                                                                )
+                                                                    : (
+                                                                        <></>
+                                                                    )
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <></>
+                                            )
+                                        }
 
+                                    </div>
+                                </>
+                            )
+                        })
+                    }
+                </div>
             </div>
         </div>
-    </div>
+
     );
 }
 export default PassengerCard;

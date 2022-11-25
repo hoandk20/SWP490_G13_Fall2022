@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux';
 const Header1 = () =>{
     const user = useSelector((state) => state.user.userInfo?.currentUser)
     
-     console.log(user);
     return(
         <div className='header-logo'>
             <div style={{position: 'absolute',right: '50px'}}>

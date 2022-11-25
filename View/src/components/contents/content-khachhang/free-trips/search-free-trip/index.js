@@ -1,14 +1,36 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Col, DatePicker, Form, Input, Row, Select, TimePicker, Button, Table } from 'antd';
+import { Col, DatePicker, Form, Row, Select, TimePicker, Button, Table, InputNumber } from 'antd';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { getListFreeTripIsOpen } from '../../../../../redux/apiRequest';
+import { getListFreeTrip, getListFreeTripIsOpen } from '../../../../../redux/apiRequest';
 import ModalViewDetail from '../../../../commons/modals/modal-view-detail';
-const { Option } = Select;
 
+import {
+    Box,
+    ButtonGroup,
+    Flex,
+    HStack,
+    IconButton,
+    SkeletonText,
+    Text,
+    Input
+} from '@chakra-ui/react'
+import { FaLocationArrow, FaTimes } from 'react-icons/fa'
+
+import {
+    useJsApiLoader,
+    GoogleMap,
+    Marker,
+    Autocomplete,
+    DirectionsRenderer,
+} from '@react-google-maps/api'
+import { useRef, useState } from 'react'
+
+const { Option } = Select;
+const center = { lat: 21.013255, lng: 105.52597 }
 
 
 const SerachFreeTripForPassenger = () => {
@@ -17,21 +39,25 @@ const SerachFreeTripForPassenger = () => {
     const dispatch=useDispatch();
     
     const trips = useSelector((state) => state.freeTrip.trips?.allTrip) ; 
-    const freeTrips=trips.object.map(row=>({
-        key:row.id,
-        timeStart:row.timeStart,
-        from:row.from,
-        to:row.to,
-        price:row.price,
-        //  seatRemind:`${row.seatRegistered}/${row.seat}`,
-        driverEmail:row.driverEmail,
-        seatRegistered:row.seatRegistered,
-        status:row.status,
-        listPassenger:row.listPassenger,
-        tripID:row.tripID,
-        waitingTime:row.waitingTime,
-        seatRemind:row.seat
-    }))
+    
+    // const freeTrips=trips.object.map(row=>({
+    //     key:row.id,
+    //     timeStart:row.timeStart,
+    //     from:row.from,
+    //     to:row.to,
+    //     price:row.price,
+    //     //  seatRemind:`${row.seatRegistered}/${row.seat}`,
+    //     driverEmail:row.driverEmail,
+    //     seatRegistered:row.seatRegistered,
+    //     status:row.status,
+    //     listPassenger:row.listPassenger,
+    //     tripID:row.tripID,
+    //     waitingTime:row.waitingTime,
+    //     seat:row.seat
+    // }))
+
+    const freeTrips=trips?.object.map((row)=> ({ ...row,key:row.id}));
+
     useEffect(()=>{
        getListFreeTripIsOpen(dispatch);
   
@@ -94,9 +120,9 @@ const columns = [
         dataIndex: 'price',
     },
     {
-        key: 'seatRemind',
+        key: 'seat',
         title: 'Số chỗ còn trống',
-        dataIndex: 'seatRemind',
+        dataIndex: 'seat',
     },
 
     
@@ -116,88 +142,150 @@ const columns = [
         },
     }
 ];
+const data = [
+    {
+        key: '1',
+        timeStart: '08:00:00 ngày 20/10/2000',
+        from: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
+        to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
+        fee: '10000 vnd',
+        seat: '3',
+        // status:'Đang mở',
+        // action: <EyeOutlined onClick={showModal} />,
+    },
+    {
+        key: '2',
+        timeStart: '09:00:00 ngày 20/10/2000',
+        from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
+        to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
+        fee: '20000 vnd',
+        seat: '2',
+        // status:'Đang mở',
+        // action: <EyeOutlined onClick={showModal} />,
+    },
+    {
+        key: '3',
+        timeStart: '09:20:00 ngày 20/10/2000',
+        from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
+        to: 'Bình Yên, Thạch Thất, Hà Nội, Việt Nam',
+        fee: '15000 vnd',
+        seat: '1',
+        // status:'Đang mở',
+        // action: <EyeOutlined onClick={showModal} />,
+    },
+];
     const navigate = useNavigate();
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: 'AIzaSyBJsqOfn2fz4vNdX_RSS-VYA8CWQNq9EIw',
+        libraries: ['places'],
+    })
+
+    const [map, setMap] = useState(/** @type google.maps.Map */(null))
+    const [directionsResponse, setDirectionsResponse] = useState(null)
+    const [distance, setDistance] = useState('')
+    const [duration, setDuration] = useState('')
+    const [filterData, setfilterData] = useState(data);
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
+    const [listPolyline, setListPolyline] = useState('')
+    var polyline = '';
+    const options = {
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: false,
+        types: ["establishment"],
+      };
+
+    /** @type React.MutableRefObject<HTMLInputElement> */
+    const originRef = useRef()
+    /** @type React.MutableRefObject<HTMLInputElement> */
+    const destiantionRef = useRef()
+
+    if (!isLoaded) {
+        return <></>
+    }
     const showModal = () => {
 
         navigate('/khachhang/freeTrip/detail-of-taixe')
     }
 
-    const data = [
-        {
-            key: '1',
-            timeStart: '08:00:00 ngày 20/10/2000',
-            from: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-            to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-            fee: '10000 vnd',
-            seat: '3',
-            // status:'Đang mở',
-            // action: <EyeOutlined onClick={showModal} />,
-        },
-        {
-            key: '2',
-            timeStart: '09:00:00 ngày 20/10/2000',
-            from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
-            to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-            fee: '20000 vnd',
-            seat: '2',
-            // status:'Đang mở',
-            // action: <EyeOutlined onClick={showModal} />,
-        },
-        {
-            key: '3',
-            timeStart: '09:20:00 ngày 20/10/2000',
-            from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
-            to: 'Bình Yên, Thạch Thất, Hà Nội, Việt Nam',
-            fee: '15000 vnd',
-            seat: '1',
-            // status:'Đang mở',
-            // action: <EyeOutlined onClick={showModal} />,
-        },
-    ];
-    const [filterData, setfilterData] = useState(data);
-
-    const onFinish = (values) => {
-
-        // const trip = {
-        //     from: values.from,
-        //     to: values.to,
-        //     seat: values.seat,
-        //     dateStart: values.dateStart,
-        //     hStart: values.hStart,
-        //     // price:values.price,
-        // }
-        // if (values.from === undefined) {
-        //     trip.from = '';
-        // }
-        // if (values.to === undefined) {
-        //     trip.to = '';
-        // }
-        // if (values.seat === undefined) {
-        //     trip.seat = '';
-        // }
-        // if (values.dateStart === undefined) {
-        //     trip.dateStart = null;
-        // }
-        // if (values.hStart === undefined) {
-        //     trip.hStart = null;
-        // }
-
-        // console.log(trip)
-        // if (trip.from === '' && trip.to === '' && trip.seat === '' && trip.dateStart === null && trip.hStart === null) {
-        //     setfilterData(data);
-        // } else {
-
-        //     if (trip.from !== '') {
-        //         setfilterData(data.filter((obj) => obj["from"].includes(trip.from)));
-        //         if (trip.to !== '') {
-        //             setfilterData(filterData.filter((obj) => obj["to"].includes(trip.to)));
-        //         }
-        //     }
-
-        // }
-
+    
+    async function calculateRoute() {
+        
+        if (originRef.current.value === '' || destiantionRef.current.value === '') {
+            return
+        }
+       
+        // eslint-disable-next-line no-undef
+        const directionsService = new google.maps.DirectionsService()
+        const results = await directionsService.route({
+            origin: originRef.current.value,
+            destination: destiantionRef.current.value,
+            // eslint-disable-next-line no-undef
+            travelMode: google.maps.TravelMode.DRIVING,
+        })
+        setDirectionsResponse(results)
+        setDistance(results.routes[0].legs[0].distance.text)
+        setDuration(results.routes[0].legs[0].duration.text)
+        for (let index = 0; index < results.routes[0].overview_path.length; index++) {
+            const e = results.routes[0].overview_path[index];
+            polyline += e.lat() + ',' + e.lng() + ';';
+        }
+        setListPolyline(polyline);
     }
 
+    
+    function onChangeDateStart(date, dateString) {
+        setDate(date.toISOString());
+    }
+    function onChangeTimeStart(time, dateString) {
+        setTime(time.toISOString());
+    }
+
+    const onFinish = (values) => {
+        // calculateRoute();
+        const trip = {
+            from:originRef.current.value,
+            to: destiantionRef.current.value,
+            registerSeat: values.seat,
+            timeStart: values.timeStart,
+            dateStart: date,
+            listPolyline:listPolyline,
+            // price:values.price,
+        }
+         getListFreeTrip(trip,dispatch);
+
+    }
+    const onPlaceChanged = () => {
+        // eslint-disable-next-line no-undef
+       const geocoder = new google.maps.Geocoder();
+       const address = 'Hồ Gươm, Phố Lê Thái Tổ, Hàng Trống, Hoàn Kiếm, Hà Nội, Việt Nam';
+      
+       if (originRef.current.value === "" && destiantionRef.current.value === "") {
+           return
+       } else if (originRef.current.value !== "" &&destiantionRef.current.value === "") {
+           console.log(originRef.current.value);
+           console.log(destiantionRef.current.value);
+           geocoder.geocode({ address: originRef.current.value }, (results, status) => {
+               if (status === 'OK') {
+                   center= results[0].geometry.location;
+               } else {
+                   console.log("not ok");
+               }
+           })
+       }else if(destiantionRef.current.value !== ""&& originRef.current.value === ""){
+           console.log(originRef.current.value);
+           console.log(destiantionRef.current.value);
+           geocoder.geocode({ address: destiantionRef.current.value }, (results, status) => {
+               if (status === 'OK') {
+                   center= results[0].geometry.location;
+               } else {
+                   console.log("not ok");
+               }
+           })
+       }else{
+           calculateRoute();
+       }
+   }
 
     return (
         <div className='container'>
@@ -209,22 +297,55 @@ const columns = [
                             <Form
                                 onFinish={onFinish}
                             >
-                                <Form.Item
+                                  {/* <Form.Item
                                     name="from"
-                                >
-                                    <Input placeholder='Từ' />
-                                </Form.Item>
-                                <Form.Item
+                                // rules={[
+                                //     {
+                                //         required: true,
+                                //         message: 'không được để trống',
+                                //     }
+                                // ]}
+                                > */}
+                                    <Autocomplete
+                                    onPlaceChanged={onPlaceChanged}
+                                    >
+                                        <Input type='text' placeholder='Origin' ref={originRef}  style={{width:"400px",marginBottom:"20px"}}/>
+                                    </Autocomplete>
+                                {/* </Form.Item> */}
+                                {/* <Form.Item
                                     name="to"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'không được để trống',
+                                        }
+                                    ]}
                                 >
-                                    <Input placeholder='Đến' />
-                                </Form.Item>
+                                    <Autocomplete>
+                                        <Input
+                                            type='text'
+                                            placeholder='Destination'
+                                            ref={destiantionRef}
+                                        />
+                                    </Autocomplete>
+                                </Form.Item> */}
+                                <Autocomplete
+                                onPlaceChanged={onPlaceChanged}
+                                >
+                                    <Input
+                                        type='text'
+                                        placeholder='Destination'
+                                        ref={destiantionRef}
+                                        style={{width:"400px",marginBottom:"27px"}}
+                                    />
+                                </Autocomplete>
+             
                                 <Form.Item
                                     label="Đăng ký"
                                     name="seat"
                                 >
                                     <Select
-                                        style={{ width: "100px" }}
+                                        style={{ width: "200px" }}
 
                                     >
                                         <Option value='1'>1 chỗ</Option>
@@ -237,14 +358,15 @@ const columns = [
                                     name="dateStart"
                                     label="Ngày xuất phát"
                                 >
-                                    <DatePicker />
+                                    <DatePicker  onChange={onChangeDateStart} />
                                 </Form.Item>
                                 <Form.Item
-                                    name='hStart'
+                                    name='timeStart'
                                     label="Giờ"
                                     style={{ display: "inline-block" }}
                                 >
-                                    <TimePicker />
+                                    {/* <TimePicker onChange={onChangeTimeStart} /> */}
+                                    <InputNumber min={0} max={24} style={{width:"200px"}}/>
                                 </Form.Item>
                                 {/* <Form.Item
                                     style={{ display: "inline-block", width: "60px" }}
@@ -252,11 +374,93 @@ const columns = [
                                     <Input />
                                 </Form.Item> */}
                                 <Form.Item>
-                                    <Button className='btn-submit' type="primary" htmlType="submit">
+                                    <Button style={{justifyContent:"center"}}  type="primary" htmlType="submit">
                                         Tìm kiếm
                                     </Button>
                                 </Form.Item>
                             </Form>
+                        </Col>
+                        <Col sm={16} md={8}>
+                            <div style={{ marginLeft: "60px" }}>
+                                <Flex
+                                    position='relative'
+                                    flexDirection='column'
+                                    alignItems='center'
+                                    h='100vh'
+                                    w='100vw'
+                                >
+                                    <Box position='absolute' left={0} top={0} h='60%' w='50%'>
+                                        {/* Google Map Box */}
+                                        <GoogleMap
+                                            center={center}
+                                            zoom={15}
+                                            mapContainerStyle={{ width: '100%', height: '100%' }}
+                                            options={{
+                                                zoomControl: true,
+                                                streetViewControl: true,
+                                                mapTypeControl: false,
+                                                fullscreenControl: false,
+                                            }}
+                                            onLoad={map => setMap(map)}
+                                        >
+                                            <Marker position={center} />
+                                            {directionsResponse && (
+                                                <DirectionsRenderer directions={directionsResponse} />
+                                            )}
+                                        </GoogleMap>
+                                    </Box>
+                                    {/* <Box
+                                    p={4}
+                                    borderRadius='lg'
+                                    m={4}
+                                    bgColor='white'
+                                    shadow='base'
+                                    minW='container.md'
+                                    zIndex='1'
+                                >
+                                    <HStack spacing={2} justifyContent='space-between'>
+                                        <Box flexGrow={1}>
+                                            <Autocomplete>
+                                                <Input type='text' placeholder='Origin' ref={originRef} />
+                                            </Autocomplete>
+                                        </Box>
+                                        <Box flexGrow={1}>
+                                            <Autocomplete>
+                                                <Input
+                                                    type='text'
+                                                    placeholder='Destination'
+                                                    ref={destiantionRef}
+                                                />
+                                            </Autocomplete>
+                                        </Box>
+                                        <ButtonGroup>
+                                            <Button colorScheme='pink' type='submit' onClick={calculateRoute}>
+                                                Calculate Route
+                                            </Button>
+                                            <IconButton
+                                                aria-label='center back'
+                                                icon={<FaTimes />}
+                                                onClick={clearRoute}
+                                            />
+                                        </ButtonGroup>
+                                    </HStack>
+                                    <HStack spacing={4} mt={4} justifyContent='space-between'>
+                                        <Text>Distance: {distance} </Text>
+                                        <Text>Duration: {duration} </Text>
+                                        <IconButton
+                                            aria-label='center back'
+                                            icon={<FaLocationArrow />}
+                                            isRound
+                                            onClick={() => {
+                                                map.panTo(center)
+                                                map.setZoom(15)
+                                            }}
+                                        />
+                                    </HStack>
+                                </Box> */}
+                                </Flex>
+                            </div>
+
                         </Col>
                     </Row>
                     <div className='table-info' style={{ marginTop: "5%" }}>

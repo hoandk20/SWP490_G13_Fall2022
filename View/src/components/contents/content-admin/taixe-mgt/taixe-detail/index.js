@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
 
-import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, editInforDriver, getDriversForCompany, UploadFile } from '../../../../../redux/apiRequest';
+import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, editInforDriver, getDriverDetail, getDriversForCompany, UploadFile } from '../../../../../redux/apiRequest';
 
 import ModalSendEmail from '../../../../commons/modals/modal-send-email';
 
@@ -14,28 +14,30 @@ import './taixe-detail.css'
 import { useEffect } from 'react';
 const { Option } = Select;
 const DriverDetailAdmin = (props) => {
+
     const { Panel } = Collapse;
     const location = useLocation();
     const dispatch = useDispatch();
 
-    const info=location.state?.record;
-    const [drivers, setDrivers] = useState(info);
-    // const drivers? = getDriverDetail(info.email);
-
-    const listDoc = drivers?.listDocs;
+    const info = location.state?.record;
+    const drivers = useSelector((state) => state.user.driver?.info);
+    
     console.log(drivers);
-    console.log(listDoc);
+    const listDoc = drivers?.listDocs;
     const Bang_lai_xe = listDoc?.find(doc => doc.file_name === "Bang_lai_xe");
     const Chung_Nhan_Kinh_nghiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Kinh_nghiem");
     const Chung_Nhan_Bao_Hiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Bao_Hiem");
     const Chung_Nhan_Dang_Kiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Dang_Kiem");
 
 
-    const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
+    const [check1, setCheck1] = useState(Bang_lai_xe.status!="SENDED");
+    const [check2, setCheck2] = useState(Chung_Nhan_Kinh_nghiem.status!="SENDED");
+    const [check3, setCheck3] = useState(Chung_Nhan_Bao_Hiem.status!="SENDED");
+    const [check4, setCheck4] = useState(Chung_Nhan_Dang_Kiem.status!="SENDED");
     const [form] = Form.useForm();
     const URL = "http://26.36.110.116";
-   
+    console.log(check1);
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -99,47 +101,55 @@ const DriverDetailAdmin = (props) => {
     }
 
     const changeStatusValid1 = () => {
-        ChaangeStatusDoc(Bang_lai_xe.id, "VALID", toast, dispatch);
+        setCheck1(true);
+        ChaangeStatusDoc(Bang_lai_xe.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid1 = () => {
-        ChaangeStatusDoc(Bang_lai_xe.id, "INVALID", toast, dispatch);
+        setCheck1(true);
+        ChaangeStatusDoc(Bang_lai_xe.id, "INVALID", drivers?.email, toast, dispatch);
     }
     const changeStatusValid2 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "VALID", toast, dispatch);
+        setCheck2(true);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid2 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID", toast, dispatch);
+        setCheck2(true);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID", drivers?.email, toast, dispatch);
     }
     const changeStatusValid6 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "VALID", toast, dispatch);
+        setCheck3(true);
+        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid6 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "INVALID", toast, dispatch);
+        setCheck3(true);
+        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "INVALID", drivers?.email, toast, dispatch);
     }
     const changeStatusValid7 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "VALID", toast, dispatch);
+        setCheck4(true);
+        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid7 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "INVALID", toast, dispatch);
+        setCheck4(true);
+        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "INVALID", drivers?.email, toast, dispatch);
     }
 
 
     const uploadAvatar = async (e) => {
-        const file = await  e.target.files[0];
-        const base64 = await convertBase64(file);        
+        const file = await e.target.files[0];
+        const base64 = await convertBase64(file);
         await setBaseImageAvatar(base64);
     };
 
     const onfinish = (values) => {
         console.log(values);
-        const image= {
-            base64:baseImageAvatar,
-            createBy:drivers.email,
-            fileName:"Avatar",
-            year:'',
-            month:''
+        const image = {
+            base64: baseImageAvatar,
+            createBy: drivers.email,
+            fileName: "Avatar",
+            year: '',
+            month: ''
         }
-        UploadFile(image,toast,dispatch);
+        // UploadFile(image, toast, dispatch);
         const driver = {
             username: values.email,
             firstname: values.firstName,
@@ -227,7 +237,16 @@ const DriverDetailAdmin = (props) => {
             month: month
         }
         UploadFile(object, toast);
+        setTimeout(()=>{
+            getDriverDetail(drivers?.email,dispatch);
+            if(Bang_lai_xe.status==="SENDED"){
+                setCheck1(false);
+            }
+        },1000)   
+
         setCheckdoc1(false)
+       
+       
     };
 
     const uploadfile2 = () => {
@@ -272,32 +291,35 @@ const DriverDetailAdmin = (props) => {
         }
         UploadFile(object, toast);
         setCheckdoc7(false)
+
     };
 
-   
-    const getDriverDetail= async() =>{
-        try {
-            const res = await axios.get(`${URL}:8080/api/driver/detail?driverEmail=${info.email}`, {
-              headers: { 'Content-Type': 'application/json' }
-            })
-            setDrivers(res.data.object)
-          } catch (error) {
-        
-          }
-    }
-    useEffect(()=>{
-        getDriverDetail();
+
+    // const getDriverDetail = async () => {
+    //     try {
+    //         const res = await axios.get(`${URL}:8080/api/driver/detail?driverEmail=${info.email}`, {
+    //             headers: { 'Content-Type': 'application/json' }
+    //         })
+    //         setDrivers(res.data.object)
+    //     } catch (error) {
+
+    //     }
+    // }
+    // useEffect(() => {
+    //     setTimeout(()=>{
+    //         getDriverDetail(drivers.email,dispatch);
+    //       },1000)   
        
-      },[])
-      getFileAvatar();
+    // }, [])
+    // getFileAvatar();
     return (
         <>
-            <Form onFinish={onfinish} layout="vertical" hideRequiredMark name="basic" form={form}
+            <Form onFinish={onfinish}
                 labelCol={{
                     span: 8,
                 }}
                 wrapperCol={{
-                    span: 18,
+                    span: 20,
                 }}
             >
                 <p>Thông tin công ty</p>
@@ -347,31 +369,34 @@ const DriverDetailAdmin = (props) => {
                     <Col span={8}>
 
                         <div >
-                                <Image
-                                    id='avatarImage'
-                                    src={baseImageAvatar}
-                                    className='avatar'
+                            <Image
+                                style={{marginLeft:"50%"}}
+                                id='avatarImage'
+                                src={baseImageAvatar}
+                                className='avatar'
+                            />
+                            {/* <div className='inputFile'>
+                                <input
+                                    type="file"
+                                    style={{ color: "#fff" }}
+                                    onChange={(e) => {
+                                        uploadAvatar(e);
+                                    }}
                                 />
-                                <div className='inputFile'>
-                                    <input
-                                        type="file"
-                                        style={{ color: "#fff" }}
-                                        onChange={(e) => {
-                                            uploadAvatar(e);
-                                        }}
-                                    />
-                                </div>
-                            </div>
+                            </div> */}
+                        </div>
 
                     </Col>
                 </Row>
                 <p>Thông tin cá nhân</p>
                 <Row>
                     <Col span={8}>
+
+
                         <Form.Item
 
                             name="firstName"
-                            initialValue={drivers.firstName}
+                            initialValue={drivers?.firstName}
                             label="Họ và tên đệm"
 
                             rules={[
@@ -394,12 +419,12 @@ const DriverDetailAdmin = (props) => {
                                 },
                             ]}
                         >
-                            <Input disabled/>
+                            <Input disabled />
                         </Form.Item>
                         <Form.Item
 
                             name="language"
-                            initialValue={drivers.language}
+                            initialValue={drivers?.language}
 
                             label="Ngôn ngữ"
                             rules={[
@@ -413,14 +438,14 @@ const DriverDetailAdmin = (props) => {
                         </Form.Item>
                         <Form.Item
                             name="city"
-                            initialValue={drivers.city}
+                            initialValue={drivers?.city}
                             label="Thành phố"
-                            // rules={[
-                            //     {
-                            //         required: true,
-                            //         message: 'please enter  description',
-                            //     },
-                            // ]}
+                        // rules={[
+                        //     {
+                        //         required: true,
+                        //         message: 'please enter  description',
+                        //     },
+                        // ]}
                         >
                             <Select>
                                 <Option value="Hà nội">Hà nội</Option>
@@ -432,7 +457,7 @@ const DriverDetailAdmin = (props) => {
                     <Col span={8}>
                         <Form.Item
                             name="lastName"
-                            initialValue={drivers.lastName}
+                            initialValue={drivers?.lastName}
                             label="Tên"
                             rules={[
                                 {
@@ -446,7 +471,7 @@ const DriverDetailAdmin = (props) => {
                         <Form.Item
 
                             name="address"
-                            initialValue={drivers.address}
+                            initialValue={drivers?.address}
 
                             label="Địa chỉ"
                         >
@@ -455,23 +480,23 @@ const DriverDetailAdmin = (props) => {
                         <Form.Item
 
                             name="phoneNumber"
-                            initialValue={drivers.phoneNumber}
+                            initialValue={drivers?.phoneNumber}
 
                             label="Số di động"
                         >
-                            <Input disabled/>
+                            <Input disabled />
                         </Form.Item>
                         <Form.Item
                             name="status"
-                            initialValue={drivers.status}
+                            initialValue={drivers?.status}
 
                             label="Trạng thái"
                         >
 
-                            <Input disabled/>
+                            <Input disabled />
 
                         </Form.Item>
-                        <Button type="primary" htmlType="submit">Thay đổi thông tin cá nhân</Button>
+                       
                     </Col>
 
                 </Row>
@@ -494,7 +519,7 @@ const DriverDetailAdmin = (props) => {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-
+                        <Button style={{marginLeft:"30%"}} type="primary" htmlType="submit">Thay đổi thông tin tài xế</Button>
                     </Col>
                     <Col span={8}>
 
@@ -509,7 +534,7 @@ const DriverDetailAdmin = (props) => {
                         <div className='form-header'>
                             <span>
                                 Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                <div className='status'>Chưa gửi</div>
+                                {/* <div className='status'>Chưa gửi</div> */}
                             </span>
 
                         </div>
@@ -556,10 +581,16 @@ const DriverDetailAdmin = (props) => {
 
 
                                 </div>
-                                <div className='form-bottom-ad' >
-                                    <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                    <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                </div>
+                                {
+                                    Bang_lai_xe?.status === "SENDED" ? (
+                                        <div className='form-bottom-ad' >
+                                            <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                            <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )
+                                }
                             </div>
                         </div>
 
@@ -621,19 +652,27 @@ const DriverDetailAdmin = (props) => {
 
 
                                 </div>
-                                <div className='form-bottom-ad' >
-                                    <Button onClick={changeStatusValid2} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                    <Button onClick={changeStatusInValid2} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                </div>
+                                {
+                                    Chung_Nhan_Kinh_nghiem?.status === "SENDED" ? (
+                                        <div className='form-bottom-ad' >
+                                            <Button onClick={changeStatusValid2} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                            <Button onClick={changeStatusInValid2} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                        </div>
+                                    ) : (
+                                        <></>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
                 )
             }
+
             <p style={{ marginTop: "20px" }}>Thông tin phương tiện</p>
             <div className='vehico-info'>
+
                 <Collapse accordion>
-                    <Panel header={"drivers?.vehicleInfo?.plate"} key="1" extra={<div className='status-ad'>Chưa gửi</div>}>
+                    <Panel header={drivers?.vehicleInfo?.plate} key="1" extra={<div className='status-ad'>Chưa gửi</div>}>
                         <>
                             <Form onFinish={onfinishUploadVehicle}
                                 labelCol={{
@@ -662,7 +701,7 @@ const DriverDetailAdmin = (props) => {
                                         </Form.Item>
                                         <Form.Item
                                             name="produceYear"
-                                            initialValue={drivers.vehicleInfo?.produceYear}
+                                            initialValue={drivers?.vehicleInfo?.produceYear}
                                             label="Năm sản xuất"
                                             rules={[
                                                 {
@@ -729,7 +768,7 @@ const DriverDetailAdmin = (props) => {
                                         </Form.Item>
                                         <Form.Item
                                             name="platState"
-                                            initialValue={drivers?.vehicleInfo?.platState}
+                                            initialValue={drivers?.firstName}
                                             label="Thành phố đăng ký"
                                             rules={[
                                                 {
@@ -751,8 +790,8 @@ const DriverDetailAdmin = (props) => {
                                         <div className='card-doc'>
                                             <div className='form-header'>
                                                 <span>
-                                                Giấy chứng nhận bảo hiểm
-                                                    <div className='status'>Chưa gửi</div>
+                                                    Giấy chứng nhận bảo hiểm
+                                                   
                                                 </span>
 
                                             </div>
@@ -798,10 +837,16 @@ const DriverDetailAdmin = (props) => {
 
 
                                                     </div>
-                                                    <div className='form-bottom-ad' >
-                                                        <Button onClick={changeStatusValid6} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                                        <Button onClick={changeStatusInValid6} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                                    </div>
+                                                    {
+                                                        Chung_Nhan_Bao_Hiem?.status === "SENDED" ? (
+                                                            <div className='form-bottom-ad' >
+                                                                <Button onClick={changeStatusValid6} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                                <Button onClick={changeStatusInValid6} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                                            </div>
+                                                        ) : (
+                                                            <></>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -813,8 +858,8 @@ const DriverDetailAdmin = (props) => {
                                         <div className='card-doc'>
                                             <div className='form-header'>
                                                 <span>
-                                                Giấy chứng nhận đăng kiểm
-                                                    <div className='status'>Chưa gửi</div>
+                                                    Giấy chứng nhận đăng kiểm
+                                                   
                                                 </span>
 
                                             </div>
@@ -860,10 +905,16 @@ const DriverDetailAdmin = (props) => {
 
 
                                                     </div>
-                                                    <div className='form-bottom-ad' >
-                                                        <Button onClick={changeStatusValid7} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                                        <Button onClick={changeStatusInValid7} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                                    </div>
+                                                    {
+                                                        Chung_Nhan_Dang_Kiem?.status === "SENDED" ? (
+                                                            <div className='form-bottom-ad' >
+                                                                <Button onClick={changeStatusValid7} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                                <Button onClick={changeStatusInValid7} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                                            </div>
+                                                        ) : (
+                                                            <></>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>

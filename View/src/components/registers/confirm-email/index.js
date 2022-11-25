@@ -59,17 +59,17 @@ const RegisterSignup = () => {
         
     }
 
-    useEffect(() => {
+    // useEffect(() => {
       
-        if (counter > 0) {
-            const myTimeOut = setTimeout(() => setCounter(counter - 1), 1000);
-            if (counter == 60) {
-                clearTimeout(myTimeOut)
-                setTimeout(() => setCounter(counter - 1), 1000);
-            }
-        }
-        console.log(counter);
-    }, [counter]);
+    //     if (counter > 0) {
+    //         const myTimeOut = setTimeout(() => setCounter(counter - 1), 1000);
+    //         if (counter == 60) {
+    //             clearTimeout(myTimeOut)
+    //             setTimeout(() => setCounter(counter - 1), 1000);
+    //         }
+    //     }
+    //     console.log(counter);
+    // }, [counter]);
 
 
     useEffect(() => {

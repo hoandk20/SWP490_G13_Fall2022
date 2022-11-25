@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { getUser, UploadFile } from '../../../../redux/apiRequest';
+import { ChangeStatusSignUp, getUser, UploadFile } from '../../../../redux/apiRequest';
 import { useEffect } from 'react';
 const RegisterDriverInfoVehico = () => {
     const navigate = useNavigate();
@@ -35,7 +35,8 @@ const RegisterDriverInfoVehico = () => {
         });
     };
     const onClickFinish = () => {
-        navigate('/signin');
+        ChangeStatusSignUp(newUser.email, 4);
+        navigate('/home');
     };
     function getTime1(date, dateString) {
         setDate1(dateString);

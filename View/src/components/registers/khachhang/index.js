@@ -66,7 +66,7 @@ const RegisterPassenger = () => {
             role:"ROLE_PASSENGER"
         }
         registerPassenger(newUser,dispatch,navigate,toast);
-        navigate("/signup/confirm-email",{ state: { newUser } });
+        // navigate("/signup/confirm-email",{ state: { newUser } });
 
     };
 
