@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
-import { getCompanysByAdmin } from '../../../../redux/apiRequest';
+import { getCompanyDetail, getCompanysByAdmin,getCompanysByAdmiAll } from '../../../../redux/apiRequest';
 
 
 const { Option } = Select;
@@ -24,7 +24,7 @@ const CompanyManagementAdmin = () => {
     const drivers=all?.map((row)=> ({ ...row,key:row.companyID,bangphi:'Không'}));
 
     useEffect(()=>{
-        getCompanysByAdmin(dispatch);        
+        getCompanysByAdmiAll(dispatch);        
     },[])
 
     const data=[];
@@ -70,10 +70,13 @@ const CompanyManagementAdmin = () => {
             title: '',
             dataIndex: '',
             key: 'x',
-            render: (text, record, index) => {
+            render: ( record) => {
                 return <div>
-                    <EyeOutlined onClick={() => {
-                    navigate('/admin/company-mgt/detail',{state:{record}})
+                    <EyeOutlined onClick={() => {  
+                        getCompanyDetail(record.email,dispatch);
+                    setTimeout(()=>{
+                        navigate('/admin/company-mgt/detail',{state:{record}})
+                      },1500)  
                 }} />
     
                 </div>

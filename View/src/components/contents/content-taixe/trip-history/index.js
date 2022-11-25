@@ -22,8 +22,8 @@ const TripHistoryDriver = () => {
     // const [tripHistory,setTripHistory] =useState();
     const user=useSelector((state)=>state.user.userInfo?.currentUser);
     const trips=useSelector((state)=>state.tripHistory.tripHistory?.trips);
-   const tripHistory=trips.map((row)=> ({ ...row, seatRemind: row.seat-row.seatRegistered,key:row.id }))
-   
+   const tripHistory=trips?.map((row)=> ({ ...row, seatRemind: row.seat-row.seatRegistered,key:row.id }))
+   console.log(tripHistory);
     useEffect(()=>{
         getTripHistoryDriver(user.email,dispatch);
        },[]) 

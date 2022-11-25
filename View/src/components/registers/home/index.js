@@ -3,11 +3,15 @@ import 'antd/dist/antd.css';
 import './register-home.css';
 import { Button, Card, Col, Row } from 'antd';
 import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
+import { deleteUser } from '../../../redux/userSlice';
 
 
 const { Meta } = Card;
 const RegisterHome = () => {
     const navigate =useNavigate();
+    const dispatch =useDispatch();
+    dispatch(deleteUser());
     const onClickPassenger = () => {
         navigate('/signup/passenger')
         

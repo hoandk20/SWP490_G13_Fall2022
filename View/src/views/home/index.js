@@ -9,7 +9,7 @@ import jwtDecode from 'jwt-decode';
 import { useSelector } from 'react-redux';
 import Forbidden from '../forbiden';
 import { useEffect } from 'react';
-import { getUser } from '../../redux/apiRequest';
+import { getUser, resendCode } from '../../redux/apiRequest';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 const { Header, Content } = Layout;
@@ -35,6 +35,9 @@ const Home = () => {
     return <Forbidden/>
   }else{
     if(role==='ROLE_PASSENGER'){
+      if(newUser.statusVerify==0 ){
+        navigate('/signup/confirm-email', { state: { newUser } })
+      }else
       return <LayoutPassenger  content={<HomePassenger/>}/>
     }else if(role==='ROLE_DRIVER'){
       if(newUser.statusVerify==0 ){
@@ -44,10 +47,19 @@ const Home = () => {
       }else if(newUser.statusVerify==2){
         navigate('/signup/add-vehico', { state: { newUser } })
       }else if(newUser.statusVerify==3){
-        navigate('signup/vehico-info', { state: { newUser } })
+        navigate('/signup/vehico-info', { state: { newUser } })
       }else
       return <LayoutDriver content={<HomeDriver/>}/>
     }else if(role==='ROLE_COMPANY'){
+      if(newUser.statusVerify==0 ){
+        navigate('/signup/confirm-email', { state: { newUser } })
+      }else if(newUser.statusVerify==1){
+        navigate('/signup/company-doc1', { state: { newUser } })
+      }else if(newUser.statusVerify==2){
+        navigate('/signup/add-vehico', { state: { newUser } })
+      }else if(newUser.statusVerify==3){
+        navigate('/signup/vehico-info', { state: { newUser } })
+      }else
       return <LayoutCompany content={<HomeCompany/>}/>
     }
   }
