@@ -26,5 +26,8 @@ public class  TripDriver{
      String phonePassenger;
      String listPolyline;
      int NoOfPolyline;
+     String vehiclePlate;
+     String vehicleName;
+     String vehicleColor;
 
 }

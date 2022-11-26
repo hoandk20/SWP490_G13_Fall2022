@@ -198,10 +198,42 @@ public class Register {
             }
             try {
 
+
                 User u = new User();
                 u.setEmail(rp.getEmail());
                 u.setPassword(rp.getPassword());
                 User usersave = userService.saveUser(u);
+
+                Rider rider = new Rider();
+                rider.setCountryCode("vi");
+                rider.setEmail(rp.getEmail());
+                rider.setFirstName(rp.getFirstName());
+                rider.setLastName(rp.getLastName());
+                rider.setMobileNo(rp.getPhoneNumber());
+                rider.setLanguageCode(rp.getLanguage());
+                rider.setId(rp.getEmail());
+                rider.setBalance(nofloat);
+                rider.setCancelRate(nofloat);
+                rider.setStatus("at");
+                rider.setTotalTrips(noShort);
+                rider.setTotalPoint(0);
+                rider.setTotalRequests(noShort);
+                rider.setTotalCanelledTrips(noShort);
+                rider.setCreatedBy(rp.getEmail()+rp.getLastName());
+                rider.setResentCount("0".getBytes()[0]);
+                rider.setPromoStatus("0".getBytes()[0]);
+                rider.setRewardedTrips(noShort);
+                rider.setTotalPoint(0);
+                rider.setCreatedDate(timeStamp);
+                rider.setLastModifiedBy(rp.getLastName()+rp.getLastName());
+                rider.setLastModifiedDate(timeStamp);
+                rider.setRate(nofloat);
+                rider.setFullName(rp.getFirstName()+rp.getLastName());
+                rider.setPromotionBalance(nofloat);
+                rider.setTotalTripAdjustment(0.0);
+                response.setStatus(masterStatus.SUCCESSFULL);
+                riderRepository.save(rider);
+
                 UserRole userRole = new UserRole();
                 userRole.setUserId(new Long(usersave.getId()));
                 userRole.setRoleId(new Long(2));
@@ -220,7 +252,8 @@ public class Register {
 
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
-                response.content=exception.toString();
+                response.content=exception.getCause().toString();
+                System.out.println(response.content);
                 response.status = masterStatus.FAILURE;
                 return ResponseEntity.badRequest().body(response);
             }
