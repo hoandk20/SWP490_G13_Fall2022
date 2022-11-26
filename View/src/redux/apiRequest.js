@@ -423,7 +423,7 @@ export const editInforDriver = async (object, toast, dispatch) => {
       {
         headers: { 'Content-Type': 'application/json' }
       });
-    // getUser(email, dispatch);
+    getUser(object.email, dispatch);
     toast.success("Thay đổi thông tin thành công.");
   } catch (error) {
     toast.error(error);
