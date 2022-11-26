@@ -24,8 +24,23 @@ const TripHistoryDriver = () => {
     const trips=useSelector((state)=>state.tripHistory.tripHistory?.trips);
    const tripHistory=trips?.map((row)=> ({ ...row, seatRemind: row.seat-row.seatRegistered,key:row.id }))
    console.log(tripHistory);
+
+   const onfinish = (values) => {
+    const trip = {
+        email: user?.email,
+        driverEmail: values.driverEmail,
+        dateFrom: values.dateFrom,
+        dateTo: values.dateTo,
+        status: values.status
+    }
+    // getTripHistoryPassenger(trip, dispatch);
+}
+
     useEffect(()=>{
-        getTripHistoryDriver(user.email,dispatch);
+        const trip ={
+            email:user?.email,
+        }
+        getTripHistoryDriver(trip,dispatch);
        },[]) 
     const columns = [
         {
@@ -58,6 +73,23 @@ const TripHistoryDriver = () => {
             title: 'Số chỗ còn trống',
             dataIndex: 'seatRemind',
         },
+        {
+            key: 'status',
+            title: 'Trạng thái',
+            dataIndex: 'status',
+        },
+        {
+            title: 'Đăng ký',
+            dataIndex: '',
+            key: 'x',
+            render: (text, record, index) => {
+                
+                return <div>
+                         <EyeOutlined onClick={()=>{navigate('/taixe/freeTrip/detail', { state: { record } })}}/> 
+                        
+                </div>
+            },
+        },
 
     ];
     return (
@@ -66,11 +98,12 @@ const TripHistoryDriver = () => {
                 textAlign: "left",
                 marginLeft: "20px"
             }}>
-                <h2>TÀI XẾ</h2>
+                <h2>LỊCH SỬ CHYẾN ĐI</h2>
                 <h3>Trạng thái</h3>
                 <div className='driver-info'>
 
                     <Form
+                        onfinish={onfinish}
                         labelCol={{
                             span: 2,
                         }}
@@ -79,9 +112,9 @@ const TripHistoryDriver = () => {
                         }}
                     >
 
+<FormItem
+                            name="driverEmail"
 
-                        <FormItem
-                            name="account"
                             label="Tài khoản"
                         >
                             <Input />
@@ -89,6 +122,7 @@ const TripHistoryDriver = () => {
                         <Row>
                             <Col sm={12} md={6} >
                                 <FormItem
+                                    name="dateFrom"
                                     label="Từ ngày"
                                     labelCol={{
                                         span: 8,
@@ -99,6 +133,7 @@ const TripHistoryDriver = () => {
                             </Col>
                             <Col sm={12} md={6} >
                                 <FormItem
+                                    name="dateTo"
                                     label="Đến ngày"
                                     labelCol={{
                                         span: 6,
@@ -109,6 +144,20 @@ const TripHistoryDriver = () => {
                             </Col>
                         </Row>
 
+                        <FormItem
+                            name="status"
+
+                            label="Trạng thái"
+                        >
+                            <Select
+                                style={{ width: "200px" }}
+
+                            >
+                                <Option value='OPEN'>Đang mở</Option>
+                                <Option value='CLOS'>Đã đóng</Option>
+                                <Option value='CANC'>Đã bị hủy</Option>
+                            </Select>
+                        </FormItem>
 
 
                         <FormItem

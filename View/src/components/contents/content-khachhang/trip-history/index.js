@@ -15,26 +15,55 @@ const data = [
 ];
 
 const TripHistoryPassenger = () => {
-    const navigate=useNavigate();
-    const dispatch=useDispatch();
-    const user=useSelector((state)=>state.user.userInfo?.currentUser);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.userInfo?.currentUser);
+    
+    const dateFormat = (date) =>{
+        const date_str = date,
+        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+        return date_parts + formatted.substr(formatted.indexOf(",") + 1);
+    }
+     const all = useSelector((state) => state.tripHistory.tripHistory?.trips);
 
-    const trips=useSelector((state)=>state.tripHistory.tripHistory?.trips);
-    console.log(trips);
-    useEffect(()=>{
-        getTripHistoryPassenger(user?.email,dispatch);
-       },[]) 
+    // trips?.array?.forEach(element => {
+    //      element.timeStart=dateFormat(element.timeStart);
+    //     if(element.tripStatus==="OPEN"){
+    //         element.tripStatus="Đang mở"
+    //     }else if(element.tripStatus==="CLOS"){
+    //         element.tripStatus="Đã đóng"
+    //     }else if(element.tripStatus==="CANC"){
+    //         element.tripStatus="Đã bị hủy"
+    //     }
+    // });
+  const trips =all.map((item)=>{
+    if(item.tripStatus==="OPEN"){
+        return {...item,item,dateStart:dateFormat(item.timeStart),key:item.tripID,tripStatus:"Đang mở"}
+    }
+    else if(item.tripStatus==="CLOS"){
+        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),tripStatus:"Đã đóng"}
+    }
+    else if(item.tripStatus==="CANC"){
+        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),tripStatus:"Đã bị hủy"}
+    }
+
+  })
+
+    useEffect(() => {
+        const trip = {
+            email: user?.email
+        }
+        getTripHistoryPassenger(trip, dispatch);
+    }, [])
 
     const columns = [
+
         {
-            key: 'index',
-            title: 'Số',
-            dataIndex: 'index',
-        },
-        {
-            key: 'timeStart',
+            key: 'dateStart',
             title: 'Thời gian bắt đầu',
-            dataIndex: 'timeStart',
+            dataIndex: 'dateStart',
         },
         {
             key: 'from',
@@ -52,9 +81,9 @@ const TripHistoryPassenger = () => {
             dataIndex: 'price',
         },
         {
-            key: 'seatRemind',
-            title: 'Số chỗ còn trống',
-            dataIndex: 'seatRemind',
+            key: 'tripStatus',
+            title: 'Trạng thái',
+            dataIndex: 'tripStatus',
         },
 
 
@@ -74,7 +103,16 @@ const TripHistoryPassenger = () => {
             },
         }
     ];
-
+    const onfinish = (values) => {
+        const trip = {
+            email: user?.email,
+            driverEmail: values.driverEmail,
+            dateFrom: values.dateFrom,
+            dateTo: values.dateTo,
+            status: values.status
+        }
+        getTripHistoryPassenger(trip, dispatch);
+    }
 
 
     return (
@@ -83,11 +121,12 @@ const TripHistoryPassenger = () => {
                 textAlign: "left",
                 marginLeft: "20px"
             }}>
-                <h2>TÀI XẾ</h2>
+                <h2>LỊCH SỬ CHUYẾN ĐI</h2>
                 <h3>Trạng thái</h3>
                 <div className='driver-info'>
 
                     <Form
+                        onFinish={onfinish}
                         labelCol={{
                             span: 2,
                         }}
@@ -98,7 +137,8 @@ const TripHistoryPassenger = () => {
 
 
                         <FormItem
-                            name="account"
+                            name="driverEmail"
+
                             label="Tài khoản"
                         >
                             <Input />
@@ -106,6 +146,7 @@ const TripHistoryPassenger = () => {
                         <Row>
                             <Col sm={12} md={6} >
                                 <FormItem
+                                    name="dateFrom"
                                     label="Từ ngày"
                                     labelCol={{
                                         span: 8,
@@ -116,6 +157,7 @@ const TripHistoryPassenger = () => {
                             </Col>
                             <Col sm={12} md={6} >
                                 <FormItem
+                                    name="dateTo"
                                     label="Đến ngày"
                                     labelCol={{
                                         span: 6,
@@ -126,6 +168,20 @@ const TripHistoryPassenger = () => {
                             </Col>
                         </Row>
 
+                        <FormItem
+                            name="status"
+
+                            label="Trạng thái"
+                        >
+                            <Select
+                                style={{ width: "200px" }}
+
+                            >
+                                <Option value='OPEN'>Đang mở</Option>
+                                <Option value='CLOS'>Đã đóng</Option>
+                                <Option value='CANC'>Đã bị hủy</Option>
+                            </Select>
+                        </FormItem>
 
 
                         <FormItem
@@ -139,7 +195,7 @@ const TripHistoryPassenger = () => {
                     </Form>
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={data} size="middle" />
+                    <Table columns={columns} dataSource={trips} size="middle" />
                 </div>
             </div>
         </div>

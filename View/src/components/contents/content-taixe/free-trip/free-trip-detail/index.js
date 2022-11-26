@@ -25,22 +25,23 @@ import {
     DirectionsRenderer,
 } from '@react-google-maps/api'
 import { useRef, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 const { Option } = Select;
 const center = { lat: 21.013255, lng: 105.52597 }
 
 const FreeTripDetail = () => {
     const dispatch = useDispatch();
     const navigate =useNavigate();
+    const location = useLocation();
+    const detail = location.state.record; 
     const [map, setMap] = useState(/** @type google.maps.Map */(null))
     const [directionsResponse, setDirectionsResponse] = useState(null)
     const [distance, setDistance] = useState('')
-    const [duration, setDuration] = useState('')
+    const [duration, setDuration] = useState('') 
     const originRef = useRef()
-    const destiantionRef = useRef()
-
+    const destiantionRef = useRef() 
     const freeTrip = useSelector((state) => state.freeTrip);
-    const createTrip = useSelector((state) => state.freeTrip.createTrip?.detail);
+    // const createTrip = useSelector((state) => state.freeTrip.createTrip?.detail);
     const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const listPassengerRegister = tripDriverDetail?.listPassenger;
 
@@ -56,7 +57,7 @@ const FreeTripDetail = () => {
     // var timeStart=new Date(tripDriverDetail?.timeStart);
     // console.log(timeStart.toString("dd/M/yyyy hh:mm:ss tt"));
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyBJsqOfn2fz4vNdX_RSS-VYA8CWQNq9EIw',
+        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
         libraries: ['places'],
     })
     // var directionsDisplay;
@@ -67,7 +68,7 @@ const FreeTripDetail = () => {
     }
     async function calculateRoute() {
         // eslint-disable-next-line no-undef
-        // const directionsService = new google.maps.DirectionsService()
+         const directionsService = new google.maps.DirectionsService()
         const results = await directionsService.route({
             origin: tripDriverDetail?.from,
             destination: tripDriverDetail?.to,
@@ -83,16 +84,24 @@ const FreeTripDetail = () => {
     // console.log("freeTrip: ", freeTrip);
     // console.log("createTrip: ", createTrip);
     // console.log("tripDriverDetail: ", tripDriverDetail);
-    //  const [detailTrip,setDetailTrip]=useState();
+    //  const [detailTrip,setDetailTrip]=useState(); 
     const cancelTrip = () =>{
         changeStatusTripDriver(tripDriverDetail.id,"CANC",dispatch,navigate);
     }
+    const startTrip = () =>{
+        changeStatusTripDriver(tripDriverDetail.id,"RUN",dispatch,navigate);
+    } 
     useEffect(() => {
-        getTripDetailDriver(createTrip.id, dispatch);
-        initialize();
-        setTimeout(calculateRoute(), 1000);
-
-    }, [])
+        getTripDetailDriver(detail.id, dispatch);
+        // if(detail.id!==null){
+        //     getTripDetailDriver(detail.id, dispatch);
+        // }else{
+        //     getTripDetailDriver(createTrip.id, dispatch);
+        // }      
+        // initialize();
+        // setTimeout(calculateRoute(), 2000);
+        calculateRoute()
+    }, [tripDriverDetail?.from])
     return (
         <div className='container'>
             <div className='container-info'>
@@ -106,8 +115,9 @@ const FreeTripDetail = () => {
                                     <Descriptions.Item span={3} label="Từ">{tripDriverDetail?.from}</Descriptions.Item>
                                     <Descriptions.Item span={3} label="Đến">{tripDriverDetail?.to}</Descriptions.Item>
                                     <Descriptions.Item span={3} label="Thời gian xuất phát">{formatted_date}</Descriptions.Item>
-                                    <Descriptions.Item label="Trống">{tripDriverDetail?.seatRemind}</Descriptions.Item>
+                                    <Descriptions.Item label="Số ghế ">{tripDriverDetail?.seat}</Descriptions.Item>
                                     <Descriptions.Item span={2} label="Cước">{tripDriverDetail?.price}</Descriptions.Item >
+                                    {/* <Descriptions.Item label="Số ghế">{tripDriverDetail?.seat}</Descriptions.Item> */}
                                     <Descriptions.Item label="Tài xế">{tripDriverDetail?.driverEmail}</Descriptions.Item>
                                 </Descriptions>
                                 <br />
@@ -132,11 +142,17 @@ const FreeTripDetail = () => {
                                     </div>
                                 </div> */}
                                 <PassengerCard/>
-                                <div className='submit' style={{ marginTop: "20px" }}>
-                                    <Button type="primary" onClick={cancelTrip} danger style={{ marginLeft: "27%" }}>
+                                <div className='s'  style={{ marginTop: "20px",textAlign:"center" }}>
+             
+                                </div>
+                                <span>
+                                <Button type="primary" onClick={cancelTrip} danger style={{ marginLeft: "27%",display:"inline-block" }}>
                                         Hủy chuyến
                                     </Button>
-                                </div>
+                                    <Button type="primary" onClick={startTrip}  style={{  marginLeft: "20px",display:"inline-block" }}>
+                                        Bắt đầu chuyến đi
+                                    </Button>
+                                </span>
                             </div>
                         </Col>
                         <Col sm={16} md={8}>

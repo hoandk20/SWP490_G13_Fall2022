@@ -182,7 +182,8 @@ export const CreateFreeTrip = async (trip, dispatch, navigate, toast) => {
 
     console.log("res:", res);
     dispatch(createTripSuccess(res.data.object));
-    navigate('/taixe/freeTrip/detail/');
+    const record=res.data.object;
+    navigate('/taixe/freeTrip/detail/', { state: { record } });
 
   } catch (error) {
     toast.error(error);
@@ -306,10 +307,16 @@ export const changeStatusTripDriver= async (id, status,dispatch,navigate) => {
 }
 
 
-export const getTripHistoryDriver = async (email, dispatch) => {
-  // dispatch(getTripHistoryStart());
+export const getTripHistoryDriver = async (trip, dispatch) => {
   try {
-    const res = await axios.get(`${URL}:8080/api/tripdriver/listTrip?driverEmail=${email}`, {
+    const res = await axios.post(`${URL}:8080/api/tripPassenger/listTrip`,{
+      passengerEmail:trip.email,
+      driverEmail:trip.driverEmail,
+      dateFrom:trip.dateFrom,
+      dateTo:trip.dateTo,
+      status:trip.status,
+    },
+     {
       headers: { 'Content-Type': 'application/json' }
     });
     console.log(res);
@@ -320,14 +327,21 @@ export const getTripHistoryDriver = async (email, dispatch) => {
   }
 }
 
-export const getTripHistoryPassenger = async (email, dispatch) => {
+export const getTripHistoryPassenger = async (trip, dispatch) => {
   // dispatch(getTripHistoryStart());
   try {
-    const res = await axios.get(`${URL}:8080/api/tripPassenger/listTrip?passengerEmail${email}`, {
+    const res = await axios.post(`${URL}:8080/api/tripPassenger/listTrip`,{
+      passengerEmail:trip.email,
+      driverEmail:trip.driverEmail,
+      dateFrom:trip.dateFrom,
+      dateTo:trip.dateTo,
+      status:trip.status,
+    },
+     {
       headers: { 'Content-Type': 'application/json' }
     });
     console.log(res);
-    dispatch(getTripHistorySuccess(res.data));
+    dispatch(getTripHistorySuccess(res.data.object));
 
   } catch (error) {
     // dispatch(getTripHistoryFailed());

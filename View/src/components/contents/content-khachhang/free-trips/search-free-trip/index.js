@@ -55,8 +55,14 @@ const SerachFreeTripForPassenger = () => {
     //     waitingTime:row.waitingTime,
     //     seat:row.seat
     // }))
-
-    const freeTrips=trips?.object.map((row)=> ({ ...row,key:row.id}));
+    const dateFormat = (date) =>{
+        const date_str = date,
+        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+        return date_parts + formatted.substr(formatted.indexOf(",") + 1);
+    }
+    const freeTrips=trips?.object.map((row)=> ({ ...row,key:row.id,seatRemind:row.seat-row.seatRegistered,dateStart:dateFormat(row.timeStart)}));
 
     useEffect(()=>{
        getListFreeTripIsOpen(dispatch);
@@ -94,15 +100,11 @@ const SerachFreeTripForPassenger = () => {
 
       
 const columns = [
+
     {
-        key: 'index',
-        title: 'Số',
-        dataIndex: 'index',
-    },
-    {
-        key: 'timeStart',
+        key: 'dateStart',
         title: 'Thời gian bắt đầu',
-        dataIndex: 'timeStart',
+        dataIndex: 'dateStart',
     },
     {
         key: 'from',
@@ -120,12 +122,11 @@ const columns = [
         dataIndex: 'price',
     },
     {
-        key: 'seat',
+        key: 'seatRemind',
         title: 'Số chỗ còn trống',
-        dataIndex: 'seat',
+        dataIndex: 'seatRemind',
     },
 
-    
     {
         title: 'Đăng ký',
         dataIndex: '',
@@ -176,7 +177,7 @@ const data = [
 ];
     const navigate = useNavigate();
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyBJsqOfn2fz4vNdX_RSS-VYA8CWQNq9EIw',
+        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
         libraries: ['places'],
     })
 
@@ -258,13 +259,10 @@ const data = [
     const onPlaceChanged = () => {
         // eslint-disable-next-line no-undef
        const geocoder = new google.maps.Geocoder();
-       const address = 'Hồ Gươm, Phố Lê Thái Tổ, Hàng Trống, Hoàn Kiếm, Hà Nội, Việt Nam';
       
        if (originRef.current.value === "" && destiantionRef.current.value === "") {
            return
        } else if (originRef.current.value !== "" &&destiantionRef.current.value === "") {
-           console.log(originRef.current.value);
-           console.log(destiantionRef.current.value);
            geocoder.geocode({ address: originRef.current.value }, (results, status) => {
                if (status === 'OK') {
                    center= results[0].geometry.location;

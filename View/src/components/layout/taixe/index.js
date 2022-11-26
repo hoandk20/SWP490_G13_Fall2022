@@ -39,11 +39,11 @@ const menuItem=[
     icon: <LaptopOutlined rotate={180}/>,
     label: 'CHUYẾN ĐI MIỄN PHÍ',
   },
-  {
-    key: '3',
-    icon: <SearchOutlined rotate={90}/>,
-    label: 'THÔNG TIN CHUYẾN ĐI',
-  },
+  // {
+  //   key: '3',
+  //   icon: <SearchOutlined rotate={90}/>,
+  //   label: 'THÔNG TIN CHUYẾN ĐI',
+  // },
   {
     key: '4',
     icon: <HistoryOutlined />,

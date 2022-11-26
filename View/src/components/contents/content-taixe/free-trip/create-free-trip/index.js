@@ -14,7 +14,8 @@ import {
     IconButton,
     SkeletonText,
     Text,
-    Input
+    Input,
+    NumberInput
 } from '@chakra-ui/react'
 
 import {
@@ -71,7 +72,7 @@ const CreateFreeTripForDriver = () => {
     console.log(user);
 
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyBJsqOfn2fz4vNdX_RSS-VYA8CWQNq9EIw',
+        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
         libraries: ['places'],
     })
 
@@ -313,7 +314,7 @@ const CreateFreeTripForDriver = () => {
                                         }
                                     ]}
                                 >
-                                    <Input />
+                                    <Input placeholder='Thời gian chờ'  /> 
                                 </Form.Item>
                                 <Form.Item
                                     name="price"

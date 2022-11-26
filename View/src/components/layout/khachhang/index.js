@@ -35,11 +35,11 @@ const menuItem=[
     icon: <UserOutlined />,
     label: 'HỒ SƠ',
   },
-  {
-    key: '2',
-    icon: <LaptopOutlined rotate={180}/>,
-    label: 'CHUYẾN ĐI MIỄN PHÍ',
-  },
+  // {
+  //   key: '2',
+  //   icon: <LaptopOutlined rotate={180}/>,
+  //   label: 'CHUYẾN ĐI MIỄN PHÍ',
+  // },
   {
     key: '3',
     icon: <SearchOutlined rotate={90}/>,

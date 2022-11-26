@@ -39,14 +39,14 @@ const FreeTripDetailOfDriver = () => {
     const [seatRegister, setSeatRegister] = useState();
     const [note, setNote] = useState();
 
-    const [map, setMap] = useState(/** @type google.maps.Map */(null))
+    const [map, setMap] = useState((null))
     const [directionsResponse, setDirectionsResponse] = useState(null)
     const [distance, setDistance] = useState('')
     const [duration, setDuration] = useState('')
     const originRef = useRef()
     const destiantionRef = useRef()
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyBJsqOfn2fz4vNdX_RSS-VYA8CWQNq9EIw',
+        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
         libraries: ['places'],
     })
 
@@ -65,11 +65,13 @@ const FreeTripDetailOfDriver = () => {
 
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
+        console.log(tripInfo?.from);
         const results = await directionsService.route({
             origin: tripInfo?.from,
             destination: tripInfo?.to,
             // eslint-disable-next-line no-undef
             travelMode: google.maps.TravelMode.DRIVING,
+            
         })
         setDirectionsResponse(results)
         console.log(results)
@@ -116,7 +118,6 @@ const FreeTripDetailOfDriver = () => {
     };
 
     useEffect(() => {
-
         calculateRoute()
     }, [])
     return (
@@ -130,35 +131,54 @@ const FreeTripDetailOfDriver = () => {
                                 <Descriptions.Item span={3} label="Từ">{tripInfo?.from}</Descriptions.Item>
                                 <Descriptions.Item span={3} label="Đến">{tripInfo?.to}</Descriptions.Item>
                                 <Descriptions.Item span={3} label="Thời gian xuất phát">{formatted_date}</Descriptions.Item>
-                                <Descriptions.Item label="Trống">{tripInfo?.seatRemind}</Descriptions.Item>
+                                {
+                                    tripInfo?.tripID!==null?(
+                                        <Descriptions.Item label="Số ghế đã đặt">{tripInfo?.seatRegister}</Descriptions.Item>
+                                    ):(
+                                        <Descriptions.Item label="Số ghế còn trống">{tripInfo?.seat - tripInfo?.seatRegistered}</Descriptions.Item>
+                                    )
+                                }
+                              
                                 <Descriptions.Item span={2} label="Cước">{tripInfo?.price}</Descriptions.Item >
                                 <Descriptions.Item label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
                             </Descriptions>
                             <div style={{ marginTop: '30px', display: 'inline-block' }}>
-                                <div>
 
-                                    <Select
-                                        style={{ width: "100px" }}
-                                        onChange={handleOnChangeSelect}
-                                    >
-                                        <Option value='1'>1 chỗ</Option>
-                                        <Option value='2'>2 chỗ</Option>
-                                        <Option value='3'>3 chỗ</Option>
-                                        <Option value='4'>4 chỗ</Option>
-                                    </Select>
-
-                                </div>
                                 <div>
-                                    <Button type="primary" danger style={{ marginLeft: "37%", display: 'inline-block' }}>
-                                        Hủy
-                                    </Button>
-                                    <Button type="primary" style={{ display: 'inline-block' }} onClick={showModal}   >Xác nhận</Button>
+                                    {
+                                        tripInfo?.tripID !== null ? (
+                                            <></>
+                                        ) : (
+                                            <div>
+                                                <div>
+
+                                                    <Select
+                                                        style={{ width: "100px" }}
+                                                        onChange={handleOnChangeSelect}
+                                                    >
+                                                        <Option value='1'>1 chỗ</Option>
+                                                        <Option value='2'>2 chỗ</Option>
+                                                        <Option value='3'>3 chỗ</Option>
+                                                        <Option value='4'>4 chỗ</Option>
+                                                    </Select>
+
+                                                </div>
+                                                <div style={{ marginTop: "25px", textAlign: "center" }}>
+                                                    <Button type="primary" danger style={{ marginTop: "25px", display: 'inline-block' }}>
+                                                        Hủy
+                                                    </Button>
+                                                    <Button type="primary" style={{ marginLeft: "15px", display: 'inline-block' }} onClick={showModal}   >Xác nhận</Button>
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+
                                     <Modal title="Đăng ký chuyến đi" width={700} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}
                                         footer={[
                                             <Button key="back" onClick={handleCancel}>
                                                 Hủy
                                             </Button>,
-                                            <Button style={{marginTop:"100px"}} key="submit" type="primary" onClick={handleOk}>
+                                            <Button style={{ marginTop: "100px" }} key="submit" type="primary" onClick={handleOk}>
                                                 Xác nhận
                                             </Button>,
 
