@@ -44,15 +44,31 @@ public class PassengerTrip {
         if(detail.getId().equals("")) {
             throw  new Exception();
         }
+        Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(detail.getTripCode());
         switch (status){
             case "1":
                 detail.setStatus(registerStatus.REJECT);
                 break;
             case "2":
                 detail.setStatus(registerStatus.APPROVE);
+                if(promotiontrip==null){
+                    break;
+                }
+                if(promotiontrip.getCapacity()-promotiontrip.getNumberCapacityRegistered()<detail.getDuration()){
+                    response.content="do not enough seat";
+                    response.status = masterStatus.FAILURE;
+                    return ResponseEntity.badRequest().body(response);
+                }else{
+                        promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+detail.getDuration());
+                        promotiontripRepository.save(promotiontrip);
+                }
                 break;
             case "3":
                 detail.setStatus(registerStatus.PENDING);
+                break;
+            case "4":
+                detail.setStatus(registerStatus.CLOSE);
+                detail.setTimeEnd(Instant.now());
                 break;
             default:
         }
@@ -103,8 +119,8 @@ public class PassengerTrip {
                 response.status = masterStatus.FAILURE;
                 return ResponseEntity.badRequest().body(response);
             }else{
-                promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+t.getDuration());
-                promotiontripRepository.save(promotiontrip);
+              //  promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+t.getDuration());
+              //  promotiontripRepository.save(promotiontrip);
             }
             response.content= tripRepository.save(t).toString();
             response.object=t;
@@ -118,7 +134,7 @@ public class PassengerTrip {
 
     }
 
-    @GetMapping("/listTrip")
+    @GetMapping("/listTrip1")
     public ResponseEntity<?> listTrip(String passengerEmail){
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
@@ -138,6 +154,7 @@ public class PassengerTrip {
                 tripPassenger.setTimeStart(Date.from(detail.getTimeStart()));
                 tripPassenger.setWaitingTime(detail.getDriverWaitingTime());
                 tripPassenger.setPrice(detail.getOpenPrice());
+
                 tripPassengers.add(tripPassenger);
             }
 
@@ -150,19 +167,22 @@ public class PassengerTrip {
             return ResponseEntity.badRequest().body(response);
         }
     }
-    @GetMapping("/listTripHistory")
-    public ResponseEntity<?> listTripHistory(String passengerEmail){
+    @PostMapping("/listTrip")
+    public ResponseEntity<?> listTripHistory(@RequestBody filterTripPassenger filterTripPassenger){
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
-        MasterTripStatus masterTripStatus = new MasterTripStatus();
+        RegisterStatus registerStatus = new RegisterStatus();
 
         try{
-            List<Trip> list = tripRepository.findAllByRiderIDOrderByCreatedDateDesc(passengerEmail);
+            List<Trip> list = tripRepository.findAllByRiderIDOrderByCreatedDateDesc(filterTripPassenger.getPassengerEmail());
             List<TripPassenger> listTripHistory = new ArrayList<>();
             for (Trip detail:list
             ) {
-                if(detail.getStatus().equals(masterTripStatus.TRIP_CLOSE)){
+                if(detail.getStatus().equals(registerStatus.CLOSE)||detail.getStatus().equals(registerStatus.APPROVE)){
+
                     TripPassenger tripPassenger = new TripPassenger();
+                    tripPassenger.setId(detail.getId());
+                    tripPassenger.setTripID(detail.getTripCode());
                     tripPassenger.setNote(detail.getNote());
                     tripPassenger.setFrom(detail.getFromAddress());
                     tripPassenger.setTo(detail.getToAddress());
@@ -172,10 +192,15 @@ public class PassengerTrip {
                     tripPassenger.setTimeStart(Date.from(detail.getTimeStart()));
                     tripPassenger.setWaitingTime(detail.getDriverWaitingTime());
                     tripPassenger.setPrice(detail.getOpenPrice());
+
+
+                    Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(detail.getTripCode());
+                    tripPassenger.setTripStatus(promotiontrip.getStatus());
                     listTripHistory.add(tripPassenger);
                 }
             }
 
+            listTripHistory = filterTripPassenger(listTripHistory,filterTripPassenger);
             response.object=listTripHistory;
             response.status = masterStatus.SUCCESSFULL;
             return ResponseEntity.ok().body(response);
@@ -185,6 +210,36 @@ public class PassengerTrip {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    List<TripPassenger> filterTripPassenger(List<TripPassenger> tripPassengerList,filterTripPassenger filter){
+        List<TripPassenger> listResult = new ArrayList<>();
+        for (TripPassenger t:tripPassengerList
+             ) {
+            if(filter.driverEmail!=null&&!filter.driverEmail.equals("")){
+                if(!filter.driverEmail.equals(t.getDriverEmail())){
+                    continue;
+                }
+            }
+            if(filter.status!=null&&!filter.status.equals("")){
+                if(!filter.status.equals(t.getTripStatus())){
+                    continue;
+                }
+            }
+            if(filter.dateFrom!=null){
+                if(filter.dateFrom.compareTo(t.getTimeStart())>=0){
+                    continue;
+                }
+            }
+            if(filter.dateTo!=null){
+                if(filter.dateTo.compareTo(t.getTimeStart())<=0){
+                    continue;
+                }
+            }
+            listResult.add(t);
+        }
+
+        return  listResult;
+    }
+
 
 //    @GetMapping("/detail")
 //    public ResponseEntity<?> TripDetail (String id){
@@ -214,6 +269,14 @@ public class PassengerTrip {
 //        }
 //    }
 
+}
+@Data
+class filterTripPassenger{
+    String passengerEmail;
+    String driverEmail;
+    Date dateFrom;
+    Date dateTo;
+    String status;
 }
 
 

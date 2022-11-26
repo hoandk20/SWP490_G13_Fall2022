@@ -1,15 +1,11 @@
 package com.G13.api;
 
-import com.G13.domain.Promotiontrip;
-import com.G13.domain.Promotiontriprider;
-import com.G13.domain.Trip;
+import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
 import com.G13.model.TripDriver;
 import com.G13.model.TripPassenger;
-import com.G13.repo.PromotiontripRepository;
-import com.G13.repo.PromotiontripriderRepository;
-import com.G13.repo.TripRepository;
+import com.G13.repo.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +24,8 @@ public class DriverTrip {
 
     private final PromotiontripRepository promotiontripRepository;
     private final TripRepository tripRepository;
+    private  final VehicleRepository vehicleRepository;
+    private final DriverRepository driverRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> CreateTrip(@RequestBody TripDriver rp) {
@@ -124,6 +122,13 @@ public class DriverTrip {
                 tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                 tripDriver.setWaitingTime(detail.getDuration());
                 tripDriver.setPrice(detail.getFee());
+                Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
+                Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                if(vehicle!=null){
+                    tripDriver.setVehiclePlate(vehicle.getPlate());
+                    tripDriver.setVehicleColor(vehicle.getExteriorColor());
+                    tripDriver.setVehicleName(vehicle.getCreatedBy());
+                }
                 driverTrips.add(tripDriver);
             }
 
@@ -136,6 +141,7 @@ public class DriverTrip {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
 
     @PostMapping("/search")
     public ResponseEntity<?> listTrip(@RequestBody SearchTrip searchTrip) {
@@ -161,6 +167,14 @@ public class DriverTrip {
                 tripDriver.setInstantTimeStart(detail.getTimeStart());
                 tripDriver.setWaitingTime(detail.getDuration());
                 tripDriver.setPrice(detail.getFee());
+                Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
+                Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                if(vehicle!=null){
+                    tripDriver.setVehiclePlate(vehicle.getPlate());
+                    tripDriver.setVehicleColor(vehicle.getExteriorColor());
+                    tripDriver.setVehicleName(vehicle.getCreatedBy());
+                }
+
                 driverTrips.add(tripDriver);
             }
             driverTrips = filterTrip(driverTrips,searchTrip.listPolyline,searchTrip.registerSeat,searchTrip.dateStart,searchTrip.timeStart);
@@ -193,31 +207,31 @@ public class DriverTrip {
         } catch (Exception e) {
             IsHasTime = false;
         }
-          int  RegisterSeat = parseIntWithDefault(registerSeat,0);
-          int  TimeStart = parseIntWithDefault(timeStart,0);
+        int  RegisterSeat = parseIntWithDefault(registerSeat,0);
+        int  TimeStart = parseIntWithDefault(timeStart,0);
+
+
 
         String[] listPoly = SlistPoly.split(";");
+        listPoly[0]="";
+        listPoly[listPoly.length-1]="";
         for (TripDriver t : list) {
             if (t.getListPolyline() == null || t.getListPolyline().equals("")) {
                 continue;
             }
             int i = 0;
-            String sameWay = "";
+         //   String sameWay = "";
             for (String o : listPoly) {
-
                 String poly = o;
-                if (t.getListPolyline().contains(poly)) {
-                    if(i==137){
-                        System.out.println(i);
-                    }
+                if (t.getListPolyline().contains(poly)&&!poly.equals("")) {
                     i++;
                     System.out.println(i);
-                    sameWay = sameWay + o+";";
+      //            sameWay = sameWay + o+";";
                 }
             }
-            if(!t.getListPolyline().contains(sameWay)){
-                continue;
-            }
+//            if(!t.getListPolyline().contains(sameWay)){
+//                continue;
+//            }
 
             //not match of the routes
             if(i<0.5*listPoly.length){continue;}
@@ -228,7 +242,7 @@ public class DriverTrip {
             if (!(t.getSeat() - t.getSeatRegistered() >= RegisterSeat)) {
                 continue;
             }
-            if(!IsHasTime){
+            if(IsHasTime){
                 if (TimeStart>0) {
                     Date Date1 = Date.from(t.getInstantTimeStart());
                     Date Date2 = Date.from(instantStart);
@@ -256,7 +270,30 @@ public class DriverTrip {
         return listResult;
     }
     public static int parseIntWithDefault(String str, int defaultInt) {
-        return str.matches("-?\\d+") ? Integer.parseInt(str) : defaultInt;
+        try{
+            return str.matches("-?\\d+") ? Integer.parseInt(str) : defaultInt;
+        }catch (Exception e){
+            return 0;
+        }
+
+    }
+    @PostMapping("ChangeStatus")
+    public ResponseEntity<?> ChangeStatus (@RequestBody SearchTrip searchTrip) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        MasterTripStatus masterTripStatus = new MasterTripStatus();
+        try {
+
+            Promotiontrip detail = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(searchTrip.getId());
+            detail.setStatus(searchTrip.getStatus());
+            response.object = promotiontripRepository.saveAndFlush(detail);
+            response.status = masterStatus.SUCCESSFULL;
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.content = exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @GetMapping("/listTripHistory")
@@ -270,7 +307,7 @@ public class DriverTrip {
             List<TripDriver> driverTripHistory = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
-                if (detail.getStatus().equals(masterTripStatus.TRIP_CLOSE)) {
+                if (detail.getStatus().equals(masterTripStatus.TRIP_CLOSE)||detail.getStatus().equals(masterTripStatus.TRIP_CANCEL)) {
                     TripDriver tripDriver = new TripDriver();
                     tripDriver.setId(detail.getId());
                     tripDriver.setDriverEmail(detail.getDriverID());
@@ -282,6 +319,13 @@ public class DriverTrip {
                     tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                     tripDriver.setWaitingTime(detail.getDuration());
                     tripDriver.setPrice(detail.getFee());
+                    Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
+                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    if(vehicle!=null){
+                        tripDriver.setVehiclePlate(vehicle.getPlate());
+                        tripDriver.setVehicleColor(vehicle.getExteriorColor());
+                        tripDriver.setVehicleName(vehicle.getCreatedBy());
+                    }
                     driverTripHistory.add(tripDriver);
                 }
             }
@@ -352,6 +396,7 @@ public class DriverTrip {
 }
 @Data
 class SearchTrip{
+    String id;
     String listPolyline;
     String registerSeat;
     String status;

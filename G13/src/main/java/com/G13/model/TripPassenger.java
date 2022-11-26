@@ -19,4 +19,5 @@ public class TripPassenger {
     int waitingTime;
     float price;
     String status;
+    String TripStatus;
 }
