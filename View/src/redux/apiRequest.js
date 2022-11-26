@@ -309,9 +309,9 @@ export const changeStatusTripDriver= async (id, status,dispatch,navigate) => {
 
 export const getTripHistoryDriver = async (trip, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/tripPassenger/listTrip`,{
-      passengerEmail:trip.email,
-      driverEmail:trip.driverEmail,
+    const res = await axios.post(`${URL}:8080/api/tripdriver/listTrip`,{
+      driverEmail:trip.email,
+      passengerEmail:trip.passengerEmail,
       dateFrom:trip.dateFrom,
       dateTo:trip.dateTo,
       status:trip.status,
@@ -541,11 +541,9 @@ export const editInforDriver = async (object, toast, dispatch) => {
       {
         headers: { 'Content-Type': 'application/json' }
       });
-<<<<<<< HEAD
+
        getDriverDetail(object.email,dispatch);
-=======
-    getUser(object.email, dispatch);
->>>>>>> thanh
+      getUser(object.email, dispatch);
     toast.success("Thay đổi thông tin thành công.");
   } catch (error) {
     toast.error(error);
@@ -566,7 +564,7 @@ export const changePassword = async (object, toast) => {
       });
     toast.success("Đổi mật khẩu thành công.");
   } catch (error) {
-    toast.error(error);
+    toast.error("Thay đổi mật khẩu không thành công");
 
   }
 }

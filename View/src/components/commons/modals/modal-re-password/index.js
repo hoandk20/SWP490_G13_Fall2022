@@ -55,7 +55,7 @@ const ModalRePassword = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your password!',
+                                message: 'Vui lòng nhập mật khẩu cũ',
                             },
                         ]}
                         hasFeedback
@@ -68,7 +68,7 @@ const ModalRePassword = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please input your password!',
+                                message: 'Vui lòng nhập mật khẩu mới',
                                 min: 6,
                                 max: 32
                             },
@@ -86,7 +86,7 @@ const ModalRePassword = () => {
                         rules={[
                             {
                                 required: true,
-                                message: 'Please confirm your password!',
+                                message: 'Vui lòng nhập lại mật khẩu ',
                             },
                             ({ getFieldValue }) => ({
                                 validator(_, value) {
@@ -94,7 +94,7 @@ const ModalRePassword = () => {
                                         return Promise.resolve();
                                     }
 
-                                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                    return Promise.reject(new Error('Không khớp với mật khẩu vừa tạo'));
                                 },
                             }),
                         ]}

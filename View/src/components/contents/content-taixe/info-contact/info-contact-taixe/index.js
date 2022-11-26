@@ -111,7 +111,7 @@ const InfoContactTaixe = () => {
     }
 
     return (
-
+        
         <div className='container-edit'>
             <h2>Hồ sơ</h2>
             <h3>Thông tin chung</h3>
@@ -223,8 +223,9 @@ const InfoContactTaixe = () => {
                             </div>
                         </Col>
                     </Row>
-                    <Row>
-                        <Col sm={16} md={8}  >
+                    <Row style={{marginTop:"50px"}}>
+              
+                      <Col sm={16} md={8}  >
                             <FormItem
                                     wrapperCol={{
                                         span: 22,
@@ -241,6 +242,7 @@ const InfoContactTaixe = () => {
                             <ModalRePassword />
                             </div>
                         </Col>
+                     
                     </Row>
 
 

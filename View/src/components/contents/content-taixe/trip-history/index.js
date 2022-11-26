@@ -17,31 +17,33 @@ const data = [
 
 const TripHistoryDriver = () => {
 
-    const navigate=useNavigate();
-    const dispatch=useDispatch();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     // const [tripHistory,setTripHistory] =useState();
-    const user=useSelector((state)=>state.user.userInfo?.currentUser);
-    const trips=useSelector((state)=>state.tripHistory.tripHistory?.trips);
-   const tripHistory=trips?.map((row)=> ({ ...row, seatRemind: row.seat-row.seatRegistered,key:row.id }))
-   console.log(tripHistory);
+    const user = useSelector((state) => state.user.userInfo?.currentUser);
+    const trips = useSelector((state) => state.tripHistory.tripHistory?.trips);
+    const tripHistory = trips?.map((row) => ({ ...row, seatRemind: row.seat - row.seatRegistered, key: row.id }))
+    console.log(tripHistory);
 
-   const onfinish = (values) => {
-    const trip = {
-        email: user?.email,
-        driverEmail: values.driverEmail,
-        dateFrom: values.dateFrom,
-        dateTo: values.dateTo,
-        status: values.status
+    const onfinish = (values) => {
+        console.log("ád");
+        // const trip = {
+        //     email: user?.email,
+        //     passengerEmail: values.passengerEmail,
+        //     dateFrom: values.dateFrom,
+        //     dateTo: values.dateTo,
+        //     status: values.status
+        // }
+      
+        // getTripHistoryDriver(trip, dispatch);
     }
-    // getTripHistoryPassenger(trip, dispatch);
-}
 
-    useEffect(()=>{
-        const trip ={
-            email:user?.email,
+    useEffect(() => {
+        const trip = {
+            email: user?.email,
         }
-        getTripHistoryDriver(trip,dispatch);
-       },[]) 
+        getTripHistoryDriver(trip, dispatch);
+    }, [])
     const columns = [
         {
             key: 'index',
@@ -83,10 +85,10 @@ const TripHistoryDriver = () => {
             dataIndex: '',
             key: 'x',
             render: (text, record, index) => {
-                
+
                 return <div>
-                         <EyeOutlined onClick={()=>{navigate('/taixe/freeTrip/detail', { state: { record } })}}/> 
-                        
+                    <EyeOutlined onClick={() => { navigate('/taixe/freeTrip/detail', { state: { record } }) }} />
+
                 </div>
             },
         },
@@ -112,8 +114,8 @@ const TripHistoryDriver = () => {
                         }}
                     >
 
-<FormItem
-                            name="driverEmail"
+                        <FormItem
+                            name="passengerEmail"
 
                             label="Tài khoản"
                         >
