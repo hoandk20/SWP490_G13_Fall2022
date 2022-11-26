@@ -63,9 +63,10 @@ const RegisterPassenger = () => {
             firstName:values.firstName,
             lastName:values.lastName,
             phoneNumber:values.phoneNumber,
+            role:"ROLE_PASSENGER"
         }
         registerPassenger(newUser,dispatch,navigate,toast);
-        navigate("/signup/confirm-email");
+        // navigate("/signup/confirm-email",{ state: { newUser } });
 
     };
 

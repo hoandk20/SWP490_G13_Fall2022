@@ -8,13 +8,17 @@ import { ChangeStatusSignUp, getUser, UploadFile } from '../../../../redux/apiRe
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router';
 import { useEffect } from 'react';
+import jwtDecode from 'jwt-decode';
 
 const { Option } = Select;
 const RegisterDriverDoc = () => {
-   
+
     const location = useLocation();
-    const newUser=useSelector((state)=>state.user.userInfo?.currentUser);
-    console.log(newUser);
+    const currentUser = useSelector((state) => state.auth.login?.currentUser);
+    const decodedTocken = jwtDecode(currentUser.access_token);
+    const userName = decodedTocken.sub;
+    const newUser = useSelector((state) => state.user.userInfo?.currentUser);
+   
     const navigate = useNavigate();
     const [count, setCount] = useState(0);
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
@@ -62,7 +66,7 @@ const RegisterDriverDoc = () => {
             month: month
         }
         UploadFile(object, toast);
-        setCount(count+1);
+        setCount(count + 1);
     };
 
 
@@ -79,10 +83,10 @@ const RegisterDriverDoc = () => {
             month: month
         }
         UploadFile(object, toast);
-        setCount(count+1);
+        setCount(count + 1);
     };
 
-console.log(count);
+    console.log(count);
     const uploadfileAvatar = () => {
         const year = "";
         const month = "";
@@ -114,11 +118,15 @@ console.log(count);
     };
 
     const onClickNext = () => {
-        ChangeStatusSignUp(newUser.email,2);
+        ChangeStatusSignUp(newUser.email, 2);
         navigate('/signup/add-vehico', { state: { newUser } })
     };
     const dispatch = useDispatch();
- 
+    
+    useEffect(()=>{
+        getUser(userName,dispatch);
+       
+      },[])
     return (
         <div className='container'>
             <div className='container-info'>

@@ -1,2 +1,5 @@
 .idea/misc.xml
 .idea/workspace.xml
+/node_modules
+
+View/src/components/commons/autocomplete-map/index.js

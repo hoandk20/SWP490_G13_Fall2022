@@ -12,3 +12,16 @@
 .content-list{
     margin-top: 10px;
 }
+.scroll-bg{
+    width: 500px;
+    /* margin: 10% auto; */
+}
+.scroll-div{
+    width: 500px;
+    height: 300px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+.scroll-object{
+    padding: 10px;
+}

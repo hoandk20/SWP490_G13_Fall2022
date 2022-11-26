@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 
 import { toast } from 'react-toastify';
-import { getDriversByAdmin } from '../../../../redux/apiRequest';
+import { getDriverDetail, getDriversByAdmin, getDriversByAdminAll } from '../../../../redux/apiRequest';
 import EditDriverForCompany from '../../../commons/drawers/drawer-admin-mgt/drawer-edit-driver';
 import { useNavigate } from 'react-router';
 
@@ -15,21 +15,26 @@ import { useNavigate } from 'react-router';
 const { Option } = Select;
 const DriverManagementAdmin = () => {
 
-    const navigate =useNavigate();
-
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     console.log(user);
-    const all=useSelector((state)=>state.user.drivers?.all);
+    const all = useSelector((state) => state.user.drivers?.all);
     console.log(all);
-    const drivers=all?.map((row)=> ({ ...row,key:row.driverID,name:row.firstName+" "+row.lastName }));
+    const drivers = all?.map((row) => ({ ...row, key: row.driverID, name: row.firstName + " " + row.lastName }));
 
-    useEffect(()=>{
-        getDriversByAdmin(dispatch);
-         
-      },[])
+    const onFinish = (values) => {
+        console.log(values); 
+        getDriversByAdmin(values,dispatch);
 
-    const data=[];
+    }
+
+    useEffect(() => {
+        getDriversByAdminAll(dispatch);
+
+    }, [])
+
+    const data = [];
 
 
     const columns = [
@@ -89,35 +94,43 @@ const DriverManagementAdmin = () => {
             title: '',
             dataIndex: '',
             key: 'x',
-            render: (text, record, index) => {
+            render: (record) => {
                 return <div>
                     <EyeOutlined onClick={() => {
-                    navigate('/admin/taixe-mgt/detail',{state:{record}})
-                }} />
+                        console.log(record.email);
+                        getDriverDetail(record.email,dispatch);
+                        setTimeout(()=>{
+                            navigate('/admin/taixe-mgt/detail', { state: { record } })
+                          },1500)   
+                         
+                    }} />
+
+                </div>
+            },
+        },
+        
+
+        // {
+        //     title: '',
+        //     dataIndex: '',
+        //     key: 'y',
+        //     render: (record) => {
+        //         return <div>
+        //             <Popconfirm
+        //                 title="Bạn có muốn xóa tài khoản này?"
+        //                 onConfirm={() => handleDelete(record.key)}
+        //                 onCancel={cancel}
+        //                 okText="Yes"
+        //                 cancelText="No"
+        //             >
+        //                 <DeleteOutlined/>
+        //             </Popconfirm>
+        //         </div>
     
-                </div>
-            },
-        },
-
-        {
-            title: '',
-            dataIndex: '',
-            key: 'y',
-            render: (text, record, index) => {
-                return <div>
-                    <Popconfirm
-                        title="Bạn có muốn xóa phương tiện này?"
-                       
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <DeleteOutlined />
-                    </Popconfirm>
-                </div>
-
-            },
-        },
+        //     },
+        // },
     ];
+
 
     return (
         <div className='container'>
@@ -128,55 +141,75 @@ const DriverManagementAdmin = () => {
                 <h2>QUẢN TRỊ VÀ NHÂN VIÊN</h2>
                 <h3>TÌM TÀI XẾ</h3>
                 <div className='driver-info'>
-                    <Form labelCol={{
-                        span: 4,
-                    }}
+                    <Form onFinish={onFinish}
+                        labelCol={{
+                            span: 6,
+                        }}
                         wrapperCol={{
-                            span: 12,
+                            span: 16,
                         }}
                     >
                         <Row>
-                            <Col md={12} sm={24}>
+                            <Col md={8} sm={16}>
                                 <FormItem
-                                    name="account"
-                                    label="Biển số"
+                                    name="regFrom"
+                                    label="Đăng ký từ"
+                                >
+                                    <Input />
+                                </FormItem>
+                                <FormItem
+                                    name="driverName"
+                                    label="Tên tài xế"
+
+                                >
+                                      <Input />
+                                </FormItem>
+                                <FormItem
+                                    name="city"
+                                    label="Địa chỉ"
+
+                                >
+                                 <Input/>
+                                </FormItem>
+                            </Col>
+                            <Col md={8} sm={16}>
+                                <FormItem
+                                    name="regTo"
+                                    label="Đến"
+                                >
+                                    <Input />
+                                </FormItem>
+                                <FormItem
+                                    name="phone"
+                                    label="Số di động"
                                 >
                                     <Input />
                                 </FormItem>
                                 <FormItem
                                     name="status"
                                     label="Trạng thái"
-
                                 >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="Đã gửi lại tài liệu"></Option>
-                                        <Option value="Hoạt động"></Option>
-                                        <Option value="Đã gửi tài liệu"></Option>
-                                        <Option value="Không hoạt động"></Option>
-                                        <Option value="Đang chờ xem xét"></Option>
-                                        <Option value="Chưa gửi tài liệu"></Option>
-                                    </Select>
-                                </FormItem>
-                                <FormItem
-                                    name="vehicoType"
-                                    label="Loại xe"
-
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="A3"></Option>
-                                        <Option value="A6"></Option>
-                                        <Option value="FF"></Option>
+                                    <Select>
+                                        <Option value="mới">Mới</Option>
+                                        <Option value="đang hoạt động">Đang hoạt động</Option>
                                     </Select>
                                 </FormItem>
                             </Col>
-                            <Col md={12} sm={24}>
+                            <Col md={8} sm={16}>
                                 <FormItem
+                                    name="email"
+                                    label="Email"
+                                >
+                                    <Input />
+                                </FormItem>
+                                <FormItem
+                                    name="plate"
+                                    label="Biển số"
+                                >
+                                    <Input />
+                                </FormItem>
+                                <FormItem
+                                style={{marginLeft:"26%"}}
                                 >
                                     <Button className='btn' type="primary" htmlType="submit">
                                         <FilterOutlined />  Lọc phương tiện
