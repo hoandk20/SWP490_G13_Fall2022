@@ -63,6 +63,7 @@ public class UserResouce {
     private final DocumentRepository documentRepository;
     private  final VerifyaccountRepository verifyaccountRepository;
     private final VehicleRepository vehicleRepository;
+    private final CitynameRepository citynameRepository;
     @GetMapping("/checkEmailExist")
     public ResponseEntity<?> checkEmailExisted(String email){
         boolean IsExisted = userService.IsEmailExisted(email);
@@ -215,6 +216,7 @@ public class UserResouce {
                 rider.setLastName(userInfo.getLastname());
                 rider.setHomeAddressID(userInfo.getAddress());
                 rider.setMobileNo(userInfo.getPhone());
+                rider.setHomeAddressID(userInfo.getAddress());
                 rider.setCountryCode(userInfo.getCountry());
                 response.status = masterStatus.SUCCESSFULL;
                 response.object = riderRepository.save(rider);
@@ -239,6 +241,11 @@ public class UserResouce {
         MasterStatus masterStatus = new MasterStatus();
         try{
             User userExisted = userService.getUser(user.getEmail());
+            if(!userService.combinePassword(user.getOldPassword(),userExisted.getPassword())){
+                response.content=  "old password is invalid!";
+                response.status = masterStatus.FAILURE;
+                return ResponseEntity.badRequest().body(response);
+            }
             userExisted.setPassword(user.getNewPassword());
             userService.saveUser(userExisted);
             response.status = masterStatus.SUCCESSFULL;
@@ -314,6 +321,12 @@ public class UserResouce {
         userService.addRoleToUser("hoan1", m.ROLE_PASSENGER);
         userService.addRoleToUser("hoan2", m.ROLE_COMPANY);
         userService.addRoleToUser("hoan3", m.ROLE_ADMIN);
+    }
+
+    @GetMapping("/city")
+    public ResponseEntity<?> getcity(){
+       List<Cityname> list = citynameRepository.findAll();
+        return ResponseEntity.ok().body(list);
     }
 }
 

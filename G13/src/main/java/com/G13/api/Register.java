@@ -3,6 +3,7 @@ package com.G13.api;
 import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.DocumentStatus;
+import com.G13.master.DriverStatus;
 import com.G13.master.GenerateGUID;
 import com.G13.master.MasterStatus;
 import com.G13.model.*;
@@ -16,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
@@ -37,6 +35,7 @@ public class Register {
         private final DocumentRepository documentRepository;
         private  final VehicleRepository vehicleRepository;
         private  final  VerifyaccountRepository verifyaccountRepository;
+        private  final  VehicledocumentRepository vehicledocumentRepository;
     @PostMapping("/RegisterCompany")
     public  ResponseEntity<?> RegisterCompany(@RequestBody RegisterCompany rc){
         ResopnseContent response = new ResopnseContent();
@@ -126,6 +125,7 @@ public class Register {
             Instant timeStamp= Instant.now();
             ResopnseContent response = new ResopnseContent();
             MasterStatus masterStatus = new MasterStatus();
+            DriverStatus driverStatus = new DriverStatus();
             float nofloat =0;
             short noShort = (short)0;
 
@@ -149,6 +149,7 @@ public class Register {
                 driver.setCountryCode(rd.getCountry());
                 driver.setLanguageCode(rd.getLanguage());
                 driver.setAddressID(rd.getCity()+" ");
+                driver.setStatus(driverStatus.NEW);
                 driverRepository.save(driver);
                 User u = new User();
                 u.setEmail(rd.getEmail());
@@ -296,13 +297,84 @@ public class Register {
             }
 
         }
-        @GetMapping("/Upload/GetDocument")
-        public ResponseEntity<?> GetDocument(String createBy, String file_name){
-        DocumentRequest doc = new DocumentRequest();
+
+    @PostMapping("/Upload/DocumentVehicle")
+    public ResponseEntity<?> UploadDocumentVehicle(@RequestBody DocumentRequest doc){
 
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
+        DocumentStatus documentStatus = new DocumentStatus();
+        try{
+            Date date = new Date();
+            long time = date.getTime();
+            Instant instant = Instant.now();
+            Document document = new Document();
+            document.setFileName(doc.getFile_name());
+            document.setCreatedBy(doc.getCreateBy());
+            document.setExpiredDate(instant);
+            document.setExpiredMonth(doc.getExpired_month());
+            document.setExpiredYear(doc.getExpired_year());
+            Instant instant1 = Instant.now();
+            FileManage fileManage = new FileManage();
+            String filePath = fileManage.convertBase64ToImage(doc.getBase64(), time+"");
+            document.setLink(filePath);
+            document.setCreatedBy(doc.getCreateBy());
+            document.setCreatedDate(instant);
+            document.setStatus(documentStatus.DOCUMENT_SENDED);
+            Document document1 = documentRepository.saveAndFlush(document);
 
+            Vehicledocument vehicledocument = new Vehicledocument();
+            Vehicle  vehicle = vehicleRepository.findById(doc.getVehicleId());
+            vehicledocument.setDocumentid(document1);
+            vehicledocument.setVehicleid(vehicle);
+            vehicledocumentRepository.save(vehicledocument);
+
+            response.status = masterStatus.SUCCESSFULL;
+            response.object = document1;
+            return ResponseEntity.ok().body(response);
+        }catch (Exception exception){
+            response.content= exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+    @GetMapping("/Upload/GetDocumentVehicle")
+    public ResponseEntity<?> GetDocument(String vehicleid){
+
+        DocumentRequest doc = new DocumentRequest();
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try{
+            int id = Integer.parseInt(vehicleid);
+            List<Vehicledocument> vehicledocuments = vehicledocumentRepository.findVehicledocumentsByVehicleid(vehicleRepository.findVehicleById(id));
+            List<DocumentRequest> documentRequests = new ArrayList<>();
+            for (Vehicledocument vehicledocument:vehicledocuments) {
+                DocumentRequest documentRequest = new DocumentRequest();
+                    FileManage fileManage = new FileManage();
+                    Document document = documentRepository
+                            .findDocumentById(vehicledocument.getDocumentid().getId());
+                    doc.setExpired_month(document.getExpiredMonth());
+                    doc.setExpired_year(document.getExpiredYear());
+                    doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
+                    doc.setId(document.getId());
+                    documentRequests.add(doc);
+            }
+
+            response.object = documentRequests;
+            response.status = masterStatus.SUCCESSFULL;
+            return ResponseEntity.ok().body(response);
+        }catch (Exception exception){
+            response.content= exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    @GetMapping("/Upload/GetDocument")
+        public ResponseEntity<?> GetDocument(String createBy, String file_name){
+        DocumentRequest doc = new DocumentRequest();
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
         try{
             FileManage fileManage = new FileManage();
             Document document = documentRepository
@@ -311,7 +383,6 @@ public class Register {
             doc.setExpired_year(document.getExpiredYear());
             doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
             doc.setId(document.getId());
-
             response.object = doc;
             response.status = masterStatus.SUCCESSFULL;
             return ResponseEntity.ok().body(response);
@@ -320,7 +391,6 @@ public class Register {
             response.status = masterStatus.FAILURE;
             return ResponseEntity.badRequest().body(response);
         }
-
     }
 
     @PostMapping("/VerifyCode")

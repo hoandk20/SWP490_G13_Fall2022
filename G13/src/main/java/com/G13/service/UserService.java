@@ -12,6 +12,7 @@ public interface UserService {
     void addRoleToUser (String username, String roleName);
     User getUser(String username);
     List<User> getUsers();
+    boolean combinePassword(String password,String passwordEncode);
 
     Boolean IsEmailExisted(String email);
 

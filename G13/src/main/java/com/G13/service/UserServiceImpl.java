@@ -60,6 +60,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepo.save(user);
     }
 
+
     @Override
     public Role saveRole(Role role) {
         log.info("save new role "+role.getName());
@@ -87,6 +88,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public List<User> getUsers() {
         log.info("get all users");
         return userRepo.findAll();
+    }
+
+    @Override
+    public boolean combinePassword(String password,String passwordEncode) {
+       return passwordEncoder.matches(password,passwordEncode);
     }
 
     @Override

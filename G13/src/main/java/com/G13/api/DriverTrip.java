@@ -68,7 +68,6 @@ public class DriverTrip {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         MasterTripStatus masterTripStatus = new MasterTripStatus();
-
         try {
             List<Promotiontrip> list = promotiontripRepository.findAll();
             List<TripDriver> driverTripHistory = new ArrayList<>();
@@ -86,10 +85,16 @@ public class DriverTrip {
                     tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                     tripDriver.setWaitingTime(detail.getDuration());
                     tripDriver.setPrice(detail.getFee());
+                    Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
+                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    if(vehicle!=null){
+                        tripDriver.setVehiclePlate(vehicle.getPlate());
+                        tripDriver.setVehicleColor(vehicle.getExteriorColor());
+                        tripDriver.setVehicleName(vehicle.getCreatedBy());
+                    }
                     driverTripHistory.add(tripDriver);
                 }
             }
-
             response.object = driverTripHistory;
             response.status = masterStatus.SUCCESSFULL;
             return ResponseEntity.ok().body(response);
@@ -101,13 +106,13 @@ public class DriverTrip {
     }
 
 
-    @GetMapping("/listTrip")
-    public ResponseEntity<?> listTrip(String driverEmail) {
+    @PostMapping("/listTrip")
+    public ResponseEntity<?> listTrip(@RequestBody filterTripPassenger filter) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
 
         try {
-            List<Promotiontrip> list = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(driverEmail);
+            List<Promotiontrip> list = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(filter.driverEmail);
             List<TripDriver> driverTrips = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
@@ -131,6 +136,7 @@ public class DriverTrip {
                 }
                 driverTrips.add(tripDriver);
             }
+            driverTrips = filterTripDriver(driverTrips,filter);
 
             response.object = driverTrips;
             response.status = masterStatus.SUCCESSFULL;
@@ -141,7 +147,42 @@ public class DriverTrip {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    List<TripDriver> filterTripDriver(List<TripDriver> tripDriver,filterTripPassenger filter){
+        List<TripDriver> listResult = new ArrayList<>();
+        for (TripDriver t:tripDriver
+        ) {
+            if(filter.status!=null&&!filter.status.equals("")){
+                if(!filter.status.equals(t.getStatus())){
+                    continue;
+                }
+            }
+            if(filter.dateFrom!=null){
+                if(filter.dateFrom.compareTo(t.getTimeStart())>=0){
+                    continue;
+                }
+            }
+            if(filter.dateTo!=null){
+                if(filter.dateTo.compareTo(t.getTimeStart())<=0){
+                    continue;
+                }
+            }
+            if(filter.passengerEmail!=null&&!filter.passengerEmail.equals("")){
+                List<Trip> listRegister = tripRepository.findAllByTripCodeOrderByCreatedDateDesc(t.getTripID());
+                boolean isHasPassenger = false;
+                for (Trip trip:listRegister) {
+                    if(trip.getRiderID().equals(filter.passengerEmail)){
+                        isHasPassenger = true;
+                    }
+                }
+                if(isHasPassenger==false){
+                    continue;
+                }
+            }
+            listResult.add(t);
+        }
 
+        return  listResult;
+    }
 
     @PostMapping("/search")
     public ResponseEntity<?> listTrip(@RequestBody SearchTrip searchTrip) {

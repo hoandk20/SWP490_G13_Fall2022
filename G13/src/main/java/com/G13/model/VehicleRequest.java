@@ -1,7 +1,7 @@
 package com.G13.model;
 
 import lombok.Data;
-
+import java.util.List;
 @Data
 public class VehicleRequest{
 
@@ -16,4 +16,6 @@ public class VehicleRequest{
     String platState;
     String plateCountry;
     int typeId;
+    List<DocumentRequest> listDoc;
+    String vehicleStatus;
 }

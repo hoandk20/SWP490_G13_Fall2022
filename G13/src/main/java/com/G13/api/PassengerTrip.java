@@ -1,16 +1,12 @@
 package com.G13.api;
 
-import com.G13.domain.Promotiontrip;
-import com.G13.domain.Rider;
-import com.G13.domain.Trip;
+import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
 import com.G13.master.RegisterStatus;
 import com.G13.model.ChangeStatus;
 import com.G13.model.TripPassenger;
-import com.G13.repo.PromotiontripRepository;
-import com.G13.repo.RiderRepository;
-import com.G13.repo.TripRepository;
+import com.G13.repo.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
@@ -29,6 +25,8 @@ public class PassengerTrip {
     private final TripRepository tripRepository;
     private final RiderRepository riderRepository;
     private final PromotiontripRepository promotiontripRepository;
+    private final DriverRepository driverRepository;
+    private final VehicleRepository vehicleRepository;
 
 
     @PostMapping("/updateRegisterStatus")
@@ -193,7 +191,13 @@ public class PassengerTrip {
                     tripPassenger.setWaitingTime(detail.getDriverWaitingTime());
                     tripPassenger.setPrice(detail.getOpenPrice());
 
-
+                    Driver driver = driverRepository.findByEmail(tripPassenger.getDriverEmail());
+                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    if(vehicle!=null){
+                        tripPassenger.setVehiclePlate(vehicle.getPlate());
+                        tripPassenger.setVehicleColor(vehicle.getExteriorColor());
+                        tripPassenger.setVehicleName(vehicle.getCreatedBy());
+                    }
                     Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(detail.getTripCode());
                     tripPassenger.setTripStatus(promotiontrip.getStatus());
                     listTripHistory.add(tripPassenger);

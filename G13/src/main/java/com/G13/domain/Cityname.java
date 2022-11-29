@@ -12,22 +12,23 @@ public class Cityname {
     @EmbeddedId
     private CitynameId id;
 
-    @Column(name = "CityName", nullable = false, length = 30)
+    @Column(name = "cityname", nullable = false, length = 30)
     private String cityName;
 
-    @Column(name = "GoogleName", length = 60)
+
+    @Column(name = "googlename", length = 60)
     private String googleName;
 
-    @Column(name = "CreatedBy", nullable = false, length = 50)
+    @Column(name = "createdby", nullable = false, length = 50)
     private String createdBy;
 
-    @Column(name = "CreatedDate", nullable = false)
+    @Column(name = "createddate", nullable = false)
     private Instant createdDate;
 
-    @Column(name = "LastModifiedBy", nullable = false, length = 50)
+    @Column(name = "lastmodifiedby", nullable = false, length = 50)
     private String lastModifiedBy;
 
-    @Column(name = "LastModifiedDate", nullable = false)
+    @Column(name = "lastmodifieddate", nullable = false)
     private Instant lastModifiedDate;
 
     public CitynameId getId() {

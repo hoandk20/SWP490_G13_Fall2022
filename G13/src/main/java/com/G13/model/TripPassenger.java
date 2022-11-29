@@ -20,4 +20,7 @@ public class TripPassenger {
     float price;
     String status;
     String TripStatus;
+    String vehiclePlate;
+    String vehicleName;
+    String vehicleColor;
 }

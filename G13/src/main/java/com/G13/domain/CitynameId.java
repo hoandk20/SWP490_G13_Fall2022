@@ -11,10 +11,10 @@ import java.util.Objects;
 @Embeddable
 public class CitynameId implements Serializable {
     private static final long serialVersionUID = -2419310025774156151L;
-    @Column(name = "CityID", nullable = false)
+    @Column(name = "cityid", nullable = false)
     private Integer cityID;
 
-    @Column(name = "LanguageCode", nullable = false, length = 4)
+    @Column(name = "languagecode", nullable = false, length = 4)
     private String languageCode;
 
     public Integer getCityID() {

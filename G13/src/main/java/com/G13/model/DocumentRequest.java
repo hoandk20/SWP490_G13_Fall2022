@@ -11,5 +11,6 @@ public class DocumentRequest {
     String file_name;
     String createBy;
     String status;
+    int vehicleId;
 
 }

@@ -18,9 +18,11 @@ public class RegisterDriverCompany {
     String phoneNumber;
     String language;
     String country;
+    int cityId;
     String city;
     String address;
     int vehicle;
+    int removeVehicleId;
     String companyName;
     Instant createDate;
     String docStatus;
