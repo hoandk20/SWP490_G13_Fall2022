@@ -1,10 +1,10 @@
 import { Button, Checkbox, Form, Input, Row, Col, Select, Table, Popconfirm } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
-import React from 'react';
+import React, { useState } from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
 import AddVehico from '../../../commons/drawers/drawer-vehico-mgt/drawer-add--vehico';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteDriverByCompany, getDriversForCompany } from '../../../../redux/apiRequest';
+import { deleteDriverByCompany, getAllCity, getDriversForCompany, getDriversForCompanyFilter } from '../../../../redux/apiRequest';
 import { useEffect } from 'react';
 import AddDriverForCompany from '../../../commons/drawers/drawer-driverCompany-mgt/drawer-add-driver'
 import EditDriverForCompany from '../../../commons/drawers/drawer-driverCompany-mgt/drawer-edit-driver';
@@ -20,9 +20,11 @@ const DriverManagement = () => {
     const dispatch = useDispatch();
     const user=useSelector((state)=>state.user.userInfo?.currentUser);
     const all=useSelector((state)=>state.user.drivers?.all);
-    console.log(all);
      const drivers=all?.map((row)=> ({ ...row,key:row.driverID,name:row.firstName+" "+row.lastName }));
-   
+     const allCity = useSelector((state) => state.data.citys?.all);
+     const citys=allCity?.map((row)=> ({value:row.id.cityID,label:row.cityName}));
+     const [city, setCity] = useState("");
+console.log("drivers",drivers);
     const handleDelete = (key) => {
         console.log(key);
          deleteDriverByCompany(key,user.email,toast,dispatch);
@@ -30,11 +32,35 @@ const DriverManagement = () => {
     const cancel = (e) => {
 
     };
-
+    const handleChange = (a) => {
+        setCity(a);
+      };
+    const onFinish = (values) =>{
+        if(values.name===undefined){
+            values.name=""
+        }
+        if(values.driverEmail===undefined){
+            values.driverEmail=""
+        }
+        if(city===undefined){
+            setCity("")
+        }
+        if(values.status===undefined){
+            values.status=""
+        }
+        const driver = {
+            ...values,
+            address:city,
+            companyEmail:user.email,
+        }
+        console.log(driver);
+        getDriversForCompanyFilter(driver,dispatch);
+    }
     useEffect(()=>{
         getDriversForCompany(user.email,dispatch);
-         
+        
       },[])
+
 const columns = [
     {
         key: 'index',
@@ -60,11 +86,6 @@ const columns = [
         key: 'phoneNumber',
         title: 'Số di động',
         dataIndex: 'phoneNumber',
-    },
-    {
-        key: 'vehico',
-        title: 'Phương tiện',
-        dataIndex: 'vehico',
     },
     {
         key: 'status',
@@ -103,16 +124,17 @@ const columns = [
 
         },
     },
-    
+
 
 ];
     return (
         <div className='container'>
             <div className='container-infos'>
-                <h2>TÀI XẾ</h2>
+                <h2 style={{marginBottom:"50px"}}>TÀI XẾ</h2>
                 <div className='driver-info'>
 
                     <Form
+                        onFinish={onFinish}
                         labelCol={{
                             span: 4,
                         }}
@@ -123,27 +145,26 @@ const columns = [
                         <Row>
                             <Col sm={24} md={12} >
                                 <FormItem
-                                    name="trangthai"
+                                    name="status"
                                     label="Trạng thái"
 
                                 >
                                     <Select
                                         allowClear
                                     >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="Chờ xem xét"></Option>
-                                        <Option value="Mới"></Option>
-                                        <Option value="Hoạt động"></Option>
+                                        <Option value="NEW">Mới</Option>
+                                        <Option value="ACT">Hoạt đông</Option>
+
                                     </Select>
                                 </FormItem>
                                 <FormItem
-                                    name="taikhoan"
+                                    name="driverEmail"
                                     label="Tài khoản"
                                 >
                                     <Input />
                                 </FormItem>
                                 <FormItem
-                                    name="ten"
+                                    name="name"
                                     label="Tên   "
                                 >
                                     <Input />
@@ -151,18 +172,15 @@ const columns = [
                             </Col>
                             <Col sm={24} md={12} >
                                 <FormItem
-                                    name="vitri"
+                                    name="city"
                                     label="Vị trí"
 
                                 >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="Chờ xem xét"></Option>
-                                        <Option value="Mới"></Option>
-                                        <Option value="Hoạt động"></Option>
-                                    </Select>
+                                <Select
+                                    onChange={handleChange}
+                                    allowClear
+                                    options={citys}
+                                />
                                 </FormItem>
                                 <FormItem />
                                 <FormItem

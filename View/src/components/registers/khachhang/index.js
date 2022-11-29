@@ -84,8 +84,8 @@ const RegisterPassenger = () => {
 
     return (
         <div className='container'>
-            <h2>ĐĂNG KÝ ĐỂ ĐI XE</h2    >
-            <div className='container-info-register-passenger'>
+            <h2 style={{marginTop:"5%"}}>ĐĂNG KÝ ĐỂ ĐI XE</h2    >
+            <div  className='container-info-register-passenger' style={{marginTop:"5%"}}>
                 <Row> 
                     <Col sm={24} md={12} >
                         <div className='container-left'>

@@ -11,9 +11,13 @@ import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router';
 import { useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+import axios from 'axios';
+
+const URL = "http://26.36.110.116";
 
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
+
     const location = useLocation();
     const dispatch=useDispatch();
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
@@ -31,7 +35,10 @@ const RegisterCompanyDoc1 = () => {
     const [date2, setDate2] = useState();
     const [date3, setDate3] = useState();
     const [date4, setDate4] = useState();
-
+    const [Bang_lai_xe,setBang_lai_xe]=useState(false);
+    const [Chung_Nhan_Kinh_nghiem,setChung_Nhan_Kinh_nghiem]=useState(false);
+    const [GP_Kinh_Doanh,setGP_Kinh_Doanh]=useState(false);
+    const [GP_Hoat_Dong,setGP_Hoat_Dong]=useState(false);
     function getTime1(date, dateString) {
         setDate1(dateString);
     }
@@ -72,7 +79,7 @@ const RegisterCompanyDoc1 = () => {
         const base64 = await convertBase64(file);
         setBaseImage4(base64);
     };
-    const uploadfileAvatar = () => {
+    const uploadfileAvatar = async() => {
         const year = "";
         const month = "";
         const object = {
@@ -82,11 +89,25 @@ const RegisterCompanyDoc1 = () => {
             year: year,
             month: month
         }
-        console.log(object);
-        UploadFile(object, toast);
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              setChung_Nhan_Kinh_nghiem(true)
+          } catch (error) {
+            toast.error("Upload file thất bại")
+          }
     };
 
-    const uploadfile1 = () => {
+    const uploadfile1 = async() => {
         const arr = date1.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -97,13 +118,29 @@ const RegisterCompanyDoc1 = () => {
             year: year,
             month: month
         }
-        UploadFile(object, toast);
-        setCount(count + 1);
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              setBang_lai_xe(true)
+              toast.success("Upload file thành công")
+          } catch (error) {
+            toast.error("Upload file thất bại")
+
+          }
     };
 
 
 
-    const uploadfile2 = () => {
+    const uploadfile2 = async() => {
         const arr = date2.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -114,11 +151,27 @@ const RegisterCompanyDoc1 = () => {
             year: year,
             month: month,
         }
-        UploadFile(object, toast);
-        setCount(count + 1);
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              setChung_Nhan_Kinh_nghiem(true)
+              toast.success("Upload file thành công")
+          } catch (error) {
+            toast.error("Upload file thất bại")
+
+          }
     };
 
-    const uploadfile3 = () => {
+    const uploadfile3 = async() => {
         const arr = date3.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -129,12 +182,27 @@ const RegisterCompanyDoc1 = () => {
             year: year,
             month: month
         }
-        console.log(object);
-        UploadFile(object, toast);
-        setCount(count + 1);
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              setGP_Kinh_Doanh(true)
+              toast.success("Upload file thành công")
+          } catch (error) {
+            toast.error("Upload file thất bại")
+
+          }
     };
 
-    const uploadfile4 = () => {
+    const uploadfile4 = async() => {
         const arr = date4.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -145,9 +213,24 @@ const RegisterCompanyDoc1 = () => {
             year: year,
             month: month
         }
-        console.log(object);
-        UploadFile(object, toast);
-        setCount(count + 1);
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              setGP_Hoat_Dong(true)
+              toast.success("Upload file thành công")
+          } catch (error) {
+            toast.error("Upload file thất bại")
+
+          }
     };
 
     const convertBase64 = (file) => {
@@ -362,7 +445,7 @@ const RegisterCompanyDoc1 = () => {
                     </Row>
                 </div>
                 <div style={{ marginTop: "50px" }}>
-                {count == 4 ? (
+                {Bang_lai_xe===true && Chung_Nhan_Kinh_nghiem===true && GP_Hoat_Dong===true && GP_Kinh_Doanh===true ? (
                         <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
                     ) : (
                         <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>

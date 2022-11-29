@@ -28,17 +28,7 @@ const TripHistoryPassenger = () => {
     }
      const all = useSelector((state) => state.tripHistory.tripHistory?.trips);
 
-    // trips?.array?.forEach(element => {
-    //      element.timeStart=dateFormat(element.timeStart);
-    //     if(element.tripStatus==="OPEN"){
-    //         element.tripStatus="Đang mở"
-    //     }else if(element.tripStatus==="CLOS"){
-    //         element.tripStatus="Đã đóng"
-    //     }else if(element.tripStatus==="CANC"){
-    //         element.tripStatus="Đã bị hủy"
-    //     }
-    // });
-  const trips =all.map((item)=>{
+  const trips =all?.map((item)=>{
     if(item.tripStatus==="OPEN"){
         return {...item,item,dateStart:dateFormat(item.timeStart),key:item.tripID,tripStatus:"Đang mở"}
     }
@@ -175,7 +165,7 @@ const TripHistoryPassenger = () => {
                         >
                             <Select
                                 style={{ width: "200px" }}
-
+                                defaultValue="OPEN"
                             >
                                 <Option value='OPEN'>Đang mở</Option>
                                 <Option value='CLOS'>Đã đóng</Option>

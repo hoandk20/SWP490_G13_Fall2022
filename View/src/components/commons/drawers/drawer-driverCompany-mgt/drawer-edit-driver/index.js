@@ -1,16 +1,25 @@
-import { EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, DatePicker, Drawer, Form, Input, Row, Select, Space } from 'antd';
+import { DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, SelectOutlined } from '@ant-design/icons';
+import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Modal, Popconfirm, Row, Select, Space, Table } from 'antd';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { AddDriverByCompany, EditDriverByCompany, getDriversForCompany } from '../../../../../redux/apiRequest';
+import { AddDriverByCompany, AddVehicleForDriver, DeleteVehicleForDriver, EditDriverByCompany, getDriversForCompany } from '../../../../../redux/apiRequest';
+import ModalAddVehicleForDriver from '../../../modals/modal-vehicle-taixe/modal-add-vehicle-for-taixe';
+import ModalUploadDocument from '../../../modals/modal-upload-document';
 const { Option } = Select;
+const { Panel } = Collapse;
 const EditDriverForCompany = (props) => {
-    const dispatch =useDispatch();
-    const drivers=props.state;
+    const dispatch = useDispatch();
+    const drivers = props.state;
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const [form] = Form.useForm();
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
+
+    const all = useSelector((state) => state.vehico.vehicos?.all);
+    const vehicos = all?.map((row) => ({ ...row, key: row.id }))
 
     const showDrawer = () => {
         setOpen(true);
@@ -24,17 +33,120 @@ const EditDriverForCompany = (props) => {
             ...values,
             companyEmail: user.email,
         }
-        EditDriverByCompany(driver,toast,dispatch)
+        EditDriverByCompany(driver, toast, dispatch)
         // getDriversForCompany(user.email,dispatch);
         setOpen(false);
     };
+    const cancel = (e) => {
+        
+    };
+    const handleDelete = () => {
+        // AddVehicleForDriver(drivers?.email,key,toast)
+        // setOpenModal(false);
+        const object={
+            driverEmail:drivers.email,
+            companyEmail:user.email,
+            vehicle:0,
+            removeVehicleId:drivers.vehicleInfo.id,
+        }
+        DeleteVehicleForDriver(object,toast,dispatch);
+    };
+
+    const genExtra = () => (
+        <Popconfirm
+            title="Bạn có muốn gỡ phương tiện của tài xế này này?"
+            onConfirm={() => handleDelete()}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
+        >
+            <DeleteOutlined style={{ fontSize: "24px" }}
+                // onClick={(event) => {
+                  
+                //     // If you don't want click extra trigger collapse, you can prevent this:
+                //     event.stopPropagation();
+                // }}
+
+            />
+        </Popconfirm>
+    );
+    // const columns = [
+    //     // {
+    //     //     key: 'index',
+    //     //     title: 'Số',
+    //     //     dataIndex: 'index',
+    //     // },
+    //     {
+    //         key: 'producer',
+    //         title: 'Kiểu phương tiện',
+    //         dataIndex: 'producer',
+    //     },
+    //     {
+    //         key: 'plate',
+    //         title: 'Biển số',
+    //         dataIndex: 'plate',
+    //     },
+    //     {
+    //         key: 'produceYear',
+    //         title: 'Năm sản xuất',
+    //         dataIndex: 'produceYear',
+    //     },
+    //     {
+    //         key: 'price',
+    //         title: 'Giấy chứng nhận bảo hiểm',
+    //         dataIndex: 'price',
+    //     },
+    //     {
+    //         key: 'irs',
+    //         title: 'Giấy đăng kiểm',
+    //         dataIndex: 'irs',
+    //     },
+    //     {
+    //         key: 'status',
+    //         title: 'Trạng thái',
+    //         dataIndex: 'status',
+    //     },
 
 
+    //     // {
+    //     //     title: '',
+    //     //     dataIndex: '',
+    //     //     key: 'x',
+    //     //     render: (text, record, index) => {
+    //     //         return <div>
+    //     //             <EditVehico state={record} />
+
+    //     //         </div>
+
+    //     //     },
+    //     // },
+
+    //     {
+    //         title: 'Phân phương tiện',
+    //         dataIndex: '',
+    //         key: 'y',
+    //         render: (text, record, index) => {
+    //             return <div style={{ textAlign: "center" }}>
+    //                 <Popconfirm
+    //                     title="Bạn có muốn thêm phương tiện này cho tài xế?"
+    //                     onConfirm={() => handleAdd(record.key)}
+    //                     onCancel={cancel}
+    //                     okText="Yes"
+    //                     cancelText="No"
+    //                 >
+    //                     {/* <Button type="primary">Phân phương tiện</Button> */}
+    //                     <SelectOutlined style={{ fontSize: '20px', color: '#08c' }} />
+    //                 </Popconfirm>
+    //             </div>
+
+    //         },
+    //     },
+    // ];
     return (
         <>
-             <EyeOutlined onClick={showDrawer} />
+            <EyeOutlined onClick={showDrawer} />
             <Drawer
-                title="Add driver"
+                title="Thông tin tài xế"
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -48,84 +160,49 @@ const EditDriverForCompany = (props) => {
                             <Form.Item
                                 name="email"
                                 initialValue={drivers.email}
-                                label="Email"
+                                label="Tài khoản Email"
                                 rules={[
                                     {
+                                        type: 'email',
+                                        message: 'Email không hợp lệ',
+                                    },
+                                    {
                                         required: true,
-                                        message: 'Please enter user name',
+                                        message: 'Email không được để trống',
                                     },
                                 ]}
                             >
                                 <Input />
                             </Form.Item>
                         </Col>
-                        {/* <Col span={12}>
 
-                            <Form.Item
-                                name="password"
-                                label="Password"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your password!',
-                                    },
-                                ]}
-                                hasFeedback
-                            >
-                                <Input.Password />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                        <Form.Item
-                                name="confirm"
-                                label="Confirm Password"
-                                dependencies={['password']}
-                                hasFeedback
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please confirm your password!',
-                                    },
-                                    ({ getFieldValue }) => ({
-                                        validator(_, value) {
-                                            if (!value || getFieldValue('password') === value) {
-                                                return Promise.resolve();
-                                            }
-                                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                        },
-                                    }),
-                                ]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
-                        </Col> */}
                     </Row>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 name="firstName"
                                 initialValue={drivers.firstName}
-                                label="First Name"
+                                label="Họ và tên đệm"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please select an owner',
+                                        message: 'Tên không được để trống',
                                     },
                                 ]}
                             >
                                 <Input />
                             </Form.Item>
                         </Col>
-                        
+
                         <Col span={12}>
                             <Form.Item
                                 name="lastName"
                                 initialValue={drivers.lastName}
-                                label="Last name"
+                                label="Tên"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose the type',
+                                        message: 'Tên không được để trống',
                                     },
                                 ]}
                             >
@@ -136,13 +213,14 @@ const EditDriverForCompany = (props) => {
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="phoneNumber"
+                                name="Số điện thoại"
                                 initialValue={drivers.phoneNumber}
                                 label="Phone number"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter plate',
+                                        message: 'Vui lòng nhập lại số điện thoại',
+                                        pattern: new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g),
                                     },
                                 ]}
                             >
@@ -153,11 +231,11 @@ const EditDriverForCompany = (props) => {
                             <Form.Item
                                 name="country"
                                 initialValue={drivers.country}
-                                label="Country"
+                                label="Quốc gia"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose country',
+                                        message: 'Vui lòng chọn quốc gia',
                                     },
                                 ]}
                             >
@@ -171,25 +249,99 @@ const EditDriverForCompany = (props) => {
                         <Col span={24}>
                             <Form.Item
                                 name="city"
-                                initialValue={drivers.city}
-                                label="City"
+                                initialValue={drivers.cityId}
+                                label="Thành phố"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'please enter  description',
+                                        message: 'Vui lòng chọn thành phố',
                                     },
                                 ]}
                             >
-                                <Select>
-                                    <Option value="Hà nội">Hà nội</Option>
-                                    <Option value="Đà nẵng">Đà nẵng </Option>
-                                    <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                                </Select>
+                                <Select
+                                    labelInValue
+                                    // defaultValue={{
+                                    //     value: 'lucy',
+                                    //     label: 'Lucy (101)',
+                                    // }}
+                                    // style={{
+                                    //     width: 120,
+                                    // }}
+                                    // onChange={handleChange}
+                                    options={citys}
+                                />
                             </Form.Item>
+                            {
+                                drivers.vehicleInfo === null ? (
+                                    <>
+                                        <Form.Item>
+                                            <span style={{ marginRight: "40px" }}><ModalUploadDocument /></span>
+                                            <span><ModalAddVehicleForDriver email={drivers.email} companyEmail={user.email} /></span>
+                                        </Form.Item>
+                                    </>
+                                ) : (
+                                    <>
+                                        <div style={{ marginBottom: "30px" }}>
+                                            <Collapse >
+                                                <Panel header="Thông tin phương tiện của tài xế" extra={genExtra()}>
+                                                    <div className='form-content'>
+                                                        <div className='form-info'>
+                                                            <Row>
+                                                                <Col sm={12} md={6} >
+                                                                    <p>Nhà sản xuất:</p> {drivers.vehicleInfo.producer}
+                                                                </Col>
+                                                                <Col sm={12} md={6} >
+                                                                    <p>Biển số xe:</p> {drivers.vehicleInfo.plate}
+                                                                </Col>
+                                                                <Col sm={12} md={6} >
+                                                                    <p>Loại xe:</p> {drivers.vehicleInfo.typeId}
+                                                                </Col>
+                                                                <Col sm={12} md={6} >
+                                                                    <p>Màu xe:</p> {drivers.vehicleInfo.exteriorColor}
+                                                                </Col>
+                                                            </Row>
+
+                                                        </div>
+                                                    </div>
+
+                                                </Panel>
+
+                                            </Collapse>
+                                        </div>
+                                        <Form.Item>
+                                            <ModalUploadDocument />
+                                        </Form.Item>
+                                        {/* <Modal
+                                            title="Phân phương tiện"
+                                            centered
+                                            open={openModal}
+                                            onOk={() => setOpenModal(false)}
+                                            onCancel={() => setOpenModal(false)}
+                                            width={1000}
+                                        >
+                                            <div className='container'>
+                                                <div className='container-infos' style={{
+                                                    textAlign: "left",
+                                                    marginLeft: "20px"
+                                                }}>
+
+
+                                                    <div className='table-info' style={{ marginTop: "5%" }}>
+                                                        <Table columns={columns} dataSource={vehicos} size="middle" />
+                                                    </div>
+                                                </div>
+                                            </div >
+                                        </Modal> */}
+                                    </>
+
+                                )
+                            }
+
+
                             <Form.Item
                             >
                                 <Button className='btn-register' type="primary" htmlType="submit">
-                                    Submit
+                                    Gửi
                                 </Button>
                             </Form.Item>
                         </Col>

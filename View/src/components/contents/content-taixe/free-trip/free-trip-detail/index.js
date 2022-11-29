@@ -31,15 +31,16 @@ const center = { lat: 21.013255, lng: 105.52597 }
 
 const FreeTripDetail = () => {
     const dispatch = useDispatch();
-    const navigate =useNavigate();
+    const navigate = useNavigate();
     const location = useLocation();
-    const detail = location.state.record; 
+    const detail = location.state.record;
+    const check = useState(false);
     const [map, setMap] = useState(/** @type google.maps.Map */(null))
     const [directionsResponse, setDirectionsResponse] = useState(null)
     const [distance, setDistance] = useState('')
-    const [duration, setDuration] = useState('') 
+    const [duration, setDuration] = useState('')
     const originRef = useRef()
-    const destiantionRef = useRef() 
+    const destiantionRef = useRef()
     const freeTrip = useSelector((state) => state.freeTrip);
     // const createTrip = useSelector((state) => state.freeTrip.createTrip?.detail);
     const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
@@ -60,15 +61,9 @@ const FreeTripDetail = () => {
         googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
         libraries: ['places'],
     })
-    // var directionsDisplay;
-    var directionsService;
-    function initialize() {
-        // eslint-disable-next-line no-undef
-        directionsService = new google.maps.DirectionsService();
-    }
     async function calculateRoute() {
         // eslint-disable-next-line no-undef
-         const directionsService = new google.maps.DirectionsService()
+        const directionsService = new google.maps.DirectionsService()
         const results = await directionsService.route({
             origin: tripDriverDetail?.from,
             destination: tripDriverDetail?.to,
@@ -85,23 +80,19 @@ const FreeTripDetail = () => {
     // console.log("createTrip: ", createTrip);
     // console.log("tripDriverDetail: ", tripDriverDetail);
     //  const [detailTrip,setDetailTrip]=useState(); 
-    const cancelTrip = () =>{
-        changeStatusTripDriver(tripDriverDetail.id,"CANC",dispatch,navigate);
+    const cancelTrip = () => {
+        changeStatusTripDriver(tripDriverDetail.id, "CANC", dispatch, navigate);
     }
-    const startTrip = () =>{
-        changeStatusTripDriver(tripDriverDetail.id,"RUN",dispatch,navigate);
-    } 
+    const startTrip = () => {
+        changeStatusTripDriver(tripDriverDetail.id, "RUN", dispatch, navigate);
+    }
+    const endTrip = () => {
+        changeStatusTripDriver(tripDriverDetail.id, "CLOS", dispatch, navigate);
+    }
     useEffect(() => {
         getTripDetailDriver(detail.id, dispatch);
-        // if(detail.id!==null){
-        //     getTripDetailDriver(detail.id, dispatch);
-        // }else{
-        //     getTripDetailDriver(createTrip.id, dispatch);
-        // }      
-        // initialize();
-        // setTimeout(calculateRoute(), 2000);
         calculateRoute()
-    }, [tripDriverDetail?.from])
+    }, [])
     return (
         <div className='container'>
             <div className='container-info'>
@@ -141,18 +132,43 @@ const FreeTripDetail = () => {
                                         </div>
                                     </div>
                                 </div> */}
-                                <PassengerCard/>
-                                <div className='s'  style={{ marginTop: "20px",textAlign:"center" }}>
-             
+                                <PassengerCard />
+                                <div className='s' style={{ marginTop: "20px", textAlign: "center" }}>
+
                                 </div>
-                                <span>
-                                <Button type="primary" onClick={cancelTrip} danger style={{ marginLeft: "27%",display:"inline-block" }}>
-                                        Hủy chuyến
-                                    </Button>
-                                    <Button type="primary" onClick={startTrip}  style={{  marginLeft: "20px",display:"inline-block" }}>
-                                        Bắt đầu chuyến đi
-                                    </Button>
-                                </span>
+
+
+                                {
+                                    tripDriverDetail?.status === "OPEN" ? (
+                                        <span>
+                                            <Button type="primary" onClick={cancelTrip} danger style={{ marginLeft: "27%", display: "inline-block" }}>
+                                                Hủy chuyến
+                                            </Button>
+                                            <Button type="primary" onClick={startTrip} style={{ marginLeft: "20px", display: "inline-block" }}>
+                                                Bắt đầu chuyến đi
+                                            </Button>
+
+                                        </span>
+
+                                    ) : (
+                                        <>
+                                            {
+                                                tripDriverDetail?.status === "RUN" ? (
+                                                    <>
+                                                        <Button type="primary" onClick={endTrip} danger style={{ marginLeft: "30%"}}>
+                                                            Kết thúc chuyến đi
+                                                        </Button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                    </>
+                                                )
+                                            }
+
+                                        </>
+                                    )
+                                }
+
                             </div>
                         </Col>
                         <Col sm={16} md={8}>
@@ -183,7 +199,7 @@ const FreeTripDetail = () => {
                                                 <DirectionsRenderer directions={directionsResponse} />
                                             )}
                                         </GoogleMap>
-                                    </Box> 
+                                    </Box>
                                 </Flex>
                             </div>
                         </Col>

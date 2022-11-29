@@ -78,6 +78,7 @@ const InfoContactUsers = () => {
             month:''
         }
         UploadFile(image,toast,dispatch);
+
         const object = {
             email: email,
             firstName: firstName,
@@ -133,7 +134,7 @@ const InfoContactUsers = () => {
                         <Col sm={16} md={8}>
                             <FormItem
                                 name='name'
-                                label="Tên *"
+                                label="Tên "
                             >
                                 <Input.Group>
                                     <Input value={firstName} onChange={handleChangeFirstName} style={{ width: "35%", marginRight: "5%" }} />
@@ -142,7 +143,7 @@ const InfoContactUsers = () => {
                             </FormItem>
 
                             <FormItem
-                                label="Email *"
+                                label="Email "
                                 initialValue={email}
                                 name='email'
 
@@ -157,7 +158,7 @@ const InfoContactUsers = () => {
                                 <Input onChange={handleChangeEmail} defaultValue={email} />
                             </FormItem>
                             <Form.Item
-                                label="Số di động *"
+                                label="Số di động "
                                 name='phone'
                                 initialValue={phone}
                                 rules={[
@@ -173,23 +174,23 @@ const InfoContactUsers = () => {
                                 />
                             </Form.Item>
                             <Form.Item
-                                label="Địa chỉ *"
+                                label="Địa chỉ "
                             >
                                 <Input value={address} onChange={handleChangeAddress}
                                 />
                             </Form.Item>
-                            <FormItem
+                            {/* <FormItem
                                 label="Mã bưu điện *"
                             >
                                 <Input />
-                            </FormItem>
+                            </FormItem> */}
 
                         </Col>
                         <Col sm={16} md={8}  >
 
                             <FormItem
                                 name="country"
-                                label="Quốc gia *"
+                                label="Quốc gia "
                                 initialValue={user.country}
                                 labelCol={{
                                     span: 12,

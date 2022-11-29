@@ -4,26 +4,33 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { AddVehicoByCompany, getAllVehico, getDriversForCompany } from '../../../../../redux/apiRequest';
+import ModalUploadDocumentVehicle from '../../../modals/modal-upload-document-vehicle';
 const { Option } = Select;
 const AddVehico = () => {
-    const dispatch= useDispatch();
-    const user=useSelector((state)=>state.user.userInfo?.currentUser);
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
-    
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
+    const [city, setCity] = useState("");
     const showDrawer = () => {
         setOpen(true);
     };
     const onClose = () => {
         setOpen(false);
     };
+    const handleChange = (a) => {
+        setCity(a.value);
+    };
     const onfinish = (values) => {
-        console.log(values);
-        const vehico={
+
+        const vehico = {
             ...values,
-            companyEmail:user.email,
+            companyEmail: user.email,
+            platState:city.label
         }
-        
-        AddVehicoByCompany(vehico,toast,dispatch);
+
+        AddVehicoByCompany(vehico, toast, dispatch);
         // getAllVehico(user.email,dispatch);
         setOpen(false);
         // window.location.reload();
@@ -31,10 +38,10 @@ const AddVehico = () => {
     return (
         <>
             <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
-                Add Vehico
+                Thêm phương tiện
             </Button>
             <Drawer
-                title="Add vehico"
+                title="Thêm phương tiện"
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -51,11 +58,20 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter user name',
+                                        message: 'Vùi lòng chọn nhà sản xuất',
                                     },
                                 ]}
                             >
-                                <Input value='abc'/>
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="Toyota"></Option>
+                                    <Option value="Honda"></Option>
+                                    <Option value="Hyundai"></Option>
+                                    <Option value="Ford"></Option>
+                                    <Option value="Suzuki"></Option>
+                                    <Option value="Mercedes-Benz"></Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -65,7 +81,7 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter url',
+                                        message: 'Vui lòng chọn năm sản xuất',
                                     },
                                 ]}
                             >
@@ -81,11 +97,18 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please select an owner',
+                                        message: 'Vui lòng chọn năm sản xuất',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="black">Đen</Option>
+                                    <Option value="white">Trắng</Option>
+                                    <Option value="red">Đỏ</Option>
+                                    <Option value="bule">xanh</Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -95,11 +118,18 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose the type',
+                                        message: 'Vui lòng chọn màu sơn',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="black">Đen</Option>
+                                    <Option value="white">Trắng</Option>
+                                    <Option value="red">Đỏ</Option>
+                                    <Option value="bule">xanh</Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -111,11 +141,30 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter plate',
+                                        message: 'Biển số xe không được để trống',
                                     },
                                 ]}
                             >
                                 <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="typeId"
+                                label="Loại phương tiện "                               
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn loại xe',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="1">Xe máy</Option>
+                                    <Option value="2">Ô tô</Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={24}>
@@ -125,7 +174,7 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose country',
+                                        message: 'Vui lòng chọn quốc gia đăng ký',
                                     },
                                 ]}
                             >
@@ -143,16 +192,26 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'please enter  description',
+                                        message: 'Vui lòng chọn tỉnh thành đăng ký',
                                     },
                                 ]}
                             >
-                                <Select>
-                                    <Option value="Hà nội">Hà nội</Option>
-                                    <Option value="Đà nẵng">Đà nẵng </Option>
-                                    <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                                </Select>
+                                <Select
+                                    labelInValue
+                                    // defaultValue={{
+                                    //     value: 'lucy',
+                                    //     label: 'Lucy (101)',
+                                    // }}
+                                    // style={{
+                                    //     width: 120,
+                                    // }}
+                                    onChange={handleChange}
+                                    options={citys}
+                                />
                             </Form.Item>
+                            {/* <Form.Item>
+                                <ModalUploadDocumentVehicle />
+                            </Form.Item> */}
                             <Form.Item
                             >
                                 <Button className='btn-register' type="primary" htmlType="submit">

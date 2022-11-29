@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Row, Col, Select, Table, DatePicker } from 'antd';
+import { Button, Checkbox, Form, Input, item, Col, Select, Table, DatePicker, Row } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect } from 'react';
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons';
@@ -21,21 +21,41 @@ const TripHistoryDriver = () => {
     const dispatch = useDispatch();
     // const [tripHistory,setTripHistory] =useState();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    const trips = useSelector((state) => state.tripHistory.tripHistory?.trips);
-    const tripHistory = trips?.map((row) => ({ ...row, seatRemind: row.seat - row.seatRegistered, key: row.id }))
-    console.log(tripHistory);
+    const all = useSelector((state) => state.tripHistory.tripHistory?.trips);
 
+    console.log(all);
+    const dateFormat = (date) =>{
+        const date_str = date,
+        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+        return date_parts + formatted.substr(formatted.indexOf(",") + 1);
+    }
+
+  const trips =all?.map((item)=>{
+    if(item.status==="OPEN"){
+        return {...item,item,dateStart:dateFormat(item.timeStart),key:item.tripID,seatRemind: item.seat - item.seatRegistered,status:"Đang mở"}
+    }
+    else if(item.status==="CLOS"){
+        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),seatRemind: item.seat - item.seatRegistered,status:"Đã đóng"}
+    }
+    else if(item.status==="CANC"){
+        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),seatRemind: item.seat - item.seatRegistered,status:"Đã bị hủy"}
+    }
+
+  })
+  console.log(trips);
     const onfinish = (values) => {
         console.log("ád");
-        // const trip = {
-        //     email: user?.email,
-        //     passengerEmail: values.passengerEmail,
-        //     dateFrom: values.dateFrom,
-        //     dateTo: values.dateTo,
-        //     status: values.status
-        // }
-      
-        // getTripHistoryDriver(trip, dispatch);
+        const trip = {
+            email: user?.email,
+            passengerEmail: values.passengerEmail,
+            dateFrom: values.dateFrom,
+            dateTo: values.dateTo,
+            status: values.status
+        }
+
+        getTripHistoryDriver(trip, dispatch);
     }
 
     useEffect(() => {
@@ -51,9 +71,9 @@ const TripHistoryDriver = () => {
             dataIndex: 'index',
         },
         {
-            key: 'timeStart',
+            key: 'dateStart',
             title: 'Thời gian bắt đầu',
-            dataIndex: 'timeStart',
+            dataIndex: 'dateStart',
         },
         {
             key: 'from',
@@ -105,7 +125,7 @@ const TripHistoryDriver = () => {
                 <div className='driver-info'>
 
                     <Form
-                        onfinish={onfinish}
+                        onFinish={onfinish}
                         labelCol={{
                             span: 2,
                         }}
@@ -113,6 +133,7 @@ const TripHistoryDriver = () => {
                             span: 10,
                         }}
                     >
+
 
                         <FormItem
                             name="passengerEmail"
@@ -153,7 +174,7 @@ const TripHistoryDriver = () => {
                         >
                             <Select
                                 style={{ width: "200px" }}
-
+                                defaultValue="OPEN"
                             >
                                 <Option value='OPEN'>Đang mở</Option>
                                 <Option value='CLOS'>Đã đóng</Option>
@@ -173,7 +194,7 @@ const TripHistoryDriver = () => {
                     </Form>
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={tripHistory} size="middle" />
+                    <Table columns={columns} dataSource={trips} size="middle" />
                 </div>
             </div>
         </div>

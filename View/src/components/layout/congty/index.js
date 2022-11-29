@@ -41,16 +41,16 @@ const menuItem=[
     icon: <IdcardOutlined />,
     label: 'TÀI XẾ',
   },
-  {
-    key: '4',
-    icon: <HistoryOutlined />,
-    label: 'LỊCH SỬ CHUYẾN ĐI',
-  },
-  {
-    key: '5',
-    icon: <LaptopOutlined rotate={180}/>,
-    label: 'CHUYẾN ĐI MIỄN PHÍ',
-  },
+  // {
+  //   key: '4',
+  //   icon: <HistoryOutlined />,
+  //   label: 'LỊCH SỬ CHUYẾN ĐI',
+  // },
+  // {
+  //   key: '5',
+  //   icon: <LaptopOutlined rotate={180}/>,
+  //   label: 'CHUYẾN ĐI MIỄN PHÍ',
+  // },
   {
     key: 'signOut',
     icon: <LogoutOutlined />,

@@ -1,22 +1,18 @@
-import React from 'react';
-import { Button, Col, DatePicker, Form, Row, Select } from 'antd';
+
+import React, { useState } from 'react';
+import { Button, Col, DatePicker, Form, Modal, Row, Select } from 'antd';
 import { RightOutlined, CheckOutlined } from '@ant-design/icons';
-import { useLocation, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
 import { toast } from 'react-toastify';
-import { ChangeStatusSignUp, getUser, UploadFile } from '../../../../redux/apiRequest';
-import { useEffect } from 'react';
-import axios from 'axios';
-const RegisterDriverInfoVehico = () => {
+import { UploadDocumentForVehicle, UploadFile } from '../../../../redux/apiRequest';
+import { useNavigate } from 'react-router';
+const ModalUploadDocumentVehicle = (props) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const location = useLocation();
-    const URL = "http://26.36.110.116";
+    const [open, setOpen] = useState(false);
+    const vehicleId = props.vehicoId;
     const newUser = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(newUser);
-    // const newUser = location.state.newUser;
-     const vehicle = newUser?.vehicleRequest;
+    const dispatch=useDispatch();
+
     const [count, setCount] = useState(0);
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -39,10 +35,7 @@ const RegisterDriverInfoVehico = () => {
             };
         });
     };
-    const onClickFinish = () => {
-        ChangeStatusSignUp(newUser.email, 4);
-        navigate('/home');
-    };
+
     function getTime1(date, dateString) {
         setDate1(dateString);
     }
@@ -67,26 +60,12 @@ const RegisterDriverInfoVehico = () => {
             base64: baseImage1,
             createBy: newUser.email,
             fileName: "Chung_Nhan_Bao_Hiem",
+            vehicleId:vehicleId,
             year: year,
             month: month
         }
-
-        try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
-              {
-                base64: object.base64,
-                expired_month: object.month,
-                expired_year: object.year,
-                file_name: object.fileName,
-                createBy: object.createBy
-              }
-              , {
-                headers: { 'Content-Type': 'application/json' }
-              });
-              serChung_Nhan_Bao_Hiem(true);
-          } catch (error) {
-            toast.error("Upload file thất bại")
-          }
+        console.log(object);
+        UploadDocumentForVehicle(object, toast,dispatch);
    
     };
 
@@ -99,78 +78,35 @@ const RegisterDriverInfoVehico = () => {
         const object = {
             base64: baseImage2,
             createBy: newUser.email,
+            vehicleId:vehicleId,
             fileName: "Chung_Nhan_Dang_Kiem",
             year: year,
             month: month
         }
-        try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
-              {
-                base64: object.base64,
-                expired_month: object.month,
-                expired_year: object.year,
-                file_name: object.fileName,
-                createBy: object.createBy
-              }
-              , {
-                headers: { 'Content-Type': 'application/json' }
-              });
-              setChung_Nhan_Dang_Kiem(true)
-              toast.success("Upload file thành công")
-          } catch (error) {
-            toast.error("Upload file thất bại")
-          }
+        UploadDocumentForVehicle(object, toast,dispatch);
  
     };
-    useEffect(()=>{
-        getUser(newUser.email,dispatch);
-       
-      },[])
     return (
-        <div className='container'>
-            <div className='info-vehico'>
-                <h2>TÀI LIỆU CẦN CHO PHƯƠNG TIỆN</h2>
-                <div className='info-vehico-content'>
-
-                    Xin vui lòng thêm thông tin và tải các tài liệu liên quan đến xe của bạn. Xe của bạn cần có năm sản xuất
-                    từ năm 2008 trở lên. Đối với xe 7 chỗ cần có năm sản xuất từ năm 2012 trở lên. Đối với xe mô tô, vui lòng
-                    tải giấy đăng ký lên thay cho giấy đăng kiểm
-                </div>
-                <div className='card-doc'>
-                    <div className='form-header1'>
-                        <span>
-                            Thông tin phương tiện :
-                            {/* <div className='status'>Đã gửi</div> */}
-                        </span>
-
-                    </div>
-                    <div className='form-content'>
-                        <div className='form-info'>
-                            <Row>
-                                <Col sm={12} md={6} >
-                                    <p>Năm sản xuất:</p> {vehicle.produceYear}
-                                </Col>
-                                <Col sm={12} md={6} >
-                                    <p>Màu sơn:</p> {vehicle.exteriorColor}
-                                </Col>
-                                <Col sm={12} md={6} >
-                                    <p>Màu nội thất:</p> {vehicle.interiorColor}
-                                </Col>
-                                <Col sm={12} md={6} >
-                                    <p>Nơi đăng ký:</p> {vehicle.platState}
-                                </Col>
-                            </Row>
-                        </div>
-                    </div>
-                </div>
-                <div>
+        <>
+            <Button type="primary" onClick={() => setOpen(true)}>
+                Upload tài liệu
+            </Button>
+            <Modal
+                title="Upload tài liệu"
+                centered
+                open={open}
+                onOk={() => setOpen(false)}
+                onCancel={() => setOpen(false)}
+                width={1200}
+            >
+             <div>
                     <Row>
                         <Col sm={24} md={12}>
                             <div className='card-doc'>
                                 <div className='form-header'>
                                     <span>
                                         Giấy chứng nhận bảo hiểm.
-                                        <div className='status'>Đã gửi</div>
+                                        {/* <div className='status'>Đã gửi</div> */}
                                     </span>
 
                                 </div>
@@ -179,9 +115,9 @@ const RegisterDriverInfoVehico = () => {
                                         <img src={baseImage1} height="160px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span>
+                                        <div style={{marginBottom:"10px"}}>
                                             Ngày hết hạn <DatePicker onChange={getTime1}  picker='month' />
-                                        </span>
+                                        </div>
                                         <input
                                             type="file"
                                             style={{ color: "#fff" }}
@@ -199,7 +135,7 @@ const RegisterDriverInfoVehico = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy chứng nhận đăng kiểm
-                                        <div className='status'>Đã gửi</div>
+                                        {/* <div className='status'>Đã gửi</div> */}
                                     </span>
 
                                 </div>
@@ -208,9 +144,9 @@ const RegisterDriverInfoVehico = () => {
                                         <img src={baseImage2} height="160px" />
                                     </div>
                                     <div className='content-bottom'>
-                                        <span>
+                                        <div style={{marginBottom:"10px"}}>
                                             Ngày hết hạn <DatePicker onChange={getTime2} picker='month' />
-                                        </span>
+                                        </div>
                                         <input
                                             type="file"
                                             style={{ color: "#fff" }}
@@ -225,16 +161,8 @@ const RegisterDriverInfoVehico = () => {
                         </Col>
                     </Row>
                 </div>
-                <div style={{ marginTop: "50px" }}>
-                    
-                    {Chung_Nhan_Bao_Hiem===true && Chung_Nhan_Dang_Kiem===true? (
-                       <Button type='primary' onClick={onClickFinish}>Finish <RightOutlined /> </Button>
-                    ) : (
-                        <Button type='primary' disabled>Finish <RightOutlined /> </Button>
-                    )}
-                </div>
-            </div>
-        </div>
-    )
-}
-export default RegisterDriverInfoVehico
+            </Modal>
+        </>
+    );
+};
+export default ModalUploadDocumentVehicle;

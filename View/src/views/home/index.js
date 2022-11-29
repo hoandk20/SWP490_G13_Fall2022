@@ -9,7 +9,7 @@ import jwtDecode from 'jwt-decode';
 import { useSelector } from 'react-redux';
 import Forbidden from '../forbiden';
 import { useEffect } from 'react';
-import { getUser, resendCode } from '../../redux/apiRequest';
+import { getAllCity, getUser, resendCode } from '../../redux/apiRequest';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 const { Header, Content } = Layout;
@@ -25,9 +25,10 @@ const Home = () => {
   const newUser=useSelector((state)=>state.user.userInfo?.currentUser);
   console.log(newUser);
   const role=decodedTocken.roles[0];
-  
+
   useEffect(()=>{
     getUser(userName,dispatch);
+    getAllCity(dispatch);
    
   },[])
 

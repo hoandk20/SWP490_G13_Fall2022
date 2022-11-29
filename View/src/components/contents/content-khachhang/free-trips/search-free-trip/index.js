@@ -68,37 +68,7 @@ const SerachFreeTripForPassenger = () => {
        getListFreeTripIsOpen(dispatch);
   
       },[]) 
-//  const getListFreeTripIsOpen =async () =>{
-
-//     const res=await axios.get(`${URL}:8080/api/tripdriver/listOpen`,{
-//       headers: { 'Content-Type': 'application/json' }
-//     })
-//     .then(function (response) {
-//         setFreeTrips(
-//             response.data.object.map(row=>({
-//                 key:row.id,
-//                 timeStart:row.timeStart,
-//                 from:row.from,
-//                 to:row.to,
-//                 price:row.price,
-//                 seat:row.seat,
-//                 driverEmail:row.driverEmail,
-//                 seatRegistered:row.seatRegistered,
-//                 status:row.status,
-//                 listPassenger:row.listPassenger,
-//                 tripID:row.tripID,
-//                 waitingTime:row.waitingTime,
-//                 seatRemind:row.seat-row.seatRegistered
-//             }))
-//         );
-//     })
-//     .catch(function (error) {
-//       console.log(error);
-//     });
-//   }
-
-
-      
+    
 const columns = [
 
     {
@@ -204,12 +174,7 @@ const data = [
     if (!isLoaded) {
         return <></>
     }
-    const showModal = () => {
-
-        navigate('/khachhang/freeTrip/detail-of-taixe')
-    }
-
-    
+  
     async function calculateRoute() {
         
         if (originRef.current.value === '' || destiantionRef.current.value === '') {
@@ -295,38 +260,12 @@ const data = [
                             <Form
                                 onFinish={onFinish}
                             >
-                                  {/* <Form.Item
-                                    name="from"
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message: 'không được để trống',
-                                //     }
-                                // ]}
-                                > */}
                                     <Autocomplete
                                     onPlaceChanged={onPlaceChanged}
                                     >
                                         <Input type='text' placeholder='Origin' ref={originRef}  style={{width:"400px",marginBottom:"20px"}}/>
                                     </Autocomplete>
-                                {/* </Form.Item> */}
-                                {/* <Form.Item
-                                    name="to"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'không được để trống',
-                                        }
-                                    ]}
-                                >
-                                    <Autocomplete>
-                                        <Input
-                                            type='text'
-                                            placeholder='Destination'
-                                            ref={destiantionRef}
-                                        />
-                                    </Autocomplete>
-                                </Form.Item> */}
+
                                 <Autocomplete
                                 onPlaceChanged={onPlaceChanged}
                                 >
@@ -363,14 +302,9 @@ const data = [
                                     label="Giờ"
                                     style={{ display: "inline-block" }}
                                 >
-                                    {/* <TimePicker onChange={onChangeTimeStart} /> */}
                                     <InputNumber min={0} max={24} style={{width:"200px"}}/>
                                 </Form.Item>
-                                {/* <Form.Item
-                                    style={{ display: "inline-block", width: "60px" }}
-                                >
-                                    <Input />
-                                </Form.Item> */}
+  
                                 <Form.Item>
                                     <Button style={{justifyContent:"center"}}  type="primary" htmlType="submit">
                                         Tìm kiếm

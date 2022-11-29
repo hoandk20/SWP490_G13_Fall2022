@@ -9,16 +9,18 @@ import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router';
 import { useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 
 const { Option } = Select;
 const RegisterDriverDoc = () => {
+    const URL = "http://26.36.110.116";
 
     const location = useLocation();
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const decodedTocken = jwtDecode(currentUser.access_token);
     const userName = decodedTocken.sub;
     const newUser = useSelector((state) => state.user.userInfo?.currentUser);
-   
+
     const navigate = useNavigate();
     const [count, setCount] = useState(0);
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
@@ -27,15 +29,17 @@ const RegisterDriverDoc = () => {
 
     const [date1, setDate1] = useState();
     const [date2, setDate2] = useState();
-
-
+    const [Bang_lai_xe, setBang_lai_xe] = useState(false)
+    const [Chung_Nhan_Kinh_nghiem, setChung_Nhan_Kinh_nghiem] = useState(false)
+    
+    // var Bang_lai_xe = false;
+    const [a, setA] = useState(false);
     function getTime1(date, dateString) {
         setDate1(dateString);
     }
     function getTime2(date, dateString) {
         setDate2(dateString);
     }
-
 
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
@@ -54,7 +58,7 @@ const RegisterDriverDoc = () => {
         setBaseImageAvatar(base64);
     };
 
-    const uploadfile1 = () => {
+    const uploadfile1 = async () => {
         const arr = date1.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -65,13 +69,30 @@ const RegisterDriverDoc = () => {
             year: year,
             month: month
         }
-        UploadFile(object, toast);
-        setCount(count + 1);
+
+            try {
+                const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+                  {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                  }
+                  , {
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                  setBang_lai_xe(true);
+                  toast.success("Upload file thành công")
+              } catch (error) {
+                toast.error("Upload file thất bại")
+              }
+
     };
 
+    console.log(Bang_lai_xe);
 
-
-    const uploadfile2 = () => {
+    const uploadfile2 = async () => {
         const arr = date2.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -82,12 +103,30 @@ const RegisterDriverDoc = () => {
             year: year,
             month: month
         }
-        UploadFile(object, toast);
-        setCount(count + 1);
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              setChung_Nhan_Kinh_nghiem(true);
+              toast.success("Upload file thành công")
+          } catch (error) {
+            toast.error("Upload file thất bại")
+
+          }
+
     };
 
-    console.log(count);
-    const uploadfileAvatar = () => {
+
+
+    const uploadfileAvatar = async() => {
         const year = "";
         const month = "";
         const object = {
@@ -97,8 +136,24 @@ const RegisterDriverDoc = () => {
             year: year,
             month: month
         }
-        console.log(object);
-        UploadFile(object, toast);
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              toast.success("Upload file thành công")
+          } catch (error) {
+            toast.error("Upload file thất bại")
+
+          }
+
     };
 
 
@@ -122,11 +177,9 @@ const RegisterDriverDoc = () => {
         navigate('/signup/add-vehico', { state: { newUser } })
     };
     const dispatch = useDispatch();
-    
-    useEffect(()=>{
-        getUser(userName,dispatch);
-       
-      },[])
+
+    console.log(count);
+    console.log(Chung_Nhan_Kinh_nghiem);
     return (
         <div className='container'>
             <div className='container-info'>
@@ -256,7 +309,7 @@ const RegisterDriverDoc = () => {
                 </div>
                 <div style={{ marginTop: "50px" }} >
 
-                    {count == 2 ? (
+                    {Bang_lai_xe === true && Chung_Nhan_Kinh_nghiem===true ? (
                         <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
                     ) : (
                         <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>

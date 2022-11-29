@@ -8,7 +8,7 @@ const { Header, Content } = Layout;
 const VehicoManagement = () => {
 
   return (
-    <LayoutAdmin content={<VehicoManagements/>}/>
+    <LayoutCompany content={<VehicoManagements/>}/>
 
   );
 };

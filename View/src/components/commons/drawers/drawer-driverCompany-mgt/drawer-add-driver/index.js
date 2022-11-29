@@ -9,7 +9,11 @@ const { Option } = Select;
 const AddDriverForCompany = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys=allCity?.map((row)=> ({value:row.id.cityID,label:row.cityName}));
+
     const [open, setOpen] = useState(false);
+    const [city, setCity] = useState("");
     const [form] = Form.useForm();
 
     const showDrawer = () => {
@@ -18,11 +22,15 @@ const AddDriverForCompany = () => {
     const onClose = () => {
         setOpen(false);
     };
+    const handleChange = (a) => {
+        setCity(a.value);
+      };
     const onfinish = (values) => {
         console.log(values);
         const driver = {
             ...values,
             companyEmail: user.email,
+            city:city
         }
         AddDriverByCompany(driver, toast, dispatch);
         // getDriversForCompany(user.email,dispatch);
@@ -33,10 +41,10 @@ const AddDriverForCompany = () => {
     return (
         <>
             <Button type="primary" onClick={showDrawer} icon={<PlusOutlined />}>
-                Add Driver
+                Tạo tài xế
             </Button>
             <Drawer
-                title="Add driver"
+                title="Tạo tài xế"
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -49,11 +57,15 @@ const AddDriverForCompany = () => {
                         <Col span={24}>
                             <Form.Item
                                 name="email"
-                                label="Email"
+                                label="Tài khoản Email"
                                 rules={[
                                     {
+                                        type: 'email',
+                                        message: 'Email không hợp lệ',
+                                    },
+                                    {
                                         required: true,
-                                        message: 'Please enter user name',
+                                        message: 'Email không được để trống',
                                     },
                                 ]}
                             >
@@ -64,28 +76,33 @@ const AddDriverForCompany = () => {
 
                             <Form.Item
                                 name="password"
-                                label="Password"
+                                label="Mật khẩu"
                                 rules={[
                                     {
-                                        required: true,
-                                        message: 'Please input your password!',
+                                        min: 6,
+                                        max: 32,
+                                        message: 'Mật khẩu phải lớn hơn 6 ký tự'
                                     },
+                                    {
+                                        required: true,
+                                        message: 'Mật khẩu không được để trống',
+                                    }
                                 ]}
                                 hasFeedback
                             >
-                                <Input.Password />
+                                <Input.Password placeholder='*Mật khẩu: có tối thiểu 6 ký tự' />
                             </Form.Item>
                         </Col>
                         <Col span={12}>
                             <Form.Item
                                 name="confirm"
-                                label="Confirm Password"
+                                label="Nhập lại mật khẩu"
                                 dependencies={['password']}
                                 hasFeedback
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please confirm your password!',
+                                        message: 'Vui lòng xác nhận lại mật khẩu',
                                     },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
@@ -105,11 +122,11 @@ const AddDriverForCompany = () => {
                         <Col span={12}>
                             <Form.Item
                                 name="firstName"
-                                label="First Name"
+                                label="Họ và tên đệm"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please select an owner',
+                                        message: 'Tên không được để trống',
                                     },
                                 ]}
                             >
@@ -120,11 +137,11 @@ const AddDriverForCompany = () => {
                         <Col span={12}>
                             <Form.Item
                                 name="lastName"
-                                label="Last name"
+                                label="Tên"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose the type',
+                                        message: 'Tên không được để trống',
                                     },
                                 ]}
                             >
@@ -136,11 +153,12 @@ const AddDriverForCompany = () => {
                         <Col span={12}>
                             <Form.Item
                                 name="phoneNumber"
-                                label="Phone number"
+                                label="Số điện thoại"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter plate',
+                                        message: 'Vui lòng nhập lại số điện thoại',
+                                        pattern: new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g),
                                     },
                                 ]}
                             >
@@ -150,11 +168,11 @@ const AddDriverForCompany = () => {
                         <Col span={24}>
                             <Form.Item
                                 name="country"
-                                label="Country"
+                                label="Quốc gia"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose country',
+                                        message: 'Vui lòng chọn quốc gia',
                                     },
                                 ]}
                             >
@@ -167,27 +185,34 @@ const AddDriverForCompany = () => {
                     <Row gutter={16}>
                         <Col span={24}>
                             <Form.Item
-                                name="city"
-                                label="City"
+                                name="citys"
+                                label="Thành phố"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'please enter  description',
+                                        message: 'Vui lòng chọn thành phố',
                                     },
                                 ]}
                             >
-                                <Select>
-                                    <Option value="Hà nội">Hà nội</Option>
-                                    <Option value="Đà nẵng">Đà nẵng </Option>
-                                    <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                                </Select>
+                                <Select
+                                    labelInValue
+                                    // defaultValue={{
+                                    //     value: 'lucy',
+                                    //     label: 'Lucy (101)',
+                                    // }}
+                                    // style={{
+                                    //     width: 120,
+                                    // }}
+                                    onChange={handleChange}
+                                    options={citys}
+                                />
                             </Form.Item>
-                            <Form.Item>
-                                <ModalUploadDocument/>
-                            </Form.Item>
+                            {/* <Form.Item>
+                                <ModalUploadDocument />
+                            </Form.Item> */}
                             <Form.Item>
                                 <Button className='btn-register' type="primary" htmlType="submit">
-                                    Submit
+                                    Tạo tài xế
                                 </Button>
                             </Form.Item>
                         </Col>

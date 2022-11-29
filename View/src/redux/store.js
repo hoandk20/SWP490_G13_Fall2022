@@ -4,6 +4,7 @@ import userReducer from './userSlice'
 import tripHistoryReducer from "./tripHistorySlice";
 import freeTripReducer from "./freeTripSlice";
 import vehicoReducer from "./vehicoSlice";
+import dataReducer from "./dataSlice";
 import {
     persistStore,
     persistReducer,
@@ -22,7 +23,7 @@ import {
     version: 1,
     storage,
   }
-  const rootReducer =combineReducers({ auth:authReducer,user:userReducer,freeTrip:freeTripReducer,tripHistory:tripHistoryReducer,vehico:vehicoReducer})
+  const rootReducer =combineReducers({ auth:authReducer,user:userReducer,freeTrip:freeTripReducer,tripHistory:tripHistoryReducer,vehico:vehicoReducer,data:dataReducer})
   const persistedReducer = persistReducer(persistConfig, rootReducer)
 
   export const store = configureStore({

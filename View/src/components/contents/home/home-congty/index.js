@@ -8,12 +8,6 @@ const HomeCompany = () => {
 
     return (
         <>
-            {/* <Button type="default" size='large' shape="round">
-                Số chuyến đi đang chờ
-            </Button>
-            <Button type="default" size='large' shape="round">
-                Số chuyến đi đã đi
-            </Button> */}
             <h1>Home Company</h1>
         </>
 

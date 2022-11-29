@@ -4,38 +4,46 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { AddVehicoByCompany, EditVehicoByCompany, getAllVehico, getDriversForCompany } from '../../../../../redux/apiRequest';
+import ModalUploadDocumentVehicle from '../../../modals/modal-upload-document-vehicle';
 const { Option } = Select;
 const EditVehico = (props) => {
-    const dispatch= useDispatch();
-    const user=useSelector((state)=>state.user.userInfo?.currentUser);
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
-    const vehico=props.state;
+    const vehico = props.state;
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
+    const [city, setCity] = useState("");
     const showDrawer = () => {
         setOpen(true);
     };
     const onClose = () => {
         setOpen(false);
     };
+    const handleChange = (a) => {
+        setCity(a.value);
+    };
     const onfinish = (values) => {
-        console.log(values);
-        const vehicoUpdate={
+
+        const vehicoUpdate = {
             ...values,
-            companyEmail:user.email,
-            id:vehico.id
+            companyEmail: user.email,
+            id: vehico.id,
+            platState: city.label,
         }
         console.log(vehicoUpdate);
-        EditVehicoByCompany(vehicoUpdate,toast,dispatch);
+        EditVehicoByCompany(vehicoUpdate, toast, dispatch);
         // getAllVehico(user.email,dispatch);
         setOpen(false);
         // window.location.reload();
     };
     return (
         <>
-            
+
             <EyeOutlined onClick={showDrawer} />
 
             <Drawer
-                title="Edit vehico"
+                title="Thông tin phương tiện"
                 width={720}
                 onClose={onClose}
                 open={open}
@@ -48,16 +56,26 @@ const EditVehico = (props) => {
                         <Col span={12}>
                             <Form.Item
                                 name="producer"
-                                initialValue={vehico.producer}
+                                initialValue={vehico?.producer}
+
                                 label="Nhà sản xuất"
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter user name',
+                                        message: 'Vùi lòng chọn nhà sản xuất',
                                     },
                                 ]}
                             >
-                                <Input value='abc'/>
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="Toyota"></Option>
+                                    <Option value="Honda"></Option>
+                                    <Option value="Hyundai"></Option>
+                                    <Option value="Ford"></Option>
+                                    <Option value="Suzuki"></Option>
+                                    <Option value="Mercedes-Benz"></Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -68,7 +86,7 @@ const EditVehico = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter url',
+                                        message: 'Vui lòng chọn năm sản xuất',
                                     },
                                 ]}
                             >
@@ -85,11 +103,18 @@ const EditVehico = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please select an owner',
+                                        message: 'Vui lòng chọn năm sản xuất',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="black">Đen</Option>
+                                    <Option value="white">Trắng</Option>
+                                    <Option value="red">Đỏ</Option>
+                                    <Option value="bule">xanh</Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -100,11 +125,18 @@ const EditVehico = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose the type',
+                                        message: 'Vui lòng chọn màu sơn',
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="black">Đen</Option>
+                                    <Option value="white">Trắng</Option>
+                                    <Option value="red">Đỏ</Option>
+                                    <Option value="bule">xanh</Option>
+                                </Select>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -117,11 +149,28 @@ const EditVehico = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please enter plate',
+                                        message: 'Biển số xe không được để trống',
                                     },
                                 ]}
                             >
                                 <Input />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item
+                                name="type"
+                                label="Loại phương tiện "
+
+                                initialValue={vehico.type}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn loại xe',
+                                    },
+                                ]}
+                            >
+
+                             <Input disabled/>
                             </Form.Item>
                         </Col>
                         <Col span={24}>
@@ -132,7 +181,7 @@ const EditVehico = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please choose country',
+                                        message: 'Vui lòng chọn quốc gia đăng ký',
                                     },
                                 ]}
                             >
@@ -151,15 +200,25 @@ const EditVehico = (props) => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'please enter  description',
+                                        message: 'Vui lòng chọn tỉnh thành đăng ký',
                                     },
                                 ]}
                             >
-                                <Select>
-                                    <Option value="Hà nội">Hà nội</Option>
-                                    <Option value="Đà nẵng">Đà nẵng </Option>
-                                    <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                                </Select>
+                                <Select
+                                    labelInValue
+                                    // defaultValue={{
+                                    //     value: 'lucy',
+                                    //     label: 'Lucy (101)',
+                                    // }}
+                                    // style={{
+                                    //     width: 120,
+                                    // }}
+                                    onChange={handleChange}
+                                    options={citys}
+                                />
+                            </Form.Item>
+                            <Form.Item>
+                                <ModalUploadDocumentVehicle vehicoId={vehico.id} />
                             </Form.Item>
                             <Form.Item
                             >

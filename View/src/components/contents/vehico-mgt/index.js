@@ -1,28 +1,86 @@
-import { Button, Checkbox, Form, Input, Row, Col, Select, Table, DatePicker, Popconfirm } from 'antd';
+import { Button, Checkbox, Form, Input, Row, Col, Select, Table, DatePicker, Popconfirm, Modal } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect, useState } from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
 import ModalAddVehico from '../../commons/modals/modal-add-vehico';
 import AddVehico from '../../commons/drawers/drawer-vehico-mgt/drawer-add--vehico';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteVehicelByCompany, getAllVehico } from '../../../redux/apiRequest';
+import { deleteVehicelByCompany, getAllVehico, getAllVehicoFilter } from '../../../redux/apiRequest';
 import EditVehico from '../../commons/drawers/drawer-vehico-mgt/drawer-edit-vehico';
 import { toast } from 'react-toastify';
 
 
 const { Option } = Select;
 const VehicoManagement = () => {
-
+    const [open, setOpen] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
+
     const all = useSelector((state) => state.vehico.vehicos?.all);
     const vehicos = all?.map((row) => ({ ...row, key: row.id }))
-    console.log(user);
 
+    const vehicles = all?.map((item) => {
+
+        if (item.listDoc.length === 0) {
+            return { ...item, item, key: item.id, cnbh: "Chưa gửi", cndk: "Chưa gửi" }
+        } else if (item.listDoc.length === 1) {
+            if (item.listDoc[0].file_name === "Chung_Nhan_Bao_Hiem") {
+                if (item.listDoc[0].status === "SENDED") {
+                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Chưa gửi" }
+                } else if (item.listDoc[0].status === "VALID") {
+                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Chưa gửi" }
+                } else if (item.listDoc[0].status === "INVALID") {
+                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Chưa gửi" }
+                }
+            } else if (item.listDoc[0].file_name === "Chung_Nhan_Dang_Kiem") {
+                if (item.listDoc[0].status === "SENDED") {
+                    return { ...item, item, key: item.id, cndk: "Đã gửi", cnbh: "Chưa gửi" }
+                } else if (item.listDoc[0].status === "VALID") {
+                    return { ...item, item, key: item.id, cndk: "Hợp lệ", cnbh: "Chưa gửi" }
+                } else if (item.listDoc[0].status === "INVALID") {
+                    return { ...item, item, key: item.id, cndk: "Không Hợp lệ", cnbh: "Chưa gửi" }
+                }
+            }
+        } else if (item.listDoc.length === 2) {
+
+            if (item.listDoc[0].status === "SENDED") {
+                if (item.listDoc[1].status === "SENDED") {
+                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Đã gửi" }
+                } else if (item.listDoc[1].status === "VALID") {
+                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Hợp lệ" }
+                } else if (item.listDoc[1].status === "INVALID") {
+                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Không Hợp lệ" }
+                }
+            } else if (item.listDoc[0].status === "VALID") {
+                if (item.listDoc[1].status === "SENDED") {
+                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Đã gửi" }
+                } else if (item.listDoc[1].status === "VALID") {
+                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Hợp lệ" }
+                } else if (item.listDoc[1].status === "INVALID") {
+                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Không Hợp lệ" }
+                }
+            } else if (item.listDoc[0].status === "INVALID") {
+                if (item.listDoc[1].status === "SENDED") {
+                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Đã gửi" }
+                } else if (item.listDoc[1].status === "VALID") {
+                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Hợp lệ" }
+                } else if (item.listDoc[1].status === "INVALID") {
+                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Không Hợp lệ" }
+                }
+            }
+        }
+    })
+    console.log("vehicles", vehicles);
+    const allVehicle = vehicles?.map((item) => {
+        if (item.typeId === 1) {
+            return { ...item, item, key: item.id, type: "Xe máy" }
+        } else if (item.typeId === 2) {
+            return { ...item, item, key: item.id, type: "Ô tô" }
+        }
+    })
     const handleDelete = (key) => {
         console.log(key);
-         deleteVehicelByCompany(key,user.email,toast,dispatch);
+        deleteVehicelByCompany(key, user.email, toast, dispatch);
     };
     const cancel = (e) => {
 
@@ -52,19 +110,72 @@ const VehicoManagement = () => {
             dataIndex: 'produceYear',
         },
         {
-            key: 'price',
+            key: 'type',
+            title: 'Loại phương tiện',
+            dataIndex: 'type'
+        },
+
+        {
             title: 'Giấy chứng nhận bảo hiểm',
-            dataIndex: 'price',
+            dataIndex: 'cnbh',
+            key: 'cnbh',
+            render: (text, record, index) => {
+                if (record.cnbh === "Chưa gửi") {
+                    return <div style={{ color: "red" }}>{record.cnbh}</div>
+                } else {
+                    return <div><span style={{ marginRight: "10px", color: 'red' }}>{record.cnbh}</span>
+                        <EyeOutlined style={{ fontSize: "16px" }} onClick={() => {
+
+                        }} />
+                    </div>
+                }
+
+
+            },
         },
         {
-            key: 'irs',
             title: 'Giấy đăng kiểm',
-            dataIndex: 'irs',
+            dataIndex: 'cndk',
+            key: 'cndk',
+            render: (text, record, index) => {
+                if (record.cndk === "Chưa gửi") {
+                    return <div style={{ color: "red" }}>{record.cndk}</div>
+                } else {
+                    return <div><span style={{ marginRight: "10px", color: 'red' }}>{record.cndk}</span>
+                        <EyeOutlined style={{ fontSize: "16px" }} onClick={() => {
+                            setOpen(true);
+                        }} />
+                    </div>
+                }
+
+
+            },
         },
+        // {
+        //     title: 'Giấy đăng kiểm',
+        //     dataIndex: 'gdk',
+        //     key: 'cndk',
+        //     render: (text, record, index) => {
+        //         return <div>
+        //             <Button onClick={() =>{
+        //                 console.log(record);
+        //             }} type='primary'>Xem</Button>
+        //         </div>
+
+        //     },
+        // },
+
         {
-            key: 'status',
-            title: 'Trạng thái',
-            dataIndex: 'status',
+            key: 'driverEmail',
+            title: 'Tài xế sử dụng',
+            dataIndex: 'driverEmail',
+            // render:(record) =>{
+            //     if(record.driverEmail===""){
+            //         return <>Chưa có tài xế sử dụng</>
+            //     }else{
+            //         return <>record.driverEmail</>
+            //     }
+            // }
         },
 
 
@@ -102,19 +213,36 @@ const VehicoManagement = () => {
         },
     ];
 
+    const onFinish = (values) => {
+        if (values.plate === undefined) {
+            values.plate = "";
+        }
+        if (values.typeId === undefined) {
+            values.typeId = "";
+        }
+        const vehicle = {
+            ...values,
+            email: user.email,
+            status: ""
+        }
+        getAllVehicoFilter(vehicle, dispatch);
+        console.log(vehicle);
+    }
     return (
         <div className='container'>
             <div className='container-infos' style={{
                 textAlign: "left",
                 marginLeft: "20px"
             }}>
-                <h2>PHƯƠNG TIỆN</h2>
+                <h2 style={{ marginBottom: "50px" }}>PHƯƠNG TIỆN</h2>
                 <div className='driver-info'>
-                    <Form labelCol={{
-                        span: 4,
-                    }}
+                    <Form
+                        onFinish={onFinish}
+                        labelCol={{
+                            span: 5,
+                        }}
                         wrapperCol={{
-                            span: 16,
+                            span: 14,
                         }}
                     >
                         <Row>
@@ -125,7 +253,7 @@ const VehicoManagement = () => {
                                 >
                                     <Input />
                                 </FormItem>
-                                <FormItem
+                                {/* <FormItem
                                     name="status"
                                     label="Trạng thái"
 
@@ -141,19 +269,18 @@ const VehicoManagement = () => {
                                         <Option value="Đang chờ xem xét"></Option>
                                         <Option value="Chưa gửi tài liệu"></Option>
                                     </Select>
-                                </FormItem>
+                                </FormItem> */}
                                 <FormItem
-                                    name="vehicoType"
-                                    label="Loại xe"
+                                    name="typeId"
+                                    label="Loại phương tiện"
 
                                 >
                                     <Select
                                         allowClear
+
                                     >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="A3"></Option>
-                                        <Option value="A6"></Option>
-                                        <Option value="FF"></Option>
+                                        <Option value="1">Xe máy</Option>
+                                        <Option value="2">Ô tô</Option>
                                     </Select>
                                 </FormItem>
                             </Col>
@@ -167,6 +294,16 @@ const VehicoManagement = () => {
                             </Col>
                         </Row>
                     </Form>
+                    <Modal
+                        title="Xem tài liệu"
+                        centered
+                        open={open}
+                        onOk={() => setOpen(false)}
+                        onCancel={() => setOpen(false)}
+                        width={500}
+                    >
+                        <img src={""} height="220px" />
+                    </Modal>
                     {/* <div
                         style={{ float: "right" }}
                     >
@@ -177,7 +314,7 @@ const VehicoManagement = () => {
                     <AddVehico />
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={vehicos} size="middle" />
+                    <Table columns={columns} dataSource={allVehicle} size="middle" />
                 </div>
             </div>
         </div >

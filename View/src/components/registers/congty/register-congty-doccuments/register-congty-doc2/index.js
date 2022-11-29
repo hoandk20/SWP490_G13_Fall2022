@@ -1,15 +1,17 @@
 import { RightOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { Option } from 'antd/lib/mentions';
+import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import { AddVehicoByCompany, AddVehicoByDriver, ChangeStatusSignUp } from '../../../../../redux/apiRequest';
+import { AddVehicoByCompany, AddVehicoByDriver, ChangeStatusSignUp, getAllVehico, getUser } from '../../../../../redux/apiRequest';
 import AddVehico from '../../../../vehicos/add-vehico';
-
+const URL = "http://26.36.110.116";
 const RegisterAddVehicle = () => {
+    
 
     const navigate =useNavigate();
     const dispatch = useDispatch();
@@ -19,26 +21,67 @@ const RegisterAddVehicle = () => {
     const user = useSelector((state) => state.user.userInfo?.currentUser)
     const [vehicle,setVehicle]=useState("");
 
-    const onfinish = (values) => {
+    const onfinish = async(values) => {
         if (user.role == "ROLE_DRIVER") {
             console.log(values);
-            const vehico = {
-                ...values,
-                driverEmail: user.email,
-            }
-            setVehicle(vehico)
-           
-            AddVehicoByDriver(vehico,toast,dispatch);
-            setCount(count+1);
+            // const vehico = await{
+            //     ...values,
+            //     driverEmail: user.email,
+            // }
+            // setVehicle(vehico)
+            // console.log(vehicle);
+            try {
+                const res = await axios.post(`${URL}:8080/api/driver/addVehicle`,
+                  {
+                    driverEmail: user.email,
+                    producer: values.producer,
+                    produceYear: values.produceYear,
+                    interiorColor: values.interiorColor,
+                    exteriorColor: values.exteriorColor,
+                    plate: values.plate,
+                    platState: values.platState,
+                    plateCountry: values.plateCountry,
+                    typeId: vehicle.typeId
+                  }
+                  , {
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                  setCount(count+1);
+                  getUser(user.email,dispatch);
+                toast.success("Tạo phương tiện thành công")
+              } catch (error) {
+                toast.error("Tạo phương tiện thất bại")
+              }
+            // AddVehicoByDriver(vehico,toast,dispatch);
+            // setCount(count+1);
         }
         else {
-            const vehico = {
-                ...values,
-                companyEmail: user.email,
-            }
-            setVehicle(vehico)
-            AddVehicoByCompany(vehico, toast, dispatch);
-            setCount(count+1);
+
+            try {
+                const res = await axios.post(`${URL}:8080/api/company/addVehicle`,
+                  {
+                    companyEmail: user.email,
+                    producer: values.producer,
+                    produceYear: values.produceYear,
+                    interiorColor: values.interiorColor,
+                    exteriorColor: values.exteriorColor,
+                    plate: values.plate,
+                    platState: values.platState,
+                    plateCountry: values.plateCountry,
+                    typeId: vehicle.typeId
+                  }
+                  , {
+                    headers: { 'Content-Type': 'application/json' }
+                  });
+                  setCount(count+1);
+                getAllVehico(vehicle.companyEmail, dispatch);
+                getUser(vehicle.companyEmail,dispatch);
+                toast.success("Tạo phương tiện thành công")
+              } catch (error) {
+                toast.error("Tạo phương tiện thất bại")
+              }
+            // AddVehicoByCompany(vehico, toast, dispatch);
+            // setCount(count+1);
         }
     };
     console.log(count);
@@ -75,15 +118,22 @@ const RegisterAddVehicle = () => {
                                 <Form.Item
                                     name="producer"
                                     label="Nhà sản xuất *"
-
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vùi lòng chọn nhà sản xuất',
+                                        },
+                                    ]}
                                 >
                                     <Select
                                         allowClear
                                     >
-                                        <Option value="honda"></Option>
-                                        <Option value="honda1"></Option>
-                                        <Option value="honda2"></Option>
-                                        <Option value="honda3"></Option>
+                                        <Option value="Toyota"></Option>
+                                        <Option value="Honda"></Option>
+                                        <Option value="Hyundai"></Option>
+                                        <Option value="Ford"></Option>
+                                        <Option value="Suzuki"></Option>
+                                        <Option value="Mercedes-Benz"></Option>
                                     </Select>
                                 </Form.Item>
                                 <Form.Item
@@ -92,7 +142,7 @@ const RegisterAddVehicle = () => {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please enter url',
+                                            message: 'Vui lòng chọn năm sản xuất',
                                         },
                                     ]}
                                 >
@@ -101,7 +151,12 @@ const RegisterAddVehicle = () => {
                                 <Form.Item
                                     name="interiorColor"
                                     label="Màu nội thất *"
-
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng chọn màu sơn',
+                                        },
+                                    ]}
                                 >
                                     <Select
                                         allowClear
@@ -134,7 +189,7 @@ const RegisterAddVehicle = () => {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please enter plate',
+                                            message: 'Biển số xe không được để trống',
                                         },
                                     ]}
                                 >
@@ -144,7 +199,12 @@ const RegisterAddVehicle = () => {
                                 <Form.Item
                                     name="plateCountry"
                                     label="Quốc gia đăng ký *"
-
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng chọn quốc gia đăng ký',
+                                        },
+                                    ]}
                                 >
                                     <Select
                                         allowClear
@@ -155,19 +215,24 @@ const RegisterAddVehicle = () => {
                                 <Form.Item
                                     name="platState"
                                     label="Tỉnh thành đăng ký *"
-
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Vui lòng chọn tỉnh thành đăng ký',
+                                        },
+                                    ]}
                                 >
                                     <Select
                                         allowClear
                                     >
-                                        <Option value="hanoi">Hà Nội</Option>
-                                        <Option value="danang">Đà Nẵng</Option>
-                                        <Option value="hcm">Hồ Chí Minh</Option>
+                                        <Option value="Hà nội">Hà Nội</Option>
+                                        <Option value="Đà nẵng">Đà Nẵng</Option>
+                                        <Option value="Thành phố Hồ Chí Minh">Hồ Chí Minh</Option>
                                     </Select>
                                 </Form.Item>
                                 <Form.Item
                                     name="typeId"
-                                    label="Loại xe *"
+                                    label="Loại xe "
 
                                 >
                                     <Select

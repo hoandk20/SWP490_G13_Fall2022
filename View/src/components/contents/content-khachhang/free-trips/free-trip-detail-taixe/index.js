@@ -54,7 +54,7 @@ const FreeTripDetailOfDriver = () => {
     // const [tripInfo,setTripInfo]=useState()
     const location = useLocation();
     const tripInfo = location.state?.record;
-    console.log(tripInfo)
+
     var date_str = tripInfo?.timeStart,
         options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
         formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
@@ -65,21 +65,20 @@ const FreeTripDetailOfDriver = () => {
 
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
-        console.log(tripInfo?.from);
+
         const results = await directionsService.route({
             origin: tripInfo?.from,
             destination: tripInfo?.to,
             // eslint-disable-next-line no-undef
             travelMode: google.maps.TravelMode.DRIVING,
-            
+
         })
         setDirectionsResponse(results)
         console.log(results)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
-
     }
-
+    console.log(tripInfo);
     const handleOk = () => {
         if (seatRegister < tripInfo.seat) {
             const trip = {
@@ -131,17 +130,26 @@ const FreeTripDetailOfDriver = () => {
                                 <Descriptions.Item span={3} label="Từ">{tripInfo?.from}</Descriptions.Item>
                                 <Descriptions.Item span={3} label="Đến">{tripInfo?.to}</Descriptions.Item>
                                 <Descriptions.Item span={3} label="Thời gian xuất phát">{formatted_date}</Descriptions.Item>
+
                                 {
-                                    tripInfo?.tripID!==null?(
+                                    tripInfo?.tripID !== null ? (
                                         <Descriptions.Item label="Số ghế đã đặt">{tripInfo?.seatRegister}</Descriptions.Item>
-                                    ):(
+                                    ) : (
                                         <Descriptions.Item label="Số ghế còn trống">{tripInfo?.seat - tripInfo?.seatRegistered}</Descriptions.Item>
                                     )
                                 }
-                              
                                 <Descriptions.Item span={2} label="Cước">{tripInfo?.price}</Descriptions.Item >
-                                <Descriptions.Item label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
+                                <Descriptions.Item span={3} label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
                             </Descriptions>
+
+                            <div style={{ marginTop: "20px" }}>
+                                <Descriptions size='middle' bordered title="Thông tin phương tiện tài xế">
+
+                                    <Descriptions.Item span={3} label="Biển số xe">{tripInfo?.vehiclePlate}</Descriptions.Item>
+                                    <Descriptions.Item span={2} label="Loại xe">{tripInfo?.vehicleName}</Descriptions.Item>
+                                    <Descriptions.Item span={1} label="Màu xe">{tripInfo?.vehicleColor}</Descriptions.Item>
+                                </Descriptions>
+                            </div>
                             <div style={{ marginTop: '30px', display: 'inline-block' }}>
 
                                 <div>
@@ -184,16 +192,10 @@ const FreeTripDetailOfDriver = () => {
 
                                         ]}
                                     >
-                                        <br />
-                                        <Descriptions size='middle' bordered title="Thông tin Phương tiện">
-                                            <Descriptions.Item span={3} label="Hạng phương tiện">Ô tô 4 chỗ</Descriptions.Item>
-                                            <Descriptions.Item span={1} label="Loại xe">Mẹc</Descriptions.Item>
-                                            <Descriptions.Item span={2} label="Biển số">29A1-113.29</Descriptions.Item>
-                                        </Descriptions>
-                                        <br />
+        
                                         <h3>Ghi chú với tài xế</h3>
                                         <TextArea onChange={onChangeTextArea} style={{
-                                            height: 120,
+                                            height: 200,
                                         }} />
                                     </Modal>
                                 </div>

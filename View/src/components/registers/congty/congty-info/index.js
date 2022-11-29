@@ -34,7 +34,7 @@ const RegisterCompanyInfo = () => {
             password: values.password
         }
         registerCompany(newUser, dispatch, navigate, toast);
-        navigate('/signup/confirm-email', { state: { newUser } });
+
     };
 
     const prefixSelector = (
