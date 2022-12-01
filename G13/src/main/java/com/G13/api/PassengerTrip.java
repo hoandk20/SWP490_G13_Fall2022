@@ -276,6 +276,7 @@ public class PassengerTrip {
 }
 @Data
 class filterTripPassenger{
+    int companyID;
     String passengerEmail;
     String driverEmail;
     Date dateFrom;

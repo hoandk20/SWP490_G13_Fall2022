@@ -3,10 +3,7 @@ package com.G13.api;
 import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.*;
-import com.G13.model.CompanyInfo;
-import com.G13.model.DocumentRequest;
-import com.G13.model.RegisterDriverCompany;
-import com.G13.model.VehicleRequest;
+import com.G13.model.*;
 import com.G13.repo.*;
 import com.G13.service.UserServiceImpl;
 import lombok.Data;
@@ -31,6 +28,8 @@ public class CompanyResource {
     private final UserRoleRepository userRoleRepository;
     private final DocumentRepository documentRepository;
     private final VehicledocumentRepository vehicledocumentRepository;
+    private final PromotiontripRepository promotiontripRepository;
+    private final TripRepository tripRepository;
 
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle(@RequestBody VehicleRequest vr) {
@@ -88,7 +87,7 @@ public class CompanyResource {
             vehicle.setPlate(vr.getPlate());
             vehicle.setLisencePlatState(vr.getPlatState());
             vehicle.setLisencePlatCountry(vr.getPlateCountry());
-            vehicle.setCarTypeID(vr.getTypeId());
+        //    vehicle.setCarTypeID(vr.getTypeId());
             vehicle.setCreatedBy(vr.getProducer());
 
 
@@ -109,6 +108,7 @@ public class CompanyResource {
 
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
+        UploadFileMaster uploadFileMaster = new UploadFileMaster();
         try {
 
             Company company = companyRepository.findByNote(companyEmail);
@@ -153,8 +153,9 @@ public class CompanyResource {
                         continue;
                     }
                 }
-                List<Vehicledocument> vehicledocuments = vehicledocumentRepository.findVehicledocumentsByVehicleid(vehicleRepository.findVehicleById(vehicle.getId()));
-                List<DocumentRequest> documentRequests = new ArrayList<>();
+                boolean isHasCNBH=false;
+                boolean isHasCNDK=false;
+                List<Vehicledocument> vehicledocuments = vehicledocumentRepository.findVehicledocumentsByVehicleidOrderByIdDesc(vehicleRepository.findVehicleById(vehicle.getId()));
                 for (Vehicledocument vehicledocument : vehicledocuments) {
                     DocumentRequest doc = new DocumentRequest();
                     FileManage fileManage = new FileManage();
@@ -166,9 +167,15 @@ public class CompanyResource {
                     doc.setStatus(document.getStatus());
                     //       doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
                     doc.setId(document.getId());
-                    documentRequests.add(doc);
+                    if(doc.getFile_name().equals(uploadFileMaster.Chung_Nhan_Bao_Hiem)&&!isHasCNBH){
+                        isHasCNBH=true;
+                        vehicleRequest.setCNBH(doc);
+                    }
+                    if(doc.getFile_name().equals(uploadFileMaster.Chung_Nhan_Dang_Kiem)&&!isHasCNDK){
+                        isHasCNDK=true;
+                        vehicleRequest.setCNDK(doc);
+                    }
                 }
-                vehicleRequest.setListDoc(documentRequests);
 
                 vehicleRequests.add(vehicleRequest);
             }
@@ -490,6 +497,87 @@ public class CompanyResource {
         return listResult;
     }
 
+    @PostMapping("/listTrip")
+    public ResponseEntity<?> listTrip(@RequestBody filterTripPassenger filter) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try {
+
+            List<Driver> driverList = driverRepository.findDriversByCompanyID(filter.companyID);
+            List<TripDriver> driverTrips = new ArrayList<>();
+            for (Driver d : driverList) {
+                List<Promotiontrip> list = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(d.getEmail());
+                for (Promotiontrip detail : list) {
+                    TripDriver tripDriver = new TripDriver();
+                    tripDriver.setDriverEmail(detail.getDriverID());
+                    tripDriver.setFrom(detail.getFromAddress());
+                    tripDriver.setTo(detail.getToAddress());
+                    tripDriver.setSeat(detail.getCapacity());
+                    tripDriver.setId(detail.getId());
+                    tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());
+                    tripDriver.setStatus(detail.getStatus());
+                    tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
+                    tripDriver.setWaitingTime(detail.getDuration());
+                    tripDriver.setPrice(detail.getFee());
+                    Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
+                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    if (vehicle != null) {
+                        tripDriver.setVehiclePlate(vehicle.getPlate());
+                        tripDriver.setVehicleColor(vehicle.getExteriorColor());
+                        tripDriver.setVehicleName(vehicle.getCreatedBy());
+                    }
+                    driverTrips.add(tripDriver);
+                }
+            }
+
+            driverTrips = filterTripDriver(driverTrips, filter);
+
+            response.object = driverTrips;
+            response.status = masterStatus.SUCCESSFULL;
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.content = exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    List<TripDriver> filterTripDriver(List<TripDriver> tripDriver, filterTripPassenger filter) {
+        List<TripDriver> listResult = new ArrayList<>();
+        for (TripDriver t : tripDriver
+        ) {
+            if (filter.status != null && !filter.status.equals("")) {
+                if (!filter.status.equals(t.getStatus())) {
+                    continue;
+                }
+            }
+            if (filter.dateFrom != null) {
+                if (filter.dateFrom.compareTo(t.getTimeStart()) >= 0) {
+                    continue;
+                }
+            }
+            if (filter.dateTo != null) {
+                if (filter.dateTo.compareTo(t.getTimeStart()) <= 0) {
+                    continue;
+                }
+            }
+            if (filter.passengerEmail != null && !filter.passengerEmail.equals("")) {
+                List<Trip> listRegister = tripRepository.findAllByTripCodeOrderByCreatedDateDesc(t.getTripID());
+                boolean isHasPassenger = false;
+                for (Trip trip : listRegister) {
+                    if (trip.getRiderID().equals(filter.passengerEmail)) {
+                        isHasPassenger = true;
+                    }
+                }
+                if (isHasPassenger == false) {
+                    continue;
+                }
+            }
+            listResult.add(t);
+        }
+
+        return listResult;
+    }
 
     public boolean IsEmailExisted(String email) {
         return userService.IsEmailExisted(email);

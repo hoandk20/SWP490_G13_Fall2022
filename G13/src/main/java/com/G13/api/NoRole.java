@@ -1,16 +1,10 @@
 package com.G13.api;
 
 
-import antlr.Token;
 import com.G13.File.FileManage;
 import com.G13.domain.*;
-import com.G13.master.MasterRole;
-import com.G13.master.MasterStatus;
-import com.G13.master.UploadFileMaster;
-import com.G13.model.RoleToUserForm;
-import com.G13.model.UserChangePassword;
-import com.G13.model.UserInfo;
-import com.G13.model.VehicleRequest;
+import com.G13.master.*;
+import com.G13.model.*;
 import com.G13.repo.*;
 import com.G13.service.UserService;
 import com.auth0.jwt.JWT;
@@ -18,19 +12,10 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.source.tree.TryTree;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,10 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.attribute.UserPrincipal;
-import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -50,7 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class UserResouce {
+public class NoRole {
 
     private final UserService userService;
 
@@ -64,6 +46,7 @@ public class UserResouce {
     private  final VerifyaccountRepository verifyaccountRepository;
     private final VehicleRepository vehicleRepository;
     private final CitynameRepository citynameRepository;
+    private final PromotiontripRepository promotiontripRepository;
     @GetMapping("/checkEmailExist")
     public ResponseEntity<?> checkEmailExisted(String email){
         boolean IsExisted = userService.IsEmailExisted(email);
@@ -71,6 +54,7 @@ public class UserResouce {
         res.put("IsExisted",IsExisted?"true":"false");
         return ResponseEntity.ok().body(res);
     }
+
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
@@ -329,6 +313,45 @@ public class UserResouce {
     public ResponseEntity<?> getcity(){
        List<Cityname> list = citynameRepository.findAll();
         return ResponseEntity.ok().body(list);
+    }
+    @GetMapping("/GetTop10Trip")
+    public ResponseEntity<?> Top10Trip() {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        MasterTripStatus masterTripStatus = new MasterTripStatus();
+        try {
+            List<Promotiontrip> list = promotiontripRepository.findTop10ByStatusOrderByCreatedDateDesc(masterTripStatus.TRIP_OPEN);
+            List<TripDriver> driverTrips = new ArrayList<>();
+            for (Promotiontrip detail : list
+            ) {
+                TripDriver tripDriver = new TripDriver();
+                tripDriver.setDriverEmail(detail.getDriverID());
+                tripDriver.setFrom(detail.getFromAddress());
+                tripDriver.setTo(detail.getToAddress());
+                tripDriver.setSeat(detail.getCapacity());
+                tripDriver.setId(detail.getId());
+                tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());
+                tripDriver.setStatus(detail.getStatus());
+                tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
+                tripDriver.setWaitingTime(detail.getDuration());
+                tripDriver.setPrice(detail.getFee());
+                tripDriver.setInstantTimeStart(detail.getTimeStart());
+                tripDriver.setTripID(detail.getId());
+                Driver driver = driverRepository.findDriverById(detail.getDriverID());
+                if (driver != null) {
+                    tripDriver.setPhoneDriver(driver.getMobileNo());
+                }
+
+                driverTrips.add(tripDriver);
+            }
+            response.object = driverTrips;
+            response.status = masterStatus.SUCCESSFULL;
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.content = exception.toString();
+            response.status = masterStatus.FAILURE;
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }
 

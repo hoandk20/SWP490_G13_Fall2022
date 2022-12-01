@@ -304,7 +304,12 @@ public class Register {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         DocumentStatus documentStatus = new DocumentStatus();
+
         try{
+            if(doc.getCreateBy()==null||doc.getCreateBy().equals("")){
+                throw new Exception();
+            }
+            int vehicleid = Integer.parseInt(doc.getVehicleId()+"");
             Date date = new Date();
             long time = date.getTime();
             Instant instant = Instant.now();
@@ -324,7 +329,7 @@ public class Register {
             Document document1 = documentRepository.saveAndFlush(document);
 
             Vehicledocument vehicledocument = new Vehicledocument();
-            Vehicle  vehicle = vehicleRepository.findById(doc.getVehicleId());
+            Vehicle  vehicle = vehicleRepository.findById(vehicleid);
             vehicledocument.setDocumentid(document1);
             vehicledocument.setVehicleid(vehicle);
             vehicledocumentRepository.save(vehicledocument);
@@ -347,7 +352,7 @@ public class Register {
         MasterStatus masterStatus = new MasterStatus();
         try{
             int id = Integer.parseInt(vehicleid);
-            List<Vehicledocument> vehicledocuments = vehicledocumentRepository.findVehicledocumentsByVehicleid(vehicleRepository.findVehicleById(id));
+            List<Vehicledocument> vehicledocuments = vehicledocumentRepository.findVehicledocumentsByVehicleidOrderByIdDesc(vehicleRepository.findVehicleById(id));
             List<DocumentRequest> documentRequests = new ArrayList<>();
             for (Vehicledocument vehicledocument:vehicledocuments) {
                 DocumentRequest documentRequest = new DocumentRequest();
@@ -379,11 +384,29 @@ public class Register {
             FileManage fileManage = new FileManage();
             Document document = documentRepository
                     .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(createBy,file_name);
-            doc.setExpired_month(document.getExpiredMonth());
-            doc.setExpired_year(document.getExpiredYear());
-            doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
-            doc.setId(document.getId());
-            response.object = doc;
+            try{
+                Vehicledocument vehicledocument = vehicledocumentRepository.findVehicledocumentByDocumentid(document);
+                if(vehicledocument!=null){
+                    doc.setVehicleId(vehicledocument.getVehicleid().getId());
+                }else{
+                    doc.setVehicleId(0);
+                }
+            }catch (Exception e){
+            }
+            if(document!=null){
+                doc.setExpired_month(document.getExpiredMonth());
+                doc.setExpired_year(document.getExpiredYear());
+                doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
+                doc.setId(document.getId());
+                doc.setStatus(document.getStatus());
+                doc.setFile_name(document.getFileName());
+                doc.setCreateBy(document.getCreatedBy());
+                response.object = doc;
+            }else{
+                response.object = "";
+            }
+
+
             response.status = masterStatus.SUCCESSFULL;
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){

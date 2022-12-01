@@ -14,4 +14,5 @@ public interface DriverRepository extends JpaRepository<Driver, String> {
 
     Driver findDriverByCurrentVehicle(int vehicleId);
 
+
 }

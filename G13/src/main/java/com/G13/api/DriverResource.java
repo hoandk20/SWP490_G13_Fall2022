@@ -1,20 +1,11 @@
 package com.G13.api;
 
-import com.G13.domain.Company;
-import com.G13.domain.Document;
-import com.G13.domain.Driver;
-import com.G13.domain.Vehicle;
+import com.G13.domain.*;
 import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
 import com.G13.master.UploadFileMaster;
-import com.G13.model.CompanyInfo;
-import com.G13.model.DocumentRequest;
-import com.G13.model.RegisterDriverCompany;
-import com.G13.model.VehicleRequest;
-import com.G13.repo.CompanyRepository;
-import com.G13.repo.DocumentRepository;
-import com.G13.repo.DriverRepository;
-import com.G13.repo.VehicleRepository;
+import com.G13.model.*;
+import com.G13.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +23,8 @@ public class DriverResource {
     private final CompanyRepository companyRepository;
     private final VehicleRepository vehicleRepository;
     private final DocumentRepository documentRepository;
+    private final PromotiontripRepository promotiontripRepository;
+    private final TripRepository tripRepository;
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle (@RequestBody VehicleRequest vr) {
         Date date = new Date();
@@ -188,4 +181,6 @@ public class DriverResource {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
+
 }

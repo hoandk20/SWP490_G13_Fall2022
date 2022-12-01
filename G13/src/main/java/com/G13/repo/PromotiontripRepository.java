@@ -10,4 +10,5 @@ public interface PromotiontripRepository extends JpaRepository<Promotiontrip, St
     Promotiontrip findPromotiontripByIdOrderByCreatedDateDesc(String id);
 
     List<Promotiontrip> findAllByStatus(String status);
+    List<Promotiontrip> findTop10ByStatusOrderByCreatedDateDesc(String status);
 }

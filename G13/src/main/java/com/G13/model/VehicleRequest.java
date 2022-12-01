@@ -18,4 +18,6 @@ public class VehicleRequest{
     int typeId;
     List<DocumentRequest> listDoc;
     String vehicleStatus;
+    DocumentRequest CNBH;
+    DocumentRequest CNDK;
 }

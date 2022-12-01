@@ -15,4 +15,5 @@ public class UserInfo {
     String statusVerify;
     String Role;
     VehicleRequest vehicleRequest;
+    int companyId;
 }
