@@ -3,12 +3,14 @@ import CompanyDetailAdmin from "../../views/admin/congty-mgt/congty-mgt-detail";
 import FreeTripManagementAdmin from "../../views/admin/free-trips-mgt";
 import DriverManagementAdmin from "../../views/admin/taixe-mgt";
 import DriverDetailAdmin from "../../views/admin/taixe-mgt/taixe-detail";
+import DocumentCompany from "../../views/congty/document";
 import DriverManagement from "../../views/congty/driver-mgt";
 import AddDriver from "../../views/congty/driver-mgt/add-driver";
 import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
 import DriverManagementInfo from "../../views/congty/driver-mgt/driver-mgt-info";
 import VehicoManagement from "../../views/congty/vehico-mgt";
 import Home from "../../views/home";
+import HomeAll from "../../views/homeAll";
 import FreeTripDetailOfDriver from "../../views/khachhang/free-trips/free-trip-detail-taixe";
 import SerachFreeTripForPassenger from "../../views/khachhang/free-trips/search-free-trip";
 import InfoContactUser from "../../views/khachhang/info-contact";
@@ -23,6 +25,7 @@ import RegisterDriver from "../../views/registers/register-taixe";
 import RegisterDriverDocument from "../../views/registers/register-taixe/register-taixe-document";
 import RegisterDriverInfo from "../../views/registers/register-taixe/register-taixe-info";
 import RegisterDriverInfoVehico from "../../views/registers/register-taixe/tx-cty-infoVehico";
+import DocumentDriver from "../../views/taixe/document";
 import FreeTripDriver from "../../views/taixe/free-trip";
 import CreateFreeTripForDriver from "../../views/taixe/free-trip/create-free-trip";
 import FreeTripDetail from "../../views/taixe/free-trip/free-trip-detail";
@@ -83,7 +86,12 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterConfirmEmail
     },
-
+    //tai xe
+    {
+        path: '/taixe/document',
+        roleTarget: "ROLE_DRIVER",
+        element: DocumentDriver
+    },
     {
         path: '/taixe/free-trip',
         roleTarget: "ROLE_DRIVER",
@@ -132,6 +140,11 @@ const routers = [
     },
     //cong ty
     {
+        path: '/congty/document',
+        roleTarget: "ROLE_COMPANY",
+        element: DocumentCompany
+    },
+    {
         path: '/congty/vehico-mgt',
         roleTarget: "ALL",
         element: VehicoManagement
@@ -162,10 +175,16 @@ const routers = [
         roleTarget: "ALL",
         element: RegisterHome
     },
+    //home
     {
         path: '/home',
         roleTarget: "ALL",
         element: Home
+    },
+    {
+        path: '/',
+        roleTarget: "ALL",
+        element: HomeAll
     },
     {
         path: '/uploadImage',
@@ -199,7 +218,7 @@ const routers = [
         roleTarget: "ALL",
         element: FreeTripManagementAdmin
     }
-    
+
 
 ]
 export default routers

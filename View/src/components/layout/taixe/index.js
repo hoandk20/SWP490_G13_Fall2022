@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import 'antd/dist/antd.css';
 // import '../layout.css';
 import {
@@ -23,44 +24,84 @@ const { Sider } = Layout;
 // import Menu from '../../commons/menu/index'
 
 const { Header, Content } = Layout;
-const menuItem=[
-  {
-    key: '0',
-    icon: <UserOutlined />,
-    label: 'TRANG CHỦ',
-  },
-  {
-    key: '1',
-    icon: <UserOutlined />,
-    label: 'HỒ SƠ',
-  },
-  {
-    key: '2',
-    icon: <LaptopOutlined rotate={180}/>,
-    label: 'CHUYẾN ĐI MIỄN PHÍ',
-  },
-  // {
-  //   key: '3',
-  //   icon: <SearchOutlined rotate={90}/>,
-  //   label: 'THÔNG TIN CHUYẾN ĐI',
-  // },
-  {
-    key: '4',
-    icon: <HistoryOutlined />,
-    label: 'LỊCH SỬ CHUYẾN ĐI',
-  },
-  {
-    key: 'signOut',
-    icon: <LogoutOutlined />,
-    label: 'ĐĂNG XUẤT',
-  },
-]
+
 
 const LayoutDriver = (props) => {
   const {content}=props
   const [collapsed, setCollapsed] = useState(false);
   const navigate=useNavigate();
   const dispatch = useDispatch();
+  const user=useSelector((state)=>state.user.userInfo?.currentUser);
+  console.log("layout",user);
+  var menuItem=[];
+  
+
+  const [menu,setMenu]=useState([]);
+
+  if(user.companyId===null){
+    menuItem=[
+      {
+        key: '0',
+        icon: <UserOutlined />,
+        label: 'TRANG CHỦ',
+      },
+      {
+        key: '1',
+        icon: <UserOutlined />,
+        label: 'HỒ SƠ',
+      },
+      {
+        key: '2',
+        icon: <LaptopOutlined rotate={180}/>,
+        label: 'CHUYẾN ĐI MIỄN PHÍ',
+      },
+      {
+        key: '3',
+        icon: <SearchOutlined rotate={90}/>,
+        label: 'TÀI LIỆU',
+      },
+      {
+        key: '4',
+        icon: <HistoryOutlined />,
+        label: 'LỊCH SỬ CHUYẾN ĐI',
+      },
+      {
+        key: 'signOut',
+        icon: <LogoutOutlined />,
+        label: 'ĐĂNG XUẤT',
+      },
+    ]
+  }else{
+     menuItem=[
+      {
+        key: '0',
+        icon: <UserOutlined />,
+        label: 'TRANG CHỦ',
+      },
+      {
+        key: '1',
+        icon: <UserOutlined />,
+        label: 'HỒ SƠ',
+      },
+      {
+        key: '2',
+        icon: <LaptopOutlined rotate={180}/>,
+        label: 'CHUYẾN ĐI MIỄN PHÍ',
+      },
+      {
+        key: '4',
+        icon: <HistoryOutlined />,
+        label: 'LỊCH SỬ CHUYẾN ĐI',
+      },
+      {
+        key: 'signOut',
+        icon: <LogoutOutlined />,
+        label: 'ĐĂNG XUẤT',
+      },
+    ]
+  }
+
+
   return (
     <Layout>
       {/* <Menu/> */}
@@ -90,7 +131,7 @@ const LayoutDriver = (props) => {
                 navigate('/taixe/freeTrip/create')
               }
               if(key==3){
-                navigate('/taixe/freeTrip/detail')
+                navigate('/taixe/document')
               }
               if(key==4){
                 navigate('/taixe/trip-history')
@@ -98,6 +139,7 @@ const LayoutDriver = (props) => {
             }
           }}
           items={menuItem}
+
         />
       </Sider>
       <Layout  style={{ minHeight: "100vh" }} className="site-layout">

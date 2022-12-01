@@ -766,7 +766,7 @@ export const UploadDocumentForVehicle = async (object, toast, dispatch) => {
       , {
         headers: { 'Content-Type': 'application/json' }
       });
-      getAllVehico(object.createBy,dispatch);
+      getAllVehico(object.companyEmail,dispatch);
     toast.success("Upload file thành công")
   } catch (error) {
     toast.error("Upload file thất bại")

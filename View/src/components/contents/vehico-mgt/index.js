@@ -5,72 +5,129 @@ import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
 import ModalAddVehico from '../../commons/modals/modal-add-vehico';
 import AddVehico from '../../commons/drawers/drawer-vehico-mgt/drawer-add--vehico';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteVehicelByCompany, getAllVehico, getAllVehicoFilter } from '../../../redux/apiRequest';
+import { deleteVehicelByCompany, getAllVehico, getAllVehicoFilter, getDocumentVehicle } from '../../../redux/apiRequest';
 import EditVehico from '../../commons/drawers/drawer-vehico-mgt/drawer-edit-vehico';
 import { toast } from 'react-toastify';
-
+import axios from 'axios';
+const URL = "http://26.36.110.116";
 
 const { Option } = Select;
 const VehicoManagement = () => {
-    const [open, setOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-
+    const [image, setImage] = useState("");
     const all = useSelector((state) => state.vehico.vehicos?.all);
     const vehicos = all?.map((row) => ({ ...row, key: row.id }))
+    console.log(all);
+    const getDocumentVehicleId = async (docId) => {
+        try {
+            const res = await axios.get(`${URL}:8080/api/company/getDocument?docId=${docId}`, {
+                headers: { 'Content-Type': 'application/json' }
 
+            })
+            setImage(res.data.object.base64);
+        } catch (error) {
+
+        }
+    }
     const vehicles = all?.map((item) => {
-
-        if (item.listDoc.length === 0) {
-            return { ...item, item, key: item.id, cnbh: "Chưa gửi", cndk: "Chưa gửi" }
-        } else if (item.listDoc.length === 1) {
-            if (item.listDoc[0].file_name === "Chung_Nhan_Bao_Hiem") {
-                if (item.listDoc[0].status === "SENDED") {
-                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Chưa gửi" }
-                } else if (item.listDoc[0].status === "VALID") {
-                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Chưa gửi" }
-                } else if (item.listDoc[0].status === "INVALID") {
-                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Chưa gửi" }
-                }
-            } else if (item.listDoc[0].file_name === "Chung_Nhan_Dang_Kiem") {
-                if (item.listDoc[0].status === "SENDED") {
-                    return { ...item, item, key: item.id, cndk: "Đã gửi", cnbh: "Chưa gửi" }
-                } else if (item.listDoc[0].status === "VALID") {
-                    return { ...item, item, key: item.id, cndk: "Hợp lệ", cnbh: "Chưa gửi" }
-                } else if (item.listDoc[0].status === "INVALID") {
-                    return { ...item, item, key: item.id, cndk: "Không Hợp lệ", cnbh: "Chưa gửi" }
-                }
+        if (item.cnbh === null && item.cndk === null) {
+            return { ...item, item, key: item.id, cnbhStatus: "Chưa gửi", cndkStatus: "Chưa gửi" }
+        } else if (item.cndk === null || item.cnbh === null) {
+            if (item.cnbh === null) {
+                return { ...item, item, key: item.id, cnbhStatus: "Chưa gửi", cndkStatus: "Đã gửi" }
+            } else if (item.cndk === null) {
+                return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cndkStatus: "Chưa gửi" }
             }
-        } else if (item.listDoc.length === 2) {
 
-            if (item.listDoc[0].status === "SENDED") {
-                if (item.listDoc[1].status === "SENDED") {
-                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Đã gửi" }
-                } else if (item.listDoc[1].status === "VALID") {
-                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Hợp lệ" }
-                } else if (item.listDoc[1].status === "INVALID") {
-                    return { ...item, item, key: item.id, cnbh: "Đã gửi", cndk: "Không Hợp lệ" }
+        }else{
+            if(item.cnbh.status==="SENDED"){
+                if(item.cndk.status==="SENDED"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cndkStatus: "Đã gửi" }
+                }else if(item.cndk.status==="VALID"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cndkStatus: "Hợp lệ" }
+                }else if(item.cndk.status==="INVALID"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cndkStatus: "Không Hợp lệ" }
                 }
-            } else if (item.listDoc[0].status === "VALID") {
-                if (item.listDoc[1].status === "SENDED") {
-                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Đã gửi" }
-                } else if (item.listDoc[1].status === "VALID") {
-                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Hợp lệ" }
-                } else if (item.listDoc[1].status === "INVALID") {
-                    return { ...item, item, key: item.id, cnbh: "Hợp lệ", cndk: "Không Hợp lệ" }
+
+            }else if(item.cnbh.status==="VALID"){
+                if(item.cndk.status==="SENDED"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cndkStatus: "Đã gửi" }
+                }else if(item.cndk.status==="VALID"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cndkStatus: "Hợp lệ" }
+                }else if(item.cndk.status==="INVALID"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cndkStatus: "Không Hợp lệ" }
                 }
-            } else if (item.listDoc[0].status === "INVALID") {
-                if (item.listDoc[1].status === "SENDED") {
-                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Đã gửi" }
-                } else if (item.listDoc[1].status === "VALID") {
-                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Hợp lệ" }
-                } else if (item.listDoc[1].status === "INVALID") {
-                    return { ...item, item, key: item.id, cnbh: "Không Hợp lệ", cndk: "Không Hợp lệ" }
+            }else if(item.cnbh.status==="INVALID"){
+                if(item.cndk.status==="SENDED"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cndkStatus: "Đã gửi" }
+                }else if(item.cndk.status==="VALID"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cndkStatus: "Hợp lệ" }
+                }else if(item.cndk.status==="INVALID"){
+                    return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cndkStatus: "Không Hợp lệ" }
                 }
             }
         }
+            
+        
+
+
+
     })
-    console.log("vehicles", vehicles);
+
+    // const vehicles = all?.map((item) => {
+
+    //     if (item.listDoc.length === 0) {
+    //         return { ...item, item, key: item.id, cnbhStatus: "Chưa gửi", cndkStatus: "Chưa gửi" }
+    //     } else if (item.listDoc.length === 1) {
+    //         if (item.listDoc[0].file_name === "Chung_Nhan_Bao_Hiem") {
+    //             if (item.listDoc[0].status === "SENDED") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndkStatus: "Chưa gửi" }
+    //             } else if (item.listDoc[0].status === "VALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndkStatus: "Chưa gửi" }
+    //             } else if (item.listDoc[0].status === "INVALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndkStatus: "Chưa gửi" }
+    //             }
+    //         } else if (item.listDoc[0].file_name === "Chung_Nhan_Dang_Kiem") {
+    //             if (item.listDoc[0].status === "SENDED") {
+    //                 return { ...item, item, key: item.id, cndkStatus: "Đã gửi", cndk: item.listDoc[0], cnbhStatus: "Chưa gửi" }
+    //             } else if (item.listDoc[0].status === "VALID") {
+    //                 return { ...item, item, key: item.id, cndkStatus: "Hợp lệ", cndk: item.listDoc[0], cnbhStatus: "Chưa gửi" }
+    //             } else if (item.listDoc[0].status === "INVALID") {
+    //                 return { ...item, item, key: item.id, cndkStatus: "Không Hợp lệ", cndk: item.listDoc[0], cnbhStatus: "Chưa gửi" }
+    //             }
+    //         }
+    //     } else if (item.listDoc.length === 2) {
+
+    //         if (item.listDoc[0].status === "SENDED") {
+    //             if (item.listDoc[1].status === "SENDED") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Đã gửi" }
+    //             } else if (item.listDoc[1].status === "VALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Hợp lệ" }
+    //             } else if (item.listDoc[1].status === "INVALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Không Hợp lệ" }
+    //             }
+    //         } else if (item.listDoc[0].status === "VALID") {
+    //             if (item.listDoc[1].status === "SENDED") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Đã gửi" }
+    //             } else if (item.listDoc[1].status === "VALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Hợp lệ" }
+    //             } else if (item.listDoc[1].status === "INVALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Không Hợp lệ" }
+    //             }
+    //         } else if (item.listDoc[0].status === "INVALID") {
+    //             if (item.listDoc[1].status === "SENDED") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Đã gửi" }
+    //             } else if (item.listDoc[1].status === "VALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Hợp lệ" }
+    //             } else if (item.listDoc[1].status === "INVALID") {
+    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Không Hợp lệ" }
+    //             }
+    //         }
+    //     }
+    // })
+    // console.log("vehicles", vehicles);
     const allVehicle = vehicles?.map((item) => {
         if (item.typeId === 1) {
             return { ...item, item, key: item.id, type: "Xe máy" }
@@ -117,15 +174,16 @@ const VehicoManagement = () => {
 
         {
             title: 'Giấy chứng nhận bảo hiểm',
-            dataIndex: 'cnbh',
-            key: 'cnbh',
+            dataIndex: 'cnbhStatus',
+            key: 'cnbhStatus',
             render: (text, record, index) => {
-                if (record.cnbh === "Chưa gửi") {
-                    return <div style={{ color: "red" }}>{record.cnbh}</div>
+                if (record.cnbhStatus === "Chưa gửi") {
+                    return <div style={{ color: "red" }}>{record.cnbhStatus}</div>
                 } else {
-                    return <div><span style={{ marginRight: "10px", color: 'red' }}>{record.cnbh}</span>
+                    return <div><span style={{ marginRight: "10px", color: 'red' }}>{record.cnbhStatus}</span>
                         <EyeOutlined style={{ fontSize: "16px" }} onClick={() => {
-
+                            setOpenModal(true);
+                            getDocumentVehicleId(record.cnbh.id);
                         }} />
                     </div>
                 }
@@ -135,35 +193,26 @@ const VehicoManagement = () => {
         },
         {
             title: 'Giấy đăng kiểm',
-            dataIndex: 'cndk',
-            key: 'cndk',
+            dataIndex: 'cndkStatus',
+            key: 'cndkStatus',
             render: (text, record, index) => {
-                if (record.cndk === "Chưa gửi") {
-                    return <div style={{ color: "red" }}>{record.cndk}</div>
+                if (record.cndkStatus === "Chưa gửi") {
+                    return <div style={{ color: "red" }}>{record.cndkStatus}</div>
                 } else {
-                    return <div><span style={{ marginRight: "10px", color: 'red' }}>{record.cndk}</span>
+                    return <div><span style={{ marginRight: "10px", color: 'red' }}>{record.cndkStatus}</span>
                         <EyeOutlined style={{ fontSize: "16px" }} onClick={() => {
-                            setOpen(true);
+                            setOpenModal(true);
+                            console.log(record.cndk.id);
+                            getDocumentVehicleId(record.cndk.id);
+
                         }} />
+
                     </div>
                 }
 
 
             },
         },
-        // {
-        //     title: 'Giấy đăng kiểm',
-        //     dataIndex: 'gdk',
-        //     key: 'cndk',
-        //     render: (text, record, index) => {
-        //         return <div>
-        //             <Button onClick={() =>{
-        //                 console.log(record);
-        //             }} type='primary'>Xem</Button>
-        //         </div>
-
-        //     },
-        // },
 
         {
             key: 'driverEmail',
@@ -294,22 +343,19 @@ const VehicoManagement = () => {
                             </Col>
                         </Row>
                     </Form>
-                    <Modal
-                        title="Xem tài liệu"
-                        centered
-                        open={open}
-                        onOk={() => setOpen(false)}
-                        onCancel={() => setOpen(false)}
-                        width={500}
-                    >
-                        <img src={""} height="220px" />
-                    </Modal>
-                    {/* <div
-                        style={{ float: "right" }}
-                    >
-                        <p>*IRS: Giấy Đăng Kiểm</p>
-                    </div> */}
+
                 </div>
+                <Modal
+                    style={{ textAlign: "center" }}
+                    title="Xem tài liệu"
+                    centered
+                    open={openModal}
+                    onOk={() => setOpenModal(false)}
+                    onCancel={() => setOpenModal(false)}
+                    width={1000}
+                >
+                    <img src={image} height="500px" />
+                </Modal>
                 <div style={{ marginLeft: "50px", float: "left" }}>
                     <AddVehico />
                 </div>

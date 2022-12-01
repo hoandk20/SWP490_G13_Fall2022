@@ -10,6 +10,7 @@ const ModalUploadDocumentVehicle = (props) => {
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const vehicleId = props.vehicoId;
+    const driverEmail=props.driverEmail
     const newUser = useSelector((state) => state.user.userInfo?.currentUser);
     const dispatch=useDispatch();
 
@@ -58,11 +59,12 @@ const ModalUploadDocumentVehicle = (props) => {
         const month = arr[1];
         const object = {
             base64: baseImage1,
-            createBy: newUser.email,
+            createBy: driverEmail,
             fileName: "Chung_Nhan_Bao_Hiem",
             vehicleId:vehicleId,
             year: year,
-            month: month
+            month: month,
+            companyEmail:newUser.email,
         }
         console.log(object);
         UploadDocumentForVehicle(object, toast,dispatch);
@@ -77,14 +79,15 @@ const ModalUploadDocumentVehicle = (props) => {
         const month = arr[1];
         const object = {
             base64: baseImage2,
-            createBy: newUser.email,
+            createBy: driverEmail,
             vehicleId:vehicleId,
             fileName: "Chung_Nhan_Dang_Kiem",
             year: year,
-            month: month
+            month: month,
+            companyEmail:newUser.email,
         }
-        UploadDocumentForVehicle(object, toast,dispatch);
- 
+        // UploadDocumentForVehicle(object, toast,dispatch);
+        console.log("ve",object);
     };
     return (
         <>
