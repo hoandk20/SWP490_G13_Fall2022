@@ -110,6 +110,8 @@ public class UserResouce {
             userInfo.setPhone(driver.getMobileNo());
             userInfo.setCountry(driver.getCountryCode());
             userInfo.setRole("ROLE_DRIVER");
+
+            userInfo.setCompanyId(driver.getCompanyID());
             try{
                 Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
                 if(vehicle!=null){
