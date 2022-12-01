@@ -11,6 +11,7 @@ const EditVehico = (props) => {
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
     const vehico = props.state;
+    console.log(vehico);
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const [city, setCity] = useState("");
@@ -162,15 +163,10 @@ const EditVehico = (props) => {
                                 label="Loại phương tiện "
 
                                 initialValue={vehico.type}
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng chọn loại xe',
-                                    },
-                                ]}
+
                             >
 
-                             <Input disabled/>
+                                <Input disabled />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
@@ -217,9 +213,19 @@ const EditVehico = (props) => {
                                     options={citys}
                                 />
                             </Form.Item>
-                            <Form.Item>
-                                <ModalUploadDocumentVehicle vehicoId={vehico.id} />
-                            </Form.Item>
+                            {
+                                vehico.driverEmail === null ? (
+                                    <>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Form.Item>
+                                            <ModalUploadDocumentVehicle vehicoId={vehico.id} driverEmail={vehico.driverEmail} />
+                                        </Form.Item>
+                                    </>
+                                )
+                            }
+
                             <Form.Item
                             >
                                 <Button className='btn-register' type="primary" htmlType="submit">

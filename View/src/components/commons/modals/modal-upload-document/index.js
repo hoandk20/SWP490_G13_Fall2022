@@ -6,15 +6,15 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { UploadFile } from '../../../../redux/apiRequest';
 import './modal-upload-document.css'
-const ModalUploadDocument = () => {
+const ModalUploadDocument = (props) => {
     const [open, setOpen] = useState(false);
     const user = useSelector((state) => state.user.userInfo?.currentUser)
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
-
+    const driver = props.driver;
+    console.log("tãie",driver);
     const [date1, setDate1] = useState();
     const [date2, setDate2] = useState();
-
 
     function getTime1(date, dateString) {
         setDate1(dateString);
@@ -42,7 +42,7 @@ const ModalUploadDocument = () => {
         const month = arr[1];
         const object = {
             base64: baseImage1,
-            createBy: user.email,
+            createBy: driver.email,
             fileName: "Bang_lai_xe",
             year: year,
             month: month
@@ -58,7 +58,7 @@ const ModalUploadDocument = () => {
         const month = arr[1];
         const object = {
             base64: baseImage2,
-            createBy: user.email,
+            createBy: driver.email,
             fileName: "Chung_Nhan_Kinh_nghiem",
             year: year,
             month: month,

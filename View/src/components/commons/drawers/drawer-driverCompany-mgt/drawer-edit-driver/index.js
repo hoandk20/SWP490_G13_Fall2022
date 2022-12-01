@@ -32,6 +32,7 @@ const EditDriverForCompany = (props) => {
         const driver = {
             ...values,
             companyEmail: user.email,
+            
         }
         EditDriverByCompany(driver, toast, dispatch)
         // getDriversForCompany(user.email,dispatch);
@@ -275,7 +276,7 @@ const EditDriverForCompany = (props) => {
                                 drivers.vehicleInfo === null ? (
                                     <>
                                         <Form.Item>
-                                            <span style={{ marginRight: "40px" }}><ModalUploadDocument /></span>
+                                            <span style={{ marginRight: "40px" }}><ModalUploadDocument driver={drivers}/></span>
                                             <span><ModalAddVehicleForDriver email={drivers.email} companyEmail={user.email} /></span>
                                         </Form.Item>
                                     </>
@@ -309,7 +310,7 @@ const EditDriverForCompany = (props) => {
                                             </Collapse>
                                         </div>
                                         <Form.Item>
-                                            <ModalUploadDocument />
+                                            <ModalUploadDocument driver={drivers} />
                                         </Form.Item>
                                         {/* <Modal
                                             title="Phân phương tiện"
