@@ -1,18 +1,8 @@
-.home-content-ac{
 
-}
 .container-home{
     
-    /* display: flex;
-    align-items: center;
-    justify-content: center; */
-    margin: 10% 30%;
-    min-height: 100vh;
-    /* margin: 20% 30%;
-    padding: 0;
-    margin: 0; */
-    /* display: flex;
-    justify-content: center; */
+    margin-top: 10vh;
+    min-height: 90vh;
 }
 
 .home-btn{
@@ -21,10 +11,18 @@
 }
 .btn-home-a{
     margin: 20px;
-   background-color: chartreuse;
-   width: 500px;
-   height: 80px;
+    background: linear-gradient(0.25turn, #3f87a6, #ebf8e1, #f69d3c);
+   width: 600px;
+   height: 90px;
    border: 1px;
    border-radius: 40px;
    font-size: 30px;
+}
+.home-content-ac{
+    display: flex;
+    justify-content: center;
+}
+.home-content-ab{
+    display: flex;
+    justify-content: center;
 }

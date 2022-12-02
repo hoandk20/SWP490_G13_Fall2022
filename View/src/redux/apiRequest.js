@@ -406,7 +406,12 @@ export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
     getUser(vehicle.companyEmail, dispatch);
     toast.success("Tạo phương tiện thành công")
   } catch (error) {
-    toast.error("Tạo phương tiện thất bại")
+    if(error.response.data.object.IsExistedPlate){
+      toast.error("Biển số đã tồn tại")
+    }else{
+      toast.error("Tạo phương tiện thất bại")
+    }
+    
   }
 }
 
@@ -430,7 +435,11 @@ export const AddVehicoByDriver = async (vehicle, toast, dispatch) => {
     getUser(vehicle.driverEmail, dispatch);
     toast.success("Tạo phương tiện thành công")
   } catch (error) {
-    toast.error("Tạo phương tiện thất bại")
+    if(error.response.data.object.IsExistedPlate){
+      toast.error("Biển số đã tồn tại")
+    }else{
+      toast.error("Tạo phương tiện thất bại")
+    }
   }
 }
 

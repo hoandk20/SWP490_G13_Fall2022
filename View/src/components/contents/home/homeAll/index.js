@@ -11,41 +11,41 @@ const URL = "http://26.36.110.116";
 
 
 const HomeAll = () => {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
-    const [allTrip,setAllTrip] = useState();
-    const getTop10Trips= async() =>{
+    const [allTrip, setAllTrip] = useState();
+    const getTop10Trips = async () => {
         try {
 
             const res = await axios.get(`${URL}:8080/api/GetTop10Trip`, {
-              headers: { 'Content-Type': 'application/json' }
+                headers: { 'Content-Type': 'application/json' }
             })
             setAllTrip(res.data.object);
-          } catch (error) {
-        
-          }
+        } catch (error) {
+
+        }
     }
     console.log(allTrip);
-    const dateFormat = (date) =>{
+    const dateFormat = (date) => {
         const date_str = date,
-        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
-        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
-        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+            options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+            formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+            date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
 
-  const trips =allTrip?.map((item)=>{
-    if(item.status==="OPEN"){
-        return {...item,item,dateStart:dateFormat(item.timeStart),key:item.tripID,status:"Đang mở"}
-    }
-    else if(item.status==="CLOS"){
-        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),status:"Đã đóng"}
-    }
-    else if(item.status==="CANC"){
-        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),status:"Đã bị hủy"}
-    }
+    const trips = allTrip?.map((item) => {
+        if (item.status === "OPEN") {
+            return { ...item, item, dateStart: dateFormat(item.timeStart), key: item.tripID, status: "Đang mở" }
+        }
+        else if (item.status === "CLOS") {
+            return { ...item, item, key: item.tripID, dateStart: dateFormat(item.timeStart), status: "Đã đóng" }
+        }
+        else if (item.status === "CANC") {
+            return { ...item, item, key: item.tripID, dateStart: dateFormat(item.timeStart), status: "Đã bị hủy" }
+        }
 
-  })
+    })
 
 
     const columns = [
@@ -102,12 +102,17 @@ const HomeAll = () => {
             <div cotainer-home>
                 <div className='home'>
                     <div className='home-content'>
-                            <div className='home-content-a'>
-                                <CarouselHome/>
+                        <div className='home-content-a'>
+                            <CarouselHome />
+                        </div>
+                        <div style={{ margin: "20px 10%" }}>
+                            <div className='home-table-header'>
+                                <div className='text-home'>CHUYẾN ĐI MIỄN PHÍ</div>
                             </div>
                             <div className='home-content-table'>
                                 <Table columns={columns} dataSource={trips} size="middle" />
                             </div>
+                        </div>
                     </div>
                 </div>
             </div>

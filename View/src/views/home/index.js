@@ -12,9 +12,12 @@ import { useEffect } from 'react';
 import { getAllCity, getUser, resendCode } from '../../redux/apiRequest';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
+import axios from 'axios';
+import { useState } from 'react';
 const { Header, Content } = Layout;
 // const role="ROLE_PASSENGER"
 
+const URL = "http://26.36.110.116";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -26,9 +29,48 @@ const Home = () => {
   console.log(newUser);
   const role=decodedTocken.roles[0];
 
+  const [data,setData]=useState("");
+
+
+  const getDataPassenger = async() =>{
+    if(role==="ROLE_DRIVER"){
+      try {
+        const res = await axios.get(`${URL}:8080/api/driver/reportDriver?driverEmail=${userName}`, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+        setData(res.data.object);
+      } catch (error) {
+    
+      }
+    }else if(role==="ROLE_PASSENGER"){
+      try {
+        const res = await axios.get(`${URL}:8080/api/passenger/reportPassenger?passengerEmail=${userName}`, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+        setData(res.data.object);
+      } catch (error) {
+    
+      }
+    }else if(role==="ROLE_COMPANY"){
+      try {
+        const res = await axios.get(`${URL}:8080/api/company/reportCompany?companyId=${newUser.companyId}`, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+        setData(res.data.object);
+      } catch (error) {
+    
+      }
+    }
+
+  }
+
+  
+
+  console.log("passenger",data);
   useEffect(()=>{
     getUser(userName,dispatch);
     getAllCity(dispatch);
+    getDataPassenger();
    
   },[])
 
@@ -39,7 +81,7 @@ const Home = () => {
       if(newUser.statusVerify==0 ){
         navigate('/signup/confirm-email', { state: { newUser } })
       }else
-      return <LayoutPassenger  content={<HomePassenger/>}/>
+      return <LayoutPassenger  content={<HomePassenger data={data}/>}/>
     }else if(role==='ROLE_DRIVER'){
       if(newUser.statusVerify==0 ){
         navigate('/signup/confirm-email', { state: { newUser } })
@@ -50,7 +92,7 @@ const Home = () => {
       }else if(newUser.statusVerify==3){
         navigate('/signup/vehico-info', { state: { newUser } })
       }else
-      return <LayoutDriver content={<HomeDriver/>}/>
+      return <LayoutDriver content={<HomeDriver data={data}/>}/>
     }else if(role==='ROLE_COMPANY'){
       if(newUser.statusVerify==0 ){
         navigate('/signup/confirm-email', { state: { newUser } })
@@ -61,7 +103,7 @@ const Home = () => {
       }else if(newUser.statusVerify==3){
         navigate('/signup/vehico-info', { state: { newUser } })
       }else
-      return <LayoutCompany content={<HomeCompany/>}/>
+      return <LayoutCompany content={<HomeCompany data={data}/>}/>
     }
   }
 };

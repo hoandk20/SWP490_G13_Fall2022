@@ -25,6 +25,7 @@ const DriverDetailAdmin = (props) => {
     console.log(drivers);
     const listDoc = drivers?.listDocs;
     const Bang_lai_xe = listDoc?.find(doc => doc.file_name === "Bang_lai_xe");
+    console.log(Bang_lai_xe);
     const Chung_Nhan_Kinh_nghiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Kinh_nghiem");
     const Chung_Nhan_Bao_Hiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Bao_Hiem");
     const Chung_Nhan_Dang_Kiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Dang_Kiem");
@@ -237,13 +238,13 @@ const DriverDetailAdmin = (props) => {
             month: month
         }
         UploadFile(object, toast);
-        setTimeout(()=>{
-            getDriverDetail(drivers?.email,dispatch);
-            if(Bang_lai_xe.status==="SENDED"){
-                setCheck1(false);
-            }
-        },1000)   
-
+        // setTimeout(()=>{
+        //     getDriverDetail(drivers?.email,dispatch);
+        //     if(Bang_lai_xe.status==="SENDED"){
+        //         setCheck1(false);
+        //     }
+        // },1000)   
+        getDriverDetail(drivers?.email,dispatch);
         setCheckdoc1(false)
        
        
@@ -305,12 +306,12 @@ const DriverDetailAdmin = (props) => {
 
     //     }
     // }
-    // useEffect(() => {
-    //     setTimeout(()=>{
-    //         getDriverDetail(drivers.email,dispatch);
-    //       },1000)   
+    useEffect(() => {
+        setTimeout(()=>{
+            getDriverDetail(drivers.email,dispatch);
+          },1000)   
        
-    // }, [])
+    }, [])
     // getFileAvatar();
     return (
         <>

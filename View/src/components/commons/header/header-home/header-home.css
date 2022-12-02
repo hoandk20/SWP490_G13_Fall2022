@@ -8,9 +8,16 @@
     float: right;
     margin-right: 5%;
 }
+.login-header-logo{
+  float: left;
+  margin:5px 5%;
+  height: 35px;
+  padding: 0;
+}
 
-
-
+.image-logo{
+  height: 100%;
+}
 
 
 
