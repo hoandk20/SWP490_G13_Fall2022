@@ -34,12 +34,12 @@ const center = { lat: 21.013255, lng: 105.52597 }
 
 
 const SerachFreeTripForPassenger = () => {
-    
+
     // const [freeTrips,setFreeTrips] =useState([]);
-    const dispatch=useDispatch();
-    
-    const trips = useSelector((state) => state.freeTrip.trips?.allTrip) ; 
-    
+    const dispatch = useDispatch();
+
+    const trips = useSelector((state) => state.freeTrip.trips?.allTrip);
+
     // const freeTrips=trips.object.map(row=>({
     //     key:row.id,
     //     timeStart:row.timeStart,
@@ -55,96 +55,96 @@ const SerachFreeTripForPassenger = () => {
     //     waitingTime:row.waitingTime,
     //     seat:row.seat
     // }))
-    const dateFormat = (date) =>{
+    const dateFormat = (date) => {
         const date_str = date,
-        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
-        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
-        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+            options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+            formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+            date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
-    const freeTrips=trips?.object.map((row)=> ({ ...row,key:row.id,seatRemind:row.seat-row.seatRegistered,dateStart:dateFormat(row.timeStart)}));
+    const freeTrips = trips?.object.map((row) => ({ ...row, key: row.id, seatRemind: row.seat - row.seatRegistered, dateStart: dateFormat(row.timeStart) }));
 
-    useEffect(()=>{
-       getListFreeTripIsOpen(dispatch);
-  
-      },[]) 
-    
-const columns = [
+    useEffect(() => {
+        getListFreeTripIsOpen(dispatch);
 
-    {
-        key: 'dateStart',
-        title: 'Thời gian bắt đầu',
-        dataIndex: 'dateStart',
-    },
-    {
-        key: 'from',
-        title: 'Từ',
-        dataIndex: 'from',
-    },
-    {
-        key: 'to',
-        title: 'Đến',
-        dataIndex: 'to',
-    },
-    {
-        key: 'price',
-        title: 'Cước (đ)',
-        dataIndex: 'price',
-    },
-    {
-        key: 'seatRemind',
-        title: 'Số chỗ còn trống',
-        dataIndex: 'seatRemind',
-    },
+    }, [])
 
-    {
-        title: 'Đăng ký',
-        dataIndex: '',
-        key: 'x',
-        render: (text, record, index) => {
-            return <div>
+    const columns = [
 
-                <EyeOutlined onClick={() => {
-                    navigate('/khachhang/freeTrip/detail-of-taixe',{state:{record}})
-
-                }} />
-
-            </div>
+        {
+            key: 'dateStart',
+            title: 'Thời gian bắt đầu',
+            dataIndex: 'dateStart',
         },
-    }
-];
-const data = [
-    {
-        key: '1',
-        timeStart: '08:00:00 ngày 20/10/2000',
-        from: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-        to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-        fee: '10000 vnd',
-        seat: '3',
-        // status:'Đang mở',
-        // action: <EyeOutlined onClick={showModal} />,
-    },
-    {
-        key: '2',
-        timeStart: '09:00:00 ngày 20/10/2000',
-        from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
-        to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-        fee: '20000 vnd',
-        seat: '2',
-        // status:'Đang mở',
-        // action: <EyeOutlined onClick={showModal} />,
-    },
-    {
-        key: '3',
-        timeStart: '09:20:00 ngày 20/10/2000',
-        from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
-        to: 'Bình Yên, Thạch Thất, Hà Nội, Việt Nam',
-        fee: '15000 vnd',
-        seat: '1',
-        // status:'Đang mở',
-        // action: <EyeOutlined onClick={showModal} />,
-    },
-];
+        {
+            key: 'from',
+            title: 'Từ',
+            dataIndex: 'from',
+        },
+        {
+            key: 'to',
+            title: 'Đến',
+            dataIndex: 'to',
+        },
+        {
+            key: 'price',
+            title: 'Cước (đ)',
+            dataIndex: 'price',
+        },
+        {
+            key: 'seatRemind',
+            title: 'Số chỗ còn trống',
+            dataIndex: 'seatRemind',
+        },
+
+        {
+            title: 'Đăng ký',
+            dataIndex: '',
+            key: 'x',
+            render: (text, record, index) => {
+                return <div>
+
+                    <EyeOutlined onClick={() => {
+                        navigate('/khachhang/freeTrip/detail-of-taixe', { state: { record } })
+
+                    }} />
+
+                </div>
+            },
+        }
+    ];
+    const data = [
+        {
+            key: '1',
+            timeStart: '08:00:00 ngày 20/10/2000',
+            from: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
+            to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
+            fee: '10000 vnd',
+            seat: '3',
+            // status:'Đang mở',
+            // action: <EyeOutlined onClick={showModal} />,
+        },
+        {
+            key: '2',
+            timeStart: '09:00:00 ngày 20/10/2000',
+            from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
+            to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
+            fee: '20000 vnd',
+            seat: '2',
+            // status:'Đang mở',
+            // action: <EyeOutlined onClick={showModal} />,
+        },
+        {
+            key: '3',
+            timeStart: '09:20:00 ngày 20/10/2000',
+            from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
+            to: 'Bình Yên, Thạch Thất, Hà Nội, Việt Nam',
+            fee: '15000 vnd',
+            seat: '1',
+            // status:'Đang mở',
+            // action: <EyeOutlined onClick={showModal} />,
+        },
+    ];
     const navigate = useNavigate();
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
@@ -164,7 +164,7 @@ const data = [
         fields: ["formatted_address", "geometry", "name"],
         strictBounds: false,
         types: ["establishment"],
-      };
+    };
 
     /** @type React.MutableRefObject<HTMLInputElement> */
     const originRef = useRef()
@@ -174,13 +174,13 @@ const data = [
     if (!isLoaded) {
         return <></>
     }
-  
+
     async function calculateRoute() {
-        
+
         if (originRef.current.value === '' || destiantionRef.current.value === '') {
             return
         }
-       
+
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
         const results = await directionsService.route({
@@ -199,7 +199,7 @@ const data = [
         setListPolyline(polyline);
     }
 
-    
+
     function onChangeDateStart(date, dateString) {
         setDate(date.toISOString());
     }
@@ -210,45 +210,45 @@ const data = [
     const onFinish = (values) => {
         // calculateRoute();
         const trip = {
-            from:originRef.current.value,
+            from: originRef.current.value,
             to: destiantionRef.current.value,
             registerSeat: values.seat,
             timeStart: values.timeStart,
             dateStart: date,
-            listPolyline:listPolyline,
+            listPolyline: listPolyline,
             // price:values.price,
         }
-         getListFreeTrip(trip,dispatch);
+        getListFreeTrip(trip, dispatch);
 
     }
     const onPlaceChanged = () => {
         // eslint-disable-next-line no-undef
-       const geocoder = new google.maps.Geocoder();
-      
-       if (originRef.current.value === "" && destiantionRef.current.value === "") {
-           return
-       } else if (originRef.current.value !== "" &&destiantionRef.current.value === "") {
-           geocoder.geocode({ address: originRef.current.value }, (results, status) => {
-               if (status === 'OK') {
-                   center= results[0].geometry.location;
-               } else {
-                   console.log("not ok");
-               }
-           })
-       }else if(destiantionRef.current.value !== ""&& originRef.current.value === ""){
-           console.log(originRef.current.value);
-           console.log(destiantionRef.current.value);
-           geocoder.geocode({ address: destiantionRef.current.value }, (results, status) => {
-               if (status === 'OK') {
-                   center= results[0].geometry.location;
-               } else {
-                   console.log("not ok");
-               }
-           })
-       }else{
-           calculateRoute();
-       }
-   }
+        const geocoder = new google.maps.Geocoder();
+
+        if (originRef.current.value === "" && destiantionRef.current.value === "") {
+            return
+        } else if (originRef.current.value !== "" && destiantionRef.current.value === "") {
+            geocoder.geocode({ address: originRef.current.value }, (results, status) => {
+                if (status === 'OK') {
+                    center = results[0].geometry.location;
+                } else {
+                    console.log("not ok");
+                }
+            })
+        } else if (destiantionRef.current.value !== "" && originRef.current.value === "") {
+            console.log(originRef.current.value);
+            console.log(destiantionRef.current.value);
+            geocoder.geocode({ address: destiantionRef.current.value }, (results, status) => {
+                if (status === 'OK') {
+                    center = results[0].geometry.location;
+                } else {
+                    console.log("not ok");
+                }
+            })
+        } else {
+            calculateRoute();
+        }
+    }
 
     return (
         <div className='container'>
@@ -260,24 +260,26 @@ const data = [
                             <Form
                                 onFinish={onFinish}
                             >
-                                    <Autocomplete
+                                <Autocomplete
                                     onPlaceChanged={onPlaceChanged}
-                                    >
-                                        <Input type='text' placeholder='Origin' ref={originRef}  style={{width:"400px",marginBottom:"20px"}}/>
-                                    </Autocomplete>
+                                >
+                                    <Input type='text' placeholder='Origin' ref={originRef} style={{ width: "400px", marginBottom: "20px" }}
+                                    />
+                                </Autocomplete>
 
                                 <Autocomplete
-                                onPlaceChanged={onPlaceChanged}
+                                    onPlaceChanged={onPlaceChanged}
                                 >
                                     <Input
                                         type='text'
                                         placeholder='Destination'
                                         ref={destiantionRef}
-                                        style={{width:"400px",marginBottom:"27px"}}
+                                        style={{ width: "400px", marginBottom: "27px" }}
                                     />
                                 </Autocomplete>
-             
+
                                 <Form.Item
+                                    defaultValue="1"
                                     label="Đăng ký"
                                     name="seat"
                                 >
@@ -295,18 +297,18 @@ const data = [
                                     name="dateStart"
                                     label="Ngày xuất phát"
                                 >
-                                    <DatePicker  onChange={onChangeDateStart} />
+                                    <DatePicker onChange={onChangeDateStart} />
                                 </Form.Item>
                                 <Form.Item
                                     name='timeStart'
                                     label="Giờ"
                                     style={{ display: "inline-block" }}
                                 >
-                                    <InputNumber min={0} max={24} style={{width:"200px"}}/>
+                                    <InputNumber min={0} max={24} style={{ width: "200px" }} />
                                 </Form.Item>
-  
+
                                 <Form.Item>
-                                    <Button style={{justifyContent:"center"}}  type="primary" htmlType="submit">
+                                    <Button style={{ justifyContent: "center" }} type="primary" htmlType="submit">
                                         Tìm kiếm
                                     </Button>
                                 </Form.Item>
@@ -396,7 +398,7 @@ const data = [
                         </Col>
                     </Row>
                     <div className='table-info' style={{ marginTop: "5%" }}>
-                        <Table  columns={columns} dataSource={freeTrips} size="middle" />
+                        <Table columns={columns} dataSource={freeTrips} size="middle" />
                     </div>
                 </div>
             </div>

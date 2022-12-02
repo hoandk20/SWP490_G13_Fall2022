@@ -135,6 +135,12 @@ const InfoContactUsers = () => {
                             <FormItem
                                 name='name'
                                 label="Tên "
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Tên không được để trống',
+                                    },
+                                ]}
                             >
                                 <Input.Group>
                                     <Input value={firstName} onChange={handleChangeFirstName} style={{ width: "35%", marginRight: "5%" }} />
@@ -155,7 +161,7 @@ const InfoContactUsers = () => {
                                     },
                                 ]}
                             >
-                                <Input onChange={handleChangeEmail} defaultValue={email} />
+                                <Input onChange={handleChangeEmail} defaultValue={email} disabled/>
                             </FormItem>
                             <Form.Item
                                 label="Số di động "

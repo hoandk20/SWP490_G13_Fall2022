@@ -59,9 +59,9 @@ const { Option } = Select;
 
 
 const CreateFreeTripForDriver = () => {
-    const center ={
-      lat: 21.013255
-      , lng: 105.52597 
+    const center = {
+        lat: 21.013255
+        , lng: 105.52597
     }
     const [maker, setMaker] = useState();
     const [date, setDate] = useState('');
@@ -185,13 +185,13 @@ const CreateFreeTripForDriver = () => {
     }
 
     const onPlaceChanged = () => {
-         // eslint-disable-next-line no-undef
+        // eslint-disable-next-line no-undef
         const geocoder = new google.maps.Geocoder();
         const address = 'Hồ Gươm, Phố Lê Thái Tổ, Hàng Trống, Hoàn Kiếm, Hà Nội, Việt Nam';
-       
+
         if (originRef.current.value === "" && destiantionRef.current.value === "") {
             return
-        } else if (originRef.current.value !== "" &&destiantionRef.current.value === "") {
+        } else if (originRef.current.value !== "" && destiantionRef.current.value === "") {
             console.log(originRef.current.value);
             console.log(destiantionRef.current.value);
             geocoder.geocode({ address: originRef.current.value }, (results, status) => {
@@ -200,35 +200,35 @@ const CreateFreeTripForDriver = () => {
                     //     lat: results[0].geometry.location.lat(),
                     //     lng: results[0].geometry.location.lng()
                     // }
-                     const lat= results[0].geometry.location.lat();
-                     const lng= results[0].geometry.location.lng();
+                    const lat = results[0].geometry.location.lat();
+                    const lng = results[0].geometry.location.lng();
                     // console.log(center);
-               
-           
+
+
 
                     // setMaker(prevState => ({
                     //     ...prevState,
                     //     lat:point.lat,
                     //     lng:point.lng
                     //  }));
-                   setMaker({lat,lng})
+                    setMaker({ lat, lng })
                     console.log(maker);
                 } else {
                     console.log("not ok");
                 }
             })
-        }else if(destiantionRef.current.value !== ""&& originRef.current.value === ""){
+        } else if (destiantionRef.current.value !== "" && originRef.current.value === "") {
             console.log(originRef.current.value);
             console.log(destiantionRef.current.value);
             geocoder.geocode({ address: destiantionRef.current.value }, (results, status) => {
                 if (status === 'OK') {
-                    
-                    center= results[0].geometry.location;
+
+                    center = results[0].geometry.location;
                 } else {
                     console.log("not ok");
                 }
             })
-        }else{
+        } else {
             calculateRoute();
         }
     }
@@ -251,35 +251,53 @@ const CreateFreeTripForDriver = () => {
                                 }}
                                 onFinish={onFinish}
                             >
-                        
-
-                      
+                                <Form.Item
+                                    name="origin"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Điểm bắt đầu không được để trống',
+                                        },
+                                    ]}
+                                >
                                     <Autocomplete
                                         onLoad={onLoad}
                                         onPlaceChanged={onPlaceChanged}
                                     >
-                                        <Input className='abc' type='text' placeholder='Origin' ref={originRef} style={{width:"400px",marginBottom:"20px"}} />
+                                        <Input className='abc' type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ width: "400px", marginBottom: "20px" }} />
                                     </Autocomplete>
-                    
-                                <Autocomplete
-                                    onPlaceChanged={onPlaceChanged}
-                                >
-                                    <Input
-                                        className='abc' 
-                                        type='text'
-                                        placeholder='Destination'
-                                        ref={destiantionRef}
-                                        style={{width:"400px"}}
-                                    />
-                                </Autocomplete>
+                                </Form.Item>
                                 <Form.Item
-                                    style={{ marginTop:"27px" }}
+                                    name="destination"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Điểm kết thúc không được để trống',
+                                        },
+                                    ]}
+                                >
+                                    <Autocomplete
+                                        onPlaceChanged={onPlaceChanged}
+                                    >
+                                        <Input
+                                            className='abc'
+                                            type='text'
+                                            placeholder='Điểm kết thúc'
+                                            ref={destiantionRef}
+                                            style={{ width: "400px" }}
+                                        />
+                                    </Autocomplete>
+                                </Form.Item>
+
+                                <Form.Item
+                                    style={{ marginTop: "27px" }}
                                     label="Đăng ký"
                                     name="seat"
+                                    
                                 >
                                     <Select
-                                         style={{ width: "200px"}}
-
+                                        style={{ width: "200px" }}
+                                        defaultValue = '1'
                                     >
                                         <Option value='1'>1 chỗ</Option>
                                         <Option value='2'>2 chỗ</Option>
@@ -291,6 +309,12 @@ const CreateFreeTripForDriver = () => {
                                 <Form.Item
                                     style={{ display: "inline-block" }}
                                     name="timeStart"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Ngày không được để trống',
+                                        },
+                                    ]}
                                 >
                                     {/* <DatePicker
                                         // format="YYYY-MM-DD HH:mm:ss"
@@ -301,8 +325,8 @@ const CreateFreeTripForDriver = () => {
                                         }}
                                         onChange={onChange}
                                     /> ± */}
-                                     <DatePicker onChange={onChange}
-                                      renderExtraFooter={() => ''} showTime />
+                                    <DatePicker onChange={onChange}
+                                        renderExtraFooter={() => ''} showTime />
                                 </Form.Item>
                                 <Form.Item
                                     style={{ display: "inline-block", width: "60px" }}
@@ -314,24 +338,24 @@ const CreateFreeTripForDriver = () => {
                                         }
                                     ]}
                                 >
-                                    <Input placeholder='Thời gian chờ'  /> 
+                                    <Input placeholder='Thời gian chờ' />
                                 </Form.Item>
                                 <Form.Item
                                     name="price"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'không được để trống',
+                                            message: 'Cước không được để trống',
                                         }
                                     ]}
                                     label="Cước"
-                                    // style={{ width: "200px" }}
+                                // style={{ width: "200px" }}
                                 >
                                     <Input />
                                 </Form.Item>
 
                                 <Form.Item>
-                                    <Button  type="primary" htmlType="submit">
+                                    <Button type="primary" htmlType="submit">
                                         Tạo chuyến đi
                                     </Button>
                                 </Form.Item>
@@ -362,7 +386,7 @@ const CreateFreeTripForDriver = () => {
                                             onLoad={map => setMap(map)}
                                         >
                                             <Marker position={maker} />
-                                            
+
                                             {directionsResponse && (
                                                 <DirectionsRenderer directions={directionsResponse} />
                                             )}

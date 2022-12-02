@@ -88,7 +88,7 @@ const RegisterCompanyInfo = () => {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please input your username!',
+                                                message: 'Tên công ty không được để trống',
                                             },
                                         ]}
                                     >
@@ -105,7 +105,7 @@ const RegisterCompanyInfo = () => {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please input your username!',
+                                                message: 'Địa chỉ không được để trống',
                                             },
                                         ]}
                                     >
@@ -122,11 +122,11 @@ const RegisterCompanyInfo = () => {
                                         rules={[
                                             {
                                                 type: 'email',
-                                                message: 'The input is not valid E-mail!',
+                                                message: 'Email không hợp lệ',
                                             },
                                             {
                                                 required: true,
-                                                message: 'Please input your E-mail!',
+                                                message: 'Email không được để trống',
                                             },
                                         ]}
                                     >
@@ -138,10 +138,15 @@ const RegisterCompanyInfo = () => {
                                     <Form.Item
                                         name="password"
                                         rules={[
+                                            {                                             
+                                                min: 6,
+                                                max: 32,
+                                                message: 'Mật khẩu phải lớn hơn 6 ký tự'
+                                            },
                                             {
                                                 required: true,
-                                                message: 'Please input your password!',
-                                            },
+                                                message: 'Mật khẩu không được để trống',  
+                                            }
                                         ]}
                                         hasFeedback
                                     >
@@ -156,7 +161,7 @@ const RegisterCompanyInfo = () => {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please confirm your password!',
+                                                message: 'Vui lòng xác nhận lại mật khẩu',
                                             },
                                             ({ getFieldValue }) => ({
                                                 validator(_, value) {
@@ -164,7 +169,7 @@ const RegisterCompanyInfo = () => {
                                                         return Promise.resolve();
                                                     }
 
-                                                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                                    return Promise.reject(new Error('Không khớp với mật khẩu'));
                                                 },
                                             }),
                                         ]}
