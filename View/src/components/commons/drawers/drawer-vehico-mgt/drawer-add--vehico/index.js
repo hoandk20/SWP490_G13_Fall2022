@@ -97,7 +97,7 @@ const AddVehico = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Vui lòng chọn năm sản xuất',
+                                        message: 'Vui lòng chọn màu nội thất',
                                     },
                                 ]}
                             >

@@ -86,7 +86,7 @@ const RegisterDriverInfo = () => {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please input your username!',
+                                                message: 'Please input your firstname!',
                                             },
                                         ]}
                                     >
@@ -102,7 +102,7 @@ const RegisterDriverInfo = () => {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please input your username!',
+                                                message: 'Please input your lastname!',
                                             },
                                         ]}
                                     >
@@ -119,11 +119,11 @@ const RegisterDriverInfo = () => {
                                         rules={[
                                             {
                                                 type: 'email',
-                                                message: 'The input is not valid E-mail!',
+                                                message: 'Email không hợp lệ',
                                             },
                                             {
                                                 required: true,
-                                                message: 'Please input your E-mail!',
+                                                message: 'Email không được để trống',
                                             },
                                         ]}
                                     >
@@ -135,10 +135,15 @@ const RegisterDriverInfo = () => {
                                     <Form.Item
                                         name="password"
                                         rules={[
+                                            {                                             
+                                                min: 6,
+                                                max: 32,
+                                                message: 'Mật khẩu phải lớn hơn 6 ký tự'
+                                            },
                                             {
                                                 required: true,
-                                                message: 'Please input your password!',
-                                            },
+                                                message: 'Mật khẩu không được để trống',  
+                                            }
                                         ]}
                                         hasFeedback
                                     >
@@ -153,7 +158,7 @@ const RegisterDriverInfo = () => {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please confirm your password!',
+                                                message: 'Vui lòng xác nhận lại mật khẩu',
                                             },
                                             ({ getFieldValue }) => ({
                                                 validator(_, value) {
@@ -161,7 +166,7 @@ const RegisterDriverInfo = () => {
                                                         return Promise.resolve();
                                                     }
 
-                                                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                                    return Promise.reject(new Error('Không khớp với mật khẩu'));
                                                 },
                                             }),
                                         ]}

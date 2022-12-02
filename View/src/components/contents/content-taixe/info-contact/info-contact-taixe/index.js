@@ -135,6 +135,12 @@ const InfoContactTaixe = () => {
                             <FormItem
                                 name='name'
                                 label="Tên *"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Tên không được để trống',
+                                    },
+                                ]}
                             >
                                 <Input.Group>
                                     <Input value={firstName} onChange={handleChangeFirstName} style={{ width: "35%", marginRight: "5%" }} />
@@ -149,9 +155,12 @@ const InfoContactTaixe = () => {
 
                                 rules={[
                                     {
-                                        required: true,
                                         type: 'email',
-                                        message: 'The input is not valid E-mail!',
+                                        message: 'Email không hợp lệ',
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Email không được để trống',
                                     },
                                 ]}
                             >
@@ -164,7 +173,7 @@ const InfoContactTaixe = () => {
                                 rules={[
                                     {
                                         required: true,
-                                        message: 'Please input your phone number!',
+                                        message: 'Vui lòng nhập lại số điện thoại',
                                         pattern: new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g),
                                     },
                                 ]}
@@ -179,12 +188,6 @@ const InfoContactTaixe = () => {
                                 <Input value={address} onChange={handleChangeAddress}
                                 />
                             </Form.Item>
-                            <FormItem
-                                label="Mã bưu điện *"
-                            >
-                                <Input />
-                            </FormItem>
-
                         </Col>
                         <Col sm={16} md={8}  >
 
