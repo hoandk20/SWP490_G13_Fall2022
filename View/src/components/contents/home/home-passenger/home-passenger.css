@@ -1,0 +1,30 @@
+.home-content-ac{
+
+}
+.container-home{
+    
+    /* display: flex;
+    align-items: center;
+    justify-content: center; */
+    margin: 10% 30%;
+    min-height: 100vh;
+    /* margin: 20% 30%;
+    padding: 0;
+    margin: 0; */
+    /* display: flex;
+    justify-content: center; */
+}
+
+.home-btn{
+    margin-top: 40px;
+    
+}
+.btn-home-a{
+    margin: 20px;
+   background-color: chartreuse;
+   width: 500px;
+   height: 80px;
+   border: 1px;
+   border-radius: 40px;
+   font-size: 30px;
+}

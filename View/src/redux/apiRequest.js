@@ -87,19 +87,19 @@ export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
   }
 }
 
-export const registerDriver = async (user, dispatch, navigate, toast) => {
+export const registerDriver = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
   try {
     const rest = await axios
       .post(`${URL}:8080/api/RegisterDriver`, {
-        email: user.email,
-        password: user.password,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        phoneNumber: user.phoneNumber,
+        email: newUser.email,
+        password: newUser.password,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        phoneNumber: newUser.phoneNumber,
         language: "vi",
-        country: user.country,
-        city: user.city
+        country: newUser.country,
+        city: newUser.city
       },
         {
           headers: { 'Content-Type': 'application/json' }
@@ -107,7 +107,7 @@ export const registerDriver = async (user, dispatch, navigate, toast) => {
       .then(function (response) {
         console.log(response)
         dispatch(registerSuccess(response.data))
-        navigate('/signup/confirm-email', { state: { user } });
+        navigate('/signup/confirm-email', { state: { newUser } });
       })
       .catch(function (error) {
         if (error.response.data.object.IsExistedEmail) {
@@ -956,4 +956,5 @@ export const getDocumentVehicle = async (docId) => {
 
   }
 }
+
 

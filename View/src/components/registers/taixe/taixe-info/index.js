@@ -34,7 +34,7 @@ const RegisterDriverInfo = () => {
             password: values.password
         }
         registerDriver(newUser, dispatch, navigate, toast);
-        navigate('/signup/confirm-email', { state: { newUser } });
+        // navigate('/signup/confirm-email', { state: { newUser } });
     };
 
     const prefixSelector = (

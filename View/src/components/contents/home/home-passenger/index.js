@@ -1,7 +1,10 @@
-import { Button, } from 'antd';
+
 import FormItem from 'antd/es/form/FormItem';
 import React from 'react';
 import { FilterOutlined } from '@ant-design/icons';
+import "./home-passenger.css"
+import { Button } from 'react-bootstrap';
+
 
 
 // const user=useSelector((state)=>state.user.userInfo.currentUser);
@@ -10,13 +13,22 @@ const HomePassenger = () => {
 
     return (
         <>
-            {/* <Button type="default" size='large' shape="round">
-                Số chuyến đi đang chờ
-            </Button>
-            <Button type="default" size='large' shape="round">
-                Số chuyến đi đã đi
-            </Button> */}
-            <h1>Home Passenger</h1>
+            <div className='container-home'>
+                <div className='home-content-ac'>
+                    <div className='home-btn'>
+                    <Button className='btn-home-a' >
+                        Số chuyến đi đang chờ
+                    </Button>
+                    </div>
+                    <div className='home-btn'>
+                    <Button className='btn-home-a' >
+                        Số chuyến đi đã đi
+                    </Button>
+                    </div>
+
+
+                </div>
+            </div>
         </>
 
     )
