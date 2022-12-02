@@ -38,7 +38,7 @@ const LayoutDriver = (props) => {
 
   const [menu,setMenu]=useState([]);
 
-  if(user.companyId===0){
+  if(user.companyId===null){
     menuItem=[
       {
         key: '0',
