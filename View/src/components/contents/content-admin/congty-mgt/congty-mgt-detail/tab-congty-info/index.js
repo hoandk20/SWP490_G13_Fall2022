@@ -300,7 +300,7 @@ const TabCompanyInfo = (props) => {
                                 },
                             ]}
                         >
-                            <Input  disabled/>
+                            <Input  />
                         </Form.Item>
                         <Form.Item
                             name="companyAddress"
@@ -319,145 +319,6 @@ const TabCompanyInfo = (props) => {
 
                     </Col>
                     <Col span={8}>
-                        <Form.Item
-                            name="status"
-                            initialValue={companys.status}
-                            label="Trạng thái"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name=""
-                            initialValue={companys.lastName}
-                            label="Số ĐT"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                    </Col>
-                    <Col span={8}>
-
-                    </Col>
-                </Row>
-                <p>Thông tin cá nhân</p>
-                <Row>
-                    <Col span={8}>
-                        <Form.Item
-                            name="name"
-                            initialValue={companys.firstName}
-                            label="Tên đầy đủ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please select an owner',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            initialValue={companys.email}
-                            label="Email"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter user name',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name=""
-                            initialValue={companys.firstName}
-                            label="Ngôn ngữ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please select an owner',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item
-                            name="lastName"
-                            initialValue={companys.lastName}
-                            label="Địa chỉ"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="email"
-                            initialValue={companys.email}
-                            label="Số di động"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please enter user name',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name=""
-                            initialValue={companys.lastName}
-                            label="Trạng thái"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please choose the type',
-                                },
-                            ]}
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
-                            name="city"
-                            initialValue={companys.city}
-                            label="Thành phố"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'please enter  description',
-                                },
-                            ]}
-                        >
-                            <Select>
-                                <Option value="Hà nội">Hà nội</Option>
-                                <Option value="Đà nẵng">Đà nẵng </Option>
-                                <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Image
-                            id='avatarImage'
-                            src={companys.avatar}
-                            className='avatar'
-                        />
 
                     </Col>
                 </Row>
@@ -498,7 +359,7 @@ const TabCompanyInfo = (props) => {
                                 },
                             ]}
                         >
-                            <Input disabled/>
+                            <Input />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
