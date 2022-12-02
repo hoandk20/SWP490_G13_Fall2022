@@ -24,12 +24,11 @@ const RegisterSignup = () => {
         username: newUser.email,
         password: newUser.password,
     };
-
-    // const currentUser = useSelector((state) => state.auth.login?.currentUser);
-    // const decodedTocken = jwtDecode(currentUser?.access_token);
-    // const userName = decodedTocken?.sub;
-    // const newUser = useSelector((state) => state.user.userInfo?.currentUser);
-    // console.log(newUser);
+    const currentUser = useSelector((state)=>state.auth.login?.currentUser);
+    const decodedTocken=jwtDecode(currentUser.access_token);
+    const userName=decodedTocken.sub; 
+    const user1=useSelector((state)=>state.user.userInfo?.currentUser);
+    console.log(user1);
 
     const handleChangeCode = (e) => {
         setCode(e.target.value)
@@ -75,7 +74,8 @@ const RegisterSignup = () => {
     useEffect(() => {
         setTimeout(()=>{
             login();
-          },2000)   
+          },1000)   
+          
     }, []);
 
     return (

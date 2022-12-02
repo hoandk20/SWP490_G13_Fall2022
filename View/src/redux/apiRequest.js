@@ -57,7 +57,6 @@ export const logoutUser = async (dispatch, navigate) => {
 
 export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
-  try {
     const res = await axios
       .post(`${URL}:8080/api/RegisterPassenger`,
         {
@@ -81,15 +80,14 @@ export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
         }else{
           toast.error("Đăng ký không thành công");
         }
+        dispatch(registerFailed())
       });
-  } catch (error) {
-    dispatch(registerFailed())
-  }
+
 }
 
 export const registerDriver = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
-  try {
+
     const rest = await axios
       .post(`${URL}:8080/api/RegisterDriver`, {
         email: newUser.email,
@@ -115,12 +113,11 @@ export const registerDriver = async (newUser, dispatch, navigate, toast) => {
         }else{
           toast.error("Đăng ký không thành công");
         }
+        dispatch(registerFailed())
       });
 
 
-  } catch (error) {
-    dispatch(registerFailed())
-  }
+
 }
 
 export const registerCompany = async (user, dispatch, navigate, toast) => {

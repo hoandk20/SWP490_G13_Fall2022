@@ -20,7 +20,7 @@ const RegisterDriverDoc = () => {
     const decodedTocken = jwtDecode(currentUser.access_token);
     const userName = decodedTocken.sub;
     const newUser = useSelector((state) => state.user.userInfo?.currentUser);
-
+    console.log("newUser",newUser);
     const navigate = useNavigate();
     const [count, setCount] = useState(0);
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
@@ -178,8 +178,12 @@ const RegisterDriverDoc = () => {
     };
     const dispatch = useDispatch();
 
-    console.log(count);
-    console.log(Chung_Nhan_Kinh_nghiem);
+
+
+    useEffect(()=>{
+        getUser(userName,dispatch);
+       
+      },[])
     return (
         <div className='container'>
             <div className='container-info'>
