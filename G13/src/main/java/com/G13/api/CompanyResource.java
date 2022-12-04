@@ -6,12 +6,10 @@ import com.G13.master.*;
 import com.G13.model.*;
 import com.G13.repo.*;
 import com.G13.service.UserServiceImpl;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLOutput;
 import java.time.Instant;
 import java.util.*;
 
@@ -30,6 +28,7 @@ public class CompanyResource {
     private final VehicledocumentRepository vehicledocumentRepository;
     private final PromotiontripRepository promotiontripRepository;
     private final TripRepository tripRepository;
+    private final RiderRepository riderRepository;
 
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle(@RequestBody VehicleRequest vr) {
@@ -56,13 +55,13 @@ public class CompanyResource {
             vehicle.setStatus(carStatus.Car_Pending);
 
 
-            response.content = "";
-            response.object = vehicleRepository.saveAndFlush(vehicle);
-            response.status = masterStatus.SUCCESSFULL;
+            response.setContent("");
+            response.setObject(vehicleRepository.saveAndFlush(vehicle));
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -87,17 +86,17 @@ public class CompanyResource {
             vehicle.setPlate(vr.getPlate());
             vehicle.setLisencePlatState(vr.getPlatState());
             vehicle.setLisencePlatCountry(vr.getPlateCountry());
-        //    vehicle.setCarTypeID(vr.getTypeId());
+            //    vehicle.setCarTypeID(vr.getTypeId());
             vehicle.setCreatedBy(vr.getProducer());
 
 
-            response.content = vehicleRepository.save(vehicle).toString();
-            response.object = vehicle;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setContent(vehicleRepository.save(vehicle).toString());
+            response.setObject(vehicle);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -153,8 +152,8 @@ public class CompanyResource {
                         continue;
                     }
                 }
-                boolean isHasCNBH=false;
-                boolean isHasCNDK=false;
+                boolean isHasCNBH = false;
+                boolean isHasCNDK = false;
                 List<Vehicledocument> vehicledocuments = vehicledocumentRepository.findVehicledocumentsByVehicleidOrderByIdDesc(vehicleRepository.findVehicleById(vehicle.getId()));
                 for (Vehicledocument vehicledocument : vehicledocuments) {
                     DocumentRequest doc = new DocumentRequest();
@@ -167,12 +166,12 @@ public class CompanyResource {
                     doc.setStatus(document.getStatus());
                     //       doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
                     doc.setId(document.getId());
-                    if(doc.getFile_name().equals(uploadFileMaster.Chung_Nhan_Bao_Hiem)&&!isHasCNBH){
-                        isHasCNBH=true;
+                    if (doc.getFile_name().equals(uploadFileMaster.Chung_Nhan_Bao_Hiem) && !isHasCNBH) {
+                        isHasCNBH = true;
                         vehicleRequest.setCNBH(doc);
                     }
-                    if(doc.getFile_name().equals(uploadFileMaster.Chung_Nhan_Dang_Kiem)&&!isHasCNDK){
-                        isHasCNDK=true;
+                    if (doc.getFile_name().equals(uploadFileMaster.Chung_Nhan_Dang_Kiem) && !isHasCNDK) {
+                        isHasCNDK = true;
                         vehicleRequest.setCNDK(doc);
                     }
                 }
@@ -180,13 +179,13 @@ public class CompanyResource {
                 vehicleRequests.add(vehicleRequest);
             }
 
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = vehicleRequests;
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(vehicleRequests);
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -211,13 +210,13 @@ public class CompanyResource {
             doc.setId(document.getId());
 
 
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = doc;
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(doc);
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -233,16 +232,16 @@ public class CompanyResource {
             Vehicle vehicle = vehicleRepository.findById(id);
             if (vehicle == null) {
                 response.setStatus(masterStatus.FAILURE);
-                response.object = "driver not existed!";
+                response.setObject("driver not existed!");
                 return ResponseEntity.badRequest().body(response);
             }
             vehicleRepository.delete(vehicle);
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.object = vehicle;
+            response.setObject(vehicle);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -261,8 +260,8 @@ public class CompanyResource {
 
             Map<String, Boolean> err = new HashMap<>();
             err.put("IsExistedEmail", true);
-            response.object = err;
-            response.status = masterStatus.FAILURE;
+            response.setObject(err);
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
         try {
@@ -291,11 +290,11 @@ public class CompanyResource {
             userRole.setRoleId(new Long(1));
             userRoleRepository.save(userRole);
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.object = driver;
+            response.setObject(driver);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -322,11 +321,11 @@ public class CompanyResource {
             driverRepository.save(driver);
 
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.object = driver;
+            response.setObject(driver);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -343,8 +342,8 @@ public class CompanyResource {
         try {
             Driver driver = driverRepository.findByEmail(rd.getEmail());
             if (driver == null) {
-                response.content = "driver not existed";
-                response.status = masterStatus.FAILURE;
+                response.setContent("driver not existed");
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
             Vehicle vehicle = new Vehicle();
@@ -366,11 +365,11 @@ public class CompanyResource {
             driverRepository.save(driver);
 
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.object = driver;
+            response.setObject(driver);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -387,17 +386,17 @@ public class CompanyResource {
             Driver driver = driverRepository.findByEmailOrderByCreatedDateDesc(email);
             if (driver == null) {
                 response.setStatus(masterStatus.FAILURE);
-                response.object = "driver not existed!";
+                response.setObject("driver not existed!");
                 return ResponseEntity.badRequest().body(response);
             }
             driverRepository.delete(driver);
 
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.object = driver;
+            response.setObject(driver);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -451,12 +450,12 @@ public class CompanyResource {
                 registerDriverCompanies.add(r);
             }
 
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = filterDriverCompany(registerDriverCompanies, status, email, name, city);
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(filterDriverCompany(registerDriverCompanies, status, email, name, city));
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -532,12 +531,12 @@ public class CompanyResource {
 
             driverTrips = filterTripDriver(driverTrips, filter);
 
-            response.object = driverTrips;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(driverTrips);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -648,18 +647,101 @@ public class CompanyResource {
                 documentRequests.add(documentRequest);
             }
             companyInfo.setListDoc(documentRequests);
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = companyInfo;
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(companyInfo);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
     }
 
+    @GetMapping("/reportCompany")
+    public ResponseEntity<?> reportCompany(int companyId) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        MasterTripStatus masterTripStatus = new MasterTripStatus();
+        CarStatus carStatus = new CarStatus();
+        try {
+            ReportCompany reportCompany = new ReportCompany();
+            List<Driver> driverList = driverRepository.findDriversByCompanyID(companyId);
+            List<Driver> driverListNoVehicle = driverRepository.findDriversByCompanyIDAndCurrentVehicle(companyId,0);
+            List<Vehicle> vehicleList = vehicleRepository.findByCompanyIDOrderByCreatedDateDesc(companyId);
+            List<Vehicle> vehicleNoDriver = vehicleRepository.findByCompanyIDAndStatus(companyId,carStatus.Car_Pending);
 
+
+            int Trip=0;
+            int TripOpen=0;
+            int TripClose=0;
+            int TripCancel=0;
+            for (Driver d : driverList) {
+                List<Promotiontrip> promotiontripList = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(d.getId());
+                for (Promotiontrip p:promotiontripList) {
+                    Trip++;
+                    if(p.getStatus().equals(masterTripStatus.TRIP_OPEN)){
+                        TripOpen++;
+                    }
+                    if(p.getStatus().equals(masterTripStatus.TRIP_CANCEL)){
+                        TripCancel++;
+                    }
+                    if(p.getStatus().equals(masterTripStatus.TRIP_CLOSE)){
+                        TripClose++;
+                    }
+                }
+            }
+
+
+
+            reportCompany.setDriverNo(driverList.size());
+            reportCompany.setVehicleNo(vehicleList.size());
+            reportCompany.setTripOpenNo(TripOpen);
+            reportCompany.setTripNo(Trip);
+            reportCompany.setTripClose(TripClose);
+            reportCompany.setTripCancel(TripCancel);
+            reportCompany.setVehicleNoDriver(vehicleNoDriver.size());
+            reportCompany.setDriverNoVehicle(driverListNoVehicle.size());
+
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(reportCompany);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+
+    @PostMapping("/changeInfo")
+    public ResponseEntity<?> changeInfoCompany(@RequestBody CompanyInfo companyInfo){
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try{
+            Company company = companyRepository.findCompanyById(companyInfo.getCompanyId());
+
+            commonFuntion commonFuntion = new commonFuntion();
+            if(commonFuntion.IsPhoneExisted(companyInfo.getPhone(),riderRepository,driverRepository,companyRepository)
+            &&!company.getPhoneNo().equals(companyInfo.getPhone())){
+                Map<String,Boolean> err = new HashMap<>();
+                err.put("IsExistedPhone",true);
+                response.setObject(err);
+                response.setStatus(masterStatus.FAILURE);
+                return ResponseEntity.badRequest().body(response);
+            }
+            company.setAddressID(companyInfo.getCompanyAddress());
+            company.setCityID(companyInfo.getCityId());
+            company.setPhoneNo(companyInfo.getPhone());
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(companyRepository.saveAndFlush(company));
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 }
 
 

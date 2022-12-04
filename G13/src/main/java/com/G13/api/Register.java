@@ -9,14 +9,11 @@ import com.G13.master.MasterStatus;
 import com.G13.model.*;
 import com.G13.repo.*;
 import com.G13.service.UserService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 @RestController
@@ -41,18 +38,27 @@ public class Register {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
 
+        commonFuntion commonFuntion = new commonFuntion();
+        if(commonFuntion.IsPhoneExisted(rc.getPhoneNumber(),riderRepository,driverRepository,companyRepository)){
+            Map<String,Boolean> err = new HashMap<>();
+            err.put("IsExistedPhone",true);
+            response.setObject(err);
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
         if(IsEmailExisted(rc.getEmail())){
 
             Map<String,Boolean> err = new HashMap<>();
             err.put("IsExistedEmail",true);
-            response.object = err;
-            response.status = masterStatus.FAILURE;
+            response.setObject(err);
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
         Date date = new Date();
         Instant timeStamp= Instant.now();
         try {
+            DriverStatus driverStatus = new DriverStatus();
             float nofloat =0;
             short noShort = (short)0;
             Company company = new Company();
@@ -60,6 +66,7 @@ public class Register {
             company.setName(rc.getName());
             company.setPhoneNo(rc.getPhoneNumber());
             company.setAddressID(rc.getAddress());
+            company.setStatus(driverStatus.NEW);
             companyRepository.save(company);
             User u = new User();
             u.setEmail(rc.getEmail());
@@ -69,7 +76,7 @@ public class Register {
             userRole.setUserId(new Long(usersave.getId()));
             userRole.setRoleId(new Long(3));
             userRoleRepository.save(userRole);
-            response.object = company;
+            response.setObject(company);
             response.setStatus(masterStatus.SUCCESSFULL);
             Verifyaccount verifyaccount = new Verifyaccount();
             GenerateGUID guid = new GenerateGUID();
@@ -79,11 +86,11 @@ public class Register {
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
             MailAPI mailAPI = new MailAPI();
             mailAPI.SendEmailVerifyAccount(rc.getEmail(),verifyaccount.getVerificode());
-            response.object=verifyaccountRepository.saveAndFlush(verifyaccount);
+            response.setObject(verifyaccountRepository.saveAndFlush(verifyaccount));
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
-            response.content=exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -100,20 +107,20 @@ public class Register {
             Instant instant1 = Instant.now();
             Verifyaccount verifyaccount =verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
             if(verifyaccount==null){
-                response.status = masterStatus.FAILURE;
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
 
             }else{
                 verifyaccount.setStatus(verifyCode.getStatus());
                 Verifyaccount verifyaccount1=verifyaccountRepository.saveAndFlush(verifyaccount);
                 response.setObject(verifyaccount1);
-                response.status = masterStatus.SUCCESSFULL;
+                response.setStatus(masterStatus.SUCCESSFULL);
                 return ResponseEntity.ok().body(response);
             }
 
         }catch (Exception exception){
-            response.content= exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -128,13 +135,20 @@ public class Register {
             DriverStatus driverStatus = new DriverStatus();
             float nofloat =0;
             short noShort = (short)0;
-
+        commonFuntion commonFuntion = new commonFuntion();
+        if(commonFuntion.IsPhoneExisted(rd.getPhoneNumber(),riderRepository,driverRepository,companyRepository)){
+            Map<String,Boolean> err = new HashMap<>();
+            err.put("IsExistedPhone",true);
+            response.setObject(err);
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
         if(IsEmailExisted(rd.getEmail())){
 
             Map<String,Boolean> err = new HashMap<>();
             err.put("IsExistedEmail",true);
-            response.object = err;
-            response.status = masterStatus.FAILURE;
+            response.setObject(err);
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
             try {
@@ -167,12 +181,12 @@ public class Register {
                 verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
                 MailAPI mailAPI = new MailAPI();
                 mailAPI.SendEmailVerifyAccount(rd.getEmail(),verifyaccount.getVerificode());
-                response.object=verifyaccountRepository.saveAndFlush(verifyaccount);
+                response.setObject(verifyaccountRepository.saveAndFlush(verifyaccount));
                 response.setStatus(masterStatus.SUCCESSFULL);
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
-                response.content=exception.toString();
-                response.status = masterStatus.FAILURE;
+                response.setContent(exception.toString());
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
         }
@@ -188,13 +202,20 @@ public class Register {
             MasterStatus masterStatus = new MasterStatus();
             float nofloat =0;
             short noShort = (short)0;
-
+            commonFuntion commonFuntion = new commonFuntion();
+            if(commonFuntion.IsPhoneExisted(rp.getPhoneNumber(),riderRepository,driverRepository,companyRepository)){
+                Map<String,Boolean> err = new HashMap<>();
+                err.put("IsExistedPhone",true);
+                response.setObject(err);
+                response.setStatus(masterStatus.FAILURE);
+                return ResponseEntity.badRequest().body(response);
+            }
             if(IsEmailExisted(rp.getEmail())){
 
                 Map<String,Boolean> err = new HashMap<>();
                 err.put("IsExistedEmail",true);
-                response.object = err;
-                response.status = masterStatus.FAILURE;
+                response.setObject(err);
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
             try {
@@ -248,14 +269,14 @@ public class Register {
                 verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
                 MailAPI mailAPI = new MailAPI();
                 mailAPI.SendEmailVerifyAccount(rp.getEmail(),verifyaccount.getVerificode());
-                response.object=verifyaccountRepository.saveAndFlush(verifyaccount);
+                response.setObject(verifyaccountRepository.saveAndFlush(verifyaccount));
                 response.setStatus(masterStatus.SUCCESSFULL);
 
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
-                response.content=exception.getCause().toString();
-                System.out.println(response.content);
-                response.status = masterStatus.FAILURE;
+                response.setContent(exception.getCause().toString());
+                System.out.println(response.getContent());
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -288,11 +309,11 @@ public class Register {
                 document.setStatus(documentStatus.DOCUMENT_SENDED);
                 documentRepository.save(document);
 
-                response.status = masterStatus.SUCCESSFULL;
+                response.setStatus(masterStatus.SUCCESSFULL);
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
-                response.content= exception.toString();
-                response.status = masterStatus.FAILURE;
+                response.setContent(exception.toString());
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -334,12 +355,12 @@ public class Register {
             vehicledocument.setVehicleid(vehicle);
             vehicledocumentRepository.save(vehicledocument);
 
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = document1;
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(document1);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
-            response.content= exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -366,12 +387,12 @@ public class Register {
                     documentRequests.add(doc);
             }
 
-            response.object = documentRequests;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(documentRequests);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
-            response.content= exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -401,17 +422,17 @@ public class Register {
                 doc.setStatus(document.getStatus());
                 doc.setFile_name(document.getFileName());
                 doc.setCreateBy(document.getCreatedBy());
-                response.object = doc;
+                response.setObject(doc);
             }else{
-                response.object = "";
+                response.setObject("");
             }
 
 
-            response.status = masterStatus.SUCCESSFULL;
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
-            response.content= exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -433,21 +454,21 @@ public class Register {
                 verifyaccountRepository.save(verifyaccount);
                 verifyCode.setExpired(false);
                 verifyCode.setStatus("1");
-                response.content= "verify sussessfull";
-                response.object = verifyCode;
-                response.status = masterStatus.SUCCESSFULL;
+                response.setContent("verify sussessfull");
+                response.setObject(verifyCode);
+                response.setStatus(masterStatus.SUCCESSFULL);
                 return ResponseEntity.ok().body(response);
             }else{
                 verifyCode.setExpired(true);
                 verifyCode.setStatus("0");
-                response.content= "code is expired or invalid";
-                response.status = masterStatus.FAILURE;
+                response.setContent("code is expired or invalid");
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
 
         }catch (Exception exception){
-            response.content= exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -471,13 +492,13 @@ public class Register {
             MailAPI mailAPI = new MailAPI();
             mailAPI.SendEmailVerifyAccount(email,verifyaccount.getVerificode());
             verifyaccountRepository.save(verifyaccount);
-            response.content= "send successfull";
-            response.status = masterStatus.SUCCESSFULL;
+            response.setContent("send successfull");
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
 
         }catch (Exception exception){
-            response.content= exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 

@@ -1,10 +1,9 @@
-package com.G13.api;
+package com.G13.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +12,5 @@ import java.util.Optional;
 public class ResopnseContent {
     String status;
     String content;
-
     Object object;
 }

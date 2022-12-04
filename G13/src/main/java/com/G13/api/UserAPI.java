@@ -15,14 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 
 import static java.util.Arrays.stream;
@@ -32,12 +29,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class NoRole {
+public class UserAPI {
 
     private final UserService userService;
-
-    private final RoleRepository roleRepository;
-    UserDetailsService userDetailsService;
     private final UserRepository userRepository;
     private final DriverRepository driverRepository;
     private final CompanyRepository companyRepository;
@@ -55,20 +49,7 @@ public class NoRole {
         return ResponseEntity.ok().body(res);
     }
 
-
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok().body(userService.getUsers());
-    }
-
-    @PostMapping("/user/save")
-    public ResponseEntity<User> saveUser(@RequestBody User user) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveUser(user));
-    }
-
     @GetMapping("user/info")
-
     public ResponseEntity<?> getUserInfo(String username){
         UserInfo userInfo = new UserInfo();
         userInfo.setEmail(username);
@@ -94,8 +75,12 @@ public class NoRole {
             userInfo.setPhone(driver.getMobileNo());
             userInfo.setCountry(driver.getCountryCode());
             userInfo.setRole("ROLE_DRIVER");
-
             userInfo.setCompanyId(driver.getCompanyID());
+            try{
+                userInfo.setCityId(driver.getBranchCityId());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
             try{
                 Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
                 if(vehicle!=null){
@@ -113,7 +98,7 @@ public class NoRole {
                     userInfo.setVehicleRequest(vehicleRequest);
                 }
             }catch (Exception e){
-
+                System.out.println(e.toString());
             }
         }
         Rider rider = riderRepository.findByEmail(username);
@@ -126,6 +111,11 @@ public class NoRole {
             userInfo.setUsername(rider.getEmail());
             userInfo.setEmail(rider.getEmail());
             userInfo.setRole("ROLE_PASSENGER");
+            try{
+                userInfo.setCityId(rider.getCityID());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
         }
         Company company = companyRepository.findByNote(username);
         if(company!=null){
@@ -135,6 +125,12 @@ public class NoRole {
             userInfo.setUsername(company.getNote());
             userInfo.setEmail(company.getNote());
             userInfo.setRole("ROLE_COMPANY");
+            userInfo.setCompanyId(company.getId());
+            try{
+                userInfo.setCityId(company.getCityID());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
             try{
                 Vehicle vehicle = vehicleRepository.findFirstByOrderByCreatedDateDesc();
                 if(vehicle!=null){
@@ -152,7 +148,7 @@ public class NoRole {
                     userInfo.setVehicleRequest(vehicleRequest);
                 }
             }catch (Exception e){
-
+                System.out.println(e.toString());
             }
         }
 
@@ -164,61 +160,6 @@ public class NoRole {
         return ResponseEntity.ok().body(userInfo);
     }
 
-    @PostMapping("user/changeinfoDriver")
-    public ResponseEntity<?> changeDriver(@RequestBody UserInfo userInfo){
-        Driver driver = driverRepository.findByEmail(userInfo.getUsername());
-        ResopnseContent response = new ResopnseContent();
-        MasterStatus masterStatus = new MasterStatus();
-        try{
-            if(driver!=null){
-                driver.setFirstName(userInfo.getFirstname());
-                driver.setLastName(userInfo.getLastname());
-                driver.setAddressID(userInfo.getAddress());
-                driver.setMobileNo(userInfo.getPhone());
-                driver.setCountryCode(userInfo.getCountry());
-
-                response.status = masterStatus.SUCCESSFULL;
-                response.object = driverRepository.save(driver);
-                return ResponseEntity.ok().body(response);
-            }else{
-                response.content = "driver not existed";
-                response.status = masterStatus.FAILURE;
-                return ResponseEntity.badRequest().body(response);
-            }
-        }catch (Exception e){
-            response.content= e.toString();
-            response.status = masterStatus.FAILURE;
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
-    @PostMapping("user/changeinfoPassenger")
-    public ResponseEntity<?> changePassenger(@RequestBody UserInfo userInfo){
-        Rider rider = riderRepository.findByEmail(userInfo.getUsername());
-        ResopnseContent response = new ResopnseContent();
-        MasterStatus masterStatus = new MasterStatus();
-        try{
-            if(rider!=null){
-                rider.setFirstName(userInfo.getFirstname());
-                rider.setLastName(userInfo.getLastname());
-                rider.setHomeAddressID(userInfo.getAddress());
-                rider.setMobileNo(userInfo.getPhone());
-                rider.setHomeAddressID(userInfo.getAddress());
-                rider.setCountryCode(userInfo.getCountry());
-                response.status = masterStatus.SUCCESSFULL;
-                response.object = riderRepository.save(rider);
-                return ResponseEntity.ok().body(response);
-            }else{
-                response.content = "passenger not existed";
-                response.status = masterStatus.FAILURE;
-                return ResponseEntity.badRequest().body(response);
-            }
-        }catch (Exception e){
-            response.content= e.toString();
-            response.status = masterStatus.FAILURE;
-            return ResponseEntity.badRequest().body(response);
-        }
-    }
-
     @PostMapping("user/changePassword")
 
     public ResponseEntity<?> changePassword(@RequestBody UserChangePassword user){
@@ -228,17 +169,17 @@ public class NoRole {
         try{
             User userExisted = userService.getUser(user.getEmail());
             if(!userService.combinePassword(user.getOldPassword(),userExisted.getPassword())){
-                response.content=  "old password is invalid!";
-                response.status = masterStatus.FAILURE;
+                response.setContent("old password is invalid!");
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
             userExisted.setPassword(user.getNewPassword());
             userService.saveUser(userExisted);
-            response.status = masterStatus.SUCCESSFULL;
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         }catch (Exception e){
-            response.content= e.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(e.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -289,26 +230,6 @@ public class NoRole {
             throw new RuntimeException("Refresh token is missing");
         }
     }
-
-    @GetMapping("/autoGenUser")
-    public void autoGenerateUser() {
-        MasterRole m = new MasterRole();
-        userService.saveRole(new Role(m.ROLE_DRIVER));
-        userService.saveRole(new Role(m.ROLE_PASSENGER));
-        userService.saveRole(new Role(m.ROLE_COMPANY));
-        userService.saveRole(new Role(m.ROLE_ADMIN));
-
-        userService.saveUser(new User("hoan", "hoan"));
-        userService.saveUser(new User("hoan1", "hoan1"));
-        userService.saveUser(new User("hoan2", "hoan2"));
-        userService.saveUser(new User("hoan3", "hoan3"));
-
-        userService.addRoleToUser("hoan", m.ROLE_DRIVER);
-        userService.addRoleToUser("hoan1", m.ROLE_PASSENGER);
-        userService.addRoleToUser("hoan2", m.ROLE_COMPANY);
-        userService.addRoleToUser("hoan3", m.ROLE_ADMIN);
-    }
-
     @GetMapping("/city")
     public ResponseEntity<?> getcity(){
        List<Cityname> list = citynameRepository.findAll();
@@ -344,14 +265,33 @@ public class NoRole {
 
                 driverTrips.add(tripDriver);
             }
-            response.object = driverTrips;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(driverTrips);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
+    }
+
+    @GetMapping("/autoGenUser")
+    public void autoGenerateUser() {
+        MasterRole m = new MasterRole();
+        userService.saveRole(new Role(m.ROLE_DRIVER));
+        userService.saveRole(new Role(m.ROLE_PASSENGER));
+        userService.saveRole(new Role(m.ROLE_COMPANY));
+        userService.saveRole(new Role(m.ROLE_ADMIN));
+
+        userService.saveUser(new User("hoan", "hoan"));
+        userService.saveUser(new User("hoan1", "hoan1"));
+        userService.saveUser(new User("hoan2", "hoan2"));
+        userService.saveUser(new User("hoan3", "hoan3"));
+
+        userService.addRoleToUser("hoan", m.ROLE_DRIVER);
+        userService.addRoleToUser("hoan1", m.ROLE_PASSENGER);
+        userService.addRoleToUser("hoan2", m.ROLE_COMPANY);
+        userService.addRoleToUser("hoan3", m.ROLE_ADMIN);
     }
 }
 

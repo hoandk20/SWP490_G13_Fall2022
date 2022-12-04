@@ -16,4 +16,5 @@ public class UserInfo {
     String Role;
     VehicleRequest vehicleRequest;
     int companyId;
+    int cityId;
 }

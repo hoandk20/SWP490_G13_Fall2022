@@ -5,11 +5,11 @@ import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
 import com.G13.master.RegisterStatus;
 import com.G13.model.ChangeStatus;
+import com.G13.model.ResopnseContent;
 import com.G13.model.TripPassenger;
 import com.G13.repo.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,8 +53,8 @@ public class PassengerTrip {
                     break;
                 }
                 if(promotiontrip.getCapacity()-promotiontrip.getNumberCapacityRegistered()<detail.getDuration()){
-                    response.content="do not enough seat";
-                    response.status = masterStatus.FAILURE;
+                    response.setContent("do not enough seat");
+                    response.setStatus(masterStatus.FAILURE);
                     return ResponseEntity.badRequest().body(response);
                 }else{
                         promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+detail.getDuration());
@@ -70,13 +70,13 @@ public class PassengerTrip {
                 break;
             default:
         }
-        response.content= tripRepository.save(detail).toString();
-        response.object=detail;
-        response.status = masterStatus.SUCCESSFULL;
+        response.setContent(tripRepository.save(detail).toString());
+        response.setObject(detail);
+        response.setStatus(masterStatus.SUCCESSFULL);
         return ResponseEntity.ok().body(response);
     }catch (Exception exception){
-        response.content=exception.toString();
-        response.status = masterStatus.FAILURE;
+        response.setContent(exception.toString());
+        response.setStatus(masterStatus.FAILURE);
         return ResponseEntity.badRequest().body(response);
     }
     }
@@ -113,20 +113,20 @@ public class PassengerTrip {
 
             Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(t.getTripCode());
             if(promotiontrip.getCapacity()-promotiontrip.getNumberCapacityRegistered()<t.getDuration()){
-                response.content="do not enough seat";
-                response.status = masterStatus.FAILURE;
+                response.setContent("do not enough seat");
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }else{
               //  promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+t.getDuration());
               //  promotiontripRepository.save(promotiontrip);
             }
-            response.content= tripRepository.save(t).toString();
-            response.object=t;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setContent(tripRepository.save(t).toString());
+            response.setObject(t);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
-            response.content=exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -156,12 +156,12 @@ public class PassengerTrip {
                 tripPassengers.add(tripPassenger);
             }
 
-            response.object=tripPassengers;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(tripPassengers);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -205,12 +205,12 @@ public class PassengerTrip {
             }
 
             listTripHistory = filterTripPassenger(listTripHistory,filterTripPassenger);
-            response.object=listTripHistory;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(listTripHistory);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }

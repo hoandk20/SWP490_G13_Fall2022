@@ -2,20 +2,17 @@ package com.G13.api;
 
 import com.G13.domain.*;
 import com.G13.master.MasterStatus;
-import com.G13.master.UploadFileMaster;
 import com.G13.model.*;
 import com.G13.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -87,16 +84,17 @@ public class AdminResource {
                 registerDriverCompanies.add(r);
             }
 
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = filterListDriverCompany(registerDriverCompanies, regFrom, regTo, phone, driverName, email, Status, city, plate);
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(filterListDriverCompany(registerDriverCompanies, regFrom, regTo, phone, driverName, email, Status, city, plate));
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
+
 
     List<RegisterDriverCompany> filterListDriverCompany(List<RegisterDriverCompany> list, String regFrom, String regTo, String phone, String driverName, String email, String Status, String city, String plate) {
 
@@ -181,13 +179,13 @@ public class AdminResource {
                 companyInfos.add(companyInfo);
             }
 
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = filterListCompany(companyInfos, regFrom, regTo, companyName, email, Status, city);
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(filterListCompany(companyInfos, regFrom, regTo, companyName, email, Status, city));
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -274,12 +272,12 @@ public class AdminResource {
                 driverTrips.add(tripDriver);
             }
 
-            response.object = filterlistTrips(driverTrips, regFrom, regTo, phoneDriver, phonePassenger, Status);
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(filterlistTrips(driverTrips, regFrom, regTo, phoneDriver, phonePassenger, Status));
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -344,18 +342,18 @@ public class AdminResource {
         try {
             Document docExist = documentRepository.findDocumentById(doc.getId());
             if (docExist == null) {
-                response.content = "document not existed";
-                response.status = masterStatus.FAILURE;
+                response.setContent("document not existed");
+                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
             docExist.setStatus(doc.getStatus());
             documentRepository.save(docExist);
-            response.object = docExist;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(docExist);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }

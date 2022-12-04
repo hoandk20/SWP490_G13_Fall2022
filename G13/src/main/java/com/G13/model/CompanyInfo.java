@@ -8,6 +8,8 @@ import java.util.List;
 
 @Data
 public class CompanyInfo {
+    int companyId;
+    int cityId;
     String companyName;
     String companyStatus;
     String companyAddress;

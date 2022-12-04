@@ -3,6 +3,7 @@ package com.G13.api;
 import com.G13.domain.*;
 import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
+import com.G13.master.MasterTripStatus;
 import com.G13.master.UploadFileMaster;
 import com.G13.model.*;
 import com.G13.repo.*;
@@ -10,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/driver")
@@ -25,6 +24,7 @@ public class DriverResource {
     private final DocumentRepository documentRepository;
     private final PromotiontripRepository promotiontripRepository;
     private final TripRepository tripRepository;
+    private final RiderRepository riderRepository;
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle (@RequestBody VehicleRequest vr) {
         Date date = new Date();
@@ -53,12 +53,12 @@ public class DriverResource {
             driver.setCurrentVehicle(vehicleSave.getId());
             driver.setDeviceType("N/A");
             driverRepository.save(driver);
-            response.object=vehicleSave;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(vehicleSave);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -171,16 +171,94 @@ public class DriverResource {
 
 
 
-            response.status = masterStatus.SUCCESSFULL;
-            response.object = r;
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(r);
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
 
+    @GetMapping("/reportDriver")
+    public ResponseEntity<?> reportDriver(String driverEmail) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        MasterTripStatus masterTripStatus = new MasterTripStatus();
+        try {
+            ReportDriverPassenger reportDriverPassenger = new ReportDriverPassenger();
+
+            int Trip=0;
+            int TripOpen=0;
+            int TripClose=0;
+            int TripCancel=0;
+
+                List<Promotiontrip> promotiontripList = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(driverEmail);
+                for (Promotiontrip p:promotiontripList) {
+                    Trip++;
+                    if(p.getStatus().equals(masterTripStatus.TRIP_OPEN)){
+                        TripOpen++;
+                    }
+                    if(p.getStatus().equals(masterTripStatus.TRIP_CANCEL)){
+                        TripCancel++;
+                    }
+                    if(p.getStatus().equals(masterTripStatus.TRIP_CLOSE)){
+                        TripClose++;
+                    }
+                }
+
+            reportDriverPassenger.setTripOpenNo(TripOpen);
+            reportDriverPassenger.setTripNo(Trip);
+            reportDriverPassenger.setTripClose(TripClose);
+            reportDriverPassenger.setTripCancel(TripCancel);
+
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(reportDriverPassenger);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
+    @PostMapping("/changeinfo")
+    public ResponseEntity<?> changeDriver(@RequestBody UserInfo userInfo){
+        Driver driver = driverRepository.findByEmail(userInfo.getUsername());
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try{
+            if(driver!=null){
+                commonFuntion commonFuntion = new commonFuntion();
+                if(commonFuntion.IsPhoneExisted(userInfo.getPhone(),riderRepository,driverRepository,companyRepository)
+                        &&!driver.getMobileNo().equals(userInfo.getPhone())){
+                    Map<String,Boolean> err = new HashMap<>();
+                    err.put("IsExistedPhone",true);
+                    response.setObject(err);
+                    response.setStatus(masterStatus.FAILURE);
+                    return ResponseEntity.badRequest().body(response);
+                }
+                driver.setFirstName(userInfo.getFirstname());
+                driver.setLastName(userInfo.getLastname());
+                driver.setAddressID(userInfo.getAddress());
+                driver.setMobileNo(userInfo.getPhone());
+                driver.setCountryCode(userInfo.getCountry());
+                driver.setBranchCityId(userInfo.getCityId());
+                response.setStatus(masterStatus.SUCCESSFULL);
+                response.setObject(driverRepository.save(driver));
+                return ResponseEntity.ok().body(response);
+            }else{
+                response.setContent("driver not existed");
+                response.setStatus(masterStatus.FAILURE);
+                return ResponseEntity.badRequest().body(response);
+            }
+        }catch (Exception e){
+            response.setContent(e.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
 }

@@ -3,6 +3,7 @@ package com.G13.api;
 import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
+import com.G13.model.ResopnseContent;
 import com.G13.model.TripDriver;
 import com.G13.model.TripPassenger;
 import com.G13.repo.*;
@@ -51,13 +52,13 @@ public class DriverTrip {
             t.setCapacity(rp.getSeat());
             t.setStatus(masterTripStatus.TRIP_OPEN);
             t.setNote(rp.getListPolyline());
-            response.content = promotiontripRepository.save(t).toString();
-            response.object = t;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setContent(promotiontripRepository.save(t).toString());
+            response.setObject(t);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
@@ -95,12 +96,12 @@ public class DriverTrip {
                     driverTripHistory.add(tripDriver);
                 }
             }
-            response.object = driverTripHistory;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(driverTripHistory);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -138,12 +139,12 @@ public class DriverTrip {
             }
             driverTrips = filterTripDriver(driverTrips,filter);
 
-            response.object = driverTrips;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(driverTrips);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -228,12 +229,12 @@ public class DriverTrip {
                     return o1.getNoOfPolyline() > (o2.getNoOfPolyline()) ? -1 : 1;
                 }
             });
-            response.object = driverTrips;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(driverTrips);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -327,12 +328,12 @@ public class DriverTrip {
 
             Promotiontrip detail = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(searchTrip.getId());
             detail.setStatus(searchTrip.getStatus());
-            response.object = promotiontripRepository.saveAndFlush(detail);
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(promotiontripRepository.saveAndFlush(detail));
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -371,12 +372,12 @@ public class DriverTrip {
                 }
             }
 
-            response.object = driverTripHistory;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(driverTripHistory);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }
@@ -423,12 +424,12 @@ public class DriverTrip {
             tripDriver.setListPassenger(tripPassengers);
             tripDriver.setSeatRegistered(detail.getCapacity() - listPassengers.size());
 
-            response.object = tripDriver;
-            response.status = masterStatus.SUCCESSFULL;
+            response.setObject(tripDriver);
+            response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
-            response.content = exception.toString();
-            response.status = masterStatus.FAILURE;
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
     }

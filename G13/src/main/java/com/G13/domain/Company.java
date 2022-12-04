@@ -1,6 +1,6 @@
 package com.G13.domain;
 
-import com.G13.api.ResopnseContent;
+import com.G13.model.ResopnseContent;
 import com.G13.master.MasterStatus;
 
 import javax.persistence.*;
