@@ -2,10 +2,7 @@ package com.G13.api;
 
 import com.G13.File.FileManage;
 import com.G13.domain.*;
-import com.G13.master.DocumentStatus;
-import com.G13.master.DriverStatus;
-import com.G13.master.GenerateGUID;
-import com.G13.master.MasterStatus;
+import com.G13.master.*;
 import com.G13.model.*;
 import com.G13.repo.*;
 import com.G13.service.UserService;
@@ -58,7 +55,7 @@ public class Register {
         Date date = new Date();
         Instant timeStamp= Instant.now();
         try {
-            DriverStatus driverStatus = new DriverStatus();
+            CompanyStatus companyStatus = new CompanyStatus();
             float nofloat =0;
             short noShort = (short)0;
             Company company = new Company();
@@ -66,7 +63,7 @@ public class Register {
             company.setName(rc.getName());
             company.setPhoneNo(rc.getPhoneNumber());
             company.setAddressID(rc.getAddress());
-            company.setStatus(driverStatus.NEW);
+            company.setStatus(companyStatus.New);
             companyRepository.save(company);
             User u = new User();
             u.setEmail(rc.getEmail());
@@ -219,8 +216,6 @@ public class Register {
                 return ResponseEntity.badRequest().body(response);
             }
             try {
-
-
                 User u = new User();
                 u.setEmail(rp.getEmail());
                 u.setPassword(rp.getPassword());

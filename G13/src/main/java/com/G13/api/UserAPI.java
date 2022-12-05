@@ -6,7 +6,7 @@ import com.G13.domain.*;
 import com.G13.master.*;
 import com.G13.model.*;
 import com.G13.repo.*;
-import com.G13.service.UserService;
+import com.G13.service.*;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -33,14 +33,15 @@ public class UserAPI {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final DriverRepository driverRepository;
-    private final CompanyRepository companyRepository;
-    private final RiderRepository riderRepository;
+    private final CompanyService companyService;
+    private final RiderService riderService;
     private final DocumentRepository documentRepository;
     private  final VerifyaccountRepository verifyaccountRepository;
     private final VehicleRepository vehicleRepository;
-    private final CitynameRepository citynameRepository;
-    private final PromotiontripRepository promotiontripRepository;
+    private final PromotionTripService tripDriverService;
+    private final DriverService driverService;
+    private final CityService cityService;
+    private final VehicleService vehicleService;
     @GetMapping("/checkEmailExist")
     public ResponseEntity<?> checkEmailExisted(String email){
         boolean IsExisted = userService.IsEmailExisted(email);
@@ -67,7 +68,7 @@ public class UserAPI {
         }
 
 
-        Driver driver = driverRepository.findByEmailOrderByCreatedDateDesc(username);
+        Driver driver = driverService.getDriverByEmail(username);
         if(driver!=null){
             userInfo.setFirstname(driver.getFirstName());
             userInfo.setLastname(driver.getLastName());
@@ -75,14 +76,18 @@ public class UserAPI {
             userInfo.setPhone(driver.getMobileNo());
             userInfo.setCountry(driver.getCountryCode());
             userInfo.setRole("ROLE_DRIVER");
-            userInfo.setCompanyId(driver.getCompanyID());
+            try{
+                userInfo.setCompanyId(driver.getCompanyID());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
             try{
                 userInfo.setCityId(driver.getBranchCityId());
             }catch (Exception e){
                 System.out.println(e.toString());
             }
             try{
-                Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                 if(vehicle!=null){
                     VehicleRequest vehicleRequest = new VehicleRequest();
                     vehicleRequest.setId(vehicle.getId());
@@ -101,7 +106,7 @@ public class UserAPI {
                 System.out.println(e.toString());
             }
         }
-        Rider rider = riderRepository.findByEmail(username);
+        Rider rider = riderService.getRiderByEmail(username);;
         if(rider!=null){
             userInfo.setFirstname(rider.getFirstName());
             userInfo.setLastname(rider.getLastName());
@@ -117,7 +122,7 @@ public class UserAPI {
                 System.out.println(e.toString());
             }
         }
-        Company company = companyRepository.findByNote(username);
+        Company company = companyService.getCompanyByEmail(username);
         if(company!=null){
             userInfo.setFirstname(company.getName());
             userInfo.setAddress(company.getAddressID());
@@ -151,7 +156,9 @@ public class UserAPI {
                 System.out.println(e.toString());
             }
         }
-
+        if(user.getEmail().equals("admin")){
+            userInfo.setRole("ROLE_ADMIN");
+        }
 
         Verifyaccount verifyaccount = verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
         if(verifyaccount!=null){
@@ -165,31 +172,19 @@ public class UserAPI {
     public ResponseEntity<?> changePassword(@RequestBody UserChangePassword user){
 
         ResopnseContent response = new ResopnseContent();
-        MasterStatus masterStatus = new MasterStatus();
         try{
-            User userExisted = userService.getUser(user.getEmail());
-            if(!userService.combinePassword(user.getOldPassword(),userExisted.getPassword())){
-                response.setContent("old password is invalid!");
-                response.setStatus(masterStatus.FAILURE);
-                return ResponseEntity.badRequest().body(response);
+            if(userService.changePassword(user)){
+                return ResponseEntity.ok().body(response);
+            }else{
+                throw new Exception();
             }
-            userExisted.setPassword(user.getNewPassword());
-            userService.saveUser(userExisted);
-            response.setStatus(masterStatus.SUCCESSFULL);
-            return ResponseEntity.ok().body(response);
         }catch (Exception e){
-            response.setContent(e.toString());
-            response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
 
 
     }
     @PostMapping("/role/AddToUser")
-    public ResponseEntity<?> saveRole(@RequestBody RoleToUserForm form) {
-        userService.addRoleToUser(form.getUsername(), form.getRoleName());
-        return ResponseEntity.ok().build();
-    }
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
@@ -232,16 +227,15 @@ public class UserAPI {
     }
     @GetMapping("/city")
     public ResponseEntity<?> getcity(){
-       List<Cityname> list = citynameRepository.findAll();
+       List<Cityname> list = cityService.getListCity();
         return ResponseEntity.ok().body(list);
     }
     @GetMapping("/GetTop10Trip")
     public ResponseEntity<?> Top10Trip() {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
-        MasterTripStatus masterTripStatus = new MasterTripStatus();
+        List<Promotiontrip> list = tripDriverService.getTop10TripOpen();
         try {
-            List<Promotiontrip> list = promotiontripRepository.findTop10ByStatusOrderByCreatedDateDesc(masterTripStatus.TRIP_OPEN);
             List<TripDriver> driverTrips = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
@@ -258,7 +252,7 @@ public class UserAPI {
                 tripDriver.setPrice(detail.getFee());
                 tripDriver.setInstantTimeStart(detail.getTimeStart());
                 tripDriver.setTripID(detail.getId());
-                Driver driver = driverRepository.findDriverById(detail.getDriverID());
+                Driver driver = driverService.getDriverByID(detail.getDriverID());
                 if (driver != null) {
                     tripDriver.setPhoneDriver(driver.getMobileNo());
                 }
@@ -278,20 +272,20 @@ public class UserAPI {
     @GetMapping("/autoGenUser")
     public void autoGenerateUser() {
         MasterRole m = new MasterRole();
-        userService.saveRole(new Role(m.ROLE_DRIVER));
-        userService.saveRole(new Role(m.ROLE_PASSENGER));
-        userService.saveRole(new Role(m.ROLE_COMPANY));
-        userService.saveRole(new Role(m.ROLE_ADMIN));
+//        userService.saveRole(new Role(m.ROLE_DRIVER));
+//        userService.saveRole(new Role(m.ROLE_PASSENGER));
+//        userService.saveRole(new Role(m.ROLE_COMPANY));
+//        userService.saveRole(new Role(m.ROLE_ADMIN));
 
-        userService.saveUser(new User("hoan", "hoan"));
-        userService.saveUser(new User("hoan1", "hoan1"));
-        userService.saveUser(new User("hoan2", "hoan2"));
-        userService.saveUser(new User("hoan3", "hoan3"));
+//        userService.saveUser(new User("hoan", "hoan"));
+//        userService.saveUser(new User("hoan1", "hoan1"));
+//        userService.saveUser(new User("hoan2", "hoan2"));
+        userService.saveUser(new User("admin", "admin"));
 
-        userService.addRoleToUser("hoan", m.ROLE_DRIVER);
-        userService.addRoleToUser("hoan1", m.ROLE_PASSENGER);
-        userService.addRoleToUser("hoan2", m.ROLE_COMPANY);
-        userService.addRoleToUser("hoan3", m.ROLE_ADMIN);
+//        userService.addRoleToUser("hoan", m.ROLE_DRIVER);
+//        userService.addRoleToUser("hoan1", m.ROLE_PASSENGER);
+//        userService.addRoleToUser("hoan2", m.ROLE_COMPANY);
+        userService.addRoleToUser("admin", m.ROLE_ADMIN);
     }
 }
 

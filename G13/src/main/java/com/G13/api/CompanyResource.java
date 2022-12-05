@@ -5,7 +5,7 @@ import com.G13.domain.*;
 import com.G13.master.*;
 import com.G13.model.*;
 import com.G13.repo.*;
-import com.G13.service.UserServiceImpl;
+import com.G13.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +22,7 @@ public class CompanyResource {
     private final CompanyRepository companyRepository;
     private final VehicleRepository vehicleRepository;
     private final DriverRepository driverRepository;
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final UserRoleRepository userRoleRepository;
     private final DocumentRepository documentRepository;
     private final VehicledocumentRepository vehicledocumentRepository;
@@ -42,8 +42,8 @@ public class CompanyResource {
 
         try {
             Vehicle vehicle = new Vehicle();
-
-            vehicle.setCompanyID(companyRepository.findByNote(vr.getCompanyEmail()).getId());
+            int companyId = companyRepository.findByNote(vr.getCompanyEmail()).getId();
+            vehicle.setCompanyID(companyId);
             vehicle.setProduceYear(vr.getProduceYear());
             vehicle.setInteriorColor(vr.getInteriorColor());
             vehicle.setExteriorColor(vr.getExteriorColor());
@@ -53,8 +53,6 @@ public class CompanyResource {
             vehicle.setCarTypeID(vr.getTypeId());
             vehicle.setCreatedBy(vr.getProducer());
             vehicle.setStatus(carStatus.Car_Pending);
-
-
             response.setContent("");
             response.setObject(vehicleRepository.saveAndFlush(vehicle));
             response.setStatus(masterStatus.SUCCESSFULL);
@@ -596,7 +594,6 @@ public class CompanyResource {
             companyInfo.setEmail(c.getNote());
             companyInfo.setPhone(c.getPhoneNo());
             companyInfo.setCompanyName(c.getName());
-            List<DocumentRequest> documentRequests = new ArrayList<>();
             UploadFileMaster uploadFileMaster = new UploadFileMaster();
             Document document1 = documentRepository
                     .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Bang_lai_xe);
@@ -608,7 +605,7 @@ public class CompanyResource {
                 documentRequest.setStatus(document1.getStatus());
                 documentRequest.setFile_name(document1.getFileName());
                 documentRequest.setCreateBy(document1.getCreatedBy());
-                documentRequests.add(documentRequest);
+                companyInfo.setBLX(documentRequest);
             }
             Document document2 = documentRepository
                     .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
@@ -620,7 +617,7 @@ public class CompanyResource {
                 documentRequest.setStatus(document2.getStatus());
                 documentRequest.setFile_name(document2.getFileName());
                 documentRequest.setCreateBy(document2.getCreatedBy());
-                documentRequests.add(documentRequest);
+                companyInfo.setCNKN(documentRequest);
             }
             Document document3 = documentRepository
                     .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Kinh_Doanh);
@@ -632,7 +629,7 @@ public class CompanyResource {
                 documentRequest.setStatus(document3.getStatus());
                 documentRequest.setFile_name(document3.getFileName());
                 documentRequest.setCreateBy(document3.getCreatedBy());
-                documentRequests.add(documentRequest);
+                companyInfo.setGPKD(documentRequest);
             }
             Document document4 = documentRepository
                     .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Hoat_Dong);
@@ -644,9 +641,17 @@ public class CompanyResource {
                 documentRequest.setStatus(document4.getStatus());
                 documentRequest.setFile_name(document4.getFileName());
                 documentRequest.setCreateBy(document4.getCreatedBy());
-                documentRequests.add(documentRequest);
+                companyInfo.setGPHD(documentRequest);
             }
-            companyInfo.setListDoc(documentRequests);
+            Document document = documentRepository
+                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(),uploadFileMaster.avatar);
+
+            if(document!=null){
+                FileManage fileManage = new FileManage();
+                companyInfo.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
+            }
+
+
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(companyInfo);
             return ResponseEntity.ok().body(response);

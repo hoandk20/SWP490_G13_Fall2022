@@ -27,6 +27,7 @@ public class AdminResource {
 
     private final DocumentRepository documentRepository;
     private final VehicleRepository vehicleRepository;
+    private final RiderRepository riderRepository;
 
     @GetMapping("/GetDrivers")
     public ResponseEntity<?> getDrivers(String regFrom, String regTo, String phone, String driverName, String email, String Status, String city, String plate) {
@@ -61,7 +62,7 @@ public class AdminResource {
                     companyInfo.setCompanyStatus(company.getStatus());
                     r.setCompanyInfo(companyInfo);
                 } catch (Exception e) {
-
+                    System.out.println(e.toString());
                 }
                 try {
                     Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
@@ -356,6 +357,58 @@ public class AdminResource {
             response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
+    }
+
+    @GetMapping("/GetAllRider")
+    public ResponseEntity<?> listRider(String name, String phone) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+
+        try {
+            List<Rider> list = riderRepository.findAll();
+            List<PassengerInfo> passengerInfos = new ArrayList<>();
+            for (Rider rider : list
+            ) {
+                PassengerInfo passengerInfo = new PassengerInfo();
+                passengerInfo.setId(rider.getId());
+                passengerInfo.setAddress(rider.getHomeAddressID());
+                passengerInfo.setLassName(rider.getLastName());
+                passengerInfo.setFirstName(rider.getFirstName());
+                passengerInfo.setPhone(rider.getMobileNo());
+                passengerInfo.setEmail(rider.getEmail());
+                try{
+                    passengerInfo.setCityId(rider.getCityID());
+                }catch (Exception e){
+                    System.out.println(e.toString());
+                }
+
+                passengerInfos.add(passengerInfo);
+            }
+
+            response.setObject(filterlistRider(passengerInfos, phone, name));
+            response.setStatus(masterStatus.SUCCESSFULL);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    List<PassengerInfo> filterlistRider(List<PassengerInfo> list, String phone, String name) {
+        List<PassengerInfo> listResult = new ArrayList<>();
+        for (PassengerInfo passengerInfo : list
+        ) {
+            if(phone!=null&&!phone.equals("")){
+                if(!passengerInfo.getPhone().contains(phone)){continue;}
+            }
+            if(name!=null&&!name.equals("")){
+                if(!passengerInfo.getLassName().contains(name)&&!passengerInfo.getFirstName().contains(name)){continue;}
+            }
+            listResult.add(passengerInfo);
+        }
+
+        return listResult;
     }
 }
 

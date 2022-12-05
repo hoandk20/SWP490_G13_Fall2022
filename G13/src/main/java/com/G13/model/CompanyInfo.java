@@ -16,5 +16,9 @@ public class CompanyInfo {
     String phone;
     String email;
     Instant createDate;
-    List<DocumentRequest> listDoc;
+    DocumentRequest BLX;
+    DocumentRequest CNKN;
+    DocumentRequest GPKD;
+    DocumentRequest GPHD;
+    String AvatarBase64;
 }
