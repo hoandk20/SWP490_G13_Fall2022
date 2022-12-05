@@ -13,7 +13,7 @@ import axios from 'axios';
 
 const { Option } = Select;
 const RegisterDriverDoc = () => {
-    const URL = "http://26.36.110.116";
+    const URL = "http://26.86.144.172";
 
     const location = useLocation();
     const currentUser = useSelector((state) => state.auth.login?.currentUser);

@@ -14,28 +14,24 @@ const URL = "http://26.36.110.116";
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart())
-  try {
-
-    const res = await axios({
-      method: "post",
-      url: `${URL}:8080/api/login`,
-      data: user,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  const res = await axios({
+    method: "post",
+    url: `${URL}:8080/api/login`,
+    data: user,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  })
+    .then(function (response) {
+      dispatch(loginSuccess(response.data));
+      navigate('/home')
     })
-      .then(function (response) {
-        dispatch(loginSuccess(response.data));
-        navigate('/home')
-      })
-      .catch(function (error) {
-        if (error.response.status == 401) {
-          toast.error("Tài khoản hoặc mật khẩu không chính xác")
-        }
-        dispatch(loginFailed());
-      });
+    .catch(function (error) {
+      if (error.response.status == 401) {
+        toast.error("Tài khoản hoặc mật khẩu không chính xác")
+      }
+      dispatch(loginFailed());
+    });
 
-  } catch (error) {
 
-  }
 }
 
 
@@ -57,101 +53,164 @@ export const logoutUser = async (dispatch, navigate) => {
 
 export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
-    const res = await axios
-      .post(`${URL}:8080/api/RegisterPassenger`,
-        {
-          email: newUser.email,
-          password: newUser.password,
-          firstName: newUser.firstName,
-          lastName: newUser.lastName,
-          phoneNumber: newUser.phoneNumber,
-          language: "vi"
-        },
-        {
-          headers: { 'Content-Type': 'application/json' }
-        })
-      .then(function (response) {
-        dispatch(registerSuccess(response.data))
-        navigate("/signup/confirm-email", { state: { newUser } });
+  const res = await axios
+    .post(`${URL}:8080/api/RegisterPassenger`,
+      {
+        email: newUser.email,
+        password: newUser.password,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        phoneNumber: newUser.phoneNumber,
+        language: "vi"
+      },
+      {
+        headers: { 'Content-Type': 'application/json' }
       })
-      .catch(function (error) {
-        if (error.response.data.object.IsExistedEmail) {
-          toast.error("Email đã tồn tại");
-        }else{
-          toast.error("Đăng ký không thành công");
-        }
-        dispatch(registerFailed())
-      });
+    .then(function (response) {
+      dispatch(registerSuccess(response.data))
+
+    })
+    .catch(function (error) {
+      if (error.response.data.object.IsExistedPhone) {
+        toast.error("Số điện thoại đã tồn tại");
+      } else if (error.response.data.object.IsExistedEmail) {
+        toast.error("Email đã tồn tại");
+      } else {
+        toast.error("Đăng ký không thành công");
+      }
+      dispatch(registerFailed())
+    });
+  dispatch(loginStart())
+  const user = {
+    username: newUser.email,
+    password: newUser.password
+  }
+
+  const rest = await axios({
+    method: "post",
+    url: `${URL}:8080/api/login`,
+    data: user,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  })
+    .then(function (response) {
+      dispatch(loginSuccess(response.data));
+      navigate("/signup/confirm-email", { state: { newUser } });
+    })
+    .catch(function (error) {
+      if (error.response.status == 401) {
+        toast.error("Tài khoản hoặc mật khẩu không chính xác")
+      }
+      dispatch(loginFailed());
+    });
+
 
 }
 
 export const registerDriver = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
 
-    const rest = await axios
-      .post(`${URL}:8080/api/RegisterDriver`, {
-        email: newUser.email,
-        password: newUser.password,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        phoneNumber: newUser.phoneNumber,
-        language: "vi",
-        country: newUser.country,
-        city: newUser.city
-      },
-        {
-          headers: { 'Content-Type': 'application/json' }
-        })
+  const res = await axios
+    .post(`${URL}:8080/api/RegisterDriver`, {
+      email: newUser.email,
+      password: newUser.password,
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      phoneNumber: newUser.phoneNumber,
+      language: "vi",
+      country: newUser.country,
+      city: newUser.city.key
+    },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      })
+    .then(function (response) {
+      console.log(response)
+      dispatch(registerSuccess(response.data))
+
+    })
+    .catch(function (error) {
+      if (error.response.data.object.IsExistedPhone) {
+        toast.error("Số điện thoại đã tồn tại");
+      } else if (error.response.data.object.IsExistedEmail) {
+        toast.error("Email đã tồn tại");
+      } else {
+        toast.error("Đăng ký không thành công");
+      }
+      dispatch(registerFailed())
+    });
+    const user = {
+      username: newUser.email,
+      password: newUser.password
+    }
+    const rest = await axios({
+      method: "post",
+      url: `${URL}:8080/api/login`,
+      data: user,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    })
       .then(function (response) {
-        console.log(response)
-        dispatch(registerSuccess(response.data))
-        navigate('/signup/confirm-email', { state: { newUser } });
+        dispatch(loginSuccess(response.data));
+        navigate("/signup/confirm-email", { state: { newUser } });
       })
       .catch(function (error) {
-        if (error.response.data.object.IsExistedEmail) {
-          toast.error("Email đã tồn tại");
-        }else{
-          toast.error("Đăng ký không thành công");
-        }
-        dispatch(registerFailed())
+        dispatch(loginFailed());
       });
 
 
 
 }
 
-export const registerCompany = async (user, dispatch, navigate, toast) => {
+export const registerCompany = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
-  try {
-    const rest = await axios
-      .post(`${URL}:8080/api/RegisterCompany`, {
-        email: user.email,
-        password: user.password,
-        name: user.name,
-        address: user.address + ', ' + user.city,
-        phoneNumber: user.phoneNumber,
-        language: "vi",
-      },
-        {
-          headers: { 'Content-Type': 'application/json' }
-        })
-      .then(function (response) {
-        console.log(response)
-        dispatch(registerSuccess(response.data))
-        navigate('/signup/confirm-email', { state: { user } });
+  const res = await axios
+    .post(`${URL}:8080/api/RegisterCompany`, {
+      email: newUser.email,
+      password: newUser.password,
+      name: newUser.name,
+      address: newUser.address,
+      phoneNumber: newUser.phoneNumber,
+      language: "vi",
+      cityId:newUser.city.value
+    },
+      {
+        headers: { 'Content-Type': 'application/json' }
       })
-      .catch(function (error) {
-        if (error.response.data.object.IsExistedEmail) {
-          toast.error("Email đã tồn tại");
-        }else{
-          toast.error("Đăng ký không thành công");
-        }
-      });
+    .then(function (response) {
+      console.log(response)
+      dispatch(registerSuccess(response.data))
+      const user = {
+        username: newUser.email,
+        password: newUser.password
+      }
+      const rest = axios({
+        method: "post",
+        url: `${URL}:8080/api/login`,
+        data: user,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+        .then(function (response) {
+          dispatch(loginSuccess(response.data));
+          navigate("/signup/confirm-email", { state: { newUser } });
+        })
+        .catch(function (error) {
+          dispatch(loginFailed());
+        });
+    })
+    .catch(function (error) {
+      if (error.response.data.object.IsExistedPhone) {
+        toast.error("Số điện thoại đã tồn tại");
+      } else if (error.response.data.object.IsExistedEmail) {
+        toast.error("Email đã tồn tại");
+      } else {
+        toast.error("Đăng ký không thành công");
+      }
+      dispatch(registerFailed())
+      console.log("ok");
+      return;
+    });
 
 
-  } catch (error) {
-    dispatch(registerFailed())
-  }
+
 }
 
 export const getUser = async (userName, dispatch) => {
@@ -325,7 +384,7 @@ export const getTripHistoryDriver = async (trip, dispatch) => {
       {
         headers: { 'Content-Type': 'application/json' }
       });
-    
+
     dispatch(getTripHistorySuccess(res.data.object));
 
   } catch (error) {
@@ -346,7 +405,7 @@ export const getTripHistoryPassenger = async (trip, dispatch) => {
       {
         headers: { 'Content-Type': 'application/json' }
       });
-    
+
     dispatch(getTripHistorySuccess(res.data.object));
 
   } catch (error) {
@@ -357,11 +416,11 @@ export const getTripHistoryPassenger = async (trip, dispatch) => {
 
 
 export const getAllVehico = async (email, dispatch) => {
-  const vehicle={
-    email:email,
-    status:"",
-    plate:"",
-    typeId:"",
+  const vehicle = {
+    email: email,
+    status: "",
+    plate: "",
+    typeId: "",
   }
   try {
     const res = await axios.get(`${URL}:8080/api/company/getVehicle?companyEmail=${vehicle.email}&plate=${vehicle.plate}&status=${vehicle.status}&typeId=${vehicle.typeId}`, {
@@ -386,8 +445,8 @@ export const getAllVehicoFilter = async (vehicle, dispatch) => {
 }
 
 export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
-  try {
-    const res = await axios.post(`${URL}:8080/api/company/addVehicle`,
+  const res = await axios
+    .post(`${URL}:8080/api/company/addVehicle`,
       {
         companyEmail: vehicle.companyEmail,
         producer: vehicle.producer,
@@ -395,24 +454,27 @@ export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
         interiorColor: vehicle.interiorColor,
         exteriorColor: vehicle.exteriorColor,
         plate: vehicle.plate,
-        platState: vehicle.platState,
+        platState: vehicle.platState.label,
         plateCountry: vehicle.plateCountry,
         typeId: vehicle.typeId
-      }
-      , {
+      },
+      {
         headers: { 'Content-Type': 'application/json' }
-      });
-    getAllVehico(vehicle.companyEmail, dispatch);
-    getUser(vehicle.companyEmail, dispatch);
-    toast.success("Tạo phương tiện thành công")
-  } catch (error) {
-    if(error.response.data.object.IsExistedPlate){
-      toast.error("Biển số đã tồn tại")
-    }else{
-      toast.error("Tạo phương tiện thất bại")
-    }
-    
-  }
+      })
+    .then(function (response) {
+      getAllVehico(vehicle.companyEmail, dispatch);
+      getUser(vehicle.companyEmail, dispatch);
+      toast.success("Tạo phương tiện thành công")
+    })
+    .catch(function (error) {
+      if (error.response.data.object.IsExistedPhone) {
+        toast.error("Biển số đã tồn tại");
+      } else {
+        toast.error("Tạo phương tiện không thành công");
+      }
+
+    });
+
 }
 
 export const AddVehicoByDriver = async (vehicle, toast, dispatch) => {
@@ -425,7 +487,7 @@ export const AddVehicoByDriver = async (vehicle, toast, dispatch) => {
         interiorColor: vehicle.interiorColor,
         exteriorColor: vehicle.exteriorColor,
         plate: vehicle.plate,
-        platState: vehicle.platState,
+        platState: vehicle.platState.label,
         plateCountry: vehicle.plateCountry,
         typeId: vehicle.typeId
       }
@@ -435,38 +497,38 @@ export const AddVehicoByDriver = async (vehicle, toast, dispatch) => {
     getUser(vehicle.driverEmail, dispatch);
     toast.success("Tạo phương tiện thành công")
   } catch (error) {
-    if(error.response.data.object.IsExistedPlate){
+    if (error.response.data.object.IsExistedPlate) {
       toast.error("Biển số đã tồn tại")
-    }else{
+    } else {
       toast.error("Tạo phương tiện thất bại")
     }
   }
 }
 
-export const getDriversForCompany = async (companyEmail, dispatch) => { 
-  const status="";
-  const driverEmail="";
-  const name ="";
-  const city="";
+export const getDriversForCompany = async (companyEmail, dispatch) => {
+  const status = "";
+  const driverEmail = "";
+  const name = "";
+  const city = "";
   try {
     const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${companyEmail}&status=${status}&email=${driverEmail}&name=${name}&city=${city}`, {
       headers: { 'Content-Type': 'application/json' }
     });
-    
+
     dispatch(getAllDriverForCompany(res.data.object));
     console.log("object");
   } catch (error) { }
 }
 
 export const getDriversForCompanyFilter = async (driver, dispatch) => {
-  if(driver.address===undefined){
-    driver.address="";
+  if (driver.address === undefined) {
+    driver.address = "";
   }
   try {
     const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${driver.companyEmail}&status=${driver.status}&email=${driver.driverEmail}&name=${driver.name}&city=${driver.address}`, {
       headers: { 'Content-Type': 'application/json' }
     });
-    
+
     dispatch(getAllDriverForCompany(res.data.object));
     console.log("object");
   } catch (error) { }
@@ -553,33 +615,43 @@ export const getCompanysByAdmiAll = async (dispatch) => {
   } catch (error) { }
 }
 
-export const editInforPassenger = async (object, email, toast, dispatch) => {
+export const editInforPassenger = async (object, toast, dispatch) => {
 
-  try {
-    const res = await axios.post(`${URL}:8080/api/user/changeinfoPassenger`, {
-      username: object.email,
-      firstname: object.firstName,
-      lastname: object.lastName,
-      avatarBase64: object.avatarBase64,
-      address: object.address,
-      email: object.email,
-      phone: object.phone,
-      country: object.country
-    },
+  const res = await axios
+    .post(`${URL}:8080/api/passenger/changeinfo`,
+      {
+        username: object.email,
+        firstname: object.firstName,
+        lastname: object.lastName,
+        avatarBase64: object.avatarBase64,
+        address: object.address,
+        email: object.email,
+        phone: object.phone,
+        country: object.country,
+        cityId: object.cityId,
+      },
       {
         headers: { 'Content-Type': 'application/json' }
-      });
-    getUser(email, dispatch);
-    toast.success("Thay đổi thông tin thành công.");
-  } catch (error) {
-    toast.error(error);
-  }
+      })
+    .then(function (response) {
+      getUser(object.email, dispatch);
+      toast.success("Thay đổi thông tin thành công.");
+    })
+    .catch(function (error) {
+      if (error.response.data.object.IsExistedPhone) {
+        toast.error("Số điện thoại đã tồn tại");
+      } else {
+        toast.error("Thay đổi thông tin không thành công");
+      }
+    });
+
+
 }
 
 export const editInforDriver = async (object, toast, dispatch) => {
 
   try {
-    const res = await axios.post(`${URL}:8080/api/user/changeinfoDriver`, {
+    const res = await axios.post(`${URL}:8080/api/driver/changeinfo`, {
       username: object.email,
       firstname: object.firstname,
       lastname: object.lastname,
@@ -587,7 +659,8 @@ export const editInforDriver = async (object, toast, dispatch) => {
       address: object.address,
       email: object.email,
       phone: object.phone,
-      country: object.country
+      country: object.country,
+      cityId: object.cityId
     },
       {
         headers: { 'Content-Type': 'application/json' }
@@ -597,7 +670,7 @@ export const editInforDriver = async (object, toast, dispatch) => {
     getUser(object.email, dispatch);
     toast.success("Thay đổi thông tin thành công.");
   } catch (error) {
-    toast.error(error);
+    toast.error("Thay đổi thông tin không thành công");
   }
 }
 
@@ -772,7 +845,7 @@ export const UploadDocumentForVehicle = async (object, toast, dispatch) => {
       , {
         headers: { 'Content-Type': 'application/json' }
       });
-      getAllVehico(object.companyEmail,dispatch);
+    getAllVehico(object.companyEmail, dispatch);
     toast.success("Upload file thành công")
   } catch (error) {
     toast.error("Upload file thất bại")
@@ -915,7 +988,7 @@ export const getAllCity = async (dispatch) => {
 }
 
 
-export const AddVehicleForDriver = async (object, toast,dispatch) => {
+export const AddVehicleForDriver = async (object, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/setDriverVehicle`,
       {
@@ -926,29 +999,29 @@ export const AddVehicleForDriver = async (object, toast,dispatch) => {
         headers: { 'Content-Type': 'application/json' }
       });
 
-        toast.success("Thêm phương tiện thành công cho tài xế")
-      getDriversForCompany(object.companyEmail,dispatch);
+    toast.success("Thêm phương tiện thành công cho tài xế")
+    getDriversForCompany(object.companyEmail, dispatch);
   } catch (error) {
-      toast.error("Thêm phương tiện thất bại cho tài xế")
+    toast.error("Thêm phương tiện thất bại cho tài xế")
   }
 }
 
 
-export const DeleteVehicleForDriver = async (object, toast,dispatch) => {
+export const DeleteVehicleForDriver = async (object, toast, dispatch) => {
   try {
     const res = await axios.post(`${URL}:8080/api/company/setDriverVehicle`,
       {
         email: object.driverEmail,
         vehicle: object.vehicle,
-        removeVehicleId:object.removeVehicleId
+        removeVehicleId: object.removeVehicleId
       }
       , {
         headers: { 'Content-Type': 'application/json' }
       });
-        toast.success("Gỡ phương tiện thành công")    
-      getDriversForCompany(object.companyEmail,dispatch);
+    toast.success("Gỡ phương tiện thành công")
+    getDriversForCompany(object.companyEmail, dispatch);
   } catch (error) {
-      toast.error("Gỡ phương tiện thất bại")
+    toast.error("Gỡ phương tiện thất bại")
   }
 }
 
@@ -963,4 +1036,50 @@ export const getDocumentVehicle = async (docId) => {
   }
 }
 
+
+export const GetAllTripByCompany = async (object, dispatch) => {
+  try {
+    const res = await axios.post(`${URL}:8080/api/company/listTrip`,
+      {
+        companyID: object.companyID,
+        passengerEmail: object.passengerEmail,
+        driverEmail: object.driverEmail,
+        dateFrom: object.dateFrom,
+        dateTo: object.dateTo,
+        status: object.status
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    dispatch(getTripHistorySuccess(res.data.object));
+
+  } catch (error) {
+  }
+}
+
+export const EditCompany = async (object, dispatch, toast) => {
+  const res = await axios
+    .post(`${URL}:8080/api/company/changeInfo`,
+      {
+        companyId: object.companyId,
+        companyAddress: object.companyAddress,
+        phone: object.phone,
+        cityId: object.city.key,
+      },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      })
+    .then(function (response) {
+      getUser(object.email, dispatch)
+      toast.success("Thay đổi thông tin thành công")
+    })
+    .catch(function (error) {
+      if (error.response.data.object.IsExistedPhone) {
+        toast.error("Số điện thoại đã tồn tại");
+      } else {
+        toast.error("Thay đổi thông tin thất bại");
+      }
+    });
+
+}
 

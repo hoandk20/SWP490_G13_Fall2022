@@ -8,6 +8,8 @@ import DriverManagement from "../../views/congty/driver-mgt";
 import AddDriver from "../../views/congty/driver-mgt/add-driver";
 import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
 import DriverManagementInfo from "../../views/congty/driver-mgt/driver-mgt-info";
+import AllTripCompany from "../../views/congty/free-trips";
+import InfoCompany from "../../views/congty/info";
 import VehicoManagement from "../../views/congty/vehico-mgt";
 import Home from "../../views/home";
 import HomeAll from "../../views/homeAll";
@@ -140,9 +142,19 @@ const routers = [
     },
     //cong ty
     {
+        path: '/congty/trips',
+        roleTarget: "ROLE_COMPANY",
+        element: AllTripCompany
+    },
+    {
         path: '/congty/document',
         roleTarget: "ROLE_COMPANY",
         element: DocumentCompany
+    },
+    {
+        path: '/congty/info',
+        roleTarget: "ROLE_COMPANY",
+        element: InfoCompany
     },
     {
         path: '/congty/vehico-mgt',

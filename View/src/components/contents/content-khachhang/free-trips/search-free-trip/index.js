@@ -40,21 +40,6 @@ const SerachFreeTripForPassenger = () => {
 
     const trips = useSelector((state) => state.freeTrip.trips?.allTrip);
 
-    // const freeTrips=trips.object.map(row=>({
-    //     key:row.id,
-    //     timeStart:row.timeStart,
-    //     from:row.from,
-    //     to:row.to,
-    //     price:row.price,
-    //     //  seatRemind:`${row.seatRegistered}/${row.seat}`,
-    //     driverEmail:row.driverEmail,
-    //     seatRegistered:row.seatRegistered,
-    //     status:row.status,
-    //     listPassenger:row.listPassenger,
-    //     tripID:row.tripID,
-    //     waitingTime:row.waitingTime,
-    //     seat:row.seat
-    // }))
     const dateFormat = (date) => {
         const date_str = date,
             options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -260,19 +245,30 @@ const SerachFreeTripForPassenger = () => {
                             <Form
                                 onFinish={onFinish}
                             >
+                                <Form.Item 
+                                name="origin"
+                                // rules={[
+                                //     {
+                                //         required: true,
+                                //         message: 'Vui lòng chọn quốc gia đăng ký',
+                                //     },
+                                // ]}
+                                >
                                 <Autocomplete
                                     onPlaceChanged={onPlaceChanged}
                                 >
-                                    <Input type='text' placeholder='Origin' ref={originRef} style={{ width: "400px", marginBottom: "20px" }}
+                                    <Input type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ width: "400px", marginBottom: "20px" }}
                                     />
                                 </Autocomplete>
+                                </Form.Item>
+
 
                                 <Autocomplete
                                     onPlaceChanged={onPlaceChanged}
                                 >
                                     <Input
                                         type='text'
-                                        placeholder='Destination'
+                                        placeholder='Điểm kết thúc'
                                         ref={destiantionRef}
                                         style={{ width: "400px", marginBottom: "27px" }}
                                     />
@@ -297,7 +293,7 @@ const SerachFreeTripForPassenger = () => {
                                     name="dateStart"
                                     label="Ngày xuất phát"
                                 >
-                                    <DatePicker onChange={onChangeDateStart} />
+                                    <DatePicker placeholder='Chọn ngày' onChange={onChangeDateStart} />
                                 </Form.Item>
                                 <Form.Item
                                     name='timeStart'

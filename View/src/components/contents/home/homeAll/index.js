@@ -6,14 +6,42 @@ import CarouselHome from '../../../commons/carousel';
 import { EyeOutlined } from '@ant-design/icons';
 import "./homeAll.css"
 import axios from 'axios';
+import { getAllCity } from '../../../../redux/apiRequest';
+import { useDispatch } from 'react-redux';
+import {
+    Box,
+    ButtonGroup,
+    Flex,
+    HStack,
+    IconButton,
+    SkeletonText,
+    Text,
+    Input
+} from '@chakra-ui/react'
+import { FaLocationArrow, FaTimes } from 'react-icons/fa'
+
+import {
+    useJsApiLoader,
+    GoogleMap,
+    Marker,
+    Autocomplete,
+    DirectionsRenderer,
+} from '@react-google-maps/api'
+import { useRef } from 'react'
 
 const URL = "http://26.36.110.116";
 
 
+
+
+const center = { lat: 21.013255, lng: 105.52597 }
+
+
 const HomeAll = () => {
     const navigate = useNavigate();
-
+    const dispatch =useDispatch();
     const [allTrip, setAllTrip] = useState();
+
     const getTop10Trips = async () => {
         try {
 
@@ -25,6 +53,12 @@ const HomeAll = () => {
 
         }
     }
+
+    const { isLoaded } = useJsApiLoader({
+        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
+        libraries: ['places'],
+    })
+
     console.log(allTrip);
     const dateFormat = (date) => {
         const date_str = date,
@@ -33,6 +67,24 @@ const HomeAll = () => {
             date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
+    const [map, setMap] = useState(/** @type google.maps.Map */(null))
+    const [directionsResponse, setDirectionsResponse] = useState(null)
+    const [distance, setDistance] = useState('')
+    const [duration, setDuration] = useState('')
+    const [date, setDate] = useState('');
+    const [time, setTime] = useState('');
+    const [listPolyline, setListPolyline] = useState('')
+    var polyline = '';
+    const options = {
+        fields: ["formatted_address", "geometry", "name"],
+        strictBounds: false,
+        types: ["establishment"],
+    };
+
+    /** @type React.MutableRefObject<HTMLInputElement> */
+    const originRef = useRef()
+    /** @type React.MutableRefObject<HTMLInputElement> */
+    const destiantionRef = useRef()
 
     const trips = allTrip?.map((item) => {
         if (item.status === "OPEN") {
@@ -47,6 +99,10 @@ const HomeAll = () => {
 
     })
 
+    useEffect(() => {
+        getTop10Trips();
+        getAllCity(dispatch);
+    }, [])
 
     const columns = [
 
@@ -94,9 +150,84 @@ const HomeAll = () => {
         }
     ];
 
-    useEffect(() => {
-        getTop10Trips();
-    }, [])
+    if (!isLoaded) {
+        return <></>
+    }
+
+    async function calculateRoute() {
+
+        if (originRef.current.value === '' || destiantionRef.current.value === '') {
+            return
+        }
+
+        // eslint-disable-next-line no-undef
+        const directionsService = new google.maps.DirectionsService()
+        const results = await directionsService.route({
+            origin: originRef.current.value,
+            destination: destiantionRef.current.value,
+            // eslint-disable-next-line no-undef
+            travelMode: google.maps.TravelMode.DRIVING,
+        })
+        setDirectionsResponse(results)
+        setDistance(results.routes[0].legs[0].distance.text)
+        setDuration(results.routes[0].legs[0].duration.text)
+        for (let index = 0; index < results.routes[0].overview_path.length; index++) {
+            const e = results.routes[0].overview_path[index];
+            polyline += e.lat() + ',' + e.lng() + ';';
+        }
+        setListPolyline(polyline);
+    }
+
+
+    function onChangeDateStart(date, dateString) {
+        setDate(date.toISOString());
+    }
+    function onChangeTimeStart(time, dateString) {
+        setTime(time.toISOString());
+    }
+
+    // const onFinish = (values) => {
+    //     // calculateRoute();
+    //     const trip = {
+    //         from: originRef.current.value,
+    //         to: destiantionRef.current.value,
+    //         registerSeat: values.seat,
+    //         timeStart: values.timeStart,
+    //         dateStart: date,
+    //         listPolyline: listPolyline,
+    //         // price:values.price,
+    //     }
+    //     getListFreeTrip(trip, dispatch);
+
+    // }
+    const onPlaceChanged = () => {
+        // eslint-disable-next-line no-undef
+        const geocoder = new google.maps.Geocoder();
+
+        if (originRef.current.value === "" && destiantionRef.current.value === "") {
+            return
+        } else if (originRef.current.value !== "" && destiantionRef.current.value === "") {
+            geocoder.geocode({ address: originRef.current.value }, (results, status) => {
+                if (status === 'OK') {
+                    center = results[0].geometry.location;
+                } else {
+                    console.log("not ok");
+                }
+            })
+        } else if (destiantionRef.current.value !== "" && originRef.current.value === "") {
+            console.log(originRef.current.value);
+            console.log(destiantionRef.current.value);
+            geocoder.geocode({ address: destiantionRef.current.value }, (results, status) => {
+                if (status === 'OK') {
+                    center = results[0].geometry.location;
+                } else {
+                    console.log("not ok");
+                }
+            })
+        } else {
+            calculateRoute();
+        }
+    }
     return (
         <>
             <div cotainer-home>
@@ -107,7 +238,28 @@ const HomeAll = () => {
                         </div>
                         <div style={{ margin: "20px 10%" }}>
                             <div className='home-table-header'>
-                                <div className='text-home'>CHUYẾN ĐI MIỄN PHÍ</div>
+                                <span className='text-home'>CHUYẾN ĐI MIỄN PHÍ</span>
+                                <span>
+                                <Autocomplete
+                                    onPlaceChanged={onPlaceChanged}
+                                >
+                                    <Input type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ width: "400px", marginBottom: "20px" }}
+                                    />
+                                </Autocomplete>
+                                </span>
+                                <span>
+                                    
+                                <Autocomplete
+                                    onPlaceChanged={onPlaceChanged}
+                                >
+                                    <Input
+                                        type='text'
+                                        placeholder='Điểm kết thúc'
+                                        ref={destiantionRef}
+                                        style={{ width: "400px", marginBottom: "27px" }}
+                                    />
+                                </Autocomplete>
+                                </span>
                             </div>
                             <div className='home-content-table'>
                                 <Table columns={columns} dataSource={trips} size="middle" />

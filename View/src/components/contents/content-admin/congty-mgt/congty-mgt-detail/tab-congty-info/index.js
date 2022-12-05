@@ -19,10 +19,10 @@ const TabCompanyInfo = (props) => {
     const listDoc = companys.listDoc;
     console.log(companys);
     console.log(listDoc);
-    const Bang_lai_xe = listDoc.find(doc => doc.file_name === "Bang_lai_xe");
-    const Chung_Nhan_Kinh_nghiem = listDoc.find(doc => doc.file_name === "Chung_Nhan_Kinh_nghiem");
-    const GP_Kinh_Doanh = listDoc.find(doc => doc.file_name === "GP_Kinh_Doanh");
-    const GP_Hoat_Dong = listDoc.find(doc => doc.file_name === "GP_Hoat_Dong");
+    const Bang_lai_xe = companys.blx;
+    const Chung_Nhan_Kinh_nghiem = companys.cnkn;
+    const GP_Kinh_Doanh = companys.gpkd;
+    const GP_Hoat_Dong = companys.gphd;
 
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);

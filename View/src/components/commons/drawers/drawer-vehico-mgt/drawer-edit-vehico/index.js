@@ -111,10 +111,10 @@ const EditVehico = (props) => {
                                 <Select
                                     allowClear
                                 >
-                                    <Option value="black">Đen</Option>
-                                    <Option value="white">Trắng</Option>
-                                    <Option value="red">Đỏ</Option>
-                                    <Option value="bule">xanh</Option>
+                                    <Option value="Đen">Đen</Option>
+                                    <Option value="Trắng">Trắng</Option>
+                                    <Option value="Đỏ">Đỏ</Option>
+                                    <Option value="Xanh">Xanh</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -133,10 +133,10 @@ const EditVehico = (props) => {
                                 <Select
                                     allowClear
                                 >
-                                    <Option value="black">Đen</Option>
-                                    <Option value="white">Trắng</Option>
-                                    <Option value="red">Đỏ</Option>
-                                    <Option value="bule">xanh</Option>
+                                    <Option value="Đen">Đen</Option>
+                                    <Option value="Trắng">Trắng</Option>
+                                    <Option value="Đỏ">Đỏ</Option>
+                                    <Option value="Xanh">Xanh</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
