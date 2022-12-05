@@ -4,7 +4,10 @@ import LayoutSignup from '../../../../../components/layout/register';
 import RegisterAddVehicles from '../../../../../components/registers/congty/register-congty-doccuments/register-congty-doc2';
 const RegisterAddVehicle = () =>{
     return(
-      <LayoutSignup content={<RegisterAddVehicles/>}/>
+      <div style={{margin:" 50px 10%"}}>
+       <RegisterAddVehicles/>
+          </div>
+     
     );
 };
 export default RegisterAddVehicle

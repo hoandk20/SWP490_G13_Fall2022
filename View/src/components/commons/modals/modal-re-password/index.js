@@ -11,6 +11,8 @@ const ModalRePassword = () => {
 
     const user = useSelector((state) => state.user.userInfo.currentUser)
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [oldPassword, setOldPassword] = useState(false);
+    const [newPassword, setNewPassword] = useState(false);
     const [form] = Form.useForm();
     const showModal = () => {
         setIsModalOpen(true);
@@ -21,26 +23,25 @@ const ModalRePassword = () => {
         form.resetFields();
     };
 
-    const onFinish = (values) => {
-        console.log(values.email);
+    const handleOk = () =>{
         const object = {
             email: user.email,
-            oldPassword: values.oldPassword,
-            newPassword: values.password
+            oldPassword: oldPassword,
+            newPassword: newPassword
         }
         changePassword(object,toast);
         setIsModalOpen(false);
         form.resetFields();
     }
 
+
     return (
         <div>
             <Button type="primary" onClick={showModal}>
                 Thay đổi mật khẩu
             </Button>
-            <Modal title="Thay đổi mật khẩu" open={isModalOpen} onCancel={handleCancel}>
+            <Modal title="Thay đổi mật khẩu" open={isModalOpen} onCancel={handleCancel} onOk={handleOk}>
                 <Form
-                    onFinish={onFinish}
                     form={form}
                     labelCol={{
                         span: 7,
@@ -60,7 +61,7 @@ const ModalRePassword = () => {
                         ]}
                         hasFeedback
                     >
-                        <Input.Password />
+                        <Input.Password  onChange={(e) =>{setOldPassword(e)}} />
                     </FormItem>
                     <Form.Item
                         name="password"
@@ -75,7 +76,7 @@ const ModalRePassword = () => {
                         ]}
                         hasFeedback
                     >
-                        <Input.Password placeholder='*Mật khẩu: có tối thiểu 6 ký tự' />
+                        <Input.Password placeholder='*Mật khẩu: có tối thiểu 6 ký tự'  onChange={(e) =>{setNewPassword(e)}}/>
                     </Form.Item>
 
                     <Form.Item
@@ -99,12 +100,7 @@ const ModalRePassword = () => {
                             }),
                         ]}
                     >
-                        <Input.Password placeholder='*Nhập lại mật khẩu' />
-                    </Form.Item>
-                    <Form.Item>
-                        <Button className='btn' type="primary" htmlType="submit" style={{position: 'absolute',right: '0px'}}>
-                            <SaveOutlined /> Lưu
-                        </Button>
+                        <Input.Password placeholder='*Nhập lại mật khẩu'  />
                     </Form.Item>
                 </Form>
             </Modal>

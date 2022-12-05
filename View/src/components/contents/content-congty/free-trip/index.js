@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTripHistoryDriver, tripHistoryDriver } from '../../../../redux/apiRequest';
+import { GetAllTripByCompany, getTripHistoryDriver, tripHistoryDriver } from '../../../../redux/apiRequest';
 import { useState } from 'react';
 
 
@@ -15,15 +15,15 @@ const data = [
 
 ];
 
-const TripHistoryDriver = () => {
+const TripsCompany = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
     // const [tripHistory,setTripHistory] =useState();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
+    console.log(user);
     const all = useSelector((state) => state.tripHistory.tripHistory?.trips);
 
-    console.log(all);
     const dateFormat = (date) =>{
         const date_str = date,
         options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -47,22 +47,23 @@ const TripHistoryDriver = () => {
   console.log(trips);
     const onfinish = (values) => {
         console.log("ád");
-        const trip = {
-            email: user?.email,
+        const object = {
+            companyID:user?.companyId,
+            driverEmail: values.driverEmail,
             passengerEmail: values.passengerEmail,
             dateFrom: values.dateFrom,
             dateTo: values.dateTo,
             status: values.status
         }
 
-        getTripHistoryDriver(trip, dispatch);
+        GetAllTripByCompany(object,dispatch);
     }
 
     useEffect(() => {
-        const trip = {
-            email: user?.email,
+        const object = {
+            companyID: user?.companyId,
         }
-        getTripHistoryDriver(trip, dispatch);
+        GetAllTripByCompany(object,dispatch);
     }, [])
     const columns = [
         {
@@ -127,18 +128,26 @@ const TripHistoryDriver = () => {
                     <Form
                         onFinish={onfinish}
                         labelCol={{
-                            span: 2,
+                            span: 3,
                         }}
                         wrapperCol={{
-                            span: 10,
+                            span: 7,
                         }}
                     >
 
 
                         <FormItem
+                            name="driverEmail"
+
+                            label="Tài khoản tài xế"
+                        >
+                            <Input />
+                        </FormItem>
+                        
+                        <FormItem
                             name="passengerEmail"
 
-                            label="Tài khoản"
+                            label="Tài khoản khách hàng"
                         >
                             <Input />
                         </FormItem>
@@ -151,7 +160,7 @@ const TripHistoryDriver = () => {
                                         span: 8,
                                     }}
                                 >
-                                    <DatePicker placeholder='Chọn ngày' />
+                                    <DatePicker />
                                 </FormItem>
                             </Col>
                             <Col sm={12} md={6} >
@@ -162,7 +171,7 @@ const TripHistoryDriver = () => {
                                         span: 6,
                                     }}
                                 >
-                                    <DatePicker placeholder='Chọn ngày' />
+                                    <DatePicker />
                                 </FormItem>
                             </Col>
                         </Row>
@@ -200,4 +209,4 @@ const TripHistoryDriver = () => {
         </div>
     )
 }
-export default TripHistoryDriver
+export default TripsCompany

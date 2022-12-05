@@ -11,83 +11,77 @@ import { AddVehicoByCompany, AddVehicoByDriver, ChangeStatusSignUp, getAllVehico
 import AddVehico from '../../../../vehicos/add-vehico';
 const URL = "http://26.36.110.116";
 const RegisterAddVehicle = () => {
-    
 
-    const navigate =useNavigate();
+
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
     const [count, setCount] = useState(0);
     // const newUser = location.state.newUser;
     const user = useSelector((state) => state.user.userInfo?.currentUser)
-    const [vehicle,setVehicle]=useState("");
-
-    const onfinish = async(values) => {
+    const [vehicle, setVehicle] = useState("");
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
+    const onfinish = async (values) => {
         if (user.role == "ROLE_DRIVER") {
             console.log(values);
-            // const vehico = await{
-            //     ...values,
-            //     driverEmail: user.email,
-            // }
-            // setVehicle(vehico)
-            // console.log(vehicle);
+
             try {
                 const res = await axios.post(`${URL}:8080/api/driver/addVehicle`,
-                  {
-                    driverEmail: user.email,
-                    producer: values.producer,
-                    produceYear: values.produceYear,
-                    interiorColor: values.interiorColor,
-                    exteriorColor: values.exteriorColor,
-                    plate: values.plate,
-                    platState: values.platState,
-                    plateCountry: values.plateCountry,
-                    typeId: vehicle.typeId
-                  }
-                  , {
-                    headers: { 'Content-Type': 'application/json' }
-                  });
-                  setCount(count+1);
-                  getUser(user.email,dispatch);
+                    {
+                        driverEmail: user.email,
+                        producer: values.producer,
+                        produceYear: values.produceYear,
+                        interiorColor: values.interiorColor,
+                        exteriorColor: values.exteriorColor,
+                        plate: values.plate,
+                        platState: values.city.label,
+                        plateCountry: values.plateCountry,
+                        typeId: values.typeId
+                    }
+                    , {
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                setCount(count + 1);
+                getUser(user.email, dispatch);
                 toast.success("Tạo phương tiện thành công")
-              } catch (error) {
+            } catch (error) {
                 toast.error("Tạo phương tiện thất bại")
-              }
-            // AddVehicoByDriver(vehico,toast,dispatch);
-            // setCount(count+1);
+            }
         }
         else {
 
             try {
                 const res = await axios.post(`${URL}:8080/api/company/addVehicle`,
-                  {
-                    companyEmail: user.email,
-                    producer: values.producer,
-                    produceYear: values.produceYear,
-                    interiorColor: values.interiorColor,
-                    exteriorColor: values.exteriorColor,
-                    plate: values.plate,
-                    platState: values.platState,
-                    plateCountry: values.plateCountry,
-                    typeId: vehicle.typeId
-                  }
-                  , {
-                    headers: { 'Content-Type': 'application/json' }
-                  });
-                  setCount(count+1);
+                    {
+                        companyEmail: user.email,
+                        producer: values.producer,
+                        produceYear: values.produceYear,
+                        interiorColor: values.interiorColor,
+                        exteriorColor: values.exteriorColor,
+                        plate: values.plate,
+                        platState: values.city.label,
+                        plateCountry: values.plateCountry,
+                        typeId: values.typeId
+                    }
+                    , {
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                setCount(count + 1);
                 getAllVehico(vehicle.companyEmail, dispatch);
-                getUser(vehicle.companyEmail,dispatch);
+                getUser(vehicle.companyEmail, dispatch);
                 toast.success("Tạo phương tiện thành công")
-              } catch (error) {
+            } catch (error) {
                 toast.error("Tạo phương tiện thất bại")
-              }
+            }
             // AddVehicoByCompany(vehico, toast, dispatch);
             // setCount(count+1);
         }
     };
     console.log(count);
     const onClickNext = () => {
-        ChangeStatusSignUp(user.email,3);
-        navigate('/signup/vehico-info');      
+        ChangeStatusSignUp(user.email, 3);
+        navigate('/signup/vehico-info');
     };
     return (
         <div className='container'>
@@ -99,171 +93,170 @@ const RegisterAddVehicle = () => {
                 </p>
                 {/* <AddVehico/> */}
                 <div className='form-add' >
-                <div className='form-header'
-                >
-                    Thông tin phương tiện
-                </div>
-                <div className='form-contents'>
-                    <Form
-                        onFinish={onfinish}
-                        labelCol={{
-                            span: 8,
-                        }}
-                        wrapperCol={{
-                            span: 12,
-                        }}
+                    <div className='form-header'
                     >
-                        <Row>
-                            <Col sm={24} md={12} >
-                                <Form.Item
-                                    name="producer"
-                                    label="Nhà sản xuất *"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vùi lòng chọn nhà sản xuất',
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Toyota"></Option>
-                                        <Option value="Honda"></Option>
-                                        <Option value="Hyundai"></Option>
-                                        <Option value="Ford"></Option>
-                                        <Option value="Suzuki"></Option>
-                                        <Option value="Mercedes-Benz"></Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    name="produceYear"
-                                    label="Năm sản xuất"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng chọn năm sản xuất',
-                                        },
-                                    ]}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    name="interiorColor"
-                                    label="Màu nội thất *"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng chọn màu sơn',
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="black">Đen</Option>
-                                        <Option value="white">Trắng</Option>
-                                        <Option value="red">Đỏ</Option>
-                                        <Option value="bule">xanh</Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    name="exteriorColor"
-                                    label="Màu sơn *"
-
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="black">Đen</Option>
-                                        <Option value="white">Trắng</Option>
-                                        <Option value="red">Đỏ</Option>
-                                        <Option value="bule">xanh</Option>
-                                    </Select>
-                                </Form.Item>
-                            </Col>
-                            <Col sm={24} md={12} >
-                                <Form.Item
-                                    name="plate"
-                                    label="Biển số"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Biển số xe không được để trống',
-                                        },
-                                    ]}
-                                >
-                                    <Input />
-                                </Form.Item>
-
-                                <Form.Item
-                                    name="plateCountry"
-                                    label="Quốc gia đăng ký *"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng chọn quốc gia đăng ký',
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="vn">Việt nam</Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    name="platState"
-                                    label="Tỉnh thành đăng ký *"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Vui lòng chọn tỉnh thành đăng ký',
-                                        },
-                                    ]}
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Hà nội">Hà Nội</Option>
-                                        <Option value="Đà nẵng">Đà Nẵng</Option>
-                                        <Option value="Thành phố Hồ Chí Minh">Hồ Chí Minh</Option>
-                                    </Select>
-                                </Form.Item>
-                                <Form.Item
-                                    name="typeId"
-                                    label="Loại xe "
-
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="1">A3</Option>
-                                    </Select>
-                                </Form.Item>
-
-                            </Col>
-                        </Row>
-
-                        <Form.Item
+                        Thông tin phương tiện
+                    </div>
+                    <div className='form-contents'>
+                        <Form
+                            onFinish={onfinish}
+                            labelCol={{
+                                span: 8,
+                            }}
+                            wrapperCol={{
+                                span: 12,
+                            }}
                         >
-                            <Button type="primary" htmlType="submit">
-                                <SaveOutlined /> Lưu
-                            </Button>
-                        </Form.Item>
+                            <Row>
+                                <Col sm={24} md={12} >
+                                    <Form.Item
+                                        name="producer"
+                                        label="Nhà sản xuất *"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vùi lòng chọn nhà sản xuất',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="Toyota"></Option>
+                                            <Option value="Honda"></Option>
+                                            <Option value="Hyundai"></Option>
+                                            <Option value="Ford"></Option>
+                                            <Option value="Suzuki"></Option>
+                                            <Option value="Mercedes-Benz"></Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="produceYear"
+                                        label="Năm sản xuất"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn năm sản xuất',
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="interiorColor"
+                                        label="Màu nội thất *"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn màu sơn',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="Đen">Đen</Option>
+                                            <Option value="Trắng">Trắng</Option>
+                                            <Option value="Đỏ">Đỏ</Option>
+                                            <Option value="Xanh">Xanh</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="exteriorColor"
+                                        label="Màu sơn *"
 
-                    </Form>
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="Đen">Đen</Option>
+                                            <Option value="Trắng">Trắng</Option>
+                                            <Option value="Đỏ">Đỏ</Option>
+                                            <Option value="Xanh">Xanh</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                                <Col sm={24} md={12} >
+                                    <Form.Item
+                                        name="plate"
+                                        label="Biển số"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Biển số xe không được để trống',
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name="plateCountry"
+                                        label="Quốc gia đăng ký *"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn quốc gia đăng ký',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="vn">Việt nam</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="city"
+                                        label="Thành phố đăng ký"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn thành phố',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            placeholder="*Lựa chọn thành phố"
+                                            labelInValue
+                                            options={citys}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="typeId"
+                                        label="Loại xe "
+
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="1">Xe máy</Option>
+                                            <Option value="2">Ô tô</Option>
+                                        </Select>
+                                    </Form.Item>
+
+                                </Col>
+                            </Row>
+
+                            <Form.Item
+                            >
+                                <Button type="primary" htmlType="submit">
+                                    <SaveOutlined /> Lưu
+                                </Button>
+                            </Form.Item>
+
+                        </Form>
+                    </div>
                 </div>
-            </div>
             </div>
             <div style={{ marginTop: "50px" }}>
-                    {/* <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined/> </Button> */}
-                    {count == 1 ? (
-                        <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
-                    ) : (
-                        <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>
-                    )}
-                </div>
+                {/* <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined/> </Button> */}
+                {count == 1 ? (
+                    <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
+                ) : (
+                    <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>
+                )}
+            </div>
         </div>
     )
 }

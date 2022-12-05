@@ -9,7 +9,7 @@ import { ChangeStatusSignUp, getUser, UploadFile } from '../../../../redux/apiRe
 import { useEffect } from 'react';
 import axios from 'axios';
 const RegisterDriverInfoVehico = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const location = useLocation();
     const URL = "http://26.36.110.116";
@@ -68,24 +68,27 @@ const RegisterDriverInfoVehico = () => {
             createBy: newUser.email,
             fileName: "Chung_Nhan_Bao_Hiem",
             year: year,
-            month: month
+            month: month,
+            vehicleId:newUser.vehicleRequest.id
         }
-
+        console.log(object);
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${URL}:8080/api/Upload/DocumentVehicle`,
               {
                 base64: object.base64,
                 expired_month: object.month,
                 expired_year: object.year,
                 file_name: object.fileName,
-                createBy: object.createBy
+                createBy: object.createBy,
+                vehicleId:object.vehicleId
               }
               , {
                 headers: { 'Content-Type': 'application/json' }
               });
               serChung_Nhan_Bao_Hiem(true);
+              toast.success("Upload tài liệu thành công")
           } catch (error) {
-            toast.error("Upload file thất bại")
+            toast.error("Upload tài liệu thất bại")
           }
    
     };
@@ -101,24 +104,26 @@ const RegisterDriverInfoVehico = () => {
             createBy: newUser.email,
             fileName: "Chung_Nhan_Dang_Kiem",
             year: year,
-            month: month
+            month: month,
+            vehicleId:newUser.vehicleRequest.id,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${URL}:8080/api/Upload/DocumentVehicle`,
               {
                 base64: object.base64,
                 expired_month: object.month,
                 expired_year: object.year,
                 file_name: object.fileName,
-                createBy: object.createBy
+                createBy: object.createBy,
+                vehicleId:object.vehicleId
               }
               , {
                 headers: { 'Content-Type': 'application/json' }
               });
               setChung_Nhan_Dang_Kiem(true)
-              toast.success("Upload file thành công")
+              toast.success("Upload tài liệu thành công")
           } catch (error) {
-            toast.error("Upload file thất bại")
+            toast.error("Upload tài liệu thất bại")
           }
  
     };

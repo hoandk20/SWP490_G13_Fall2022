@@ -5,8 +5,10 @@ import RegisterCompanyDoc1s from '../../../../../components/registers/congty/reg
 
 const RegisterCompanyDoc1 = () => {
   return (
-    <LayoutSignup content={<RegisterCompanyDoc1s/>}/>
 
+    <div style={{margin:" 50px 10%"}}>
+    <RegisterCompanyDoc1s/>
+       </div>
   );
 };
 export default RegisterCompanyDoc1

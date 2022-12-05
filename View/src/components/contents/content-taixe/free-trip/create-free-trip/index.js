@@ -325,7 +325,7 @@ const CreateFreeTripForDriver = () => {
                                         }}
                                         onChange={onChange}
                                     /> ± */}
-                                    <DatePicker onChange={onChange}
+                                    <DatePicker placeholder='Chọn ngày' onChange={onChange}
                                         renderExtraFooter={() => ''} showTime />
                                 </Form.Item>
                                 <Form.Item

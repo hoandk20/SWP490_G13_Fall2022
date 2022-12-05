@@ -24,15 +24,15 @@ const RegisterCompanyInfo = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    console.log(location.state.newUser)
     const onFinish = (values) => {
         const newUser = {
             ...location.state.newUser,
             name: values.name,
             address: values.address,
             email: values.email,
-            password: values.password
+            password: values.password,
         }
+        console.log(newUser);
         registerCompany(newUser, dispatch, navigate, toast);
 
     };

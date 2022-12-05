@@ -32,6 +32,16 @@ const menuItem=[
     label: 'TRANG CHỦ',
   },
   {
+    key: '5',
+    icon: <LaptopOutlined />,
+    label: 'HỒ SƠ',
+  },
+  {
+    key: '6',
+    icon: <LaptopOutlined />,
+    label: 'TÀI LIỆU',
+  },
+  {
     key: '2',
     icon: <CarOutlined />,
     label: 'PHƯƠNG TIỆN',
@@ -41,16 +51,12 @@ const menuItem=[
     icon: <IdcardOutlined />,
     label: 'TÀI XẾ',
   },
-  // {
-  //   key: '4',
-  //   icon: <HistoryOutlined />,
-  //   label: 'LỊCH SỬ CHUYẾN ĐI',
-  // },
-  // {
-  //   key: '5',
-  //   icon: <LaptopOutlined rotate={180}/>,
-  //   label: 'CHUYẾN ĐI MIỄN PHÍ',
-  // },
+  {
+    key: '4',
+    icon: <HistoryOutlined />,
+    label: 'TỔNG SỐ CHUYẾN ĐI ',
+  },
+
   {
     key: 'signOut',
     icon: <LogoutOutlined />,
@@ -90,6 +96,15 @@ const LayoutCompany = (props) => {
               }
               if(key==3){
                 navigate('/congty/driver-mgt')
+              }
+              if(key==4){
+                navigate('/congty/trips')
+              }
+              if(key==5){
+                navigate('/congty/info')
+              }
+              if(key==6){
+                navigate('/congty/document')
               }
             }
           }}

@@ -21,24 +21,23 @@ const DriverDetailAdmin = (props) => {
 
     const info = location.state?.record;
     const drivers = useSelector((state) => state.user.driver?.info);
-    
+
     console.log(drivers);
     const listDoc = drivers?.listDocs;
-    const Bang_lai_xe = listDoc?.find(doc => doc.file_name === "Bang_lai_xe");
+    const Bang_lai_xe = drivers.blx;
     console.log(Bang_lai_xe);
-    const Chung_Nhan_Kinh_nghiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Kinh_nghiem");
-    const Chung_Nhan_Bao_Hiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Bao_Hiem");
-    const Chung_Nhan_Dang_Kiem = listDoc?.find(doc => doc.file_name === "Chung_Nhan_Dang_Kiem");
+    const Chung_Nhan_Kinh_nghiem = drivers.cnkn;
+    const Chung_Nhan_Bao_Hiem = drivers.cnbh;
+    const Chung_Nhan_Dang_Kiem = drivers.cndk;
 
 
     const [open, setOpen] = useState(false);
-    const [check1, setCheck1] = useState(Bang_lai_xe.status!="SENDED");
-    const [check2, setCheck2] = useState(Chung_Nhan_Kinh_nghiem.status!="SENDED");
-    const [check3, setCheck3] = useState(Chung_Nhan_Bao_Hiem.status!="SENDED");
-    const [check4, setCheck4] = useState(Chung_Nhan_Dang_Kiem.status!="SENDED");
+    // const [check1, setCheck1] = useState(Bang_lai_xe.status != "SENDED");
+    // const [check2, setCheck2] = useState(Chung_Nhan_Kinh_nghiem.status != "SENDED");
+    // const [check3, setCheck3] = useState(Chung_Nhan_Bao_Hiem.status != "SENDED");
+    // const [check4, setCheck4] = useState(Chung_Nhan_Dang_Kiem.status != "SENDED");
     const [form] = Form.useForm();
     const URL = "http://26.36.110.116";
-    console.log(check1);
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -53,7 +52,7 @@ const DriverDetailAdmin = (props) => {
     const [checkdoc2, setCheckdoc2] = useState(false);
     const [checkdoc6, setCheckdoc6] = useState(false);
     const [checkdoc7, setCheckdoc7] = useState(false);
-
+    console.log(baseImage1);
 
 
     const getFileAvatar = async () => {
@@ -102,35 +101,35 @@ const DriverDetailAdmin = (props) => {
     }
 
     const changeStatusValid1 = () => {
-        setCheck1(true);
+        // setCheck1(true);
         ChaangeStatusDoc(Bang_lai_xe.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid1 = () => {
-        setCheck1(true);
+        // setCheck1(true);
         ChaangeStatusDoc(Bang_lai_xe.id, "INVALID", drivers?.email, toast, dispatch);
     }
     const changeStatusValid2 = () => {
-        setCheck2(true);
+        // setCheck2(true);
         ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid2 = () => {
-        setCheck2(true);
+        // setCheck2(true);
         ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID", drivers?.email, toast, dispatch);
     }
     const changeStatusValid6 = () => {
-        setCheck3(true);
+        // setCheck3(true);
         ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid6 = () => {
-        setCheck3(true);
+        // setCheck3(true);
         ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "INVALID", drivers?.email, toast, dispatch);
     }
     const changeStatusValid7 = () => {
-        setCheck4(true);
+        // setCheck4(true);
         ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "VALID", drivers?.email, toast, dispatch);
     }
     const changeStatusInValid7 = () => {
-        setCheck4(true);
+        // setCheck4(true);
         ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "INVALID", drivers?.email, toast, dispatch);
     }
 
@@ -226,7 +225,7 @@ const DriverDetailAdmin = (props) => {
     function getTime7(date, dateString) {
         setDate7(dateString);
     }
-    const uploadfile1 = () => {
+    const uploadfile1 = async () => {
         const arr = date1.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -237,20 +236,29 @@ const DriverDetailAdmin = (props) => {
             year: year,
             month: month
         }
-        UploadFile(object, toast);
-        // setTimeout(()=>{
-        //     getDriverDetail(drivers?.email,dispatch);
-        //     if(Bang_lai_xe.status==="SENDED"){
-        //         setCheck1(false);
-        //     }
-        // },1000)   
-        getDriverDetail(drivers?.email,dispatch);
-        setCheckdoc1(false)
-       
-       
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            getDriverDetail(drivers?.email, dispatch);
+            setCheckdoc1(false)
+            toast.success("Upload file thành công")
+        } catch (error) {
+            toast.error("Upload file thất bại")
+        }
+
+
     };
 
-    const uploadfile2 = () => {
+    const uploadfile2 = async () => {
         const arr = date2.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -261,11 +269,28 @@ const DriverDetailAdmin = (props) => {
             year: year,
             month: month,
         }
-        UploadFile(object, toast);
-        setCheckdoc2(false)
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            getDriverDetail(drivers?.email, dispatch);
+            setCheckdoc2(false)
+            toast.success("Upload file thành công")
+        } catch (error) {
+            toast.error("Upload file thất bại")
+        }
+
     };
 
-    const uploadfile6 = () => {
+    const uploadfile6 = async () => {
         const arr = date6.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -276,10 +301,27 @@ const DriverDetailAdmin = (props) => {
             year: year,
             month: month,
         }
-        UploadFile(object, toast);
-        setCheckdoc6(false)
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            getDriverDetail(drivers?.email, dispatch);
+            setCheckdoc6(false)
+            toast.success("Upload file thành công")
+        } catch (error) {
+            toast.error("Upload file thất bại")
+        }
+
     };
-    const uploadfile7 = () => {
+    const uploadfile7 = async () => {
         const arr = date7.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -290,8 +332,25 @@ const DriverDetailAdmin = (props) => {
             year: year,
             month: month,
         }
-        UploadFile(object, toast);
-        setCheckdoc7(false)
+        try {
+            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            getDriverDetail(drivers?.email, dispatch);
+            setCheckdoc7(false)
+            toast.success("Upload file thành công")
+        } catch (error) {
+            toast.error("Upload file thất bại")
+        }
+
 
     };
 
@@ -307,10 +366,10 @@ const DriverDetailAdmin = (props) => {
     //     }
     // }
     useEffect(() => {
-        setTimeout(()=>{
-            getDriverDetail(drivers.email,dispatch);
-          },1000)   
-       
+        setTimeout(() => {
+            getDriverDetail(drivers.email, dispatch);
+        }, 1000)
+
     }, [])
     // getFileAvatar();
     return (
@@ -323,31 +382,40 @@ const DriverDetailAdmin = (props) => {
                     span: 20,
                 }}
             >
-                <p>Thông tin công ty</p>
-                <Row>
-                    <Col span={8}>
-                        <Form.Item
-                            name="companyName"
+                {
+                    drivers.companyInfo === null ? (
+                        <>
+                            <h2 style={{ marginTop: "30px" }}>
+                                Tài xế không thuộc công ty nào
+                            </h2>
+                        </>
+                    ) : (
+                        <>
+                            <p>Thông tin công ty</p>
+                            <Row>
+                                <Col span={8}>
+                                    <Form.Item
+                                        name="companyName"
 
-                            // initialValue={drivers.companyInfo.companyName}
+                                        // initialValue={drivers.companyInfo.companyName}
 
-                            label="Tên công ty"
-                        >
-                            <Input />
-                        </Form.Item>
-                        <Form.Item
+                                        label="Tên công ty"
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    <Form.Item
 
-                            name="companyAddress"
-                            // initialValue={drivers.companyInfo.companyAddress}
+                                        name="companyAddress"
+                                        // initialValue={drivers.companyInfo.companyAddress}
 
-                            label="Địa chỉ"
-                        >
-                            <Input />
-                        </Form.Item>
+                                        label="Địa chỉ"
+                                    >
+                                        <Input />
+                                    </Form.Item>
 
-                    </Col>
-                    <Col span={8}>
-                        {/* <Form.Item
+                                </Col>
+                                <Col span={8}>
+                                    {/* <Form.Item
                             name="status"
 
                             // initialValue={drivers.companyInfo.companyStatus}
@@ -356,39 +424,23 @@ const DriverDetailAdmin = (props) => {
                         >
                             <Input />
                         </Form.Item> */}
-                        <Form.Item
+                                    <Form.Item
 
-                            name="companyPhone"
-                            // initialValue={drivers.companyInfo.phone}
+                                        name="companyPhone"
+                                        // initialValue={drivers.companyInfo.phone}
 
-                            label="Số ĐT"
-                        >
-                            <Input />
-                        </Form.Item>
+                                        label="Số ĐT"
+                                    >
+                                        <Input />
+                                    </Form.Item>
 
-                    </Col>
-                    <Col span={8}>
+                                </Col>
 
-                        <div >
-                            <Image
-                                style={{marginLeft:"50%"}}
-                                id='avatarImage'
-                                src={baseImageAvatar}
-                                className='avatar'
-                            />
-                            {/* <div className='inputFile'>
-                                <input
-                                    type="file"
-                                    style={{ color: "#fff" }}
-                                    onChange={(e) => {
-                                        uploadAvatar(e);
-                                    }}
-                                />
-                            </div> */}
-                        </div>
+                            </Row>
+                        </>
+                    )
+                }
 
-                    </Col>
-                </Row>
                 <p>Thông tin cá nhân</p>
                 <Row>
                     <Col span={8}>
@@ -497,9 +549,22 @@ const DriverDetailAdmin = (props) => {
                             <Input disabled />
 
                         </Form.Item>
-                       
-                    </Col>
 
+                    </Col>
+                    <Col span={8}>
+
+                        <div style={{ margin: "0px 40%" }}>
+                            <Image
+                                // style={{ marginLeft: "50%" }}
+                                // id='avatarImage'
+                                src={drivers?.avatarBase64}
+                                className='avatar'
+                            />
+                   
+
+                        </div>
+
+                    </Col>
                 </Row>
 
                 <p>Thôn tin Tài khoản</p>
@@ -520,7 +585,7 @@ const DriverDetailAdmin = (props) => {
                         </Form.Item>
                     </Col>
                     <Col span={8}>
-                        <Button style={{marginLeft:"30%"}} type="primary" htmlType="submit">Thay đổi thông tin tài xế</Button>
+                        <Button style={{ marginLeft: "30%" }} type="primary" htmlType="submit">Thay đổi thông tin tài xế</Button>
                     </Col>
                     <Col span={8}>
 
@@ -575,7 +640,16 @@ const DriverDetailAdmin = (props) => {
                                 </div>
                                 <div className='upload-doc'>
                                     <span>
-                                        <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                        {
+                                            baseImage1 !== "" ? (
+                                                <></>
+                                            ) : (
+                                                <>
+                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                </>
+                                            )
+                                        }
+
                                         <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Bang_lai_xe?.expired_month}-{Bang_lai_xe?.expired_year}</span>
                                         <Button onClick={editDocument1} style={{ float: "right" }} type="primary"> Thay đổi</Button>
                                     </span>
@@ -646,7 +720,15 @@ const DriverDetailAdmin = (props) => {
                                 </div>
                                 <div className='upload-doc'>
                                     <span>
-                                        <Button onClick={getFile2} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                        {
+                                            baseImage2 !== "" ? (
+                                                <></>
+                                            ) : (
+                                                <>
+                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                </>
+                                            )
+                                        }
                                         <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Chung_Nhan_Kinh_nghiem?.expired_month}-{Chung_Nhan_Kinh_nghiem?.expired_year}</span>
                                         <Button onClick={editDocument2} style={{ float: "right" }} type="primary"> Thay đổi</Button>
                                     </span>
@@ -668,268 +750,296 @@ const DriverDetailAdmin = (props) => {
                     </div>
                 )
             }
+            {
+                drivers?.vehicleInfo === null ? (
+                    <>
+                        <div style={{ marginTop: "50px", fontSize: "30px" }}>
+                            Hiện tài xế chưa có phương tiện
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <p style={{ marginTop: "20px" }}>Thông tin phương tiện</p>
+                        <div className='vehico-info'>
 
-            <p style={{ marginTop: "20px" }}>Thông tin phương tiện</p>
-            <div className='vehico-info'>
-
-                <Collapse accordion>
-                    <Panel header={drivers?.vehicleInfo?.plate} key="1" extra={<div className='status-ad'>Chưa gửi</div>}>
-                        <>
-                            <Form onFinish={onfinishUploadVehicle}
-                                labelCol={{
-                                    span: 6,
-                                }}
-                                wrapperCol={{
-                                    span: 14,
-                                }}
-                            >
-
-
-                                <Row>
-                                    <Col sm={24} md={12}>
-                                        <Form.Item
-                                            name=""
-                                            // initialValue={drivers?.vehicle.a}
-                                            label="Hạng phương tiện"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
+                            <Collapse accordion>
+                                <Panel header={drivers?.vehicleInfo?.plate} key="1" >
+                                    <>
+                                        <Form onFinish={onfinishUploadVehicle}
+                                            labelCol={{
+                                                span: 6,
+                                            }}
+                                            wrapperCol={{
+                                                span: 14,
+                                            }}
                                         >
-                                            <Input />
-                                        </Form.Item>
-                                        <Form.Item
-                                            name="produceYear"
-                                            initialValue={drivers?.vehicleInfo?.produceYear}
-                                            label="Năm sản xuất"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
-                                        <Form.Item
-                                            name="plate"
-                                            initialValue={drivers?.vehicleInfo?.plate}
-                                            label="Biển số"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
-                                        <Form.Item
-                                            name="exteriorColor"
-                                            initialValue={drivers?.vehicleInfo?.exteriorColor}
-                                            label="Màu sơn"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
-                                    </Col>
-                                    <Col sm={24} md={12}>
-                                        <Form.Item
-                                            name="interiorColor"
-                                            initialValue={drivers?.vehicleInfo?.interiorColor}
-                                            label="Màu nội thất"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
-                                        <Form.Item
-                                            name="plateCountry"
-                                            initialValue={drivers?.vehicleInfo?.plateCountry}
-                                            label="Quốc gia đăng ký"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
-                                        <Form.Item
-                                            name="platState"
-                                            initialValue={drivers?.firstName}
-                                            label="Thành phố đăng ký"
-                                            rules={[
-                                                {
-                                                    required: true,
-                                                    message: 'Please select an owner',
-                                                },
-                                            ]}
-                                        >
-                                            <Input />
-                                        </Form.Item>
-
-                                    </Col>
-
-                                </Row>
-                                <p>Thông tin tài liệu của phương tiện</p>
-                                {
-                                    checkdoc6 === true ? (
-
-                                        <div className='card-doc'>
-                                            <div className='form-header'>
-                                                <span>
-                                                    Giấy chứng nhận bảo hiểm
-                                                   
-                                                </span>
-
-                                            </div>
-                                            <div className='form-content'>
-                                                <div className='form-image' style={{ height: "230px" }}>
-                                                    <img src={baseImage6} height="220px" />
-                                                </div>
-                                                <div className='content-bottom'>
-                                                    <span style={{ marginRight: "20px" }}>
-                                                        Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
-                                                    </span>
-                                                    <input
-                                                        type="file"
-                                                        style={{ color: "#fff" }}
-                                                        onChange={(e) => {
-                                                            uploadImage6(e);
-                                                        }}
-                                                    />
-                                                    <Button className='btn-submit' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className='doc-taixe'>
-                                            <div className='card-doc-ad'>
-                                                <div className='form-header-ad' style={{ height: "40px" }}>
-                                                    <span>
-                                                        Giấy chứng nhận bảo hiểm
-                                                        <div className='status-ad'>{Chung_Nhan_Bao_Hiem?.status}</div>
-                                                    </span>
-
-                                                </div>
-                                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                    <div className='form-image-ad' style={{ minHeight: "50px" }} >
-                                                        <img src={baseImage6} height="150px" />
-                                                    </div>
-                                                    <div className='upload-doc'>
-                                                        <span>
-                                                            <Button onClick={getFile6} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                                            <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Bao_Hiem?.expired_month}-{Chung_Nhan_Bao_Hiem?.expired_year}</span>
-                                                            <Button onClick={editDocument6} style={{ float: "right" }} type="primary"> Thay đổi</Button>
-                                                        </span>
 
 
-                                                    </div>
-                                                    {
-                                                        Chung_Nhan_Bao_Hiem?.status === "SENDED" ? (
-                                                            <div className='form-bottom-ad' >
-                                                                <Button onClick={changeStatusValid6} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                                                <Button onClick={changeStatusInValid6} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                            <Row>
+                                                <Col sm={24} md={12}>
+                                                    <Form.Item
+                                                        name=""
+                                                        // initialValue={drivers?.vehicle.a}
+                                                        label="Hạng phương tiện"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Please select an owner',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name="produceYear"
+                                                        initialValue={drivers?.vehicleInfo?.produceYear}
+                                                        label="Năm sản xuất"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Please select an owner',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name="plate"
+                                                        initialValue={drivers?.vehicleInfo?.plate}
+                                                        label="Biển số"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Please select an owner',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name="exteriorColor"
+                                                        initialValue={drivers?.vehicleInfo?.exteriorColor}
+                                                        label="Màu sơn"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Please select an owner',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+                                                </Col>
+                                                <Col sm={24} md={12}>
+                                                    <Form.Item
+                                                        name="interiorColor"
+                                                        initialValue={drivers?.vehicleInfo?.interiorColor}
+                                                        label="Màu nội thất"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Please select an owner',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name="plateCountry"
+                                                        initialValue={drivers?.vehicleInfo?.plateCountry}
+                                                        label="Quốc gia đăng ký"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Please select an owner',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+                                                    <Form.Item
+                                                        name="platState"
+                                                        initialValue={drivers?.firstName}
+                                                        label="Thành phố đăng ký"
+                                                        rules={[
+                                                            {
+                                                                required: true,
+                                                                message: 'Please select an owner',
+                                                            },
+                                                        ]}
+                                                    >
+                                                        <Input />
+                                                    </Form.Item>
+
+                                                </Col>
+
+                                            </Row>
+                                            <p>Thông tin tài liệu của phương tiện</p>
+                                            {
+                                                checkdoc6 === true ? (
+
+                                                    <div className='card-doc'>
+                                                        <div className='form-header'>
+                                                            <span>
+                                                                Giấy chứng nhận bảo hiểm
+
+                                                            </span>
+
+                                                        </div>
+                                                        <div className='form-content'>
+                                                            <div className='form-image' style={{ height: "230px" }}>
+                                                                <img src={baseImage6} height="220px" />
                                                             </div>
-                                                        ) : (
-                                                            <></>
-                                                        )
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                }
-                                {
-                                    checkdoc7 === true ? (
-
-                                        <div className='card-doc'>
-                                            <div className='form-header'>
-                                                <span>
-                                                    Giấy chứng nhận đăng kiểm
-                                                   
-                                                </span>
-
-                                            </div>
-                                            <div className='form-content'>
-                                                <div className='form-image' style={{ height: "230px" }}>
-                                                    <img src={baseImage7} height="220px" />
-                                                </div>
-                                                <div className='content-bottom'>
-                                                    <span style={{ marginRight: "20px" }}>
-                                                        Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
-                                                    </span>
-                                                    <input
-                                                        type="file"
-                                                        style={{ color: "#fff" }}
-                                                        onChange={(e) => {
-                                                            uploadImage7(e);
-                                                        }}
-                                                    />
-                                                    <Button className='btn-submit' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className='doc-taixe'>
-                                            <div className='card-doc-ad'>
-                                                <div className='form-header-ad' style={{ height: "40px" }}>
-                                                    <span>
-                                                        Giấy chứng nhận đăng kiểm
-                                                        <div className='status-ad'>{Chung_Nhan_Dang_Kiem?.status}</div>
-                                                    </span>
-
-                                                </div>
-                                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                    <div className='form-image-ad' style={{ minHeight: "50px" }} >
-                                                        <img src={baseImage7} height="150px" />
-                                                    </div>
-                                                    <div className='upload-doc'>
-                                                        <span>
-                                                            <Button onClick={getFile7} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
-                                                            <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Dang_Kiem?.expired_month}-{Chung_Nhan_Dang_Kiem?.expired_year}</span>
-                                                            <Button onClick={editDocument7} style={{ float: "right" }} type="primary"> Thay đổi</Button>
-                                                        </span>
-
-
-                                                    </div>
-                                                    {
-                                                        Chung_Nhan_Dang_Kiem?.status === "SENDED" ? (
-                                                            <div className='form-bottom-ad' >
-                                                                <Button onClick={changeStatusValid7} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                                                <Button onClick={changeStatusInValid7} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                                            <div className='content-bottom'>
+                                                                <span style={{ marginRight: "20px" }}>
+                                                                    Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
+                                                                </span>
+                                                                <input
+                                                                    type="file"
+                                                                    style={{ color: "#fff" }}
+                                                                    onChange={(e) => {
+                                                                        uploadImage6(e);
+                                                                    }}
+                                                                />
+                                                                <Button className='btn-submit' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
                                                             </div>
-                                                        ) : (
-                                                            <></>
-                                                        )
-                                                    }
-                                                </div>
-                                            </div>
-                                        </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className='doc-taixe'>
+                                                        <div className='card-doc-ad'>
+                                                            <div className='form-header-ad' style={{ height: "40px" }}>
+                                                                <span>
+                                                                    Giấy chứng nhận bảo hiểm
+                                                                    <div className='status-ad'>{Chung_Nhan_Bao_Hiem?.status}</div>
+                                                                </span>
 
-                                    )
-                                }
+                                                            </div>
+                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                                <div className='form-image-ad' style={{ minHeight: "50px" }} >
+                                                                    <img src={baseImage6} height="150px" />
+                                                                </div>
+                                                                <div className='upload-doc'>
+                                                                    <span>
+                                                                        {
+                                                                            baseImage6 !== "" ? (
+                                                                                <></>
+                                                                            ) : (
+                                                                                <>
+                                                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                                </>
+                                                                            )
+                                                                        }
+                                                                        <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Bao_Hiem?.expired_month}-{Chung_Nhan_Bao_Hiem?.expired_year}</span>
+                                                                        <Button onClick={editDocument6} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+                                                                    </span>
 
 
-                            </Form>
-                        </>
-                    </Panel>
+                                                                </div>
+                                                                {
+                                                                    Chung_Nhan_Bao_Hiem?.status === "SENDED" ? (
+                                                                        <div className='form-bottom-ad' >
+                                                                            <Button onClick={changeStatusValid6} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                                            <Button onClick={changeStatusInValid6} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <></>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            }
+                                            {
+                                                checkdoc7 === true ? (
 
-                </Collapse>
-            </div>
+                                                    <div className='card-doc'>
+                                                        <div className='form-header'>
+                                                            <span>
+                                                                Giấy chứng nhận đăng kiểm
+
+                                                            </span>
+
+                                                        </div>
+                                                        <div className='form-content'>
+                                                            <div className='form-image' style={{ height: "230px" }}>
+                                                                <img src={baseImage7} height="220px" />
+                                                            </div>
+                                                            <div className='content-bottom'>
+                                                                <span style={{ marginRight: "20px" }}>
+                                                                    Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
+                                                                </span>
+                                                                <input
+                                                                    type="file"
+                                                                    style={{ color: "#fff" }}
+                                                                    onChange={(e) => {
+                                                                        uploadImage7(e);
+                                                                    }}
+                                                                />
+                                                                <Button className='btn-submit' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : (
+                                                    <div className='doc-taixe'>
+                                                        <div className='card-doc-ad'>
+                                                            <div className='form-header-ad' style={{ height: "40px" }}>
+                                                                <span>
+                                                                    Giấy chứng nhận đăng kiểm
+                                                                    <div className='status-ad'>{Chung_Nhan_Dang_Kiem?.status}</div>
+                                                                </span>
+
+                                                            </div>
+                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                                <div className='form-image-ad' style={{ minHeight: "50px" }} >
+                                                                    <img src={baseImage7} height="150px" />
+                                                                </div>
+                                                                <div className='upload-doc'>
+                                                                    <span>
+                                                                        {
+                                                                            baseImage7 !== "" ? (
+                                                                                <></>
+                                                                            ) : (
+                                                                                <>
+                                                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                                </>
+                                                                            )
+                                                                        }
+                                                                        <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Dang_Kiem?.expired_month}-{Chung_Nhan_Dang_Kiem?.expired_year}</span>
+                                                                        <Button onClick={editDocument7} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+                                                                    </span>
+
+
+                                                                </div>
+                                                                {
+                                                                    Chung_Nhan_Dang_Kiem?.status === "SENDED" ? (
+                                                                        <div className='form-bottom-ad' >
+                                                                            <Button onClick={changeStatusValid7} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                                            <Button onClick={changeStatusInValid7} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <></>
+                                                                    )
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                )
+                                            }
+
+
+                                        </Form>
+                                    </>
+                                </Panel>
+
+                            </Collapse>
+                        </div>
+                    </>
+                )
+            }
+
 
 
             <div style={{ marginTop: "50px" }}>

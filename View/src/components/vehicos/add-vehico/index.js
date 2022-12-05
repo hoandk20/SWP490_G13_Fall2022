@@ -16,6 +16,9 @@ const AddVehico = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const newUser = location.state.newUser;
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
+    console.log(newUser);
     const onfinish = (values) => {
         if (newUser.role == "ROLE_DRIVER") {
             console.log(values);
@@ -31,7 +34,7 @@ const AddVehico = () => {
                 ...values,
                 companyEmail: newUser.email,
             }
-            AddVehicoByCompany(vehico, toast, dispatch);
+            // AddVehicoByCompany(vehico, toast, dispatch);
         }
     };
 
@@ -54,20 +57,27 @@ const AddVehico = () => {
                     >
                         <Row>
                             <Col sm={24} md={12} >
-                                <FormItem
-                                    name="producer"
-                                    label="Nhà sản xuất *"
-
+                            <Form.Item
+                                name="producer"
+                                label="Nhà sản xuất"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vùi lòng chọn nhà sản xuất',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    allowClear
                                 >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="honda"></Option>
-                                        <Option value="honda1"></Option>
-                                        <Option value="honda2"></Option>
-                                        <Option value="honda3"></Option>
-                                    </Select>
-                                </FormItem>
+                                    <Option value="Toyota"></Option>
+                                    <Option value="Honda"></Option>
+                                    <Option value="Hyundai"></Option>
+                                    <Option value="Ford"></Option>
+                                    <Option value="Suzuki"></Option>
+                                    <Option value="Mercedes-Benz"></Option>
+                                </Select>
+                            </Form.Item>
                                 <Form.Item
                                     name="produceYear"
                                     label="Năm sản xuất"
@@ -91,7 +101,7 @@ const AddVehico = () => {
                                         <Option value="black">Đen</Option>
                                         <Option value="white">Trắng</Option>
                                         <Option value="red">Đỏ</Option>
-                                        <Option value="bule">xanh</Option>
+                                        <Option value="bule">Xanh</Option>
                                     </Select>
                                 </FormItem>
                                 <FormItem
@@ -116,7 +126,7 @@ const AddVehico = () => {
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'Please enter plate',
+                                            message: 'Biển số xe không được để trống',
                                         },
                                     ]}
                                 >
@@ -134,19 +144,21 @@ const AddVehico = () => {
                                         <Option value="vn">Việt nam</Option>
                                     </Select>
                                 </FormItem>
-                                <FormItem
-                                    name="platState"
-                                    label="Tỉnh thành đăng ký *"
-
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="hanoi">Hà Nội</Option>
-                                        <Option value="danang">Đà Nẵng</Option>
-                                        <Option value="hcm">Hồ Chí Minh</Option>
-                                    </Select>
-                                </FormItem>
+                                <Form.Item
+                                name="platState"
+                                label="Thành phố đăng ký"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn tỉnh thành đăng ký',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    labelInValue
+                                    options={citys}
+                                />
+                            </Form.Item>
                                 <FormItem
                                     name="typeId"
                                     label="Loại xe *"
@@ -155,7 +167,8 @@ const AddVehico = () => {
                                     <Select
                                         allowClear
                                     >
-                                        <Option value="1">A3</Option>
+                                        <Option value="1">Xe máy</Option>
+                                        <Option value="2">Ô tô</Option>
                                     </Select>
                                 </FormItem>
 

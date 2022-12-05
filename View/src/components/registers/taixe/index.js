@@ -16,6 +16,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from 'react-router';
 
 import {  toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 const { Option } = Select;
 
 // const onChangeCheck = (e) => {
@@ -38,6 +39,8 @@ const prefixSelector = (
 const RegisterDriver = () => {
 
     const navigate= useNavigate();
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const onFinish = (values) => {
         const newUser={
             country:values.country,
@@ -81,6 +84,12 @@ const RegisterDriver = () => {
                                     <h3>Bạn đang ở...</h3>
                                     <FormItem
                                         name="country"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn quốc gia của bạn',
+                                            },
+                                        ]}
                                     >
                                         <Select
                                             placeholder="*Lựa chọn quốc gia"
@@ -92,15 +101,28 @@ const RegisterDriver = () => {
                                     </FormItem>
                                     <FormItem
                                         name="city"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn thành phố ',
+                                            },
+                                        ]}
                                     >
-                                        <Select
-                                            placeholder="*Thành phố"
-                                        >
-                                            <Option value="Hà Nội"></Option>
-                                            <Option value="Đà nẵng"></Option>
-                                            <Option value="Hồ Chí Minh"></Option>
-
-                                        </Select>
+                        <Form.Item
+                                name="city"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn thành phố',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                   placeholder="*Lựa chọn thành phố"
+                                    labelInValue
+                                    options={citys}
+                                />
+                            </Form.Item>
 
                                     </FormItem>
                                     <Form.Item
@@ -108,7 +130,10 @@ const RegisterDriver = () => {
                                         rules={[
                                             {
                                                 required: true,
-                                                message: 'Please input your phone number!',
+                                                message: 'Số điện thoại không được để trống',
+                                            },
+                                            {
+                                                message: 'Số điện thoại không hợp lệ',
                                                 pattern: new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g),
                                             },
                                         ]}

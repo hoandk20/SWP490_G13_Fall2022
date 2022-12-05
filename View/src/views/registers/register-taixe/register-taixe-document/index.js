@@ -4,8 +4,9 @@ import RegisterDriverDoc from '../../../../components/registers/taixe/register-d
 
 const RegisterDriverDocument = () => {
   return (
-    <LayoutSignup content={<RegisterDriverDoc/>}/>
-
+     <div style={{margin:" 20px 10%"}}>
+<RegisterDriverDoc/>
+     </div>
   );
 };
 export default RegisterDriverDocument

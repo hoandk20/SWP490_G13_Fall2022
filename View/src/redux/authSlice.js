@@ -58,7 +58,7 @@ const authSlice = createSlice({
             state.register.error=true;   
             state.register.success=false    
         }
-    }
+    } 
 });
 
 export const{

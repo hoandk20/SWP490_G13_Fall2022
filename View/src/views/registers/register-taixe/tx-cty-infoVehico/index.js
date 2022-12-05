@@ -5,7 +5,9 @@ import RegisterDriverInfoVehicos from '../../../../components/registers/taixe/tx
 
 const RegisterDriverInfoVehico = () =>{
     return(
-      <LayoutSignup content={<RegisterDriverInfoVehicos/>}/>
+     <div style={{margin:" 50px 10%"}}>
+ <RegisterDriverInfoVehicos/>
+     </div>
     );
 };
 export default RegisterDriverInfoVehico

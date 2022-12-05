@@ -5,6 +5,8 @@ import { Button, Card, Col, Row } from 'antd';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../../redux/userSlice';
+import { useEffect } from 'react';
+import { getAllCity } from '../../../redux/apiRequest';
 
 
 const { Meta } = Card;
@@ -20,6 +22,9 @@ const RegisterHome = () => {
         navigate('/signup/driver&company')
         
     };
+    useEffect(() => {
+        getAllCity(dispatch);
+    }, [])
     return (
         <div className='container'>
             <div className='container-register'>

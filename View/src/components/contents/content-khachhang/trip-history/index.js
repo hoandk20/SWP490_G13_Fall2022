@@ -142,7 +142,7 @@ const TripHistoryPassenger = () => {
                                         span: 8,
                                     }}
                                 >
-                                    <DatePicker />
+                                    <DatePicker placeholder='Chọn ngày'/>
                                 </FormItem>
                             </Col>
                             <Col sm={12} md={6} >
@@ -153,7 +153,7 @@ const TripHistoryPassenger = () => {
                                         span: 6,
                                     }}
                                 >
-                                    <DatePicker />
+                                    <DatePicker placeholder='Chọn ngày' />
                                 </FormItem>
                             </Col>
                         </Row>

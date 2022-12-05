@@ -25,6 +25,7 @@ const RegisterSignup = () => {
         password: newUser.password,
     };
     const currentUser = useSelector((state)=>state.auth.login?.currentUser);
+    console.log(currentUser);
     const decodedTocken=jwtDecode(currentUser.access_token);
     const userName=decodedTocken.sub; 
     const user1=useSelector((state)=>state.user.userInfo?.currentUser);
@@ -58,25 +59,13 @@ const RegisterSignup = () => {
         
     }
 
+
     // useEffect(() => {
-      
-    //     if (counter > 0) {
-    //         const myTimeOut = setTimeout(() => setCounter(counter - 1), 1000);
-    //         if (counter == 60) {
-    //             clearTimeout(myTimeOut)
-    //             setTimeout(() => setCounter(counter - 1), 1000);
-    //         }
-    //     }
-    //     console.log(counter);
-    // }, [counter]);
-
-
-    useEffect(() => {
-        setTimeout(()=>{
-            login();
-          },1000)   
+    //     setTimeout(()=>{
+    //         login();
+    //       },3000)   
           
-    }, []);
+    // }, []);
 
     return (
         <>

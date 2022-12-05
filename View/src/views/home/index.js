@@ -65,8 +65,6 @@ const Home = () => {
   }
 
   
-
-  console.log("passenger",data);
   useEffect(()=>{
     getUser(userName,dispatch);
     getAllCity(dispatch);
