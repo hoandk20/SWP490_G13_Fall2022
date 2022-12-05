@@ -30,7 +30,12 @@ public class RegisterDriverCompany {
     String lh;
     String DeviceType;
     CompanyInfo companyInfo;
-    List<DocumentRequest> listDocs;
     VehicleRequest vehicleInfo;
+    DocumentRequest BLX;
+    DocumentRequest CNKN;
+    DocumentRequest CNDK;
+    DocumentRequest CNBH;
+    String AvatarBase64;
+
 
 }

@@ -1,5 +1,6 @@
 package com.G13.api;
 
+import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
@@ -64,7 +65,7 @@ public class DriverResource {
 
     }
     @GetMapping("/detail")
-    public ResponseEntity<?> AddVehicle(String driverEmail){
+    public ResponseEntity<?> DriverDetail(String driverEmail){
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
             try {
@@ -82,7 +83,6 @@ public class DriverResource {
                 r.setCreateDate(driver.getCreatedDate());
                 r.setStatus(driver.getStatus());
                 r.setDeviceType(driver.getDeviceType());
-
                 r.setDocStatus("");
                 r.setLh("");
                 r.setCountry(driver.getCountryCode());
@@ -96,9 +96,8 @@ public class DriverResource {
                     companyInfo.setCompanyStatus(company.getStatus());
                     r.setCompanyInfo(companyInfo);
                 } catch (Exception e) {
-
+                    System.out.println(e.toString());
                 }
-                List<DocumentRequest> documentRequests = new ArrayList<>();
                 UploadFileMaster uploadFileMaster = new UploadFileMaster();
                 Document document1 = documentRepository
                         .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Bang_lai_xe);
@@ -110,7 +109,7 @@ public class DriverResource {
                     documentRequest1.setStatus(document1.getStatus());
                     documentRequest1.setFile_name(document1.getFileName());
                     documentRequest1.setCreateBy(document1.getCreatedBy());
-                    documentRequests.add(documentRequest1);
+                    r.setBLX(documentRequest1);
                 }
                 Document document2 = documentRepository
                         .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
@@ -122,33 +121,8 @@ public class DriverResource {
                     documentRequest2.setStatus(document2.getStatus());
                     documentRequest2.setFile_name(document2.getFileName());
                     documentRequest2.setCreateBy(document2.getCreatedBy());
-                    documentRequests.add(documentRequest2);
+                    r.setCNKN(documentRequest2);
                 }
-                Document document3 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Bao_Hiem);
-                if (document3 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document3.getExpiredMonth());
-                    documentRequest.setExpired_year(document3.getExpiredYear());
-                    documentRequest.setId(document3.getId());
-                    documentRequest.setStatus(document3.getStatus());
-                    documentRequest.setFile_name(document3.getFileName());
-                    documentRequest.setCreateBy(document3.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                Document document4 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Dang_Kiem);
-                if (document4 != null) {
-                    DocumentRequest documentRequest = new DocumentRequest();
-                    documentRequest.setExpired_month(document4.getExpiredMonth());
-                    documentRequest.setExpired_year(document4.getExpiredYear());
-                    documentRequest.setId(document4.getId());
-                    documentRequest.setStatus(document4.getStatus());
-                    documentRequest.setFile_name(document4.getFileName());
-                    documentRequest.setCreateBy(document4.getCreatedBy());
-                    documentRequests.add(documentRequest);
-                }
-                r.setListDocs(documentRequests);
 
                 try {
                     Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
@@ -164,16 +138,45 @@ public class DriverResource {
                         vehicleRequest.setPlatState(vehicle.getLisencePlatState());
                         vehicleRequest.setPlateCountry(vehicle.getLisencePlatCountry());
                         vehicleRequest.setTypeId(vehicle.getCarTypeID());
+                        Document document3 = documentRepository
+                                .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Bao_Hiem);
+                        if (document3 != null) {
+                            DocumentRequest documentRequest = new DocumentRequest();
+                            documentRequest.setExpired_month(document3.getExpiredMonth());
+                            documentRequest.setExpired_year(document3.getExpiredYear());
+                            documentRequest.setId(document3.getId());
+                            documentRequest.setStatus(document3.getStatus());
+                            documentRequest.setFile_name(document3.getFileName());
+                            documentRequest.setCreateBy(document3.getCreatedBy());
+                            vehicleRequest.setCNBH(documentRequest);
+                        }
+                        Document document4 = documentRepository
+                                .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Dang_Kiem);
+                        if (document4 != null) {
+                            DocumentRequest documentRequest = new DocumentRequest();
+                            documentRequest.setExpired_month(document4.getExpiredMonth());
+                            documentRequest.setExpired_year(document4.getExpiredYear());
+                            documentRequest.setId(document4.getId());
+                            documentRequest.setStatus(document4.getStatus());
+                            documentRequest.setFile_name(document4.getFileName());
+                            documentRequest.setCreateBy(document4.getCreatedBy());
+                            vehicleRequest.setCNDK(documentRequest);
+                        }
                         r.setVehicleInfo(vehicleRequest);
                     }
                 } catch (Exception e) {
+                    System.out.println(e.toString());
                 }
 
-
+                Document document = documentRepository
+                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(),uploadFileMaster.avatar);
+                if(document!=null){
+                    FileManage fileManage = new FileManage();
+                    r.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
+                }
 
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(r);
-
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
             response.setContent(exception.toString());

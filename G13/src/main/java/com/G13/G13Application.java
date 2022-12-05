@@ -16,10 +16,7 @@ public class G13Application {
 	public static void main(String[] args) {
 		SpringApplication.run(G13Application.class, args);
 	}
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+
 //	@Bean
 //	CommandLineRunner run() {
 //		Base64 base64 = new Base64();
