@@ -40,11 +40,11 @@ const LayoutDriver = (props) => {
 
   if(user.companyId===0){
     menuItem=[
-      {
-        key: '0',
-        icon: <UserOutlined />,
-        label: 'TRANG CHỦ',
-      },
+      // {
+      //   key: '0',
+      //   icon: <UserOutlined />,
+      //   label: 'TRANG CHỦ',
+      // },
       {
         key: '1',
         icon: <UserOutlined />,
@@ -121,9 +121,9 @@ const LayoutDriver = (props) => {
               logoutUser(dispatch,navigate);
           
             }else{
-              if(key==0){
-                navigate('/home')
-              }
+              // if(key==0){
+              //   navigate('/home')
+              // }
               if(key==1){
                 navigate('/taixe/info')
               }

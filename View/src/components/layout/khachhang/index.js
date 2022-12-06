@@ -26,11 +26,6 @@ const { Sider } = Layout;
 const { Header, Content } = Layout;
 const menuItem=[
   {
-    key: '0',
-    icon: <UserOutlined />,
-    label: 'TRANG CHỦ',
-  },
-  {
     key: '1',
     icon: <UserOutlined />,
     label: 'HỒ SƠ',
@@ -84,9 +79,7 @@ const LayoutPassenger = (props) => {
               logoutUser(dispatch,navigate);
           
             }else{
-              if(key==0){
-                navigate('/home')
-              }
+
               if(key==1){
                 navigate('/khachhang/info')
               }

@@ -80,12 +80,15 @@ const LayoutAdmin = (props) => {
               if(key==1){
                 navigate('/admin/taixe-mgt')
               }
+              if(key==2){
+                navigate('/admin/passenger-mgt')
+              }
               if(key==3){
                 navigate('/admin/company-mgt')
               }
-            //   if(key==3){
-            //     navigate('/congty/driver-mgt')
-            //   }
+              if(key==4){
+                navigate('/admin/free-trip-mgt')
+              }
             }
           }}
    

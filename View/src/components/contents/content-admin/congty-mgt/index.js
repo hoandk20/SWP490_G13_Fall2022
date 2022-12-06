@@ -1,4 +1,4 @@
-import { Button, Form, Input, Row, Col, Select, Table, Popconfirm } from 'antd';
+import { Button, Form, Input, Row, Col, Select, Table, Popconfirm, DatePicker } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect, useState } from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
@@ -8,26 +8,53 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router';
-import { getCompanyDetail, getCompanysByAdmin,getCompanysByAdmiAll } from '../../../../redux/apiRequest';
+import { getCompanyDetail, getCompanysByAdmin, getCompanysByAdmiAll } from '../../../../redux/apiRequest';
 
 
 const { Option } = Select;
 const CompanyManagementAdmin = () => {
 
-    const navigate =useNavigate();
-
+    const navigate = useNavigate();
+    const [date1, setDate1] = useState('');
+    const [date2, setDate2] = useState('');
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     console.log(user);
-    const all=useSelector((state)=>state.user.companys?.all);
+    const all = useSelector((state) => state.user.companys?.all);
     console.log(all);
-    const drivers=all?.map((row)=> ({ ...row,key:row.companyID,bangphi:'Không'}));
 
-    useEffect(()=>{
-        getCompanysByAdmiAll(dispatch);        
-    },[])
 
-    const data=[];
+
+    const dateFormat = (date) =>{
+        const date_str = date,
+        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+        return date_parts + formatted.substr(formatted.indexOf(",") + 1);
+    }
+
+    const drivers = all?.map((row) => ({ ...row, key: row.companyID, bangphi: 'Không',regDate:dateFormat(row.createDate) }));
+
+
+    function onChangeDateStart(date, dateString) {
+        setDate1(date.toISOString());
+    }
+    function onChangeDateEnd(date, dateString) {
+        setDate2(date.toISOString());
+    }
+    useEffect(() => {
+        getCompanysByAdmiAll(dispatch);
+    }, [])
+
+    const onFinish = (values) => {
+        const object ={
+            ...values,
+            regFrom:date1,
+            regTo:date2
+        }
+
+         getCompanysByAdmin(object, dispatch);
+    }
 
 
     const columns = [
@@ -52,55 +79,27 @@ const CompanyManagementAdmin = () => {
             dataIndex: 'companyStatus',
         },
         {
-            key: 'createDate',
+            key: 'regDate',
             title: 'Ngày Đăng Ký',
-            dataIndex: 'createDate',
-        },
-        {
-            key: 'docStatus',
-            title: 'Nhóm Công Ty',
-            dataIndex: 'docStatus',
-        },
-        {
-            key: 'bangphi',
-            title: 'Bảng Phí',
-            dataIndex: 'bangphi',
+            dataIndex: 'regDate',
         },
         {
             title: '',
             dataIndex: '',
             key: 'x',
-            render: ( record) => {
+            render: (record) => {
                 return <div>
-                    <EyeOutlined onClick={() => {  
-                        getCompanyDetail(record.email,dispatch);
-                    setTimeout(()=>{
-                        navigate('/admin/company-mgt/detail',{state:{record}})
-                      },1500)  
-                }} />
-    
+                    <EyeOutlined onClick={() => {
+                        getCompanyDetail(record.email, dispatch);
+                        setTimeout(() => {
+                            navigate('/admin/company-mgt/detail', { state: { record } })
+                        }, 1500)
+                    }} />
+
                 </div>
             },
         },
 
-        {
-            title: '',
-            dataIndex: '',
-            key: 'y',
-            render: (text, record, index) => {
-                return <div>
-                    <Popconfirm
-                        title="Bạn có muốn xóa phương tiện này?"
-                       
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <DeleteOutlined />
-                    </Popconfirm>
-                </div>
-
-            },
-        },
     ];
 
     return (
@@ -110,57 +109,75 @@ const CompanyManagementAdmin = () => {
                 marginLeft: "20px"
             }}>
                 <h2>QUẢN TRỊ VÀ NHÂN VIÊN</h2>
-                <h3>TÌM ĐỐI Tác</h3>
+                <h3>TÌM ĐỐI TÁC</h3>
                 <div className='driver-info'>
                     <Form labelCol={{
-                        span: 4,
+                        span: 6,
                     }}
                         wrapperCol={{
-                            span: 12,
+                            span: 16,
                         }}
+                        onFinish={onFinish}
                     >
                         <Row>
-                            <Col md={12} sm={24}>
+                            <Col md={8} sm={16}>
                                 <FormItem
-                                    name="account"
-                                    label="Biển số"
+                                    name="regFrom1"
+                                    label="Đăng ký từ"
+                                >
+                                <DatePicker style={{width:"100%"}} placeholder='Chọn ngày' onChange={onChangeDateStart} />
+                                </FormItem>
+                                <FormItem
+                                    name="companyName"
+                                    label="Tên công ty"
+
+                                >
+                                    <Input />
+                                </FormItem>
+                                <FormItem
+                                    name="city"
+                                    label="Thành phố"
+
+                                >
+                                    <Input />
+                                </FormItem>
+                            </Col>
+                            <Col md={8} sm={16}>
+                                <FormItem
+                                    name="regTo1"
+                                    label="Đến"
+                                >
+                                <DatePicker style={{width:"100%"}} placeholder='Chọn ngày' onChange={onChangeDateEnd} />
+                                </FormItem>
+                                <FormItem
+                                    name="phone"
+                                    label="Số di động"
                                 >
                                     <Input />
                                 </FormItem>
                                 <FormItem
                                     name="status"
                                     label="Trạng thái"
-
                                 >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="Đã gửi lại tài liệu"></Option>
-                                        <Option value="Hoạt động"></Option>
-                                        <Option value="Đã gửi tài liệu"></Option>
-                                        <Option value="Không hoạt động"></Option>
-                                        <Option value="Đang chờ xem xét"></Option>
-                                        <Option value="Chưa gửi tài liệu"></Option>
-                                    </Select>
-                                </FormItem>
-                                <FormItem
-                                    name="vehicoType"
-                                    label="Loại xe"
-
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="A3"></Option>
-                                        <Option value="A6"></Option>
-                                        <Option value="FF"></Option>
+                                    <Select>
+                                        <Option value="mới">Mới</Option>
+                                        <Option value="đang hoạt động">Đang hoạt động</Option>
                                     </Select>
                                 </FormItem>
                             </Col>
-                            <Col md={12} sm={24}>
+                            <Col md={8} sm={16}>
                                 <FormItem
+                                    name="email"
+                                    label="Email"
+                                >
+                                    <Input />
+                                </FormItem>
+                                <FormItem
+
+                                >
+                                </FormItem>
+                                <FormItem
+                                    style={{ marginLeft: "26%" }}
                                 >
                                     <Button className='btn' type="primary" htmlType="submit">
                                         <FilterOutlined />  Lọc phương tiện

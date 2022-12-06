@@ -219,9 +219,13 @@ const EditDriverForCompany = (props) => {
                                 label="Phone number"
                                 rules={[
                                     {
-                                        required: true,
-                                        message: 'Vui lòng nhập lại số điện thoại',
+
+                                        message: 'Số điện thoại không hợp lệ',
                                         pattern: new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g),
+                                    },
+                                    {
+                                        required: true,
+                                        message: 'Số điện thoại không được để trống',
                                     },
                                 ]}
                             >

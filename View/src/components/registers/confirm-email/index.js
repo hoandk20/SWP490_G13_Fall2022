@@ -87,9 +87,11 @@ const RegisterSignup = () => {
                             </p>
                         <div className=''>
                             <Form.Item
-                                wrapperCol={4}
+                                wrapperCol={7}
+                                labelCol={5}
                                 label="Mã nhập"
-                                style={{ width: "50%" }}
+
+                                style={{ width: "90%" }}
                             >
                                 <Input onChange={handleChangeCode} />
                             </Form.Item>

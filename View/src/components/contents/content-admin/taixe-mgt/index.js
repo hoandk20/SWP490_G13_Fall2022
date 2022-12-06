@@ -17,12 +17,27 @@ const DriverManagementAdmin = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [date1, setDate1] = useState('');
+    const [date2, setDate2] = useState('');
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
     const all = useSelector((state) => state.user.drivers?.all);
-    console.log(all);
-    const drivers = all?.map((row) => ({ ...row, key: row.driverID, name: row.firstName + " " + row.lastName }));
 
+    const dateFormat = (date) =>{
+        const date_str = date,
+        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+        return date_parts + formatted.substr(formatted.indexOf(",") + 1);
+    }
+
+    const drivers = all?.map((row) => ({ ...row, key: row.driverID,crDate:dateFormat(row.createDate) ,name: row.firstName + " " + row.lastName }));
+    console.log(drivers);
+    function onChangeDateStart(date, dateString) {
+        setDate1(date.toISOString());
+    }
+    function onChangeDateEnd(date, dateString) {
+        setDate2(date.toISOString());
+    }
     const onFinish = (values) => {
         console.log(values); 
         getDriversByAdmin(values,dispatch);
@@ -38,15 +53,10 @@ const DriverManagementAdmin = () => {
 
 
     const columns = [
-        // {
-        //     key: 'index',
-        //     title: 'Số',
-        //     dataIndex: 'index',
-        // },
         {
             key: 'email',
             title: 'Tài khoản',
-            dataIndex: 'eamil',
+            dataIndex: 'email',
         },
         {
             key: 'name',
@@ -59,11 +69,6 @@ const DriverManagementAdmin = () => {
             dataIndex: 'phoneNumber',
         },
         {
-            key: 'deviceType',
-            title: 'Loại',
-            dataIndex: 'deviceType',
-        },
-        {
             key: 'companyName',
             title: 'Công ty',
             dataIndex: 'companyName',
@@ -74,20 +79,16 @@ const DriverManagementAdmin = () => {
             dataIndex: 'status',
         },
         {
-            key: 'createDate',
+            key: 'crDate',
             title: 'Ngày đăng ký',
-            dataIndex: 'createDate',
+            dataIndex: 'crDate',
         },
         {
             key: 'docStatus',
             title: 'Tài liệu',
             dataIndex: 'docStatus',
         },
-        {
-            key: 'lh',
-            title: 'LH',
-            dataIndex: 'lh',
-        },
+
 
 
         {
@@ -150,12 +151,14 @@ const DriverManagementAdmin = () => {
                         }}
                     >
                         <Row>
+                         
                             <Col md={8} sm={16}>
                                 <FormItem
-                                    name="regFrom"
+                                    name="regFrom1"
                                     label="Đăng ký từ"
+                    
                                 >
-                                    <Input />
+                                <DatePicker style={{width:"100%"}}  placeholder='Chọn ngày' onChange={onChangeDateStart} />
                                 </FormItem>
                                 <FormItem
                                     name="driverName"
@@ -174,10 +177,10 @@ const DriverManagementAdmin = () => {
                             </Col>
                             <Col md={8} sm={16}>
                                 <FormItem
-                                    name="regTo"
+                                    name="regTo1"
                                     label="Đến"
                                 >
-                                    <Input />
+                                <DatePicker style={{width:"100%"}} placeholder='Chọn ngày' onChange={onChangeDateEnd} />
                                 </FormItem>
                                 <FormItem
                                     name="phone"

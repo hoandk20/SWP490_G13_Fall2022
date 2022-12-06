@@ -17,8 +17,8 @@ const DocumentCompany = () => {
     // }
     const [Bang_lai_xe, setBang_lai_xe] = useState("");
     const [Chung_Nhan_Kinh_nghiem, setChung_Nhan_Kinh_nghiem] = useState("");
-    const [Chung_Nhan_Bao_Hiem, setChung_Nhan_Bao_Hiem] = useState("");
-    const [Chung_Nhan_Dang_Kiem, setChung_Nhan_Dang_Kiem] = useState("");
+    const [GP_Kinh_Doanh, setGP_Kinh_Doanh] = useState("");
+    const [GP_Hoat_Dong, setGP_Hoat_Dong] = useState("");
 
 
     const [baseImageBang_lai_xe, setBaseImageBang_lai_xe] = useState("");
@@ -48,7 +48,7 @@ const DocumentCompany = () => {
     const addDocChung_Nhan_Dang_Kiem = () => {
         setcheckChung_Nhan_Dang_Kiem(true);
     }
-    console.log("ac", setChung_Nhan_Bao_Hiem);
+    console.log("ac", GP_Hoat_Dong);
     const getDocBang_lai_xe = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
@@ -67,26 +67,26 @@ const DocumentCompany = () => {
         // console.log(res.data.object.base64);
         setChung_Nhan_Kinh_nghiem(res.data.object);
     }
-    const getDocChung_Nhan_Bao_Hiem = async () => {
-        const file_name = "Chung_Nhan_Bao_Hiem";
+    const getDocGP_Kinh_Doanh = async () => {
+        const file_name = "GP_Kinh_Doanh";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
         // console.log(res.data.object.base64);
-        setChung_Nhan_Bao_Hiem(res.data.object);
+        setGP_Kinh_Doanh(res.data.object);
     }
-    const getDocChung_Nhan_Dang_Kiem = async () => {
-        const file_name = "Chung_Nhan_Dang_Kiem";
+    const getDocGP_Hoat_Dong = async () => {
+        const file_name = "GP_Hoat_Dong";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
         // console.log(res.data.object.base64);
-        setChung_Nhan_Dang_Kiem(res.data.object);
+        setGP_Hoat_Dong(res.data.object);
     }
 
-    console.log(Chung_Nhan_Bao_Hiem);
+    console.log();
 
 
     const convertBase64 = (file) => {
@@ -148,7 +148,7 @@ const DocumentCompany = () => {
             month: month
         }
         await UploadFile(object, toast);     
-        await getDocChung_Nhan_Bao_Hiem();
+        // await getDocChung_Nhan_Bao_Hiem();
         setcheckBang_lai_xe(false)
 
 
@@ -183,14 +183,14 @@ const DocumentCompany = () => {
         const object = {
             base64: baseImageChung_Nhan_Bao_Hiem,
             createBy: user?.email,
-            fileName: "Chung_Nhan_Bao_Hiem",
+            fileName: "GP_Kinh_Doanh",
             year: year,
             month: month,
             vehicleId: vehicleId
         }
         
         await UploadDocumentForVehicle(object, toast);
-        await getDocChung_Nhan_Bao_Hiem();
+        // await getDocChung_Nhan_Bao_Hiem();
         setcheckChung_Nhan_Bao_Hiem(false)
     };
     const uploadfileChung_Nhan_Dang_Kiem = async() => {
@@ -203,21 +203,25 @@ const DocumentCompany = () => {
         const object = {
             base64: baseImageChung_Nhan_Dang_Kiem,
             createBy: user?.email,
-            fileName: "Chung_Nhan_Dang_Kiem",
+            fileName: "GP_Hoat_Dong",
             year: year,
             month: month,
             vehicleId: vehicleId
         }
         await UploadDocumentForVehicle(object, toast);
-        await getDocChung_Nhan_Dang_Kiem();
+        // await getDocChung_Nhan_Dang_Kiem();
         setcheckChung_Nhan_Dang_Kiem(false)
      
     };
+
+    console.log("gphd",GP_Hoat_Dong);
+    console.log("gpkd",GP_Kinh_Doanh);
+
     useEffect(() => {
         getDocBang_lai_xe();
-        getDocChung_Nhan_Bao_Hiem();
+        getDocGP_Hoat_Dong()
         getDocChung_Nhan_Kinh_nghiem();
-        getDocChung_Nhan_Dang_Kiem();
+        getDocGP_Kinh_Doanh();
     }, [])
     return (
         <div>
@@ -597,367 +601,7 @@ const DocumentCompany = () => {
                             )
                         }
                     </div>
-                    {
-                        user.vehicleRequest === null ? (
-                            <></>
-                        ) : (
-                            <>
-                                <p>Tài liệu cho phương tiện</p>
-                                <div>
-                                    {
-                                        Chung_Nhan_Bao_Hiem === "" ? (
-                                            <>
-                                                {
-                                                    checkChung_Nhan_Bao_Hiem === true ? (
-                                                        <>
-                                                            <div className='card-doc'>
-                                                                <div className='form-header'>
-                                                                    <span>
-                                                                        Giấy chứng nhận bảo hiểm
-                                                                    </span>
 
-                                                                </div>
-                                                                <div className='form-content'>
-                                                                    <div className='form-image' style={{ height: "230px" }}>
-                                                                        <img src={baseImageChung_Nhan_Bao_Hiem} height="220px" />
-                                                                    </div>
-                                                                    <div className='content-bottom'>
-                                                                        <span style={{ marginRight: "20px" }}>
-                                                                            Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
-                                                                        </span>
-                                                                        <input
-                                                                            type="file"
-                                                                            style={{ color: "#fff" }}
-                                                                            onChange={(e) => {
-                                                                                uploadImageChung_Nhan_Bao_Hiem(e);
-                                                                            }}
-                                                                        />
-                                                                        <Button className='btn-submit' onClick={uploadfileChung_Nhan_Bao_Hiem} type='primary'>Gửi <CheckOutlined /></Button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <div className='card-doc-ad'>
-                                                            <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                <span>
-                                                                    Giấy chứng nhận bảo hiểm
-                                                                    <div className='status-ad'>Chưa gửi</div>
-                                                                </span>
-
-                                                            </div>
-                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                <div className='upload-doc'>
-                                                                    <span>
-                                                                        <FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> Tài liệu chưa được tải lên
-                                                                        <Button onClick={addDocChung_Nhan_Bao_Hiem} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    )
-                                                }
-                                            </>
-
-                                        ) : (
-                                            <>
-                                                {
-                                                    Chung_Nhan_Bao_Hiem.status === "SENDED" ? (
-                                                        <>
-                                                            <div className='card-doc-ad'>
-                                                                <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                    <span>
-                                                                        Giấy chứng nhận bảo hiểm
-                                                                        <div className='status-ad'>Đã gửi</div>
-                                                                    </span>
-
-                                                                </div>
-                                                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                    <div className='upload-doc'>
-                                                                        <span>
-                                                                            <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
-                                                                            <span>Tài liệu đang chờ xử lý</span>
-                                                                            <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Bao_Hiem.expired_month}/{Chung_Nhan_Bao_Hiem.expired_year}</span>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </>
-
-
-                                                    ) : (
-                                                        <>
-                                                            {
-                                                                Chung_Nhan_Bao_Hiem.status === "VALID" ? (
-                                                                    <div className='card-doc-ad'>
-                                                                        <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                            <span>
-                                                                                Giấy chứng nhận bảo hiểm
-                                                                                <div className='status-ad'>Hợp lệ</div>
-                                                                            </span>
-
-                                                                        </div>
-                                                                        <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                            <div className='form-image-ad' >
-                                                                                {/* <img src={baseImage1} height="150px" /> */}
-                                                                            </div>
-                                                                            <div className='upload-doc'>
-                                                                                <span>
-                                                                                    <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
-                                                                                    <span>Tài liệu hợp lệ</span>
-                                                                                    <span> Ngày hết hạn :{Chung_Nhan_Bao_Hiem.status}</span>
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                ) : (
-                                                                    <>
-                                                                        {
-                                                                            checkChung_Nhan_Bao_Hiem === true ? (
-                                                                                <>
-                                                                                    <div className='card-doc'>
-                                                                                        <div className='form-header'>
-                                                                                            <span>
-                                                                                                Giấy chứng nhận bảo hiểm
-                                                                                            </span>
-
-                                                                                        </div>
-                                                                                        <div className='form-content'>
-                                                                                            <div className='form-image' style={{ height: "230px" }}>
-                                                                                                <img src={baseImageChung_Nhan_Bao_Hiem} height="220px" />
-                                                                                            </div>
-                                                                                            <div className='content-bottom'>
-                                                                                                <span style={{ marginRight: "20px" }}>
-                                                                                                    Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
-                                                                                                </span>
-                                                                                                <input
-                                                                                                    type="file"
-                                                                                                    style={{ color: "#fff" }}
-                                                                                                    onChange={(e) => {
-                                                                                                        uploadImageChung_Nhan_Bao_Hiem(e);
-                                                                                                    }}
-                                                                                                />
-                                                                                                <Button className='btn-submit' onClick={uploadfileChung_Nhan_Bao_Hiem} type='primary'>Gửi <CheckOutlined /></Button>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </>
-                                                                            ) : (
-                                                                                <>
-                                                                                    <div className='card-doc-ad'>
-                                                                                        <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                                            <span>
-                                                                                                Giấy chứng nhận bảo hiểm
-                                                                                                <div className='status-ad'>Không Hợp lệ</div>
-                                                                                            </span>
-
-                                                                                        </div>
-                                                                                        <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                                            <div className='upload-doc'>
-                                                                                                <span>
-                                                                                                    <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
-                                                                                                    <span>Tài liệu không hợp lệ vui lòng gửi lại tài liệu</span>
-                                                                                                    <span onClick={addDocChung_Nhan_Bao_Hiem}> <Button style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-                                                                                </>
-                                                                            )
-                                                                        }
-                                                                    </>
-                                                                )
-                                                            }
-                                                        </>
-                                                    )
-                                                }
-
-                                            </>
-                                        )
-                                    }
-                                </div>
-                                <div>
-                                    {
-                                        Chung_Nhan_Dang_Kiem === "" ? (
-                                            <>
-                                                {
-                                                    checkChung_Nhan_Dang_Kiem === true ? (
-                                                        <>
-                                                            <div className='card-doc'>
-                                                                <div className='form-header'>
-                                                                    <span>
-                                                                        Giấy chứng nhận đăng kiểm
-                                                                    </span>
-
-                                                                </div>
-                                                                <div className='form-content'>
-                                                                    <div className='form-image' style={{ height: "230px" }}>
-                                                                        <img src={baseImageChung_Nhan_Dang_Kiem} height="220px" />
-                                                                    </div>
-                                                                    <div className='content-bottom'>
-                                                                        <span style={{ marginRight: "20px" }}>
-                                                                            Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
-                                                                        </span>
-                                                                        <input
-                                                                            type="file"
-                                                                            style={{ color: "#fff" }}
-                                                                            onChange={(e) => {
-                                                                                uploadImageChung_Nhan_Dang_Kiem(e);
-                                                                            }}
-                                                                        />
-                                                                        <Button className='btn-submit' onClick={uploadfileChung_Nhan_Dang_Kiem} type='primary'>Gửi <CheckOutlined /></Button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <div className='card-doc-ad'>
-                                                            <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                <span>
-                                                                    Giấy chứng nhận đăng kiểm
-                                                                    <div className='status-ad'>Chưa gửi</div>
-                                                                </span>
-
-                                                            </div>
-                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                <div className='upload-doc'>
-                                                                    <span>
-                                                                        <FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> Tài liệu chưa được tải lên
-                                                                        <Button onClick={addDocChung_Nhan_Dang_Kiem} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    )
-                                                }
-                                            </>
-
-                                        ) : (
-                                            <>
-                                                {
-                                                    Chung_Nhan_Dang_Kiem.status === "SENDED" ? (
-                                                        <>
-                                                            <div className='card-doc-ad'>
-                                                                <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                    <span>
-                                                                        Giấy chứng nhận đăng kiểm
-                                                                        <div className='status-ad'>Đã gửi</div>
-                                                                    </span>
-
-                                                                </div>
-                                                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                    <div className='upload-doc'>
-                                                                        <span>
-                                                                            <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
-                                                                            <span>Tài liệu đang chờ xử lý</span>
-                                                                            <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Dang_Kiem.expired_month}/{Chung_Nhan_Dang_Kiem.expired_year}</span>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            {
-                                                                Chung_Nhan_Dang_Kiem.status === "VALID" ? (
-                                                                    <div className='card-doc-ad'>
-                                                                        <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                            <span>
-                                                                                Giấy chứng nhận đăng kiểm
-                                                                                <div className='status-ad'>Hợp lệ</div>
-                                                                            </span>
-
-                                                                        </div>
-                                                                        <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                            <div className='form-image-ad' >
-                                                                                {/* <img src={baseImage1} height="150px" /> */}
-                                                                            </div>
-                                                                            <div className='upload-doc'>
-                                                                                <span>
-                                                                                    <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
-                                                                                    <span>Tài liệu hợp lệ</span>
-                                                                                    <span style={{ marginLeft: "100px" }}> Ngày hết hạn :{Chung_Nhan_Kinh_nghiem.status}</span>
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </div>
-                                                                ) : (
-                                                                    <>
-                                                                        {
-                                                                            checkChung_Nhan_Dang_Kiem === true ? (
-                                                                                <>
-                                                                                    <div className='card-doc'>
-                                                                                        <div className='form-header'>
-                                                                                            <span>
-                                                                                                Giấy chứng nhận đăng kiểm
-                                                                                            </span>
-
-                                                                                        </div>
-                                                                                        <div className='form-content'>
-                                                                                            <div className='form-image' style={{ height: "230px" }}>
-                                                                                                <img src={baseImageChung_Nhan_Dang_Kiem} height="220px" />
-                                                                                            </div>
-                                                                                            <div className='content-bottom'>
-                                                                                                <span style={{ marginRight: "20px" }}>
-                                                                                                    Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
-                                                                                                </span>
-                                                                                                <input
-                                                                                                    type="file"
-                                                                                                    style={{ color: "#fff" }}
-                                                                                                    onChange={(e) => {
-                                                                                                        uploadImageChung_Nhan_Dang_Kiem(e);
-                                                                                                    }}
-                                                                                                />
-                                                                                                <Button className='btn-submit' onClick={uploadfileChung_Nhan_Dang_Kiem} type='primary'>Gửi <CheckOutlined /></Button>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </>
-                                                                            ) : (
-                                                                                <>
-                                                                                    <div className='card-doc-ad'>
-                                                                                        <div className='form-header-ad' style={{ height: "40px" }}>
-                                                                                            <span>
-                                                                                                Giấy chứng nhận đăng kiểm
-                                                                                                <div className='status-ad'>Không Hợp lệ</div>
-                                                                                            </span>
-
-                                                                                        </div>
-                                                                                        <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                                                                            <div className='upload-doc'>
-                                                                                                <span>
-                                                                                                    <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
-                                                                                                    <span>Tài liệu không hợp lệ vui lòng gửi lại tài liệu</span>
-                                                                                                    <span> onClick={addDocChung_Nhan_Dang_Kiem}<Button style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
-                                                                                                </span>
-                                                                                            </div>
-                                                                                        </div>
-
-                                                                                    </div>
-                                                                                </>
-                                                                            )
-                                                                        }
-                                                                    </>
-                                                                )
-                                                            }
-                                                        </>
-                                                    )
-                                                }
-
-                                            </>
-                                        )
-                                    }
-                                </div>
-                            </>
-                        )
-                    }
 
 
                 </div>

@@ -19,6 +19,12 @@ const userSlice=createSlice({
         },
         company:{
             info:null
+        },
+        passengers:{
+            all:null,
+        },
+        passenger:{
+            info:null
         }
     },
     reducers:{
@@ -50,6 +56,12 @@ const userSlice=createSlice({
         },
         getCompanyByCompanyEmail(state,action){
             state.company.info=action.payload
+        },
+        getAllPassengerForAdmin(state,action){
+            state.passengers.all=action.payload
+        },
+        getPassengerByEmail(state,action){
+            state.passenger.info=action.payload
         }
     }
 
@@ -65,6 +77,8 @@ export const{
     getDriverByDriverId,
     getDriverByDriverEmail,
     getCompanyByCompanyEmail,
+    getAllPassengerForAdmin,
+    getPassengerByEmail,
 }=userSlice.actions;
 
 export default userSlice.reducer;

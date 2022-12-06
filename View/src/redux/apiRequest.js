@@ -5,7 +5,7 @@ import { loginFailed, loginStart, loginSuccess, logOutFailed, logOutStart, logOu
 import { getAllCityInVi } from './dataSlice';
 import { createTripFailed, createTripStart, createTripSuccess, getListFreeTripFailed, getListFreeTripStart, getListFreeTripSuccess, getTripDetailDriverFailed, getTripDetailDriverStart, getTripDetailDriverSuccess, passengerRegisterTripSuccess } from './freeTripSlice';
 import { getTripHistoryFailed, getTripHistoryOfDriverFailed, getTripHistoryOfDriverStart, getTripHistoryOfDriverSuccess, getTripHistoryStart, getTripHistorySuccess } from './tripHistorySlice';
-import { getUserStart, getUserSuccess, deleteUser, getUserFailed, getALlDriverForCompany, getAllDriverForCompany, getAllDrivers, getAllCompanyForAdmin, getDriverByDriverEmail, getCompanyByCompanyEmail } from './userSlice';
+import { getUserStart, getUserSuccess, deleteUser, getUserFailed, getALlDriverForCompany, getAllDriverForCompany, getAllDrivers, getAllCompanyForAdmin, getDriverByDriverEmail, getCompanyByCompanyEmail, getAllPassengerForAdmin, getPassengerByEmail } from './userSlice';
 import { getAllVehicos } from './vehicoSlice';
 const BASE_URL = "http://localhost"
 const URL = "http://26.36.110.116";
@@ -61,14 +61,15 @@ export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         phoneNumber: newUser.phoneNumber,
-        language: "vi"
+        language: "vi",
+        cityId:newUser.cityId
       },
       {
         headers: { 'Content-Type': 'application/json' }
       })
     .then(function (response) {
       dispatch(registerSuccess(response.data))
-
+      
     })
     .catch(function (error) {
       if (error.response.data.object.IsExistedPhone) {
@@ -589,6 +590,27 @@ export const getDriversByAdminAll = async (dispatch) => {
   } catch (error) { }
 }
 export const getCompanysByAdmin = async (object, dispatch) => {
+  if (object.regFrom === undefined) {
+    object.regFrom = "";
+  }
+  if (object.regTo === undefined) {
+    object.regTo = "";
+  }
+  if (object.phone === undefined) {
+    object.phone = "";
+  }
+  if (object.companyName === undefined) {
+    object.companyName = "";
+  }
+  if (object.email === undefined) {
+    object.email = "";
+  }
+  if (object.status === undefined) {
+    object.status = "";
+  }
+  if (object.city === undefined) {
+    object.city = "";
+  }
   try {
     const res = await axios.get(`${URL}:8080/api/admin/GetCompanies?regFrom=${object.regFrom}&regTo=${object.regTo}&companyName=${object.companyName}&email=${object.email}&Status=${object.status}&city=${object.city}`, {
       headers: { 'Content-Type': 'application/json' }
@@ -615,6 +637,79 @@ export const getCompanysByAdmiAll = async (dispatch) => {
   } catch (error) { }
 }
 
+
+export const getPassengersByAdmiAll = async (dispatch) => {
+  try {
+    const object = {
+      name:"",
+      phone:"",
+      email:"",
+    }
+    const res = await axios.get(`${URL}:8080/api/admin/GetAllRider?name=${object.name}&phone=${object.phone}&email=${object.email}`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    dispatch(getAllPassengerForAdmin(res.data.object));
+  } catch (error) { }
+}
+export const getPassengersByAdmin = async (object,dispatch) => {
+  if(object.name===undefined){
+    object.name="";
+  }
+  if(object.phone===undefined){
+    object.phone="";
+  }
+  if(object.email===undefined){
+    object.email="";
+  }
+  try {
+
+    const res = await axios.get(`${URL}:8080/api/admin/GetAllRider?name=${object.name}&phone=${object.phone}&email=${object.email}`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    dispatch(getAllPassengerForAdmin(res.data.object));
+  } catch (error) { }
+}
+
+
+export const getTripsByAdmiAll = async (dispatch) => {
+  try {
+    const object = {
+      regFrom:"",
+      regTo:"",
+      phoneDriver:"",
+      phonePassenger:"",
+      Status:"",
+    }
+    const res = await axios.get(`${URL}:8080/api/admin/GetAllTrip?regFrom=${object.regFrom}&regTo=${object.regTo}&phoneDriver=${object.phoneDriver}&phonePassenger=${object.phonePassenger}&Status=${object.Status}`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    dispatch(getListFreeTripSuccess(res.data.object));
+  } catch (error) { }
+}
+
+export const getTripsByAdmin = async (object,dispatch) => {
+  if(object.regFrom===undefined){
+    object.regFrom="";
+  }
+  if(object.regTo===undefined){
+    object.regTo="";
+  }
+  if(object.phoneDriver===undefined){
+    object.phoneDriver="";
+  }
+  if(object.phonePassenger===undefined){
+    object.phonePassenger="";
+  }
+  if(object.Status===undefined){
+    object.Status="";
+  }
+  try {
+    const res = await axios.get(`${URL}:8080/api/admin/GetAllTrip?regFrom=${object.regFrom}&regTo=${object.regTo}&phoneDriver=${object.phoneDriver}&phonePassenger=${object.phonePassenger}&Status=${object.Status}`, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+    dispatch(getListFreeTripSuccess(res.data.object));
+  } catch (error) { }
+}
 export const editInforPassenger = async (object, toast, dispatch) => {
 
   const res = await axios
@@ -668,6 +763,31 @@ export const editInforDriver = async (object, toast, dispatch) => {
 
     getDriverDetail(object.email, dispatch);
     getUser(object.email, dispatch);
+    toast.success("Thay đổi thông tin thành công.");
+  } catch (error) {
+    toast.error("Thay đổi thông tin không thành công");
+  }
+}
+
+export const editInforPassengerAdmin = async (object, toast, dispatch) => {
+  if(object.address===null){
+    object.address=""
+  }
+  try {
+    const res = await axios.post(`${URL}:8080/api/passenger/changeinfo`, {
+      email: object.email,
+      firstname: object.firstName,
+      lastname: object.lastName,
+      avatarBase64: object.avatarBase64,
+      address: object.address,
+      phone: object.phone,
+      cityId: object.cityId
+    },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+    getPassengerDetail(object.email, dispatch);
     toast.success("Thay đổi thông tin thành công.");
   } catch (error) {
     toast.error("Thay đổi thông tin không thành công");
@@ -956,12 +1076,21 @@ export const getDriverDetail = async (userName, dispatch) => {
       headers: { 'Content-Type': 'application/json' }
     })
     await dispatch(getDriverByDriverEmail(res.data.object));
-    // getDriversByAdminAll(dispatch);
   } catch (error) {
 
   }
 }
+export const getPassengerDetail = async (userName, dispatch) => {
+  try {
 
+    const res = await axios.get(`${URL}:8080/api/passenger/detail?passengerEmail=${userName}`, {
+      headers: { 'Content-Type': 'application/json' }
+    })
+    await dispatch(getPassengerByEmail(res.data.object));
+  } catch (error) {
+
+  }
+}
 export const getCompanyDetail = async (userName, dispatch) => {
   try {
 

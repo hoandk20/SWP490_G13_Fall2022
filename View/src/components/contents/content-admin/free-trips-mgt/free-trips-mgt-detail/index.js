@@ -3,7 +3,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeStatusTripDriver, getTripDetailDriver } from '../../../../../redux/apiRequest';
 import PassengerCard from '../../../../commons/passenger-card';
-import './free-trip-detail.css'
 import { FloatButton } from 'antd';
 import {
     Box,
@@ -29,7 +28,7 @@ import { useLocation, useNavigate } from 'react-router';
 const { Option } = Select;
 const center = { lat: 21.013255, lng: 105.52597 }
 
-const FreeTripDetail = () => {
+const TripDetailAdmin = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
@@ -58,7 +57,7 @@ const FreeTripDetail = () => {
     // var timeStart=new Date(tripDriverDetail?.timeStart);
     // console.log(timeStart.toString("dd/M/yyyy hh:mm:ss tt"));
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyD-r8Ye5leGyYgD4tEYvOa6LJnq2nH-e-I',
+        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
         libraries: ['places'],
     })
     async function calculateRoute() {
@@ -132,42 +131,62 @@ const FreeTripDetail = () => {
                                         </div>
                                     </div>
                                 </div> */}
-                                <PassengerCard />
-                                <div className='s' style={{ marginTop: "20px", textAlign: "center" }}>
-
-                                </div>
-
-
-                                {
-                                    tripDriverDetail?.status === "OPEN" ? (
-                                        <span>
-                                            <Button type="primary" onClick={cancelTrip} danger style={{ marginLeft: "27%", display: "inline-block" }}>
-                                                Hủy chuyến
-                                            </Button>
-                                            <Button type="primary" onClick={startTrip} style={{ marginLeft: "20px", display: "inline-block" }}>
-                                                Bắt đầu chuyến đi
-                                            </Button>
-
-                                        </span>
-
-                                    ) : (
-                                        <>
+                                {/* <PassengerCard /> */}
+                                <div className='scroll-bg'>
+                                    <div className='scroll-div'>
+                                        <div className='scroll-object'>
                                             {
-                                                tripDriverDetail?.status === "RUN" ? (
-                                                    <>
-                                                        <Button type="primary" onClick={endTrip} danger style={{ marginLeft: "30%"}}>
-                                                            Kết thúc chuyến đi
-                                                        </Button>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                    </>
-                                                )
-                                            }
+                                                listPassengerRegister && listPassengerRegister.length > 0 &&
+                                                listPassengerRegister.map((obj) => {
+                                                    return (
+                                                        <>
+                                                            <div key={obj.id}>
+                                                                {
+                                                                    obj?.status !== 'REJE' ? (
+                                                                        <div className='list-passenger'>
+                                                                            <div className='header-list'>
+                                                                                <span>
+                                                                                    {obj?.passengerEmail}
+                                                                                    <div className='status'>CHẤP NHẬN</div>
 
-                                        </>
-                                    )
-                                }
+                                                                                </span>
+                                                                                <div className='content-list'>
+                                                                                    <div> <Badge color="hsl(102, 53%, 61%)" text={obj?.from} /></div>
+                                                                                    <div><Badge color="#f50" text={obj?.to} /></div>
+                                                                                    <p>Số ghế:{obj?.seatRegister}</p>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <>
+                                                                         <div className='list-passenger'>
+                                                                            <div className='header-list'>
+                                                                                <span>
+                                                                                    {obj?.passengerEmail}
+                                                                                    <div className='status' style={{color:"red"}}>TỪ CHỐI</div>
+
+                                                                                </span>
+                                                                                <div className='content-list'>
+                                                                                    <div> <Badge color="hsl(102, 53%, 61%)" text={obj?.from} /></div>
+                                                                                    <div><Badge color="#f50" text={obj?.to} /></div>
+                                                                                    <p>Số ghế:{obj?.seatRegister}</p>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        </>
+                                                                    )
+                                                                }
+
+                                                            </div>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
 
                             </div>
                         </Col>
@@ -209,4 +228,4 @@ const FreeTripDetail = () => {
         </div >
     )
 }
-export default FreeTripDetail
+export default TripDetailAdmin

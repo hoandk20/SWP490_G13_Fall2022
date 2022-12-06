@@ -72,7 +72,7 @@ const CreateFreeTripForDriver = () => {
     console.log(user);
 
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
+        googleMapsApiKey: 'AIzaSyD-r8Ye5leGyYgD4tEYvOa6LJnq2nH-e-I',
         libraries: ['places'],
     })
 

@@ -11,12 +11,12 @@ import React, { useState } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
 import './register-passenger.css'
 import ImageRegisterKh from '../../../assets/image-app/register-khachhang.png'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { registerPassenger } from '../../../redux/apiRequest';
 
 
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const { Option } = Select;
 const formItemLayout = {
@@ -54,18 +54,21 @@ const tailFormItemLayout = {
 
 const RegisterPassenger = () => {
     const [form] = Form.useForm();
-    const dispatch =useDispatch();
-    const navigate= useNavigate();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const onFinish = (values) => {
-        const newUser={
-            email:values.email,
-            password:values.password,
-            firstName:values.firstName,
-            lastName:values.lastName,
-            phoneNumber:values.phoneNumber,
-            role:"ROLE_PASSENGER"
+        const newUser = {
+            email: values.email,
+            password: values.password,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            phoneNumber: values.phoneNumber,
+            role: "ROLE_PASSENGER",
+            cityId:values.city.value
         }
-        registerPassenger(newUser,dispatch,navigate,toast);
+        registerPassenger(newUser, dispatch, navigate, toast);
         // navigate("/signup/confirm-email",{ state: { newUser } });
 
     };
@@ -84,9 +87,9 @@ const RegisterPassenger = () => {
 
     return (
         <div className='container'>
-            <h2 style={{marginTop:"5%"}}>ĐĂNG KÝ ĐỂ ĐI XE</h2    >
-            <div  className='container-info-register-passenger' style={{marginTop:"5%"}}>
-                <Row> 
+            <h2 style={{ marginTop: "5%" }}>ĐĂNG KÝ ĐỂ ĐI XE</h2    >
+            <div className='container-info-register-passenger' style={{ marginTop: "5%" }}>
+                <Row>
                     <Col sm={24} md={12} >
                         <div className='container-left'>
                             <img src={ImageRegisterKh} alt="abc" />
@@ -136,14 +139,14 @@ const RegisterPassenger = () => {
                                         }}
                                         name="password"
                                         rules={[
-                                            {                                             
+                                            {
                                                 min: 6,
                                                 max: 32,
                                                 message: 'Mật khẩu phải lớn hơn 6 ký tự'
                                             },
                                             {
                                                 required: true,
-                                                message: 'Mật khẩu không được để trống',  
+                                                message: 'Mật khẩu không được để trống',
                                             }
                                         ]}
                                         hasFeedback
@@ -231,6 +234,21 @@ const RegisterPassenger = () => {
                                             }}
                                         />
                                     </Form.Item>
+                                    <Form.Item
+                                        name="city"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn thành phố',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            placeholder="Thành phố đăng ký"
+                                            labelInValue
+                                            options={citys}
+                                        />
+                                    </Form.Item>
                                     {/* <h3>MÃ MỜI</h3>
 
                                     <Form.Item
@@ -249,13 +267,13 @@ const RegisterPassenger = () => {
 
                                     <ReCAPTCHA
                                         sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-                                    
+
                                     />,
                                     <Form.Item
-                                  
+
                                     // {...tailFormItemLayout}
                                     >
-                                        <Button   className='btn-register' type="primary" htmlType="submit">
+                                        <Button className='btn-register' type="primary" htmlType="submit">
                                             Register
                                         </Button>
                                     </Form.Item>
