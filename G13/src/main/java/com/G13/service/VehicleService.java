@@ -18,4 +18,7 @@ public class VehicleService {
     public Vehicle getVehicleByID(int id){
         return vehicleRepository.findVehicleById(id);
     }
+    public Vehicle getFistVehicleByCompanyId(int id){
+        return vehicleRepository.findFirstByCompanyIDOrderByCreatedDateDesc(id);
+    }
 }

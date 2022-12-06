@@ -6,6 +6,7 @@ import com.G13.repo.UserRepository;
 import com.G13.repo.VehicleRepository;
 import com.G13.service.UserService;
 import com.G13.service.VehicleService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,18 +25,41 @@ public class VehicleTest {
     @InjectMocks
     VehicleService vehicleService;
 
-    @Test
-    void testGetVehicleById(){
+    @BeforeEach
+    void addData(){
         Vehicle vehicle = new Vehicle();
         vehicle.setId(1);
         vehicle.setPlate("29V51111");
+        vehicle.setCompanyID(1);
         when(vehicleRepository.findVehicleById(1)).thenReturn(vehicle);
+        when(vehicleRepository.findFirstByCompanyIDOrderByCreatedDateDesc(1)).thenReturn(vehicle);
+    }
+    //test get vehicle by id
+    @Test
+    void testGetVehicleById(){
+        int ExpectCompanyId = 1;
         Vehicle ActualVehicle = vehicleService.getVehicleByID(1);
-        assertThat(ActualVehicle.getId()).isEqualTo(vehicle.getId());
+        assertThat(ActualVehicle.getId()).isEqualTo(ExpectCompanyId);
+
     }
     @Test
-    void testGetVehicleByIdNotExisted(){
-        Vehicle ActualVehicle = vehicleService.getVehicleByID(1);
+    void testGetVehicleByIdNotFound(){
+        Vehicle ActualVehicle = vehicleService.getVehicleByID(2);
         assertThat(ActualVehicle).isEqualTo(null);
     }
+
+    //test get vehicle by company id
+    @Test
+    void testGetVehicleByCompanyId(){
+
+        int ExpectCompanyId = 1;
+        Vehicle ActualVehicle = vehicleService.getFistVehicleByCompanyId(ExpectCompanyId);
+        assertThat(ActualVehicle.getCompanyID()).isEqualTo(ExpectCompanyId);
+    }
+    @Test
+    void testGetVehicleByCompanyIdNotFound(){
+        Vehicle ActualVehicle = vehicleService.getFistVehicleByCompanyId(2);
+        assertThat(ActualVehicle).isEqualTo(null);
+    }
+
 }

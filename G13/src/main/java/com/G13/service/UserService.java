@@ -86,7 +86,10 @@ public class UserService implements UserDetailsService {
         return userRepo.findByEmail(username);
     }
 
-
+    public User getUserByEmail(String email) {
+        log.info("get user");
+        return userRepo.findByEmail(email);
+    }
     public List<User> getUsers() {
         log.info("get all users");
         return userRepo.findAll();

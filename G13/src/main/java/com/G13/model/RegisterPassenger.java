@@ -12,4 +12,5 @@ public class RegisterPassenger {
      String LastName;
      String PhoneNumber;
      String Language;
+     int cityId;
 }

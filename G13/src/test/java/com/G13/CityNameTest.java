@@ -5,6 +5,7 @@ import com.G13.domain.CitynameId;
 import com.G13.repo.CitynameRepository;
 
 import com.G13.service.CityService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,10 +24,10 @@ public class CityNameTest {
     @InjectMocks
     CityService cityService;
 
-    @Test
-    void TestGetTop10TripOpen() {
+    @BeforeEach
+    void addData(){
         List<Cityname> citynames = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 64; i++) {
             Cityname c = new Cityname();
             CitynameId citynameId =new CitynameId();
             citynameId.setCityID(i);
@@ -35,7 +36,10 @@ public class CityNameTest {
             citynames.add(c);
         }
         when(citynameRepository.findAll()).thenReturn(citynames);
+    }
+    @Test
+    void TestGetAllCity() {
         List<Cityname> list = cityService.getListCity();
-        assertThat(list.size()).isEqualTo(3);
+        assertThat(list.size()).isEqualTo(64);
     }
 }
