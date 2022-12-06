@@ -38,6 +38,9 @@ const TripHistoryPassenger = () => {
     else if(item.tripStatus==="CANC"){
         return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),tripStatus:"Đã bị hủy"}
     }
+    else if(item.tripStatus==="RUN"){
+        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),tripStatus:"Đang chạy"}
+    }
 
   })
 

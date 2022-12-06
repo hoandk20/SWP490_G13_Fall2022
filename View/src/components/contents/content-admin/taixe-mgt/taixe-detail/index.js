@@ -13,6 +13,18 @@ import ModalSendEmail from '../../../../commons/modals/modal-send-email';
 import './taixe-detail.css'
 import { useEffect } from 'react';
 const { Option } = Select;
+
+const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+        <Select
+            style={{
+                width: 70,
+            }}
+        >
+            <Option value="84">+84</Option>
+        </Select>
+    </Form.Item>
+);
 const DriverDetailAdmin = (props) => {
 
     const { Panel } = Collapse;
@@ -21,7 +33,8 @@ const DriverDetailAdmin = (props) => {
 
     const info = location.state?.record;
     const drivers = useSelector((state) => state.user.driver?.info);
-
+    const allCity = useSelector((state) => state.data.citys?.all);
+    const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     console.log(drivers);
     const listDoc = drivers?.listDocs;
     const Bang_lai_xe = drivers.blx;
@@ -43,7 +56,7 @@ const DriverDetailAdmin = (props) => {
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage6, setBaseImage6] = useState("");
     const [baseImage7, setBaseImage7] = useState("");
-
+    console.log("image", baseImage7);
     const [date1, setDate1] = useState();
     const [date2, setDate2] = useState();
     const [date6, setDate6] = useState();
@@ -52,7 +65,7 @@ const DriverDetailAdmin = (props) => {
     const [checkdoc2, setCheckdoc2] = useState(false);
     const [checkdoc6, setCheckdoc6] = useState(false);
     const [checkdoc7, setCheckdoc7] = useState(false);
-    console.log(baseImage1);
+
 
 
     const getFileAvatar = async () => {
@@ -98,6 +111,7 @@ const DriverDetailAdmin = (props) => {
             });
         // console.log(res.data.object.base64);
         setBaseImage7(res.data.object.base64)
+        console.log(baseImage7);
     }
 
     const changeStatusValid1 = () => {
@@ -366,15 +380,18 @@ const DriverDetailAdmin = (props) => {
     //     }
     // }
     useEffect(() => {
-        setTimeout(() => {
-            getDriverDetail(drivers.email, dispatch);
-        }, 1000)
-
+        // setTimeout(() => {
+        //     getDriverDetail(drivers.email, dispatch);
+        // }, 1000)
+        getDriverDetail(drivers.email, dispatch);
     }, [])
     // getFileAvatar();
     return (
         <>
             <Form onFinish={onfinish}
+              initialValues={{
+                prefix: '+84'
+            }}
                 labelCol={{
                     span: 8,
                 }}
@@ -397,20 +414,20 @@ const DriverDetailAdmin = (props) => {
                                     <Form.Item
                                         name="companyName"
 
-                                        // initialValue={drivers.companyInfo.companyName}
+                                        initialValue={drivers.companyInfo.companyName}
 
                                         label="Tên công ty"
                                     >
-                                        <Input />
+                                        <Input disabled />
                                     </Form.Item>
                                     <Form.Item
 
                                         name="companyAddress"
-                                        // initialValue={drivers.companyInfo.companyAddress}
+                                        initialValue={drivers.companyInfo.companyAddress}
 
                                         label="Địa chỉ"
                                     >
-                                        <Input />
+                                        <Input disabled />
                                     </Form.Item>
 
                                 </Col>
@@ -427,11 +444,11 @@ const DriverDetailAdmin = (props) => {
                                     <Form.Item
 
                                         name="companyPhone"
-                                        // initialValue={drivers.companyInfo.phone}
+                                        initialValue={drivers.companyInfo.phone}
 
-                                        label="Số ĐT"
+                                        label="Số Điện thoại"
                                     >
-                                        <Input />
+                                        <Input disabled addonBefore={prefixSelector}/>
                                     </Form.Item>
 
                                 </Col>
@@ -491,20 +508,19 @@ const DriverDetailAdmin = (props) => {
                         </Form.Item>
                         <Form.Item
                             name="city"
-                            initialValue={drivers?.city}
+                            initialValue={drivers.cityId}
                             label="Thành phố"
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         message: 'please enter  description',
-                        //     },
-                        // ]}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Vui lòng chọn thành phố',
+                                },
+                            ]}
                         >
-                            <Select>
-                                <Option value="Hà nội">Hà nội</Option>
-                                <Option value="Đà nẵng">Đà nẵng </Option>
-                                <Option value="Thành phố Hồ Chí Minh">Thành phố Hồ Chí Minh </Option>
-                            </Select>
+                            <Select
+                                labelInValue
+                                options={citys}
+                            />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
@@ -537,7 +553,7 @@ const DriverDetailAdmin = (props) => {
 
                             label="Số di động"
                         >
-                            <Input disabled />
+                            <Input   addonBefore={prefixSelector}  />
                         </Form.Item>
                         <Form.Item
                             name="status"
@@ -546,7 +562,7 @@ const DriverDetailAdmin = (props) => {
                             label="Trạng thái"
                         >
 
-                            <Input disabled />
+                            <Input  disabled />
 
                         </Form.Item>
 
@@ -560,7 +576,7 @@ const DriverDetailAdmin = (props) => {
                                 src={drivers?.avatarBase64}
                                 className='avatar'
                             />
-                   
+
 
                         </div>
 
@@ -630,7 +646,39 @@ const DriverDetailAdmin = (props) => {
                             <div className='form-header-ad' style={{ height: "40px" }}>
                                 <span>
                                     Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                    <div className='status-ad'>{Bang_lai_xe?.status}</div>
+                                    {
+                                        Bang_lai_xe === null ? (
+                                            <>
+                                              <div className='status-ad'>Chưa gửi</div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {
+                                                    Bang_lai_xe?.status === "SENDED" ? (
+                                                        <>
+                                                            <div className='status-ad'>Đã gửi</div>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            {
+                                                                Bang_lai_xe?.status === "VALID" ? (
+                                                                    <>
+                                                                        <div className='status-ad'>Hợp lệ</div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className='status-ad'>Không hợp lệ</div>
+                                                                    </>
+                                                                )
+                                                            }
+                                                        </>
+                                                    )
+                                                }
+                                            </>
+                                        )
+                                    }
+
+
                                 </span>
 
                             </div>
@@ -641,11 +689,19 @@ const DriverDetailAdmin = (props) => {
                                 <div className='upload-doc'>
                                     <span>
                                         {
-                                            baseImage1 !== "" ? (
+                                            Bang_lai_xe === null ? (
                                                 <></>
                                             ) : (
                                                 <>
-                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                    {
+                                                        baseImage1 !== "" ? (
+                                                            <></>
+                                                        ) : (
+                                                            <>
+                                                                <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                            </>
+                                                        )
+                                                    }
                                                 </>
                                             )
                                         }
@@ -710,7 +766,38 @@ const DriverDetailAdmin = (props) => {
                                 <span>
                                     Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên)
                                     hoặc lý lịch tư pháp
-                                    <div className='status-ad'>{Chung_Nhan_Kinh_nghiem?.status}</div>
+                                    {
+                                        Chung_Nhan_Kinh_nghiem === null ? (
+                                            <>
+                                                <div className='status-ad'>Chưa gửi</div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {
+                                                    Chung_Nhan_Kinh_nghiem?.status === "SENDED" ? (
+                                                        <>
+                                                            <div className='status-ad'>Đã gửi</div>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            {
+                                                                Chung_Nhan_Kinh_nghiem?.status === "VALID" ? (
+                                                                    <>
+                                                                        <div className='status-ad'>Hợp lệ</div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className='status-ad'>Không hợp lệ</div>
+                                                                    </>
+                                                                )
+                                                            }
+                                                        </>
+                                                    )
+                                                }
+                                            </>
+                                        )
+                                    }
+
                                 </span>
 
                             </div>
@@ -721,14 +808,23 @@ const DriverDetailAdmin = (props) => {
                                 <div className='upload-doc'>
                                     <span>
                                         {
-                                            baseImage2 !== "" ? (
+                                            Chung_Nhan_Kinh_nghiem === null ? (
                                                 <></>
                                             ) : (
                                                 <>
-                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                    {
+                                                        baseImage2 !== "" ? (
+                                                            <></>
+                                                        ) : (
+                                                            <>
+                                                                <Button onClick={getFile2} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                            </>
+                                                        )
+                                                    }
                                                 </>
                                             )
                                         }
+
                                         <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Chung_Nhan_Kinh_nghiem?.expired_month}-{Chung_Nhan_Kinh_nghiem?.expired_year}</span>
                                         <Button onClick={editDocument2} style={{ float: "right" }} type="primary"> Thay đổi</Button>
                                     </span>
@@ -911,7 +1007,38 @@ const DriverDetailAdmin = (props) => {
                                                             <div className='form-header-ad' style={{ height: "40px" }}>
                                                                 <span>
                                                                     Giấy chứng nhận bảo hiểm
-                                                                    <div className='status-ad'>{Chung_Nhan_Bao_Hiem?.status}</div>
+                                                                    {
+                                                                        Chung_Nhan_Dang_Kiem === null ? (
+                                                                            <>
+                                                                                <div className='status-ad'>Chưa gửi</div>
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                                {
+                                                                                    Chung_Nhan_Bao_Hiem?.status === "SENDED" ? (
+                                                                                        <>
+                                                                                            <div className='status-ad'>Đã gửi</div>
+                                                                                        </>
+                                                                                    ) : (
+                                                                                        <>
+                                                                                            {
+                                                                                                Chung_Nhan_Bao_Hiem?.status === "VALID" ? (
+                                                                                                    <>
+                                                                                                        <div className='status-ad'>Hợp lệ</div>
+                                                                                                    </>
+                                                                                                ) : (
+                                                                                                    <>
+                                                                                                        <div className='status-ad'>Không hợp lệ</div>
+                                                                                                    </>
+                                                                                                )
+                                                                                            }
+                                                                                        </>
+                                                                                    )
+                                                                                }
+                                                                            </>
+                                                                        )
+                                                                    }
+
                                                                 </span>
 
                                                             </div>
@@ -921,15 +1048,25 @@ const DriverDetailAdmin = (props) => {
                                                                 </div>
                                                                 <div className='upload-doc'>
                                                                     <span>
+
                                                                         {
-                                                                            baseImage6 !== "" ? (
+                                                                            Chung_Nhan_Bao_Hiem === null ? (
                                                                                 <></>
                                                                             ) : (
                                                                                 <>
-                                                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                                    {
+                                                                                        baseImage6 !== "" ? (
+                                                                                            <></>
+                                                                                        ) : (
+                                                                                            <>
+                                                                                                <Button onClick={getFile6} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                                            </>
+                                                                                        )
+                                                                                    }
                                                                                 </>
                                                                             )
                                                                         }
+
                                                                         <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Bao_Hiem?.expired_month}-{Chung_Nhan_Bao_Hiem?.expired_year}</span>
                                                                         <Button onClick={editDocument6} style={{ float: "right" }} type="primary"> Thay đổi</Button>
                                                                     </span>
@@ -987,7 +1124,38 @@ const DriverDetailAdmin = (props) => {
                                                             <div className='form-header-ad' style={{ height: "40px" }}>
                                                                 <span>
                                                                     Giấy chứng nhận đăng kiểm
-                                                                    <div className='status-ad'>{Chung_Nhan_Dang_Kiem?.status}</div>
+                                                                    {
+                                                                        Chung_Nhan_Dang_Kiem === null ? (
+                                                                            <>
+                                                                                <div className='status-ad'>Chưa gửi</div>
+                                                                            </>
+                                                                        ) : (
+                                                                            <>
+                                                                                {
+                                                                                    Chung_Nhan_Dang_Kiem.status === "SENDED" ? (
+                                                                                        <>
+                                                                                            <div className='status-ad'>Đã gửi</div>
+                                                                                        </>
+                                                                                    ) : (
+                                                                                        <>
+                                                                                            {
+                                                                                                Chung_Nhan_Dang_Kiem?.status === "VALID" ? (
+                                                                                                    <>
+                                                                                                        <div className='status-ad'>Hợp lệ</div>
+                                                                                                    </>
+                                                                                                ) : (
+                                                                                                    <>
+                                                                                                        <div className='status-ad'>Không hợp lệ</div>
+                                                                                                    </>
+                                                                                                )
+                                                                                            }
+                                                                                        </>
+                                                                                    )
+                                                                                }
+                                                                            </>
+                                                                        )
+                                                                    }
+
                                                                 </span>
 
                                                             </div>
@@ -998,14 +1166,23 @@ const DriverDetailAdmin = (props) => {
                                                                 <div className='upload-doc'>
                                                                     <span>
                                                                         {
-                                                                            baseImage7 !== "" ? (
+                                                                            Chung_Nhan_Dang_Kiem === null ? (
                                                                                 <></>
                                                                             ) : (
                                                                                 <>
-                                                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                                    {
+                                                                                        baseImage7 !== "" ? (
+                                                                                            <></>
+                                                                                        ) : (
+                                                                                            <>
+                                                                                                <Button onClick={getFile7} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                                            </>
+                                                                                        )
+                                                                                    }
                                                                                 </>
                                                                             )
                                                                         }
+
                                                                         <span style={{ fontSize: "20px" }}>Ngày hết hạn :{Chung_Nhan_Dang_Kiem?.expired_month}-{Chung_Nhan_Dang_Kiem?.expired_year}</span>
                                                                         <Button onClick={editDocument7} style={{ float: "right" }} type="primary"> Thay đổi</Button>
                                                                     </span>

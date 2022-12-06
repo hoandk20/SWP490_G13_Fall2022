@@ -39,6 +39,7 @@ const SerachFreeTripForPassenger = () => {
     const dispatch = useDispatch();
 
     const trips = useSelector((state) => state.freeTrip.trips?.allTrip);
+    console.log("tríp",trips); 
 
     const dateFormat = (date) => {
         const date_str = date,
@@ -132,7 +133,7 @@ const SerachFreeTripForPassenger = () => {
     ];
     const navigate = useNavigate();
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
+        googleMapsApiKey: 'AIzaSyD-r8Ye5leGyYgD4tEYvOa6LJnq2nH-e-I',
         libraries: ['places'],
     })
 

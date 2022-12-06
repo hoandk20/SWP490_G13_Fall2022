@@ -11,8 +11,8 @@ const ModalRePassword = () => {
 
     const user = useSelector((state) => state.user.userInfo.currentUser)
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [oldPassword, setOldPassword] = useState(false);
-    const [newPassword, setNewPassword] = useState(false);
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
     const [form] = Form.useForm();
     const showModal = () => {
         setIsModalOpen(true);
@@ -29,6 +29,7 @@ const ModalRePassword = () => {
             oldPassword: oldPassword,
             newPassword: newPassword
         }
+        console.log("object",object);
         changePassword(object,toast);
         setIsModalOpen(false);
         form.resetFields();
@@ -61,7 +62,7 @@ const ModalRePassword = () => {
                         ]}
                         hasFeedback
                     >
-                        <Input.Password  onChange={(e) =>{setOldPassword(e)}} />
+                        <Input.Password  onChange={(e) =>{setOldPassword(e.target.value)}} />
                     </FormItem>
                     <Form.Item
                         name="password"
@@ -76,7 +77,7 @@ const ModalRePassword = () => {
                         ]}
                         hasFeedback
                     >
-                        <Input.Password placeholder='*Mật khẩu: có tối thiểu 6 ký tự'  onChange={(e) =>{setNewPassword(e)}}/>
+                        <Input.Password placeholder='*Mật khẩu: có tối thiểu 6 ký tự'  onChange={(e) =>{setNewPassword(e.target.value)}}/>
                     </Form.Item>
 
                     <Form.Item

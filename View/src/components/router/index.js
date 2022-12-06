@@ -1,6 +1,9 @@
 import CompanyManagementAdmin from "../../views/admin/congty-mgt";
 import CompanyDetailAdmin from "../../views/admin/congty-mgt/congty-mgt-detail";
 import FreeTripManagementAdmin from "../../views/admin/free-trips-mgt";
+import TripDetailAdmin from "../../views/admin/free-trips-mgt/free-trips-mgt-detail";
+import PassengerManagementAdmin from "../../views/admin/khachhang-mgt";
+import PassengerDetailAdmin from "../../views/admin/khachhang-mgt/khachhang-mgt-detail";
 import DriverManagementAdmin from "../../views/admin/taixe-mgt";
 import DriverDetailAdmin from "../../views/admin/taixe-mgt/taixe-detail";
 import DocumentCompany from "../../views/congty/document";
@@ -207,30 +210,47 @@ const routers = [
     //admin
     {
         path: '/admin/taixe-mgt',
-        roleTarget: "ALL",
+        roleTarget: "ROLE_ADMIN",
         element: DriverManagementAdmin
     },
     {
         path: '/admin/taixe-mgt/detail',
-        roleTarget: "ALL",
+        roleTarget: "ROLE_ADMIN",
         element: DriverDetailAdmin
     },
     {
         path: '/admin/company-mgt',
-        roleTarget: "ALL",
+        roleTarget: "ROLE_ADMIN",
         element: CompanyManagementAdmin
     },
     {
         path: '/admin/company-mgt/detail',
-        roleTarget: "ALL",
+        roleTarget: "ROLE_ADMIN",
         element: CompanyDetailAdmin
     },
     {
         path: '/admin/free-trip-mgt',
-        roleTarget: "ALL",
+        roleTarget: "ROLE_ADMIN",
         element: FreeTripManagementAdmin
-    }
+    },
+    {
+        path: '/admin/free-trip-mgt/detail',
+        roleTarget: "ROLE_ADMIN",
+        element: TripDetailAdmin
+    },
+    {
+        path: '/admin/passenger-mgt',
+        roleTarget: "ROLE_ADMIN",
+        element: PassengerManagementAdmin
+    },
+    {
+        path: '/admin/passenger-mgt/detail',
+        roleTarget: "ROLE_ADMIN",
+        element: PassengerDetailAdmin
+    },
 
+
+    
 
 ]
 export default routers

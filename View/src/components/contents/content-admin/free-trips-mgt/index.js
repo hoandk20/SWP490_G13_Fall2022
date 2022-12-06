@@ -1,42 +1,78 @@
-import { Button, Form, Input, Row, Col, Select, Table, Popconfirm } from 'antd';
+import { Button, Form, Input, Row, Col, Select, Table, Popconfirm, DatePicker } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
 
 
 import { toast } from 'react-toastify';
-import { Await, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
+import { getCompanyDetail, getCompanysByAdmin, getCompanysByAdmiAll, getTripsByAdmiAll, getTripsByAdmin } from '../../../../redux/apiRequest';
 
 
 const { Option } = Select;
 const FreeTripManagementAdmin = () => {
 
     const navigate = useNavigate();
-    const URL = "http://26.36.110.116";
-    let [allTrips, setAllTrips] = useState();
-    useEffect(() => {
-        fetch(`${URL}:8080/api/admin/GetAllTrip`, {
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then(response => response.json())
-            .then(data => setAllTrips(data.object))
-    }, [])
-    console.log(allTrips);
-    const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
-    const all = allTrips?.map((row) => ({ ...row, key: row.tripID}));
+    const [date1, setDate1] = useState('');
+    const [date2, setDate2] = useState('');
+    const dispatch = useDispatch();
+    // const user = useSelector((state) => state.user.userInfo?.currentUser);
+    // console.log(user);
+    // const all = useSelector((state) => state.user.companys?.all);
+    // console.log(all);
 
-    const data = [];
+    const all =useSelector((state) => state.freeTrip.trips?.allTrip);
+    console.log("all",all);
+    const dateFormat = (date) =>{
+        const date_str = date,
+        options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+        formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
+        date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");      
+        return date_parts + formatted.substr(formatted.indexOf(",") + 1);
+    }
+    const trips =all?.map((item)=>{
+        if(item.status==="OPEN"){
+            return {...item,item,dateStart:dateFormat(item.timeStart),key:item.id,tripStatus:"Đang mở"}
+        }
+        else if(item.status==="CLOS"){
+            return {...item,item,key:item.id,dateStart:dateFormat(item.timeStart),tripStatus:"Đã đóng"}
+        }
+        else if(item.status==="CANC"){
+            return {...item,item,key:item.id,dateStart:dateFormat(item.timeStart),tripStatus:"Đã bị hủy"}
+        }else if(item.status==="RUN"){
+            return {...item,item,key:item.id,dateStart:dateFormat(item.timeStart),tripStatus:"Đang chạy"}
+        }
+    })
+    // const drivers = all?.map((row) => ({ ...row, key: row.companyID, bangphi: 'Không',regDate:dateFormat(row.createDate) }));
+    console.log("trips",trips);
+
+    function onChangeDateStart(date, dateString) {
+        setDate1(date.toISOString());
+    }
+    function onChangeDateEnd(date, dateString) {
+        setDate2(date.toISOString());
+    }
+    useEffect(() => {
+        getTripsByAdmiAll(dispatch);
+    }, [])
+
+    const onFinish = (values) => {
+        const object ={
+            ...values,
+            regFrom:date1,
+            regTo:date2
+        }
+        getTripsByAdmin(object, dispatch);
+    }
 
 
     const columns = [
         {
-            key: 'timeStart',
-            title: 'Thời Gian Bắt Đầu',
-            dataIndex: 'timeStart',
+            key: 'dateStart',
+            title: 'Thời gian bắt đầu',
+            dataIndex: 'dateStart',
         },
         {
             key: 'from',
@@ -49,47 +85,33 @@ const FreeTripManagementAdmin = () => {
             dataIndex: 'to',
         },
         {
-            key: 'price',
-            title: 'Cước(đ)',
-            dataIndex: 'price',
+            key: 'regDate',
+            title: 'Cước',
+            dataIndex: 'regDate',
         },
         {
-            key: 'status',
-            title: 'Trạng Thái',
-            dataIndex: 'status',
+            key: 'tripStatus',
+            title: 'Trạng thái',
+            dataIndex: 'tripStatus',
         },
+       
         {
             title: '',
             dataIndex: '',
             key: 'x',
-            render: (text, record, index) => {
+            render: (record) => {
                 return <div>
                     <EyeOutlined onClick={() => {
-                        // navigate('/admin/company-mgt/detail',{state:{record}})
+                        // setTimeout(() => {
+                        //     navigate('/admin/free-trip-mgt/detail', { state: { record } })
+                        // }, 1500)
+                        navigate('/admin/free-trip-mgt/detail', { state: { record } })
                     }} />
 
                 </div>
             },
         },
 
-        {
-            title: '',
-            dataIndex: '',
-            key: 'y',
-            render: (text, record, index) => {
-                return <div>
-                    <Popconfirm
-                        title="Bạn có muốn xóa phương tiện này?"
-
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <DeleteOutlined />
-                    </Popconfirm>
-                </div>
-
-            },
-        },
     ];
 
     return (
@@ -99,57 +121,63 @@ const FreeTripManagementAdmin = () => {
                 marginLeft: "20px"
             }}>
                 <h2>QUẢN TRỊ VÀ NHÂN VIÊN</h2>
-                <h3>TÌM TÀI XẾ</h3>
+                <h3>TÌM ĐỐI TÁC</h3>
                 <div className='driver-info'>
                     <Form labelCol={{
-                        span: 4,
+                        span: 6,
                     }}
                         wrapperCol={{
-                            span: 12,
+                            span: 16,
                         }}
+                        onFinish={onFinish}
                     >
                         <Row>
-                            <Col md={12} sm={24}>
+                            <Col md={8} sm={16}>
                                 <FormItem
-                                    name="account"
-                                    label="Biển số"
+                                    name="regFrom1"
+                                    label="Đăng ký từ"
+                                >
+                                <DatePicker style={{width:"100%"}} placeholder='Chọn ngày' onChange={onChangeDateStart} />
+                                </FormItem>
+                                <FormItem
+                                    name="phoneDriver"
+                                    label="Số di động TX"
+
                                 >
                                     <Input />
                                 </FormItem>
-                                <FormItem
-                                    name="status"
-                                    label="Trạng thái"
-
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="Đã gửi lại tài liệu"></Option>
-                                        <Option value="Hoạt động"></Option>
-                                        <Option value="Đã gửi tài liệu"></Option>
-                                        <Option value="Không hoạt động"></Option>
-                                        <Option value="Đang chờ xem xét"></Option>
-                                        <Option value="Chưa gửi tài liệu"></Option>
-                                    </Select>
-                                </FormItem>
-                                <FormItem
-                                    name="vehicoType"
-                                    label="Loại xe"
-
-                                >
-                                    <Select
-                                        allowClear
-                                    >
-                                        <Option value="Tất cả"></Option>
-                                        <Option value="A3"></Option>
-                                        <Option value="A6"></Option>
-                                        <Option value="FF"></Option>
-                                    </Select>
-                                </FormItem>
+                               
                             </Col>
-                            <Col md={12} sm={24}>
+                            <Col md={8} sm={16}>
                                 <FormItem
+                                    name="regTo1"
+                                    label="Đến"
+                                >
+                                <DatePicker style={{width:"100%"}} placeholder='Chọn ngày' onChange={onChangeDateEnd} />
+                                </FormItem>
+                                <FormItem
+                                    name="phonePassenger"
+                                    label="Số di động HK"
+                                >
+                                    <Input />
+                                </FormItem>
+
+                            </Col>
+                            <Col md={8} sm={16}>
+                            <FormItem
+                                    name="Status"
+                                    label="Trạng thái"
+                                >
+                                    <Select>
+                                        <Option value="OPEN">Đang mở</Option>
+                                        <Option value="CLOS">Đã đóng</Option>
+                                        <Option value="CANC">Đã bị hủy"</Option>
+                                        <Option value="RUN">Đang chạy</Option>
+                                    </Select>
+                                </FormItem>
+                         
+                                <FormItem
+                                    style={{ marginLeft: "26%" }}
                                 >
                                     <Button className='btn' type="primary" htmlType="submit">
                                         <FilterOutlined />  Lọc phương tiện
@@ -168,7 +196,7 @@ const FreeTripManagementAdmin = () => {
                     {/* <AddVehico /> */}
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={all} size="middle" />
+                    <Table columns={columns} dataSource={trips} size="middle" />
                 </div>
             </div>
         </div >

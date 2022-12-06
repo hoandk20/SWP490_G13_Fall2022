@@ -9,21 +9,20 @@ import {
     Row,
     Select,
 } from 'antd';
-import './infor.css';
 import FormItem from 'antd/es/form/FormItem';
 import React from 'react';
 import { SaveOutlined, UploadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import ModalRePassword from '../../../commons/modals/modal-re-password';
-import { editInforPassenger, getUser, UploadFile } from '../../../../redux/apiRequest';
+// import { editInforPassenger, getUser, UploadFile } from '../../../../redux/apiRequest';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import jwtDecode from 'jwt-decode';
 import { useEffect } from 'react';
+import { editInforPassengerAdmin } from '../../../../../redux/apiRequest';
 const { Option } = Select;
 
 
-const InfoContactUsers = () => {
+const PassengerDetailAdmin = () => {
 
 
     // const currentUser = useSelector((state) => state.auth.login?.currentUser);
@@ -31,15 +30,17 @@ const InfoContactUsers = () => {
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
-    const [firstName, setFirstName] = useState(user.firstname);
-    const [lastName, setLastName] = useState(user.lastname);
-    const [email, setEmail] = useState(user.email);
-    const [phone, setPhone] = useState(user.phone);
-    const [address, setAddress] = useState(user.address);
-    const [city, setCity] = useState(user.cityId);
-    const [avatar, setAvatar] = useState(user.avatarBase64);
+
+    const passenger = useSelector((state) => state.user.passenger?.info);
+    console.log(passenger);
+    const [firstName, setFirstName] = useState(passenger.firstName);
+    const [lastName, setLastName] = useState(passenger.lassName);
+    const [email, setEmail] = useState(passenger.email);
+    const [phone, setPhone] = useState(passenger.phone);
+    const [address, setAddress] = useState(passenger.address);
+    const [city, setCity] = useState(passenger.cityId);
+    const [avatar, setAvatar] = useState(passenger.avatarBase64);
+    console.log("ln",lastName);
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
             <Select
@@ -66,33 +67,32 @@ const InfoContactUsers = () => {
         });
     };
     const uploadAvatar = async (e) => {
-        const file = await e.target.files[0];
-        const base64 = await convertBase64(file);
+        const file = await  e.target.files[0];
+        const base64 = await convertBase64(file);        
         await setAvatar(base64);
     };
 
 
     const onFinish = (values) => {
-        const image = {
-            base64: avatar,
-            createBy: user.email,
-            fileName: "Avatar",
-            year: '',
-            month: ''
-        }
-        UploadFile(image, toast, dispatch);
-
+        // const image= {
+        //     base64:avatar,
+        //     createBy:user.email,
+        //     fileName:"Avatar",
+        //     year:'',
+        //     month:''
+        // }
+        // UploadFile(image,toast,dispatch);
+        //
         const object = {
             email: email,
             firstName: firstName,
             lastName: lastName,
-            avatarBase64: '',
             phone: phone,
             address: address,
-            country: 'vi',
-            cityId: city,
+            cityId:city,
         }
-        editInforPassenger(object, toast, dispatch);
+        console.log(object);
+        editInforPassengerAdmin(object, toast, dispatch);
 
     }
     const handleChangeFirstName = (e) => {
@@ -130,7 +130,7 @@ const InfoContactUsers = () => {
                     }}
                     // style={{textAlign:"right"}}
                     labelCol={{
-                        span: 8,
+                        span: 7,
                     }}
                     wrapperCol={{
                         span: 18,
@@ -141,55 +141,55 @@ const InfoContactUsers = () => {
                             {/* <FormItem
                                 name='name'
                                 label="Tên "
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message: 'Tên không được để trống',
-                                //     },
-                                // ]}
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Tên không được để trống',
+                                    },
+                                ]}
                             >
                                 <Input.Group>
                                     <Input value={firstName} onChange={handleChangeFirstName} style={{ width: "35%", marginRight: "5%" }} />
                                     <Input value={lastName} onChange={handleChangeLastName} style={{ width: "60%" }} />
                                 </Input.Group>
                             </FormItem> */}
-                            <Form.Item
-                                style={{
-                                    display: 'inline-block',
-                                    width: '50%',
+                                    <Form.Item
+                                        style={{
+                                            display: 'inline-block',
+                                            width: '50%',
 
-                                }}
-                                labelCol={{
-                                    span: 14,
-                                }}
-                                name="fn"
-                                initialValue={firstName}
-                                label="Tên"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Tên không được để trống',
-                                    },
-                                ]}
-                            >
-                                <Input onChange={handleChangeFirstName} />
-                            </Form.Item>
-                            <Form.Item
-                                initialValue={lastName}
-                                style={{
-                                    display: 'inline-block',
-                                    width: '50%',
-                                }}
-                                name="ln"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Tên không được để trống',
-                                    },
-                                ]}
-                            >
-                                <Input onChange={handleChangeLastName} />
-                            </Form.Item>
+                                        }}
+                                        labelCol={{
+                                            span: 14,
+                                        }}
+                                        name="fn"
+                                        initialValue={firstName}
+                                        label="Tên"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Tên không được để trống',
+                                            },
+                                        ]}
+                                    >
+                                        <Input  onChange={handleChangeFirstName}  />
+                                    </Form.Item>
+                                    <Form.Item
+                                        initialValue={lastName}
+                                        style={{
+                                            display: 'inline-block',
+                                            width: '50%',
+                                        }}
+                                        name="ln"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Tên không được để trống',
+                                            },
+                                        ]}
+                                    >
+                                        <Input  onChange={handleChangeLastName} />
+                                    </Form.Item>
                             <FormItem
                                 label="Email "
                                 initialValue={email}
@@ -206,7 +206,7 @@ const InfoContactUsers = () => {
                                     },
                                 ]}
                             >
-                                <Input disabled />
+                                <Input disabled/>
                             </FormItem>
                             <Form.Item
                                 label="Số di động "
@@ -246,7 +246,7 @@ const InfoContactUsers = () => {
                             <FormItem
                                 name="country"
                                 label="Quốc gia "
-                                initialValue={user.country}
+                                initialValue={"vi"}
                                 labelCol={{
                                     span: 12,
                                 }}
@@ -295,21 +295,17 @@ const InfoContactUsers = () => {
                     <Row>
                         <Col sm={16} md={8}  >
                             <FormItem
-                                wrapperCol={{
-                                    span: 22,
-                                }}
-                            >
-                                <Button className='btn' type="primary" htmlType="submit" style={{ float: "right" }}>
+                                    wrapperCol={{
+                                        span: 22,
+                                    }}
+                             >
+                                <Button className='btn' type="primary" htmlType="submit" style={{float:"right"}}>
                                     <SaveOutlined /> Thay đổi thông tin
                                 </Button>
 
                             </FormItem>
                         </Col>
-                        <Col sm={16} md={8}  >
-                            <div style={{ float: "left" }}>
-                                <ModalRePassword />
-                            </div>
-                        </Col>
+
                     </Row>
 
 
@@ -321,4 +317,4 @@ const InfoContactUsers = () => {
     )
 
 }
-export default InfoContactUsers
+export default PassengerDetailAdmin

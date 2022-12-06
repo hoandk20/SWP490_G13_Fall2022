@@ -14,6 +14,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { useState } from 'react';
+import SerachFreeTripForPassenger from '../khachhang/free-trips/search-free-trip';
+import CreateFreeTripForDriver from '../taixe/free-trip/create-free-trip'
+import DriverManagementAdmin  from '../admin/taixe-mgt/index.js'
 const { Header, Content } = Layout;
 // const role="ROLE_PASSENGER"
 
@@ -79,7 +82,7 @@ const Home = () => {
       if(newUser.statusVerify==0 ){
         navigate('/signup/confirm-email', { state: { newUser } })
       }else
-      return <LayoutPassenger  content={<HomePassenger data={data}/>}/>
+      return <SerachFreeTripForPassenger/>
     }else if(role==='ROLE_DRIVER'){
       if(newUser.statusVerify==0 ){
         navigate('/signup/confirm-email', { state: { newUser } })
@@ -90,7 +93,7 @@ const Home = () => {
       }else if(newUser.statusVerify==3){
         navigate('/signup/vehico-info', { state: { newUser } })
       }else
-      return <LayoutDriver content={<HomeDriver data={data}/>}/>
+      return <CreateFreeTripForDriver/>
     }else if(role==='ROLE_COMPANY'){
       if(newUser.statusVerify==0 ){
         navigate('/signup/confirm-email', { state: { newUser } })
@@ -100,8 +103,10 @@ const Home = () => {
         navigate('/signup/add-vehico', { state: { newUser } })
       }else if(newUser.statusVerify==3){
         navigate('/signup/vehico-info', { state: { newUser } })
-      }else
+      }else 
       return <LayoutCompany content={<HomeCompany data={data}/>}/>
+    }else if(role==="ROLE_ADMIN"){
+      return <DriverManagementAdmin/>
     }
   }
 };
