@@ -46,7 +46,7 @@ const FreeTripDetailOfDriver = () => {
     const originRef = useRef()
     const destiantionRef = useRef()
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyD-r8Ye5leGyYgD4tEYvOa6LJnq2nH-e-I',
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
 

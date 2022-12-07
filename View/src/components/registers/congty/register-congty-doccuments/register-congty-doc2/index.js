@@ -9,7 +9,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { AddVehicoByCompany, AddVehicoByDriver, ChangeStatusSignUp, getAllVehico, getUser } from '../../../../../redux/apiRequest';
 import AddVehico from '../../../../vehicos/add-vehico';
-const URL = "http://26.36.110.116";
+
 const RegisterAddVehicle = () => {
 
 
@@ -27,7 +27,7 @@ const RegisterAddVehicle = () => {
             console.log(values);
 
             try {
-                const res = await axios.post(`${URL}:8080/api/driver/addVehicle`,
+                const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/addVehicle`,
                     {
                         driverEmail: user.email,
                         producer: values.producer,
@@ -52,7 +52,7 @@ const RegisterAddVehicle = () => {
         else {
 
             try {
-                const res = await axios.post(`${URL}:8080/api/company/addVehicle`,
+                const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/addVehicle`,
                     {
                         companyEmail: user.email,
                         producer: values.producer,

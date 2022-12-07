@@ -29,7 +29,7 @@ import {
 } from '@react-google-maps/api'
 import { useRef } from 'react'
 
-const URL = "http://26.36.110.116";
+
 
 
 
@@ -45,7 +45,7 @@ const HomeAll = () => {
     const getTop10Trips = async () => {
         try {
 
-            const res = await axios.get(`${URL}:8080/api/GetTop10Trip`, {
+            const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/GetTop10Trip`, {
                 headers: { 'Content-Type': 'application/json' }
             })
             setAllTrip(res.data.object);

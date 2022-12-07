@@ -13,7 +13,6 @@ import { useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 
-const URL = "http://26.36.110.116";
 
 const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
@@ -90,7 +89,7 @@ const RegisterCompanyDoc1 = () => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
               {
                 base64: object.base64,
                 expired_month: object.month,
@@ -102,6 +101,7 @@ const RegisterCompanyDoc1 = () => {
                 headers: { 'Content-Type': 'application/json' }
               });
               setChung_Nhan_Kinh_nghiem(true)
+              toast.success("Upload file thành công")
           } catch (error) {
             toast.error("Upload file thất bại")
           }
@@ -119,7 +119,7 @@ const RegisterCompanyDoc1 = () => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
               {
                 base64: object.base64,
                 expired_month: object.month,
@@ -152,7 +152,7 @@ const RegisterCompanyDoc1 = () => {
             month: month,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
               {
                 base64: object.base64,
                 expired_month: object.month,
@@ -183,7 +183,7 @@ const RegisterCompanyDoc1 = () => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
               {
                 base64: object.base64,
                 expired_month: object.month,
@@ -214,7 +214,7 @@ const RegisterCompanyDoc1 = () => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
               {
                 base64: object.base64,
                 expired_month: object.month,

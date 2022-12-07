@@ -72,7 +72,7 @@ const CreateFreeTripForDriver = () => {
     console.log(user);
 
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyD-r8Ye5leGyYgD4tEYvOa6LJnq2nH-e-I',
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
 
@@ -82,6 +82,7 @@ const CreateFreeTripForDriver = () => {
     const [duration, setDuration] = useState('')
     const [from, setFrom] = useState('')
     const [to, setTo] = useState('')
+    const [fee,setFee]=useState('');
     const [listPolyline, setListPolyline] = useState('')
     var polyline = '';
 
@@ -120,6 +121,21 @@ const CreateFreeTripForDriver = () => {
         setDate(date.toISOString());
     }
 
+    const feeTrip = () =>{
+        console.log("distance",distance);
+        const a=0
+        if(distance<31){
+            if(distance<1){
+                setFee(9000);
+            }else{
+                setFee(9000+(distance-1)*11000)
+            }
+        }else{
+            setFee(9000+11000*29+(distance-31)*9500);
+        } 
+        
+    }
+
     const onFinish = (values) => {
         const trip = {
             driverEmail: user.email,
@@ -152,8 +168,6 @@ const CreateFreeTripForDriver = () => {
             travelMode: google.maps.TravelMode.DRIVING,
         })
         setDirectionsResponse(results)
-        console.log(results);
-        console.log(results.routes[0].legs[0].start_location)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
 
@@ -162,6 +176,9 @@ const CreateFreeTripForDriver = () => {
             polyline += e.lat() + ',' + e.lng() + ';';
         }
         setListPolyline(polyline);
+
+        feeTrip();
+        console.log("fee",fee);
     }
 
     // const changeTo = () => {

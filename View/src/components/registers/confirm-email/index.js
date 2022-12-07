@@ -38,7 +38,7 @@ const RegisterSignup = () => {
     const login = async () => {
         const res = await axios({
             method: "post",
-            url: `${URL}:8080/api/login`,
+            url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
             data: user,
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
         })

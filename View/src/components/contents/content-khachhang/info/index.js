@@ -160,7 +160,7 @@ const InfoContactUsers = () => {
 
                                 }}
                                 labelCol={{
-                                    span: 14,
+                                    span: 16,
                                 }}
                                 name="fn"
                                 initialValue={firstName}
