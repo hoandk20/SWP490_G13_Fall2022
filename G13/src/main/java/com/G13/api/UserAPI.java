@@ -36,19 +36,11 @@ public class UserAPI {
     private final CompanyService companyService;
     private final RiderService riderService;
     private final DocumentRepository documentRepository;
-    private  final VerifyaccountRepository verifyaccountRepository;
-    private final VehicleRepository vehicleRepository;
+    private final VerifyAccountService verifyAccountService;
     private final PromotionTripService tripDriverService;
     private final DriverService driverService;
     private final CityService cityService;
     private final VehicleService vehicleService;
-    @GetMapping("/checkEmailExist")
-    public ResponseEntity<?> checkEmailExisted(String email){
-        boolean IsExisted = userService.IsEmailExisted(email);
-        Map<String,String> res = new HashMap<>();
-        res.put("IsExisted",IsExisted?"true":"false");
-        return ResponseEntity.ok().body(res);
-    }
 
     @GetMapping("user/info")
     public ResponseEntity<?> getUserInfo(String username){
@@ -56,7 +48,7 @@ public class UserAPI {
         userInfo.setEmail(username);
         userInfo.setUsername(username);
         User user = new User();
-        user = userRepository.findByEmail(username);
+        user = userService.getUserByEmail(username);
         UploadFileMaster uploadFileMaster = new UploadFileMaster();
         Document document = documentRepository
                 .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(username,uploadFileMaster.avatar);
@@ -66,8 +58,6 @@ public class UserAPI {
             userInfo.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
             userInfo.setEmail(username);
         }
-
-
         Driver driver = driverService.getDriverByEmail(username);
         if(driver!=null){
             userInfo.setFirstname(driver.getFirstName());
@@ -137,7 +127,7 @@ public class UserAPI {
                 System.out.println(e.toString());
             }
             try{
-                Vehicle vehicle = vehicleRepository.findFirstByOrderByCreatedDateDesc();
+                Vehicle vehicle = vehicleService.getFistVehicleByCompanyId(company.getId());
                 if(vehicle!=null){
                     VehicleRequest vehicleRequest = new VehicleRequest();
                     vehicleRequest.setId(vehicle.getId());
@@ -160,7 +150,7 @@ public class UserAPI {
             userInfo.setRole("ROLE_ADMIN");
         }
 
-        Verifyaccount verifyaccount = verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+        Verifyaccount verifyaccount = verifyAccountService.getVerifyAccountByUserId(user.getId());
         if(verifyaccount!=null){
             userInfo.setStatusVerify(verifyaccount.getStatus());
         }
@@ -176,7 +166,7 @@ public class UserAPI {
             if(userService.changePassword(user)){
                 return ResponseEntity.ok().body(response);
             }else{
-                throw new Exception();
+                return ResponseEntity.badRequest().body(response);
             }
         }catch (Exception e){
             return ResponseEntity.badRequest().body(response);

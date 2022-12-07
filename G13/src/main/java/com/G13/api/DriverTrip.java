@@ -421,6 +421,15 @@ public class DriverTrip {
                 tripPassenger.setPrice(t.getOpenPrice());
                 tripPassengers.add(tripPassenger);
             }
+            Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
+            tripDriver.setPhoneDriver(driver.getMobileNo());
+            Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+            if(vehicle!=null){
+
+                tripDriver.setVehiclePlate(vehicle.getPlate());
+                tripDriver.setVehicleColor(vehicle.getExteriorColor());
+                tripDriver.setVehicleName(vehicle.getCreatedBy());
+            }
             tripDriver.setListPassenger(tripPassengers);
             tripDriver.setSeatRegistered(detail.getCapacity() - listPassengers.size());
 

@@ -5,7 +5,10 @@ import com.G13.domain.*;
 import com.G13.master.*;
 import com.G13.model.*;
 import com.G13.repo.*;
+import com.G13.service.DocumentService;
+import com.G13.service.UserRoleService;
 import com.G13.service.UserService;
+import com.G13.service.VerifyAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,17 +22,17 @@ import java.util.*;
 @RequiredArgsConstructor
 public class Register {
 
-        private final UserRepository userRepository;
+        private final UserService userService;
         private final UserRoleRepository userRoleRepository;
 
         private final DriverRepository driverRepository;
-        private final UserService userService;
         private  final RiderRepository riderRepository;
         private final CompanyRepository companyRepository;
-        private final DocumentRepository documentRepository;
+        private final DocumentService documentService;
         private  final VehicleRepository vehicleRepository;
-        private  final  VerifyaccountRepository verifyaccountRepository;
         private  final  VehicledocumentRepository vehicledocumentRepository;
+        private final UserRoleService userRoleService;
+        private final VerifyAccountService verifyAccountService;
     @PostMapping("/RegisterCompany")
     public  ResponseEntity<?> RegisterCompany(@RequestBody RegisterCompany rc){
         ResopnseContent response = new ResopnseContent();
@@ -83,7 +86,7 @@ public class Register {
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
             MailAPI mailAPI = new MailAPI();
             mailAPI.SendEmailVerifyAccount(rc.getEmail(),verifyaccount.getVerificode());
-            response.setObject(verifyaccountRepository.saveAndFlush(verifyaccount));
+            response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
             return ResponseEntity.ok().body(response);
         }catch (Exception exception){
             response.setContent(exception.toString());
@@ -99,18 +102,17 @@ public class Register {
         DocumentStatus documentStatus = new DocumentStatus();
 
         try{
-            User user = userRepository.findByEmail(verifyCode.getEmail());
+            User user = userService.getUserByEmail(verifyCode.getEmail());
             Date date = new Date();
             Instant instant1 = Instant.now();
-            Verifyaccount verifyaccount =verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+            Verifyaccount verifyaccount =verifyAccountService.getVerifyAccountByUserId(user.getId());
             if(verifyaccount==null){
                 response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
 
             }else{
                 verifyaccount.setStatus(verifyCode.getStatus());
-                Verifyaccount verifyaccount1=verifyaccountRepository.saveAndFlush(verifyaccount);
-                response.setObject(verifyaccount1);
+                response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
                 response.setStatus(masterStatus.SUCCESSFULL);
                 return ResponseEntity.ok().body(response);
             }
@@ -178,7 +180,7 @@ public class Register {
                 verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
                 MailAPI mailAPI = new MailAPI();
                 mailAPI.SendEmailVerifyAccount(rd.getEmail(),verifyaccount.getVerificode());
-                response.setObject(verifyaccountRepository.saveAndFlush(verifyaccount));
+                response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
                 response.setStatus(masterStatus.SUCCESSFULL);
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
@@ -228,6 +230,7 @@ public class Register {
                 rider.setLastName(rp.getLastName());
                 rider.setMobileNo(rp.getPhoneNumber());
                 rider.setLanguageCode(rp.getLanguage());
+                rider.setCityID(rp.getCityId());
                 rider.setId(rp.getEmail());
                 rider.setBalance(nofloat);
                 rider.setCancelRate(nofloat);
@@ -250,12 +253,7 @@ public class Register {
                 rider.setTotalTripAdjustment(0.0);
                 response.setStatus(masterStatus.SUCCESSFULL);
                 riderRepository.save(rider);
-
-                UserRole userRole = new UserRole();
-                userRole.setUserId(new Long(usersave.getId()));
-                userRole.setRoleId(new Long(2));
-                userRoleRepository.save(userRole);
-
+                userRoleService.SaveUserRole(usersave.getId(),2);
                 Verifyaccount verifyaccount = new Verifyaccount();
                 GenerateGUID guid = new GenerateGUID();
                 verifyaccount.setUserid(usersave.getId());
@@ -264,14 +262,12 @@ public class Register {
                 verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
                 MailAPI mailAPI = new MailAPI();
                 mailAPI.SendEmailVerifyAccount(rp.getEmail(),verifyaccount.getVerificode());
-                response.setObject(verifyaccountRepository.saveAndFlush(verifyaccount));
-                response.setStatus(masterStatus.SUCCESSFULL);
 
+                response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
                 return ResponseEntity.ok().body(response);
             }catch (Exception exception){
                 response.setContent(exception.getCause().toString());
                 System.out.println(response.getContent());
-                response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
 
@@ -302,7 +298,7 @@ public class Register {
                 document.setCreatedBy(doc.getCreateBy());
                 document.setCreatedDate(instant);
                 document.setStatus(documentStatus.DOCUMENT_SENDED);
-                documentRepository.save(document);
+                documentService.SaveDocument(document);
 
                 response.setStatus(masterStatus.SUCCESSFULL);
                 return ResponseEntity.ok().body(response);
@@ -342,8 +338,7 @@ public class Register {
             document.setCreatedBy(doc.getCreateBy());
             document.setCreatedDate(instant);
             document.setStatus(documentStatus.DOCUMENT_SENDED);
-            Document document1 = documentRepository.saveAndFlush(document);
-
+            Document document1 = documentService.SaveDocument(document);
             Vehicledocument vehicledocument = new Vehicledocument();
             Vehicle  vehicle = vehicleRepository.findById(vehicleid);
             vehicledocument.setDocumentid(document1);
@@ -373,8 +368,8 @@ public class Register {
             for (Vehicledocument vehicledocument:vehicledocuments) {
                 DocumentRequest documentRequest = new DocumentRequest();
                     FileManage fileManage = new FileManage();
-                    Document document = documentRepository
-                            .findDocumentById(vehicledocument.getDocumentid().getId());
+                    Document document = documentService
+                            .GetDocById(vehicledocument.getDocumentid().getId());
                     doc.setExpired_month(document.getExpiredMonth());
                     doc.setExpired_year(document.getExpiredYear());
                     doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
@@ -398,8 +393,8 @@ public class Register {
         MasterStatus masterStatus = new MasterStatus();
         try{
             FileManage fileManage = new FileManage();
-            Document document = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(createBy,file_name);
+            Document document = documentService
+                    .GetDocumentByCreateByAndFileName(createBy,file_name);
             try{
                 Vehicledocument vehicledocument = vehicledocumentRepository.findVehicledocumentByDocumentid(document);
                 if(vehicledocument!=null){
@@ -440,13 +435,13 @@ public class Register {
         DocumentStatus documentStatus = new DocumentStatus();
 
         try{
-            User user = userRepository.findByEmail(verifyCode.getEmail());
+            User user = userService.getUser(verifyCode.getEmail());
             Date date = new Date();
             Instant instant1 = Instant.now();
-            Verifyaccount verifyaccount =verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+            Verifyaccount verifyaccount =verifyAccountService.getVerifyAccountByUserId(user.getId());
             if(verifyCode.getCode().equals(verifyaccount.getVerificode())&&verifyaccount.getExpiredate().isAfter(Instant.now())){
                 verifyaccount.setStatus("1");
-                verifyaccountRepository.save(verifyaccount);
+                verifyAccountService.SaveVerifyAccount(verifyaccount);
                 verifyCode.setExpired(false);
                 verifyCode.setStatus("1");
                 response.setContent("verify sussessfull");
@@ -477,16 +472,16 @@ public class Register {
         Instant now = Instant.now();
 
         try{
-            User user = userRepository.findByEmail(email);
+            User user = userService.getUserByEmail(email);
             Date date = new Date();
             Instant instant1 = Instant.now();
-            Verifyaccount verifyaccount =verifyaccountRepository.findVerifyaccountByUseridOrderByExpiredateDesc(user.getId());
+            Verifyaccount verifyaccount =verifyAccountService.getVerifyAccountByUserId(user.getId());
             GenerateGUID guid = new GenerateGUID();
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(now.plusSeconds(60));
             MailAPI mailAPI = new MailAPI();
             mailAPI.SendEmailVerifyAccount(email,verifyaccount.getVerificode());
-            verifyaccountRepository.save(verifyaccount);
+            verifyAccountService.SaveVerifyAccount(verifyaccount);
             response.setContent("send successfull");
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);

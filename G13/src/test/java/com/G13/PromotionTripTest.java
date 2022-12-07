@@ -4,6 +4,7 @@ import com.G13.domain.Promotiontrip;
 import com.G13.master.MasterTripStatus;
 import com.G13.repo.PromotiontripRepository;
 import com.G13.service.PromotionTripService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,8 +25,8 @@ public class PromotionTripTest {
     @InjectMocks
     PromotionTripService tripDriverService;
 
-    @Test
-    void TestGetTop10TripOpen() {
+    @BeforeEach
+    void addData(){
         List<Promotiontrip> mocTripDriver = new ArrayList<>();
         MasterTripStatus masterTripStatus = new MasterTripStatus();
         for (int i = 0; i < 10; i++) {
@@ -40,7 +41,9 @@ public class PromotionTripTest {
             mocTripDriver.add(p1);
         }
         when(promotiontripRepository.findTop10ByStatusOrderByCreatedDateDesc(masterTripStatus.TRIP_OPEN)).thenReturn(mocTripDriver);
-
+    }
+    @Test
+    void TestGetTop10TripOpen() {
         List<Promotiontrip> list = tripDriverService.getTop10TripOpen();
         assertThat(list.size()).isEqualTo(10);
     }

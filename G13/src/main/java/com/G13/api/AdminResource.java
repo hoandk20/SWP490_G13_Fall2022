@@ -360,7 +360,7 @@ public class AdminResource {
     }
 
     @GetMapping("/GetAllRider")
-    public ResponseEntity<?> listRider(String name, String phone) {
+    public ResponseEntity<?> listRider(String name, String phone, String email) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
 
@@ -385,7 +385,7 @@ public class AdminResource {
                 passengerInfos.add(passengerInfo);
             }
 
-            response.setObject(filterlistRider(passengerInfos, phone, name));
+            response.setObject(filterlistRider(passengerInfos, phone, name,email));
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -395,7 +395,7 @@ public class AdminResource {
         }
     }
 
-    List<PassengerInfo> filterlistRider(List<PassengerInfo> list, String phone, String name) {
+    List<PassengerInfo> filterlistRider(List<PassengerInfo> list, String phone, String name,String email) {
         List<PassengerInfo> listResult = new ArrayList<>();
         for (PassengerInfo passengerInfo : list
         ) {
@@ -404,6 +404,9 @@ public class AdminResource {
             }
             if(name!=null&&!name.equals("")){
                 if(!passengerInfo.getLassName().contains(name)&&!passengerInfo.getFirstName().contains(name)){continue;}
+            }
+            if(email!=null&&!email.equals("")){
+                if(!passengerInfo.getEmail().contains(email)){continue;}
             }
             listResult.add(passengerInfo);
         }
