@@ -7,7 +7,9 @@ import com.G13.master.RegisterStatus;
 import com.G13.model.ChangeStatus;
 import com.G13.model.ResopnseContent;
 import com.G13.model.TripPassenger;
+import com.G13.model.filterTripPassenger;
 import com.G13.repo.*;
+import com.G13.service.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +24,12 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PassengerTrip {
 
-    private final TripRepository tripRepository;
-    private final RiderRepository riderRepository;
-    private final PromotiontripRepository promotiontripRepository;
-    private final DriverRepository driverRepository;
-    private final VehicleRepository vehicleRepository;
-
+    private final TripService tripService;
+    private final RiderService riderService;
+    private final DriverService driverService;
+    private final VehicleService vehicleService;
+    private final PromotionTripService promotionTripService;
+    private final PassengerTripService passengerTripService;
 
     @PostMapping("/updateRegisterStatus")
     public ResponseEntity<?> ChangeStatusRegisterTrip(@RequestBody ChangeStatus changeStatus){
@@ -35,14 +37,13 @@ public class PassengerTrip {
         String status = changeStatus.getStatus();
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
-        MasterTripStatus masterTripStatus = new MasterTripStatus();
         RegisterStatus registerStatus = new RegisterStatus();
     try{
-        Trip detail = tripRepository.findTripByIdOrderByCreatedDateDesc(id);
+        Trip detail = tripService.getTripById(id);
         if(detail.getId().equals("")) {
             throw  new Exception();
         }
-        Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(detail.getTripCode());
+        Promotiontrip promotiontrip = promotionTripService.getPromotionTripById(detail.getTripCode());
         switch (status){
             case "1":
                 detail.setStatus(registerStatus.REJECT);
@@ -58,7 +59,7 @@ public class PassengerTrip {
                     return ResponseEntity.badRequest().body(response);
                 }else{
                         promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+detail.getDuration());
-                        promotiontripRepository.save(promotiontrip);
+                        promotionTripService.SavePromotionTrip(promotiontrip);
                 }
                 break;
             case "3":
@@ -70,7 +71,7 @@ public class PassengerTrip {
                 break;
             default:
         }
-        response.setContent(tripRepository.save(detail).toString());
+        response.setContent(tripService.SaveTrip(detail).toString());
         response.setObject(detail);
         response.setStatus(masterStatus.SUCCESSFULL);
         return ResponseEntity.ok().body(response);
@@ -94,7 +95,7 @@ public class PassengerTrip {
 
 
         try {
-            Rider rider = riderRepository.findByEmail(rp.getPassengerEmail());
+            Rider rider = riderService.getRiderByEmail(rp.getPassengerEmail());
             MasterTripStatus m = new MasterTripStatus();
             Trip t = new Trip();
             t.setRiderID(rp.getPassengerEmail());
@@ -111,7 +112,7 @@ public class PassengerTrip {
             t.setStatus(masterTripStatus.TRIP_PENDING);
             t.setMobileRelative(rider.getMobileNo());
 
-            Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(t.getTripCode());
+            Promotiontrip promotiontrip = promotionTripService.getPromotionTripById(t.getTripCode());
             if(promotiontrip.getCapacity()-promotiontrip.getNumberCapacityRegistered()<t.getDuration()){
                 response.setContent("do not enough seat");
                 response.setStatus(masterStatus.FAILURE);
@@ -120,7 +121,7 @@ public class PassengerTrip {
               //  promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()+t.getDuration());
               //  promotiontripRepository.save(promotiontrip);
             }
-            response.setContent(tripRepository.save(t).toString());
+            response.setContent(tripService.SaveTrip(t).toString());
             response.setObject(t);
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
@@ -138,7 +139,7 @@ public class PassengerTrip {
         MasterStatus masterStatus = new MasterStatus();
 
         try{
-            List<Trip> list = tripRepository.findAllByRiderIDOrderByCreatedDateDesc(passengerEmail);
+            List<Trip> list = tripService.getListTripByRiderEmail(passengerEmail);
             List<TripPassenger> tripPassengers = new ArrayList<>();
             for (Trip detail:list
                  ) {
@@ -165,6 +166,7 @@ public class PassengerTrip {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
     @PostMapping("/listTrip")
     public ResponseEntity<?> listTripHistory(@RequestBody filterTripPassenger filterTripPassenger){
         ResopnseContent response = new ResopnseContent();
@@ -172,7 +174,8 @@ public class PassengerTrip {
         RegisterStatus registerStatus = new RegisterStatus();
 
         try{
-            List<Trip> list = tripRepository.findAllByRiderIDOrderByCreatedDateDesc(filterTripPassenger.getPassengerEmail());
+            List<Trip> list =
+                    tripService.getListTripByRiderEmail(filterTripPassenger.getPassengerEmail());
             List<TripPassenger> listTripHistory = new ArrayList<>();
             for (Trip detail:list
             ) {
@@ -191,20 +194,20 @@ public class PassengerTrip {
                     tripPassenger.setWaitingTime(detail.getDriverWaitingTime());
                     tripPassenger.setPrice(detail.getOpenPrice());
 
-                    Driver driver = driverRepository.findByEmail(tripPassenger.getDriverEmail());
-                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    Driver driver = driverService.getDriverByEmail(tripPassenger.getDriverEmail());
+                    Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                     if(vehicle!=null){
                         tripPassenger.setVehiclePlate(vehicle.getPlate());
                         tripPassenger.setVehicleColor(vehicle.getExteriorColor());
                         tripPassenger.setVehicleName(vehicle.getCreatedBy());
                     }
-                    Promotiontrip promotiontrip = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(detail.getTripCode());
+                    Promotiontrip promotiontrip = promotionTripService.getPromotionTripById(detail.getTripCode());
                     tripPassenger.setTripStatus(promotiontrip.getStatus());
                     listTripHistory.add(tripPassenger);
                 }
             }
 
-            listTripHistory = filterTripPassenger(listTripHistory,filterTripPassenger);
+            listTripHistory = passengerTripService.filterTripPassenger(listTripHistory,filterTripPassenger);
             response.setObject(listTripHistory);
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
@@ -214,35 +217,7 @@ public class PassengerTrip {
             return ResponseEntity.badRequest().body(response);
         }
     }
-    List<TripPassenger> filterTripPassenger(List<TripPassenger> tripPassengerList,filterTripPassenger filter){
-        List<TripPassenger> listResult = new ArrayList<>();
-        for (TripPassenger t:tripPassengerList
-             ) {
-            if(filter.driverEmail!=null&&!filter.driverEmail.equals("")){
-                if(!filter.driverEmail.equals(t.getDriverEmail())){
-                    continue;
-                }
-            }
-            if(filter.status!=null&&!filter.status.equals("")){
-                if(!filter.status.equals(t.getTripStatus())){
-                    continue;
-                }
-            }
-            if(filter.dateFrom!=null){
-                if(filter.dateFrom.compareTo(t.getTimeStart())>=0){
-                    continue;
-                }
-            }
-            if(filter.dateTo!=null){
-                if(filter.dateTo.compareTo(t.getTimeStart())<=0){
-                    continue;
-                }
-            }
-            listResult.add(t);
-        }
 
-        return  listResult;
-    }
 
 
 //    @GetMapping("/detail")
@@ -274,15 +249,7 @@ public class PassengerTrip {
 //    }
 
 }
-@Data
-class filterTripPassenger{
-    int companyID;
-    String passengerEmail;
-    String driverEmail;
-    Date dateFrom;
-    Date dateTo;
-    String status;
-}
+
 
 
 

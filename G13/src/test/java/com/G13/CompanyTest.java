@@ -28,10 +28,11 @@ public class CompanyTest {
         Company company = new Company();
         company.setId(1);
         company.setNote("congty1@gmail.com");
-
         when(companyRepository.findByNote("congty1@gmail.com")).thenReturn(company);
+        when(companyRepository.findCompanyById(1)).thenReturn(company);
     }
 
+   //test get company by email
     @Test
     void testGetCompanyByEmailFound(){
         String Expectmail = "congty1@gmail.com";
@@ -40,12 +41,27 @@ public class CompanyTest {
     }
     @Test
     void testGetCompanyByEmailNotFound(){
+        Company Expect = null;
         Company ActuaCompany = companyService.getCompanyByEmail("congty2@gmail.com");
-        assertThat(ActuaCompany).isEqualTo(null);
+        assertThat(ActuaCompany).isEqualTo(Expect);
     }
     @Test
     void testGetCompanyByInvalidEmailNotFound(){
+        Company Expect = null;
         Company ActuaCompany = companyService.getCompanyByEmail("");
+        assertThat(ActuaCompany).isEqualTo(Expect);
+    }
+    //test get company by company id
+    @Test
+    void testGetCompanyByIdFound(){
+        int companyId = 1;
+        Company ActuaCompany = companyService.getCompanyByID(companyId);
+        assertThat(ActuaCompany.getId()).isEqualTo(companyId);
+    }
+    @Test
+    void testGetCompanyByIdNotFound(){
+        int companyId = 99;
+        Company ActuaCompany = companyService.getCompanyByID(companyId);
         assertThat(ActuaCompany).isEqualTo(null);
     }
 }

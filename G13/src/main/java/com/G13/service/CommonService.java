@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.service;
 
 import com.G13.domain.Company;
 import com.G13.domain.Driver;
@@ -7,14 +7,22 @@ import com.G13.repo.CompanyRepository;
 import com.G13.repo.DriverRepository;
 import com.G13.repo.RiderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
-@CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
+@Service
 @RequiredArgsConstructor
-public class commonFuntion {
+@Transactional
+@Slf4j
+public class CommonService {
 
-    public boolean IsPhoneExisted(String phone,RiderRepository riderRepository,DriverRepository driverRepository, CompanyRepository companyRepository){
+    private final RiderRepository riderRepository;
+    private final DriverRepository driverRepository;
+    private final CompanyRepository companyRepository;
+    public boolean IsPhoneExisted(String phone){
         try{
             List<Rider> rider = riderRepository.findByMobileNo(phone);
             if(rider.size()>0){return true;}
@@ -34,5 +42,14 @@ public class commonFuntion {
             System.out.println(e.toString());
         }
         return false;
+    }
+
+    public  int parseIntWithDefault(String str, int defaultInt) {
+        try{
+            return str.matches("-?\\d+") ? Integer.parseInt(str) : defaultInt;
+        }catch (Exception e){
+            return 0;
+        }
+
     }
 }

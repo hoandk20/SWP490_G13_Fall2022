@@ -29,13 +29,73 @@ public class RiderTest {
         rider.setEmail("user1@gmail.com");
         when(riderRepository.findByEmail("user1@gmail.com")).thenReturn(rider);
     }
+    //test get rider by email
     @Test
     void testGetRiderByEmailFound(){
-        Rider ExpectRider = new Rider();
-        ExpectRider.setId("1");
-        ExpectRider.setEmail("user1@gmail.com");
+        String emailExpect = "user1@gmail.com";
 
-        Rider ActualRider = riderService.getRiderByEmail("user1@gmail.com");
-        assertThat(ActualRider.getEmail()).isEqualTo(ExpectRider.getEmail());
+        Rider ActualRider = riderService.getRiderByEmail(emailExpect);
+        assertThat(ActualRider.getEmail()).isEqualTo(emailExpect);
     }
+    @Test
+    void testGetRiderByEmailNotFound(){
+        String emailExpect = "user2@gmail.com";
+
+        Rider ActualRider = riderService.getRiderByEmail(emailExpect);
+        assertThat(ActualRider).isEqualTo(null);
+    }
+
+    @Test
+    void testGetRiderByInvalidEmail(){
+        String emailExpect = "user2";
+        Rider ActualRider = riderService.getRiderByEmail(emailExpect);
+        assertThat(ActualRider).isEqualTo(null);
+    }
+
+    //test save rider
+    @Test
+    void testSaveRiderSucessfull(){
+        Rider rider = new Rider();
+        rider.setEmail("rider@gmail.com");
+        rider.setFirstName("hoan");
+        rider.setLastName("kieu");
+        rider.setMobileNo("012345678");
+        boolean ActualStatus= riderService.SaveRider(rider);
+        assertThat(ActualStatus).isEqualTo(true);
+    }
+    @Test
+    void testSaveRiderNoEmail(){
+        Rider rider = new Rider();
+        rider.setFirstName("hoan");
+        rider.setLastName("kieu");
+        rider.setMobileNo("012345678");
+        boolean ActualStatus= riderService.SaveRider(rider);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testSaveRiderNoFirstName(){
+        Rider rider = new Rider();
+        rider.setEmail("rider@gmail.com");
+        rider.setLastName("kieu");
+        rider.setMobileNo("012345678");
+        boolean ActualStatus= riderService.SaveRider(rider);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testSaveRiderNoLastName(){
+        Rider rider = new Rider();
+        rider.setEmail("rider@gmail.com");
+        rider.setMobileNo("012345678");
+        boolean ActualStatus= riderService.SaveRider(rider);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testSaveRiderNoPhone(){
+        Rider rider = new Rider();
+        rider.setEmail("rider@gmail.com");
+        rider.setLastName("kieu");
+        boolean ActualStatus= riderService.SaveRider(rider);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+
 }

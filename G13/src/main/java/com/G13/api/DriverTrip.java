@@ -6,12 +6,15 @@ import com.G13.master.MasterTripStatus;
 import com.G13.model.ResopnseContent;
 import com.G13.model.TripDriver;
 import com.G13.model.TripPassenger;
+import com.G13.model.filterTripPassenger;
 import com.G13.repo.*;
+import com.G13.service.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
@@ -23,10 +26,12 @@ import java.util.*;
 
 public class DriverTrip {
 
-    private final PromotiontripRepository promotiontripRepository;
-    private final TripRepository tripRepository;
-    private  final VehicleRepository vehicleRepository;
-    private final DriverRepository driverRepository;
+    private final PromotionTripService promotionTripService;
+    private final TripService tripService;
+    private  final VehicleService vehicleService;
+    private final DriverService driverService;
+    private final CommonService commonService;
+    private final TripDriverService tripDriverService;
 
     @PostMapping("/create")
     public ResponseEntity<?> CreateTrip(@RequestBody TripDriver rp) {
@@ -52,7 +57,7 @@ public class DriverTrip {
             t.setCapacity(rp.getSeat());
             t.setStatus(masterTripStatus.TRIP_OPEN);
             t.setNote(rp.getListPolyline());
-            response.setContent(promotiontripRepository.save(t).toString());
+            response.setContent(promotionTripService.SavePromotionTrip(t).toString());
             response.setObject(t);
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
@@ -70,7 +75,7 @@ public class DriverTrip {
         MasterStatus masterStatus = new MasterStatus();
         MasterTripStatus masterTripStatus = new MasterTripStatus();
         try {
-            List<Promotiontrip> list = promotiontripRepository.findAll();
+            List<Promotiontrip> list = promotionTripService.getAllTrip();
             List<TripDriver> driverTripHistory = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
@@ -86,8 +91,8 @@ public class DriverTrip {
                     tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                     tripDriver.setWaitingTime(detail.getDuration());
                     tripDriver.setPrice(detail.getFee());
-                    Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
-                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    Driver driver = driverService.getDriverByEmail(tripDriver.getDriverEmail());
+                    Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                     if(vehicle!=null){
                         tripDriver.setVehiclePlate(vehicle.getPlate());
                         tripDriver.setVehicleColor(vehicle.getExteriorColor());
@@ -113,7 +118,7 @@ public class DriverTrip {
         MasterStatus masterStatus = new MasterStatus();
 
         try {
-            List<Promotiontrip> list = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(filter.driverEmail);
+            List<Promotiontrip> list = promotionTripService.getAllTripByDriverId(filter.driverEmail);
             List<TripDriver> driverTrips = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
@@ -128,8 +133,8 @@ public class DriverTrip {
                 tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                 tripDriver.setWaitingTime(detail.getDuration());
                 tripDriver.setPrice(detail.getFee());
-                Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
-                Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                Driver driver = driverService.getDriverByEmail(tripDriver.getDriverEmail());
+                Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                 if(vehicle!=null){
                     tripDriver.setVehiclePlate(vehicle.getPlate());
                     tripDriver.setVehicleColor(vehicle.getExteriorColor());
@@ -137,7 +142,7 @@ public class DriverTrip {
                 }
                 driverTrips.add(tripDriver);
             }
-            driverTrips = filterTripDriver(driverTrips,filter);
+            driverTrips = tripDriverService.filterTripDriver(driverTrips,filter);
 
             response.setObject(driverTrips);
             response.setStatus(masterStatus.SUCCESSFULL);
@@ -148,42 +153,7 @@ public class DriverTrip {
             return ResponseEntity.badRequest().body(response);
         }
     }
-    List<TripDriver> filterTripDriver(List<TripDriver> tripDriver,filterTripPassenger filter){
-        List<TripDriver> listResult = new ArrayList<>();
-        for (TripDriver t:tripDriver
-        ) {
-            if(filter.status!=null&&!filter.status.equals("")){
-                if(!filter.status.equals(t.getStatus())){
-                    continue;
-                }
-            }
-            if(filter.dateFrom!=null){
-                if(filter.dateFrom.compareTo(t.getTimeStart())>=0){
-                    continue;
-                }
-            }
-            if(filter.dateTo!=null){
-                if(filter.dateTo.compareTo(t.getTimeStart())<=0){
-                    continue;
-                }
-            }
-            if(filter.passengerEmail!=null&&!filter.passengerEmail.equals("")){
-                List<Trip> listRegister = tripRepository.findAllByTripCodeOrderByCreatedDateDesc(t.getTripID());
-                boolean isHasPassenger = false;
-                for (Trip trip:listRegister) {
-                    if(trip.getRiderID().equals(filter.passengerEmail)){
-                        isHasPassenger = true;
-                    }
-                }
-                if(isHasPassenger==false){
-                    continue;
-                }
-            }
-            listResult.add(t);
-        }
 
-        return  listResult;
-    }
 
     @PostMapping("/search")
     public ResponseEntity<?> listTrip(@RequestBody SearchTrip searchTrip) {
@@ -191,7 +161,7 @@ public class DriverTrip {
         MasterStatus masterStatus = new MasterStatus();
         try {
 
-            List<Promotiontrip> list = promotiontripRepository.findAllByStatus(searchTrip.status);
+            List<Promotiontrip> list = promotionTripService.getAllByStatus(searchTrip.status);
             List<TripDriver> driverTrips = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
@@ -209,8 +179,8 @@ public class DriverTrip {
                 tripDriver.setInstantTimeStart(detail.getTimeStart());
                 tripDriver.setWaitingTime(detail.getDuration());
                 tripDriver.setPrice(detail.getFee());
-                Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
-                Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                Driver driver = driverService.getDriverByEmail(tripDriver.getDriverEmail());
+                Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                 if(vehicle!=null){
                     tripDriver.setVehiclePlate(vehicle.getPlate());
                     tripDriver.setVehicleColor(vehicle.getExteriorColor());
@@ -249,8 +219,8 @@ public class DriverTrip {
         } catch (Exception e) {
             IsHasTime = false;
         }
-        int  RegisterSeat = parseIntWithDefault(registerSeat,0);
-        int  TimeStart = parseIntWithDefault(timeStart,0);
+        int  RegisterSeat = commonService.parseIntWithDefault(registerSeat,0);
+        int  TimeStart = commonService.parseIntWithDefault(timeStart,0);
 
 
 
@@ -278,6 +248,8 @@ public class DriverTrip {
             //not match of the routes
             if(i<0.5*listPoly.length){continue;}
             t.setNoOfPolyline(i);
+            DecimalFormat df = new DecimalFormat("#.###");
+            t.setPrice(t.getPrice()*i/listPoly.length);
             String[] listPoly2 = t.getListPolyline().split(";");
             t.setListPolyline(listPoly2[0] + "," + listPoly2[listPoly2.length - 1]);
             //not enough seat
@@ -311,14 +283,7 @@ public class DriverTrip {
         }
         return listResult;
     }
-    public static int parseIntWithDefault(String str, int defaultInt) {
-        try{
-            return str.matches("-?\\d+") ? Integer.parseInt(str) : defaultInt;
-        }catch (Exception e){
-            return 0;
-        }
 
-    }
     @PostMapping("ChangeStatus")
     public ResponseEntity<?> ChangeStatus (@RequestBody SearchTrip searchTrip) {
         ResopnseContent response = new ResopnseContent();
@@ -326,9 +291,9 @@ public class DriverTrip {
         MasterTripStatus masterTripStatus = new MasterTripStatus();
         try {
 
-            Promotiontrip detail = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(searchTrip.getId());
+            Promotiontrip detail = promotionTripService.getPromotionTripById(searchTrip.getId());
             detail.setStatus(searchTrip.getStatus());
-            response.setObject(promotiontripRepository.saveAndFlush(detail));
+            response.setObject(promotionTripService.SavePromotionTrip(detail));
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -345,7 +310,7 @@ public class DriverTrip {
         MasterTripStatus masterTripStatus = new MasterTripStatus();
 
         try {
-            List<Promotiontrip> list = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(driverEmail);
+            List<Promotiontrip> list = promotionTripService.getAllTripByDriverId(driverEmail);
             List<TripDriver> driverTripHistory = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
@@ -361,8 +326,8 @@ public class DriverTrip {
                     tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                     tripDriver.setWaitingTime(detail.getDuration());
                     tripDriver.setPrice(detail.getFee());
-                    Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
-                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    Driver driver = driverService.getDriverByEmail(tripDriver.getDriverEmail());
+                    Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                     if(vehicle!=null){
                         tripDriver.setVehiclePlate(vehicle.getPlate());
                         tripDriver.setVehicleColor(vehicle.getExteriorColor());
@@ -389,7 +354,7 @@ public class DriverTrip {
         MasterStatus masterStatus = new MasterStatus();
 
         try {
-            Promotiontrip detail = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(id);
+            Promotiontrip detail = promotionTripService.getPromotionTripById(id);
             TripDriver tripDriver = new TripDriver();
             tripDriver.setSeat(detail.getCapacity());
 
@@ -403,7 +368,7 @@ public class DriverTrip {
             tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
             tripDriver.setWaitingTime(detail.getDuration());
             tripDriver.setPrice(detail.getFee());
-            List<Trip> listPassengers = tripRepository.findAllByTripCodeOrderByCreatedDateDesc(id);
+            List<Trip> listPassengers = tripService.getAllByTripCode(id);
             List<TripPassenger> tripPassengers = new ArrayList<>();
             for (Trip t : listPassengers) {
                 TripPassenger tripPassenger = new TripPassenger();
@@ -421,9 +386,9 @@ public class DriverTrip {
                 tripPassenger.setPrice(t.getOpenPrice());
                 tripPassengers.add(tripPassenger);
             }
-            Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
+            Driver driver = driverService.getDriverByEmail(tripDriver.getDriverEmail());
             tripDriver.setPhoneDriver(driver.getMobileNo());
-            Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+            Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
             if(vehicle!=null){
 
                 tripDriver.setVehiclePlate(vehicle.getPlate());

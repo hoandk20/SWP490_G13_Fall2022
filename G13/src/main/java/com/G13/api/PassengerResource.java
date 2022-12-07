@@ -14,6 +14,10 @@ import com.G13.model.ReportDriverPassenger;
 import com.G13.model.ResopnseContent;
 import com.G13.model.UserInfo;
 import com.G13.repo.*;
+import com.G13.service.CommonService;
+import com.G13.service.DocumentService;
+import com.G13.service.PromotionTripService;
+import com.G13.service.RiderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +30,11 @@ import java.util.Map;
 @RequestMapping("/api/passenger")
 @RequiredArgsConstructor
 public class PassengerResource {
-    private final PromotiontripRepository promotiontripRepository;
+    private final PromotionTripService promotionTripService;
     private final TripRepository tripRepository;
-    private final RiderRepository riderRepository;
-    private final DriverRepository driverRepository;
-    private final CompanyRepository companyRepository;
-    private final DocumentRepository documentRepository;
+    private final DocumentService documentService;
+    private final CommonService commonService;
+    private final RiderService riderService;
 
     @GetMapping("/reportPassenger")
     public ResponseEntity<?> reportDriver(String passengerEmail) {
@@ -48,7 +51,7 @@ public class PassengerResource {
             int TripClose = 0;
             int TripCancel = 0;
             for (Trip t : tripList) {
-                Promotiontrip p = promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(t.getTripCode());
+                Promotiontrip p = promotionTripService.getPromotionTripById(t.getTripCode());
                 Trip++;
                 if (p.getStatus().equals(masterTripStatus.TRIP_OPEN) && t.getStatus().equals(registerStatus.APPROVE)) {
                     TripOpen++;
@@ -80,13 +83,12 @@ public class PassengerResource {
 
     @PostMapping("/changeinfo")
     public ResponseEntity<?> changePassenger(@RequestBody UserInfo userInfo) {
-        Rider rider = riderRepository.findByEmail(userInfo.getEmail());
+        Rider rider = riderService.getRiderByEmail(userInfo.getEmail());
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try {
             if (rider != null) {
-                commonFuntion commonFuntion = new commonFuntion();
-                if (commonFuntion.IsPhoneExisted(userInfo.getPhone(), riderRepository, driverRepository, companyRepository)
+                if (commonService.IsPhoneExisted(userInfo.getPhone())
                         && !rider.getMobileNo().equals(userInfo.getPhone())) {
                     rider.setMobileNo(userInfo.getPhone());
                     Map<String, Boolean> err = new HashMap<>();
@@ -102,7 +104,7 @@ public class PassengerResource {
 
                 rider.setHomeAddressID(userInfo.getAddress());
                 rider.setCityID(userInfo.getCityId());
-                response.setObject(riderRepository.save(rider));
+                response.setObject(riderService.SaveRider(rider));
                 return ResponseEntity.ok().body(response);
             } else {
                 response.setContent("passenger not existed");
@@ -120,7 +122,7 @@ public class PassengerResource {
         ResopnseContent response = new ResopnseContent();
         UploadFileMaster uploadFileMaster = new UploadFileMaster();
         try {
-            Rider rider = riderRepository.findByEmail(passengerEmail);
+            Rider rider = riderService.getRiderByEmail(passengerEmail);
             PassengerInfo passengerInfo = new PassengerInfo();
             passengerInfo.setId(rider.getId());
             passengerInfo.setAddress(rider.getHomeAddressID());
@@ -133,8 +135,8 @@ public class PassengerResource {
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
-            Document document = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(passengerInfo.getEmail(),uploadFileMaster.avatar);
+            Document document = documentService
+                    .GetDocumentByCreateByAndFileName(passengerInfo.getEmail(),uploadFileMaster.avatar);
 
             if(document!=null){
                 FileManage fileManage = new FileManage();

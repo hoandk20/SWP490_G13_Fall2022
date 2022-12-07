@@ -17,4 +17,21 @@ public class CompanyService {
     public Company getCompanyByEmail(String email){
         return companyRepository.findByNote(email);
     }
+    public boolean SaveCompany(Company company){
+        if(company.getNote()==null||company.getNote().equals("")){
+            return false;
+        }
+        if(company.getName()==null||company.getName().equals("")){
+            return false;
+        }
+        if(company.getPhoneNo()==null||company.getPhoneNo().equals("")){
+            return false;
+        }
+        companyRepository.save(company);
+        return true;
+    }
+
+    public Company getCompanyByID(int id){
+        return companyRepository.findCompanyById(id);
+    }
 }

@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,9 +31,14 @@ public class VehicleTest {
         Vehicle vehicle = new Vehicle();
         vehicle.setId(1);
         vehicle.setPlate("29V51111");
+        vehicle.setStatus("PE");
         vehicle.setCompanyID(1);
+        List<Vehicle>Actuallist = new ArrayList<>();
+        Actuallist.add(vehicle);
         when(vehicleRepository.findVehicleById(1)).thenReturn(vehicle);
         when(vehicleRepository.findFirstByCompanyIDOrderByCreatedDateDesc(1)).thenReturn(vehicle);
+        when(vehicleRepository.saveAndFlush(vehicle)).thenReturn(vehicle);
+        when(vehicleRepository.findByCompanyIDAndStatus(1,"PE")).thenReturn(Actuallist);
     }
     //test get vehicle by id
     @Test
@@ -61,5 +67,40 @@ public class VehicleTest {
         Vehicle ActualVehicle = vehicleService.getFistVehicleByCompanyId(2);
         assertThat(ActualVehicle).isEqualTo(null);
     }
+    //test Save Vehicle
 
+    @Test
+    void testSaveVehicleSuccess(){
+        Vehicle vehicle = new Vehicle();
+        vehicle.setId(1);
+        vehicle.setPlate("29V51111");
+        vehicle.setCompanyID(1);
+        when(vehicleRepository.saveAndFlush(vehicle)).thenReturn(vehicle);
+
+
+        Vehicle ActualVehicleSave = vehicleService.SaveVehicle(vehicle);
+        assertThat(ActualVehicleSave.getPlate()).isEqualTo(vehicle.getPlate());
+    }
+    @Test
+    void testSaveVehicleNoPlate(){
+        Vehicle vehicle = new Vehicle();
+        vehicle.setId(1);
+        vehicle.setCompanyID(1);
+        Vehicle ActualVehicleSave = vehicleService.SaveVehicle(vehicle);
+        assertThat(ActualVehicleSave).isEqualTo(null);
+    }
+
+
+    //test get vehicle by company and status
+    @Test
+    void testGetVehicleByCompanyIdAndStatusFound(){
+
+        List<Vehicle>Actuallist = vehicleService.getVehicleByCompanyIdAndStatus(1,"PE");
+        assertThat(Actuallist.size()).isEqualTo(1);
+    }
+    @Test
+    void testGetVehicleByCompanyIdAndStatusNotFound(){
+        List<Vehicle>Actuallist = vehicleService.getVehicleByCompanyIdAndStatus(1,"US");
+        assertThat(Actuallist.size()).isEqualTo(0);
+    }
 }
