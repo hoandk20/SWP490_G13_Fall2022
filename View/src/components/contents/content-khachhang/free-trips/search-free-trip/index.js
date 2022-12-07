@@ -48,7 +48,7 @@ const SerachFreeTripForPassenger = () => {
             date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
-    const freeTrips = trips?.object.map((row) => ({ ...row, key: row.id, seatRemind: row.seat - row.seatRegistered, dateStart: dateFormat(row.timeStart) }));
+    const freeTrips = trips?.object.map((row) => ({ ...row, key: row.id, seatRemind: row.seat - row.seatRegistered, dateStart: dateFormat(row.timeStart) ,price:Math.round(row.price/1000)*1000}));
 
     useEffect(() => {
         getListFreeTripIsOpen(dispatch);
@@ -133,7 +133,7 @@ const SerachFreeTripForPassenger = () => {
     ];
     const navigate = useNavigate();
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyD-r8Ye5leGyYgD4tEYvOa6LJnq2nH-e-I',
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
 

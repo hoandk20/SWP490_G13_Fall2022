@@ -169,7 +169,7 @@ const PassengerDetailAdmin = () => {
                                             {
                                                 required: true,
                                                 message: 'Tên không được để trống',
-                                            },
+                                            }, 
                                         ]}
                                     >
                                         <Input  onChange={handleChangeFirstName}  />

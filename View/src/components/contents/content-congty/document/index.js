@@ -23,18 +23,18 @@ const DocumentCompany = () => {
 
     const [baseImageBang_lai_xe, setBaseImageBang_lai_xe] = useState("");
     const [baseImageChung_Nhan_Kinh_nghiem, setBaseImageChung_Nhan_Kinh_nghiem] = useState("");
-    const [baseImageChung_Nhan_Bao_Hiem, setBaseImageChung_Nhan_Bao_Hiem] = useState("");
-    const [baseImageChung_Nhan_Dang_Kiem, setBaseImageChung_Nhan_Dang_Kiem] = useState("");
+    const [baseImageGP_Kinh_Doanh, setBaseImageGP_Kinh_Doanh] = useState("");
+    const [baseImageGP_Hoat_Dong, setBaseImageGP_Hoat_Dong] = useState("");
 
     const [dateBang_lai_xe, setDateBang_lai_xe] = useState();
     const [dateChung_Nhan_Kinh_nghiem, setDateChung_Nhan_Kinh_nghiem] = useState();
-    const [dateChung_Nhan_Bao_Hiem, setDateChung_Nhan_Bao_Hiem] = useState();
-    const [dateChung_Nhan_Dang_Kiem, setDateChung_Nhan_Dang_Kiem] = useState();
+    const [dateGP_Kinh_Doanh, setDateGP_Kinh_Doanh] = useState();
+    const [dateGP_Hoat_Dong, setDateGP_Hoat_Dong] = useState();
 
     const [checkBang_lai_xe, setcheckBang_lai_xe] = useState(false);
     const [checkChung_Nhan_Kinh_nghiem, setcheckChung_Nhan_Kinh_nghiem] = useState(false);
-    const [checkChung_Nhan_Bao_Hiem, setcheckChung_Nhan_Bao_Hiem] = useState(false);
-    const [checkChung_Nhan_Dang_Kiem, setcheckChung_Nhan_Dang_Kiem] = useState(false);
+    const [checkGP_Kinh_Doanh, setcheckGP_Kinh_Doanh] = useState(false);
+    const [checkGP_Hoat_Dong, setcheckGP_Hoat_Dong] = useState(false);
 
     const addDocBang_lai_xe = () => {
         setcheckBang_lai_xe(true);
@@ -42,11 +42,11 @@ const DocumentCompany = () => {
     const addDocChung_Nhan_Kinh_nghiem = () => {
         setcheckChung_Nhan_Kinh_nghiem(true);
     }
-    const addDocChung_Nhan_Bao_Hiem = () => {
-        setcheckChung_Nhan_Bao_Hiem(true);
+    const addDocGP_Kinh_Doanh = () => {
+        checkGP_Kinh_Doanh(true);
     }
-    const addDocChung_Nhan_Dang_Kiem = () => {
-        setcheckChung_Nhan_Dang_Kiem(true);
+    const addDocGP_Hoat_Dong = () => {
+        checkGP_Hoat_Dong(true);
     }
     console.log("ac", GP_Hoat_Dong);
     const getDocBang_lai_xe = async () => {
@@ -114,15 +114,15 @@ const DocumentCompany = () => {
         const base64 = await convertBase64(file);
         setBaseImageChung_Nhan_Kinh_nghiem(base64);
     };
-    const uploadImageChung_Nhan_Bao_Hiem = async (e) => {
+    const uploadImageGP_Kinh_Doanh = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertBase64(file);
-        setBaseImageChung_Nhan_Bao_Hiem(base64);
+        setBaseImageGP_Kinh_Doanh(base64);
     };
-    const uploadImageChung_Nhan_Dang_Kiem = async (e) => {
+    const uploadImageGP_Hoat_Dong = async (e) => {
         const file = e.target.files[0];
         const base64 = await convertBase64(file);
-        setBaseImageChung_Nhan_Dang_Kiem(base64);
+        setBaseImageGP_Hoat_Dong(base64);
     };
     function getTime1(date, dateString) {
         setDateBang_lai_xe(dateString);
@@ -131,10 +131,10 @@ const DocumentCompany = () => {
         setDateChung_Nhan_Kinh_nghiem(dateString);
     }
     function getTime6(date, dateString) {
-        setDateChung_Nhan_Bao_Hiem(dateString);
+        setDateGP_Kinh_Doanh(dateString);
     }
     function getTime7(date, dateString) {
-        setDateChung_Nhan_Dang_Kiem(dateString);
+        setDateGP_Hoat_Dong(dateString);
     }
     const uploadfileBang_lai_xe = async () => {
         const arr = dateBang_lai_xe.split("-");
@@ -173,15 +173,15 @@ const DocumentCompany = () => {
 
     };
 
-    const uploadfileChung_Nhan_Bao_Hiem = async() => {
-        const arr = dateChung_Nhan_Bao_Hiem.split("-");
+    const uploadfileGP_Kinh_Doanh = async() => {
+        const arr = dateGP_Kinh_Doanh.split("-");
         const year = arr[0];
         const month = arr[1];
         if (user.vehicleRequest !== null) {
             setVehicleId(user.vehicleRequest.id);
         }
         const object = {
-            base64: baseImageChung_Nhan_Bao_Hiem,
+            base64: baseImageGP_Kinh_Doanh,
             createBy: user?.email,
             fileName: "GP_Kinh_Doanh",
             year: year,
@@ -191,17 +191,17 @@ const DocumentCompany = () => {
         
         await UploadDocumentForVehicle(object, toast);
         // await getDocChung_Nhan_Bao_Hiem();
-        setcheckChung_Nhan_Bao_Hiem(false)
+        setcheckGP_Kinh_Doanh(false)
     };
-    const uploadfileChung_Nhan_Dang_Kiem = async() => {
-        const arr = dateChung_Nhan_Dang_Kiem.split("-");
+    const uploadfileGP_Hoat_Dong = async() => {
+        const arr = dateGP_Hoat_Dong.split("-");
         const year = arr[0];
         const month = arr[1];
         if (user.vehicleRequest !== null) {
             setVehicleId(user.vehicleRequest.id);
         }
         const object = {
-            base64: baseImageChung_Nhan_Dang_Kiem,
+            base64: baseImageGP_Hoat_Dong,
             createBy: user?.email,
             fileName: "GP_Hoat_Dong",
             year: year,
@@ -210,7 +210,7 @@ const DocumentCompany = () => {
         }
         await UploadDocumentForVehicle(object, toast);
         // await getDocChung_Nhan_Dang_Kiem();
-        setcheckChung_Nhan_Dang_Kiem(false)
+        setcheckGP_Hoat_Dong(false)
      
     };
 
@@ -601,7 +601,364 @@ const DocumentCompany = () => {
                             )
                         }
                     </div>
+                    <div>
+                        {
+                            GP_Kinh_Doanh === "" ? (
+                                <>
+                                    {
+                                        checkGP_Kinh_Doanh === true ? (
+                                            <>
+                                                <div className='card-doc'>
+                                                    <div className='form-header'>
+                                                        <span>
+                                                        Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                                            {/* <div className='status'>Chưa gửi</div> */}
+                                                        </span>
 
+                                                    </div>
+                                                    <div className='form-content'>
+                                                        <div className='form-image' style={{ height: "230px" }}>
+                                                            <img src={baseImageGP_Kinh_Doanh} height="220px" />
+                                                        </div>
+                                                        <div className='content-bottom'>
+                                                            <span style={{ marginRight: "20px" }}>
+                                                                Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
+                                                            </span>
+                                                            <input
+                                                                type="file"
+                                                                style={{ color: "#fff" }}
+                                                                onChange={(e) => {
+                                                                    uploadImageGP_Kinh_Doanh(e);
+                                                                }}
+                                                            />
+                                                            <Button className='btn-submit' onClick={uploadfileGP_Kinh_Doanh} type='primary'>Gửi <CheckOutlined /></Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className='card-doc-ad'>
+                                                    <div className='form-header-ad' style={{ height: "40px" }}>
+                                                        <span>
+                                                            Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                                            <div className='status-ad'>Chưa gửi</div>
+                                                        </span>
+
+                                                    </div>
+                                                    <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                        <div className='upload-doc'>
+                                                            <span>
+                                                                <FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> Tài liệu chưa được tải lên
+                                                                <Button onClick={addDocGP_Kinh_Doanh} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </>
+                                        )
+                                    }
+                                </>
+
+                            ) : (
+                                <>
+                                    {
+                                        GP_Kinh_Doanh.status === "SENDED" ? (
+                                            <>
+                                                <div className='card-doc-ad'>
+                                                    <div className='form-header-ad' style={{ height: "40px" }}>
+                                                        <span>
+                                                        Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                                            <div className='status-ad'>Đã gửi</div>
+                                                        </span>
+
+                                                    </div>
+                                                    <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                        <div className='upload-doc'>
+                                                            <span>
+                                                                <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
+                                                                <span>Tài liệu đang chờ xử lý</span>
+                                                                <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{GP_Kinh_Doanh.expired_month}/{GP_Kinh_Doanh.expired_year}</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {
+                                                    GP_Kinh_Doanh.status === "VALID" ? (
+                                                        <div className='card-doc-ad'>
+                                                            <div className='form-header-ad' style={{ height: "40px" }}>
+                                                                <span>
+                                                                Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                                                    <div className='status-ad'>Hợp lệ</div>
+                                                                </span>
+
+                                                            </div>
+                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                                <div className='form-image-ad' >
+                                                                    {/* <img src={baseImage1} height="150px" /> */}
+                                                                </div>
+                                                                <div className='upload-doc'>
+                                                                    <span>
+                                                                        <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
+                                                                        <span>Tài liệu hợp lệ</span>
+                                                                        <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{GP_Kinh_Doanh.expired_month}/{GP_Kinh_Doanh.expired_year}</span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            {
+                                                                checkGP_Kinh_Doanh === true ? (
+                                                                    <>
+                                                                        <div className='card-doc'>
+                                                                            <div className='form-header'>
+                                                                                <span>
+                                                                                Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                                                                    {/* <div className='status'>Chưa gửi</div> */}
+                                                                                </span>
+
+                                                                            </div>
+                                                                            <div className='form-content'>
+                                                                                <div className='form-image' style={{ height: "230px" }}>
+                                                                                    <img src={baseImageGP_Kinh_Doanh} height="220px" />
+                                                                                </div>
+                                                                                <div className='content-bottom'>
+                                                                                    <span style={{ marginRight: "20px" }}>
+                                                                                        Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
+                                                                                    </span>
+                                                                                    <input
+                                                                                        type="file"
+                                                                                        style={{ color: "#fff" }}
+                                                                                        onChange={(e) => {
+                                                                                            uploadImageGP_Kinh_Doanh(e);
+                                                                                        }}
+                                                                                    />
+                                                                                    <Button className='btn-submit' onClick={uploadfileGP_Kinh_Doanh} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className='card-doc-ad'>
+                                                                            <div className='form-header-ad' style={{ height: "40px" }}>
+                                                                                <span>
+                                                                                Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                                                                    <div className='status-ad'>Không Hợp lệ</div>
+                                                                                </span>
+
+                                                                            </div>
+                                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                                                <div className='upload-doc'>
+                                                                                    <span>
+                                                                                        <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
+                                                                                        <span>Tài liệu không hợp lệ vui lòng gửi lại tài liệu</span>
+                                                                                        <span> <Button onClick={addDocGP_Kinh_Doanh} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </>
+                                                                )
+                                                            }
+                                                        </>
+                                                    )
+                                                }
+                                            </>
+                                        )
+                                    }
+
+                                </>
+                            )
+                        }
+                    </div>
+                    <div>
+                        {
+                            GP_Hoat_Dong === "" ? (
+                                <>
+                                    {
+                                        checkGP_Hoat_Dong === true ? (
+                                            <>
+                                                <div className='card-doc'>
+                                                    <div className='form-header'>
+                                                        <span>
+                                                        Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                                            {/* <div className='status'>Chưa gửi</div> */}
+                                                        </span>
+
+                                                    </div>
+                                                    <div className='form-content'>
+                                                        <div className='form-image' style={{ height: "230px" }}>
+                                                            <img src={baseImageGP_Hoat_Dong} height="220px" />
+                                                        </div>
+                                                        <div className='content-bottom'>
+                                                            <span style={{ marginRight: "20px" }}>
+                                                                Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
+                                                            </span>
+                                                            <input
+                                                                type="file"
+                                                                style={{ color: "#fff" }}
+                                                                onChange={(e) => {
+                                                                    uploadImageGP_Hoat_Dong(e);
+                                                                }}
+                                                            />
+                                                            <Button className='btn-submit' onClick={uploadfileGP_Hoat_Dong} type='primary'>Gửi <CheckOutlined /></Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <div className='card-doc-ad'>
+                                                    <div className='form-header-ad' style={{ height: "40px" }}>
+                                                        <span>
+                                                        Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                                            <div className='status-ad'>Chưa gửi</div>
+                                                        </span>
+
+                                                    </div>
+                                                    <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                        <div className='upload-doc'>
+                                                            <span>
+                                                                <FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> Tài liệu chưa được tải lên
+                                                                <Button onClick={addDocGP_Hoat_Dong} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </>
+                                        )
+                                    }
+                                </>
+
+                            ) : (
+                                <>
+                                    {
+                                        GP_Hoat_Dong.status === "SENDED" ? (
+                                            <>
+                                                <div className='card-doc-ad'>
+                                                    <div className='form-header-ad' style={{ height: "40px" }}>
+                                                        <span>
+                                                        Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                                            <div className='status-ad'>Đã gửi</div>
+                                                        </span>
+
+                                                    </div>
+                                                    <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                        <div className='upload-doc'>
+                                                            <span>
+                                                                <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
+                                                                <span>Tài liệu đang chờ xử lý</span>
+                                                                <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{GP_Hoat_Dong.expired_month}/{GP_Hoat_Dong.expired_year}</span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                {
+                                                    GP_Hoat_Dong.status === "VALID" ? (
+                                                        <div className='card-doc-ad'>
+                                                            <div className='form-header-ad' style={{ height: "40px" }}>
+                                                                <span>
+                                                                Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                                                    <div className='status-ad'>Hợp lệ</div>
+                                                                </span>
+
+                                                            </div>
+                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                                <div className='form-image-ad' >
+                                                                    {/* <img src={baseImage1} height="150px" /> */}
+                                                                </div>
+                                                                <div className='upload-doc'>
+                                                                    <span>
+                                                                        <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
+                                                                        <span>Tài liệu hợp lệ</span>
+                                                                        <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{GP_Hoat_Dong.expired_month}/{GP_Hoat_Dong.expired_year}</span>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            {
+                                                                checkGP_Hoat_Dong === true ? (
+                                                                    <>
+                                                                        <div className='card-doc'>
+                                                                            <div className='form-header'>
+                                                                                <span>
+                                                                                Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                                                                    {/* <div className='status'>Chưa gửi</div> */}
+                                                                                </span>
+
+                                                                            </div>
+                                                                            <div className='form-content'>
+                                                                                <div className='form-image' style={{ height: "230px" }}>
+                                                                                    <img src={baseImageGP_Hoat_Dong} height="220px" />
+                                                                                </div>
+                                                                                <div className='content-bottom'>
+                                                                                    <span style={{ marginRight: "20px" }}>
+                                                                                        Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
+                                                                                    </span>
+                                                                                    <input
+                                                                                        type="file"
+                                                                                        style={{ color: "#fff" }}
+                                                                                        onChange={(e) => {
+                                                                                            uploadImageGP_Hoat_Dong(e);
+                                                                                        }}
+                                                                                    />
+                                                                                    <Button className='btn-submit' onClick={uploadfileGP_Hoat_Dong} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className='card-doc-ad'>
+                                                                            <div className='form-header-ad' style={{ height: "40px" }}>
+                                                                                <span>
+                                                                                Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                                                                    <div className='status-ad'>Không Hợp lệ</div>
+                                                                                </span>
+
+                                                                            </div>
+                                                                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                                                                <div className='upload-doc'>
+                                                                                    <span>
+                                                                                        <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
+                                                                                        <span>Tài liệu không hợp lệ vui lòng gửi lại tài liệu</span>
+                                                                                        <span> <Button onClick={addDocGP_Hoat_Dong} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </>
+                                                                )
+                                                            }
+                                                        </>
+                                                    )
+                                                }
+                                            </>
+                                        )
+                                    }
+
+                                </>
+                            )
+                        }
+                    </div>
 
 
                 </div>

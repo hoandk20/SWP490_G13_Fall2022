@@ -13,7 +13,7 @@ import axios from 'axios';
 
 const { Option } = Select;
 const RegisterDriverDoc = () => {
-    const URL = "http://26.86.144.172";
+  
 
     const location = useLocation();
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
@@ -71,7 +71,7 @@ const RegisterDriverDoc = () => {
         }
 
             try {
-                const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+                const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                   {
                     base64: object.base64,
                     expired_month: object.month,
@@ -104,7 +104,7 @@ const RegisterDriverDoc = () => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
               {
                 base64: object.base64,
                 expired_month: object.month,
@@ -137,7 +137,7 @@ const RegisterDriverDoc = () => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
               {
                 base64: object.base64,
                 expired_month: object.month,

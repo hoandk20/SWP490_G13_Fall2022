@@ -12,7 +12,6 @@ const RegisterDriverInfoVehico = () => {
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
     const location = useLocation();
-    const URL = "http://26.36.110.116";
     const newUser = useSelector((state) => state.user.userInfo?.currentUser);
     console.log(newUser);
     // const newUser = location.state.newUser;
@@ -73,7 +72,7 @@ const RegisterDriverInfoVehico = () => {
         }
         console.log(object);
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/DocumentVehicle`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/DocumentVehicle`,
               {
                 base64: object.base64,
                 expired_month: object.month,
@@ -108,7 +107,7 @@ const RegisterDriverInfoVehico = () => {
             vehicleId:newUser.vehicleRequest.id,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/DocumentVehicle`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/DocumentVehicle`,
               {
                 base64: object.base64,
                 expired_month: object.month,

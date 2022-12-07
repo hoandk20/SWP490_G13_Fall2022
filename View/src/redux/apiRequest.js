@@ -8,15 +8,15 @@ import { getTripHistoryFailed, getTripHistoryOfDriverFailed, getTripHistoryOfDri
 import { getUserStart, getUserSuccess, deleteUser, getUserFailed, getALlDriverForCompany, getAllDriverForCompany, getAllDrivers, getAllCompanyForAdmin, getDriverByDriverEmail, getCompanyByCompanyEmail, getAllPassengerForAdmin, getPassengerByEmail } from './userSlice';
 import { getAllVehicos } from './vehicoSlice';
 const BASE_URL = "http://localhost"
-const URL = "http://26.36.110.116";
 
 
+ 
 
 export const loginUser = async (user, dispatch, navigate) => {
   dispatch(loginStart())
   const res = await axios({
     method: "post",
-    url: `${URL}:8080/api/login`,
+    url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
     data: user,
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
   })
@@ -54,7 +54,7 @@ export const logoutUser = async (dispatch, navigate) => {
 export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
   const res = await axios
-    .post(`${URL}:8080/api/RegisterPassenger`,
+    .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/RegisterPassenger`,
       {
         email: newUser.email,
         password: newUser.password,
@@ -89,7 +89,7 @@ export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
 
   const rest = await axios({
     method: "post",
-    url: `${URL}:8080/api/login`,
+    url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
     data: user,
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
   })
@@ -111,7 +111,7 @@ export const registerDriver = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
 
   const res = await axios
-    .post(`${URL}:8080/api/RegisterDriver`, {
+    .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/RegisterDriver`, {
       email: newUser.email,
       password: newUser.password,
       firstName: newUser.firstName,
@@ -145,7 +145,7 @@ export const registerDriver = async (newUser, dispatch, navigate, toast) => {
     }
     const rest = await axios({
       method: "post",
-      url: `${URL}:8080/api/login`,
+      url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
       data: user,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
     })
@@ -164,7 +164,7 @@ export const registerDriver = async (newUser, dispatch, navigate, toast) => {
 export const registerCompany = async (newUser, dispatch, navigate, toast) => {
   dispatch(registerStart())
   const res = await axios
-    .post(`${URL}:8080/api/RegisterCompany`, {
+    .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/RegisterCompany`, {
       email: newUser.email,
       password: newUser.password,
       name: newUser.name,
@@ -185,7 +185,7 @@ export const registerCompany = async (newUser, dispatch, navigate, toast) => {
       }
       const rest = axios({
         method: "post",
-        url: `${URL}:8080/api/login`,
+        url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
         data: user,
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
       })
@@ -217,7 +217,7 @@ export const registerCompany = async (newUser, dispatch, navigate, toast) => {
 export const getUser = async (userName, dispatch) => {
   try {
     dispatch(getUserStart())
-    const res = await axios.get(`${URL}:8080/api/user/info?username=${userName}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/user/info?username=${userName}`, {
       headers: { 'Content-Type': 'application/json' }
     })
 
@@ -232,7 +232,7 @@ export const CreateFreeTrip = async (trip, dispatch, navigate, toast) => {
   dispatch(createTripStart())
   try {
     const res = await axios
-      .post(`${URL}:8080/api/tripdriver/create`, {
+      .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/create`, {
         driverEmail: trip.driverEmail,
         from: trip.from,
         to: trip.to,
@@ -259,7 +259,7 @@ export const CreateFreeTrip = async (trip, dispatch, navigate, toast) => {
 
 export const getListFreeTripIsOpen = async (dispatch) => {
   dispatch(getListFreeTripStart())
-  const res = await axios.get(`${URL}:8080/api/tripdriver/listOpen`, {
+  const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/listOpen`, {
     headers: { 'Content-Type': 'application/json' }
   })
     .then(function (response) {
@@ -276,7 +276,7 @@ export const getListFreeTripIsOpen = async (dispatch) => {
 export const getListFreeTrip = async (trip, dispatch) => {
   try {
     dispatch(getListFreeTripStart())
-    const res = await axios.post(`${URL}:8080/api/tripdriver/search`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/search`, {
       listPolyline: trip.listPolyline,
       status: "OPEN",
       registerSeat: trip.registerSeat,
@@ -297,7 +297,7 @@ export const RegisterTripForPassenger = async (trip, dispatch, navigate, toast) 
   //  dispatch(getTripDriverStart);
   try {
     const res = await axios
-      .post(`${URL}:8080/api/tripPassenger/create`, {
+      .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripPassenger/create`, {
         tripID: trip.tripID,
         driverEmail: trip.driverEmail,
         passengerEmail: trip.passengerEmail,
@@ -325,7 +325,7 @@ export const RegisterTripForPassenger = async (trip, dispatch, navigate, toast) 
 export const getTripDetailDriver = async (id, dispatch) => {
   dispatch(getTripDetailDriverStart());
   try {
-    const res = await axios.get(`${URL}:8080/api/tripdriver/detail?id=${id}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/detail?id=${id}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getTripDetailDriverSuccess(res.data.object));
@@ -337,7 +337,7 @@ export const getTripDetailDriver = async (id, dispatch) => {
 
 export const changeStatusPassengerRegister = async (id, status, toast, dispatch, tripId) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/tripPassenger/updateRegisterStatus`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripPassenger/updateRegisterStatus`, {
       id: id,
       status: status
     }
@@ -356,7 +356,7 @@ export const changeStatusPassengerRegister = async (id, status, toast, dispatch,
 
 export const changeStatusTripDriver = async (id, status, dispatch, navigate) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/tripdriver/ChangeStatus`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/ChangeStatus`, {
       id: id,
       status: status
     }
@@ -375,7 +375,7 @@ export const changeStatusTripDriver = async (id, status, dispatch, navigate) => 
 
 export const getTripHistoryDriver = async (trip, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/tripdriver/listTrip`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/listTrip`, {
       driverEmail: trip.email,
       passengerEmail: trip.passengerEmail,
       dateFrom: trip.dateFrom,
@@ -396,7 +396,7 @@ export const getTripHistoryDriver = async (trip, dispatch) => {
 export const getTripHistoryPassenger = async (trip, dispatch) => {
   // dispatch(getTripHistoryStart());
   try {
-    const res = await axios.post(`${URL}:8080/api/tripPassenger/listTrip`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripPassenger/listTrip`, {
       passengerEmail: trip.email,
       driverEmail: trip.driverEmail,
       dateFrom: trip.dateFrom,
@@ -424,7 +424,7 @@ export const getAllVehico = async (email, dispatch) => {
     typeId: "",
   }
   try {
-    const res = await axios.get(`${URL}:8080/api/company/getVehicle?companyEmail=${vehicle.email}&plate=${vehicle.plate}&status=${vehicle.status}&typeId=${vehicle.typeId}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/getVehicle?companyEmail=${vehicle.email}&plate=${vehicle.plate}&status=${vehicle.status}&typeId=${vehicle.typeId}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllVehicos(res.data.object));
@@ -436,7 +436,7 @@ export const getAllVehicoFilter = async (vehicle, dispatch) => {
 
 
   try {
-    const res = await axios.get(`${URL}:8080/api/company/getVehicle?companyEmail=${vehicle.email}&plate=${vehicle.plate}&status=${vehicle.status}&typeId=${vehicle.typeId}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/getVehicle?companyEmail=${vehicle.email}&plate=${vehicle.plate}&status=${vehicle.status}&typeId=${vehicle.typeId}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllVehicos(res.data.object));
@@ -447,7 +447,7 @@ export const getAllVehicoFilter = async (vehicle, dispatch) => {
 
 export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
   const res = await axios
-    .post(`${URL}:8080/api/company/addVehicle`,
+    .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/addVehicle`,
       {
         companyEmail: vehicle.companyEmail,
         producer: vehicle.producer,
@@ -480,7 +480,7 @@ export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
 
 export const AddVehicoByDriver = async (vehicle, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/driver/addVehicle`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/addVehicle`,
       {
         driverEmail: vehicle.driverEmail,
         producer: vehicle.producer,
@@ -512,7 +512,7 @@ export const getDriversForCompany = async (companyEmail, dispatch) => {
   const name = "";
   const city = "";
   try {
-    const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${companyEmail}&status=${status}&email=${driverEmail}&name=${name}&city=${city}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/GetDriver?companyEmail=${companyEmail}&status=${status}&email=${driverEmail}&name=${name}&city=${city}`, {
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -526,7 +526,7 @@ export const getDriversForCompanyFilter = async (driver, dispatch) => {
     driver.address = "";
   }
   try {
-    const res = await axios.get(`${URL}:8080/api/company/GetDriver?companyEmail=${driver.companyEmail}&status=${driver.status}&email=${driver.driverEmail}&name=${driver.name}&city=${driver.address}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/GetDriver?companyEmail=${driver.companyEmail}&status=${driver.status}&email=${driver.driverEmail}&name=${driver.name}&city=${driver.address}`, {
       headers: { 'Content-Type': 'application/json' }
     });
 
@@ -561,7 +561,7 @@ export const getDriversByAdmin = async (object, dispatch) => {
     if (object.plate === undefined) {
       object.plate = "";
     }
-    const res = await axios.get(`${URL}:8080/api/admin/GetDrivers?regFrom=${object.regFrom}&regTo=${object.regTo}&phone=${object.phone}&driverName=${object.driverName}&email=${object.email}&Status=${object.status}&city=${object.city}&plate=${object.plate}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetDrivers?regFrom=${object.regFrom}&regTo=${object.regTo}&phone=${object.phone}&driverName=${object.driverName}&email=${object.email}&Status=${object.status}&city=${object.city}&plate=${object.plate}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllDriverForCompany(res.data.object));
@@ -582,7 +582,7 @@ export const getDriversByAdminAll = async (dispatch) => {
       plate: "",
     }
 
-    const res = await axios.get(`${URL}:8080/api/admin/GetDrivers?regFrom=${object.regFrom}&regTo=${object.regTo}&phone=${object.phone}&driverName=${object.driverName}&email=${object.email}&Status=${object.status}&city=${object.city}&plate=${object.plate}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetDrivers?regFrom=${object.regFrom}&regTo=${object.regTo}&phone=${object.phone}&driverName=${object.driverName}&email=${object.email}&Status=${object.status}&city=${object.city}&plate=${object.plate}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllDriverForCompany(res.data.object));
@@ -612,7 +612,7 @@ export const getCompanysByAdmin = async (object, dispatch) => {
     object.city = "";
   }
   try {
-    const res = await axios.get(`${URL}:8080/api/admin/GetCompanies?regFrom=${object.regFrom}&regTo=${object.regTo}&companyName=${object.companyName}&email=${object.email}&Status=${object.status}&city=${object.city}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetCompanies?regFrom=${object.regFrom}&regTo=${object.regTo}&companyName=${object.companyName}&email=${object.email}&Status=${object.status}&city=${object.city}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllCompanyForAdmin(res.data.object));
@@ -630,7 +630,7 @@ export const getCompanysByAdmiAll = async (dispatch) => {
       status: "",
       city: "",
     }
-    const res = await axios.get(`${URL}:8080/api/admin/GetCompanies?regFrom=${object.regFrom}&regTo=${object.regTo}&companyName=${object.companyName}&email=${object.email}&Status=${object.status}&city=${object.city}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetCompanies?regFrom=${object.regFrom}&regTo=${object.regTo}&companyName=${object.companyName}&email=${object.email}&Status=${object.status}&city=${object.city}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllCompanyForAdmin(res.data.object));
@@ -645,7 +645,7 @@ export const getPassengersByAdmiAll = async (dispatch) => {
       phone:"",
       email:"",
     }
-    const res = await axios.get(`${URL}:8080/api/admin/GetAllRider?name=${object.name}&phone=${object.phone}&email=${object.email}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetAllRider?name=${object.name}&phone=${object.phone}&email=${object.email}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllPassengerForAdmin(res.data.object));
@@ -663,7 +663,7 @@ export const getPassengersByAdmin = async (object,dispatch) => {
   }
   try {
 
-    const res = await axios.get(`${URL}:8080/api/admin/GetAllRider?name=${object.name}&phone=${object.phone}&email=${object.email}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetAllRider?name=${object.name}&phone=${object.phone}&email=${object.email}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getAllPassengerForAdmin(res.data.object));
@@ -680,7 +680,7 @@ export const getTripsByAdmiAll = async (dispatch) => {
       phonePassenger:"",
       Status:"",
     }
-    const res = await axios.get(`${URL}:8080/api/admin/GetAllTrip?regFrom=${object.regFrom}&regTo=${object.regTo}&phoneDriver=${object.phoneDriver}&phonePassenger=${object.phonePassenger}&Status=${object.Status}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetAllTrip?regFrom=${object.regFrom}&regTo=${object.regTo}&phoneDriver=${object.phoneDriver}&phonePassenger=${object.phonePassenger}&Status=${object.Status}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getListFreeTripSuccess(res.data.object));
@@ -704,7 +704,7 @@ export const getTripsByAdmin = async (object,dispatch) => {
     object.Status="";
   }
   try {
-    const res = await axios.get(`${URL}:8080/api/admin/GetAllTrip?regFrom=${object.regFrom}&regTo=${object.regTo}&phoneDriver=${object.phoneDriver}&phonePassenger=${object.phonePassenger}&Status=${object.Status}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetAllTrip?regFrom=${object.regFrom}&regTo=${object.regTo}&phoneDriver=${object.phoneDriver}&phonePassenger=${object.phonePassenger}&Status=${object.Status}`, {
       headers: { 'Content-Type': 'application/json' }
     });
     dispatch(getListFreeTripSuccess(res.data.object));
@@ -713,7 +713,7 @@ export const getTripsByAdmin = async (object,dispatch) => {
 export const editInforPassenger = async (object, toast, dispatch) => {
 
   const res = await axios
-    .post(`${URL}:8080/api/passenger/changeinfo`,
+    .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/passenger/changeinfo`,
       {
         username: object.email,
         firstname: object.firstName,
@@ -746,7 +746,7 @@ export const editInforPassenger = async (object, toast, dispatch) => {
 export const editInforDriver = async (object, toast, dispatch) => {
 
   try {
-    const res = await axios.post(`${URL}:8080/api/driver/changeinfo`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/changeinfo`, {
       username: object.email,
       firstname: object.firstname,
       lastname: object.lastname,
@@ -774,7 +774,7 @@ export const editInforPassengerAdmin = async (object, toast, dispatch) => {
     object.address=""
   }
   try {
-    const res = await axios.post(`${URL}:8080/api/passenger/changeinfo`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/passenger/changeinfo`, {
       email: object.email,
       firstname: object.firstName,
       lastname: object.lastName,
@@ -797,7 +797,7 @@ export const editInforPassengerAdmin = async (object, toast, dispatch) => {
 export const changePassword = async (object, toast) => {
 
   try {
-    const res = await axios.post(`${URL}:8080/api/user/changePassword`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/user/changePassword`,
       {
         email: object.email,
         oldPassword: object.oldPassword,
@@ -816,7 +816,7 @@ export const changePassword = async (object, toast) => {
 
 export const AddDriverByCompany = async (driver, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/RegisterDriver`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/RegisterDriver`,
       {
         companyEmail: driver.companyEmail,
         email: driver.email,
@@ -842,7 +842,7 @@ export const AddDriverByCompany = async (driver, toast, dispatch) => {
 }
 export const EditVehicoByCompany = async (vehicle, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/editVehicle`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/editVehicle`,
       {
         producer: vehicle.producer,
         produceYear: vehicle.produceYear,
@@ -868,7 +868,7 @@ export const EditVehicoByCompany = async (vehicle, toast, dispatch) => {
 
 export const EditDriverByCompany = async (driver, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/editDriver`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/editDriver`,
       {
         email: driver.email,
         firstName: driver.firstName,
@@ -893,7 +893,7 @@ export const EditDriverByCompany = async (driver, toast, dispatch) => {
 
 export const deleteDriverByCompany = async (id, companyEmail, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/deleteDriver`, {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/deleteDriver`, {
       driverID: id,
     }, {
       headers: { 'Content-Type': 'application/json' }
@@ -907,7 +907,7 @@ export const deleteDriverByCompany = async (id, companyEmail, toast, dispatch) =
 
 export const deleteVehicelByCompany = async (driverID, companyEmail, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/deleteVehicle`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/deleteVehicle`,
       {
         id: driverID
       }
@@ -925,7 +925,7 @@ export const deleteVehicelByCompany = async (driverID, companyEmail, toast, disp
 
 export const UploadFile = async (object, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
       {
         base64: object.base64,
         expired_month: object.month,
@@ -953,7 +953,7 @@ export const UploadFile = async (object, toast, dispatch) => {
 }
 export const UploadDocumentForVehicle = async (object, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/Upload/DocumentVehicle`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/DocumentVehicle`,
       {
         base64: object.base64,
         expired_month: object.month,
@@ -976,7 +976,7 @@ export const UploadDocumentForVehicle = async (object, toast, dispatch) => {
 
 export const ChaangeStatusDoc = async (id, status, email, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/admin/DocumentChangeStatus`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/DocumentChangeStatus`,
       {
         id: id,
         status: status
@@ -1004,7 +1004,7 @@ export const ChaangeStatusDoc = async (id, status, email, toast, dispatch) => {
 
 export const SendEmail = async (object, toast) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/admin/sendEmail`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/sendEmail`,
       {
         subject: object.subject,
         emailTo: object.email,
@@ -1022,7 +1022,7 @@ export const SendEmail = async (object, toast) => {
 
 export const resendCode = async (email) => {
   try {
-    const res = await axios.get(`${URL}:8080/api/getResendCode?email=${email}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/getResendCode?email=${email}`, {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) { }
@@ -1030,7 +1030,7 @@ export const resendCode = async (email) => {
 
 export const VerifyCodeEmail = async (newUser, code, toast, navigate) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/VerifyCode`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/VerifyCode`,
       {
         email: newUser.email,
         code: code,
@@ -1054,7 +1054,7 @@ export const VerifyCodeEmail = async (newUser, code, toast, navigate) => {
 
 export const ChangeStatusSignUp = async (email, status, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/ChangeStatusVerify`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/ChangeStatusVerify`,
       {
         email: email,
         status: status,
@@ -1072,7 +1072,7 @@ export const ChangeStatusSignUp = async (email, status, dispatch) => {
 export const getDriverDetail = async (userName, dispatch) => {
   try {
 
-    const res = await axios.get(`${URL}:8080/api/driver/detail?driverEmail=${userName}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/detail?driverEmail=${userName}`, {
       headers: { 'Content-Type': 'application/json' }
     })
     await dispatch(getDriverByDriverEmail(res.data.object));
@@ -1083,7 +1083,7 @@ export const getDriverDetail = async (userName, dispatch) => {
 export const getPassengerDetail = async (userName, dispatch) => {
   try {
 
-    const res = await axios.get(`${URL}:8080/api/passenger/detail?passengerEmail=${userName}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/passenger/detail?passengerEmail=${userName}`, {
       headers: { 'Content-Type': 'application/json' }
     })
     await dispatch(getPassengerByEmail(res.data.object));
@@ -1094,7 +1094,7 @@ export const getPassengerDetail = async (userName, dispatch) => {
 export const getCompanyDetail = async (userName, dispatch) => {
   try {
 
-    const res = await axios.get(`${URL}:8080/api/company/detail?companyEmail=${userName}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/detail?companyEmail=${userName}`, {
       headers: { 'Content-Type': 'application/json' }
     })
     await dispatch(getCompanyByCompanyEmail(res.data.object));
@@ -1106,7 +1106,7 @@ export const getCompanyDetail = async (userName, dispatch) => {
 export const getAllCity = async (dispatch) => {
   try {
 
-    const res = await axios.get(`${URL}:8080/api/city`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/city`, {
       headers: { 'Content-Type': 'application/json' }
     })
     // return res.data.object
@@ -1119,7 +1119,7 @@ export const getAllCity = async (dispatch) => {
 
 export const AddVehicleForDriver = async (object, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/setDriverVehicle`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/setDriverVehicle`,
       {
         email: object.driverEmail,
         vehicle: object.vehicle,
@@ -1138,7 +1138,7 @@ export const AddVehicleForDriver = async (object, toast, dispatch) => {
 
 export const DeleteVehicleForDriver = async (object, toast, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/setDriverVehicle`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/setDriverVehicle`,
       {
         email: object.driverEmail,
         vehicle: object.vehicle,
@@ -1157,7 +1157,7 @@ export const DeleteVehicleForDriver = async (object, toast, dispatch) => {
 
 export const getDocumentVehicle = async (docId) => {
   try {
-    const res = await axios.get(`${URL}:8080/api/company/getDocument?docId=${docId}`, {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/getDocument?docId=${docId}`, {
       headers: { 'Content-Type': 'application/json' }
     })
   } catch (error) {
@@ -1168,7 +1168,7 @@ export const getDocumentVehicle = async (docId) => {
 
 export const GetAllTripByCompany = async (object, dispatch) => {
   try {
-    const res = await axios.post(`${URL}:8080/api/company/listTrip`,
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/listTrip`,
       {
         companyID: object.companyID,
         passengerEmail: object.passengerEmail,
@@ -1188,7 +1188,7 @@ export const GetAllTripByCompany = async (object, dispatch) => {
 
 export const EditCompany = async (object, dispatch, toast) => {
   const res = await axios
-    .post(`${URL}:8080/api/company/changeInfo`,
+    .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/changeInfo`,
       {
         companyId: object.companyId,
         companyAddress: object.companyAddress,

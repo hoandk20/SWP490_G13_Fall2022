@@ -57,7 +57,7 @@ const TripDetailAdmin = () => {
     // var timeStart=new Date(tripDriverDetail?.timeStart);
     // console.log(timeStart.toString("dd/M/yyyy hh:mm:ss tt"));
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
     async function calculateRoute() {
