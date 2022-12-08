@@ -280,7 +280,7 @@ const PassengerDetailAdmin = () => {
                                 />
 
                                 {/* <Upload><Button icon={<UploadOutlined />}>Click to Upload</Button></Upload> */}
-                                <div className='inputFile'>
+                                {/* <div className='inputFile'>
                                     <input
                                         type="file"
                                         style={{ color: "#fff" }}
@@ -288,7 +288,7 @@ const PassengerDetailAdmin = () => {
                                             uploadAvatar(e);
                                         }}
                                     />
-                                </div>
+                                </div> */}
                             </div>
                         </Col>
                     </Row>

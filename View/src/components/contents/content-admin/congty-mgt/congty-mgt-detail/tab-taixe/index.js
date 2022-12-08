@@ -4,12 +4,13 @@ import React from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
 // import AddVehico from '../../../../../commons/drawers/drawer-vehico-mgt/drawer-add--vehico';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteDriverByCompany, getDriversForCompany } from '../../../../../../redux/apiRequest';
+import { deleteDriverByCompany, getDriverDetail, getDriversForCompany } from '../../../../../../redux/apiRequest';
 import { useEffect } from 'react';
 import AddDriverForCompany from '../../../../../commons/drawers/drawer-driverCompany-mgt/drawer-add-driver';
 import EditDriverForCompany from '../../../../../commons/drawers/drawer-admin-mgt/drawer-edit-driver';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 const { Option } = Select;
 
@@ -19,6 +20,7 @@ const data = [
 
 const DriverOfCompanyByAdmin = (props) => {
     const dispatch = useDispatch();
+    const navigate =useNavigate();
     const [companys,setCompanys]=useState(props.companys);
     // const user=useSelector((state)=>state.user.userInfo?.currentUser);
     const all=useSelector((state)=>state.user.drivers?.all);
@@ -81,30 +83,37 @@ const columns = [
         key: 'x',
         render: (text, record, index) => {
             return <div>
-                     <EditDriverForCompany state={record}/> 
+                   <EyeOutlined onClick={() => {
+                        console.log(record.email);
+                        getDriverDetail(record.email,dispatch);
+                        setTimeout(()=>{
+                            navigate('/admin/taixe-mgt/detail', { state: { record } })
+                          },1500)   
+                         
+                    }} />
 
             </div>
         },
     },
-    {
-        title: '',
-        dataIndex: '',
-        key: 'y',
-        render: (record) => {
-            return <div>
-                <Popconfirm
-                    title="Bạn có muốn xóa tài khoản này?"
-                    onConfirm={() => handleDelete(record.key)}
-                    onCancel={cancel}
-                    okText="Yes"
-                    cancelText="No"
-                >
-                    <DeleteOutlined/>
-                </Popconfirm>
-            </div>
+    // {
+    //     title: '',
+    //     dataIndex: '',
+    //     key: 'y',
+    //     render: (record) => {
+    //         return <div>
+    //             <Popconfirm
+    //                 title="Bạn có muốn xóa tài khoản này?"
+    //                 onConfirm={() => handleDelete(record.key)}
+    //                 onCancel={cancel}
+    //                 okText="Yes"
+    //                 cancelText="No"
+    //             >
+    //                 <DeleteOutlined/>
+    //             </Popconfirm>
+    //         </div>
 
-        },
-    },
+    //     },
+    // },
     
 
 ];
@@ -178,9 +187,9 @@ const columns = [
                         </Row>
                     </Form>
                 </div>
-                <div style={{marginLeft:"50px",float:"left"}}>
+                {/* <div style={{marginLeft:"50px",float:"left"}}>
                     <AddDriverForCompany/>
-                </div>
+                </div> */}
                 <div className='table-info' style={{marginTop:"5%"}}>
                 <Table columns={columns} dataSource={drivers} size="middle" />
                 </div>

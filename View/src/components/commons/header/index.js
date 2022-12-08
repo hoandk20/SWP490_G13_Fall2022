@@ -10,7 +10,7 @@ const Header1 = () =>{
     return(
         <div className='header-logo'>
             <span style={{float:"left", height:"35px" ,  padding: 0 ,  margin:"5px 3%"}}>
-                <a href="#"> <img className='image-logo' src={ImageTnet} alt="app store" /></a>
+                <a href="/"> <img className='image-logo' src={ImageTnet} alt="app store" /></a>
             </span>
             <span>
             <div style={{position: 'absolute',right: '50px'}}>

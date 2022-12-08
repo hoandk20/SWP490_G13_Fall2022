@@ -14,7 +14,7 @@ import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { registerCompany, registerDriver } from '../../../../redux/apiRequest';
 import { useDispatch } from 'react-redux';
-
+import ImageRegister from '../../../../assets/image-app/register-company.jpg'
 import { toast } from 'react-toastify';
 const { Option } = Select;
 
@@ -51,19 +51,19 @@ const RegisterCompanyInfo = () => {
 
     return (
         <div className='container'>
-            <h2>ĐĂNG KÝ ĐỂ ĐI XE</h2>
+           
             <div className='container-info'>
                 <Row>
-                    <Col sm={24} md={12} >
+                <Col sm={28} md={14} >
                         <div className='container-left'>
-                            {/* <img src={ImageRegisterKh} alt="abc" /> */}
+                            <img width="95%" height="600vh" src={ImageRegister} alt="abc" />
                         </div>
                     </Col>
-                    <Col sm={24} md={12}>
+                    <Col sm={20} md={10}>
                         <div className='container-right'>
                             {/* <h1>ĐĂNG KÝ ĐỂ ĐI XE</h1> */}
                             <div className='container-right-info'>
-
+                            <h2>ĐĂNG KÝ ĐỂ ĐI XE</h2>
                                 <Form
                                     // {...formItemLayout}
                                     form={form}
@@ -182,7 +182,7 @@ const RegisterCompanyInfo = () => {
                                     <Form.Item
                                     >
                                         <Button className='btn-register' type="primary" htmlType="submit" >
-                                            Register
+                                            Gửi
                                         </Button>
                                     </Form.Item>
 

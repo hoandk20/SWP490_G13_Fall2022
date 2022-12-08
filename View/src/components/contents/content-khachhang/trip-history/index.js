@@ -168,7 +168,6 @@ const TripHistoryPassenger = () => {
                         >
                             <Select
                                 style={{ width: "200px" }}
-                                defaultValue="OPEN"
                             >
                                 <Option value='OPEN'>Đang mở</Option>
                                 <Option value='CLOS'>Đã đóng</Option>

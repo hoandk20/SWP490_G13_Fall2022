@@ -112,7 +112,7 @@ const TripDetailAdmin = () => {
                                 </Descriptions>
                                 <br />
                                 <h3>Thông tin hành khách đã đăng ký</h3>
-
+ 
                                 {/* <div className='scroll-bg'>
                                     <div className='scroll-div'>
                                         <div className='scroll-object'>

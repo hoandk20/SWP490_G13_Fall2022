@@ -229,7 +229,7 @@ const EditVehico = (props) => {
                             <Form.Item
                             >
                                 <Button className='btn-register' type="primary" htmlType="submit">
-                                    Submit
+                                    Gửi
                                 </Button>
                             </Form.Item>
                         </Col>

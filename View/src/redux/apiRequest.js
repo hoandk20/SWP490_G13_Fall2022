@@ -312,10 +312,11 @@ export const RegisterTripForPassenger = async (trip, dispatch, navigate, toast) 
         {
           headers: { 'Content-Type': 'application/json' }
         })
+        toast.success("Đăng ký thành công,vui lòng đợi tài xế xác nhận")
     dispatch(passengerRegisterTripSuccess(res.data));
     // navigate('/taixe/freeTrip/detail')
   } catch (error) {
-    toast.error(error);
+    toast.error("Đăng ký thất bại");
   }
 
 

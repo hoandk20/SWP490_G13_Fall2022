@@ -274,7 +274,7 @@ const RegisterPassenger = () => {
                                     // {...tailFormItemLayout}
                                     >
                                         <Button className='btn-register' type="primary" htmlType="submit">
-                                            Register
+                                            Gửi
                                         </Button>
                                     </Form.Item>
                                 </Form>
