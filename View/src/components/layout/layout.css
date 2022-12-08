@@ -20,3 +20,6 @@ padding: 0;
   /* background: #fff; */
 }
 
+.ant-layout-sider ant-layout-sider-dark ant-layout-sider-has-trigger{
+  height: 280px;
+}

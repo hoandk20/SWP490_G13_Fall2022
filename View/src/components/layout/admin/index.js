@@ -12,39 +12,40 @@ import {
   LogoutOutlined,
 
 } from '@ant-design/icons';
-import { Layout,Menu } from 'antd';
+import { Layout, Menu } from 'antd';
 import Footers from '../../commons/footer/index';
 import { Footer } from 'antd/lib/layout/layout';
 import Headers from '../../commons/header/index';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../../redux/apiRequest';
+import { NavLink } from 'react-router-dom';
 const { Sider } = Layout;
 
 // import Menu from '../../commons/menu/index'
 
 const { Header, Content } = Layout;
-const menuItem=[
+const menuItem = [
   {
-    key: '1',
     icon: <InfoCircleOutlined />,
     label: 'TÀI XẾ',
+    key: '/admin/taixe-mgt'
   },
   {
-    key: '2',
+    key: '/admin/passenger-mgt',
     icon: <CarOutlined />,
     label: 'HÀNH KHÁCH',
   },
   {
-    key: '3',
     icon: <IdcardOutlined />,
     label: 'ĐỐI TÁC',
+    key: '/admin/company-mgt'
   },
   {
-    key: '4',
     icon: <HistoryOutlined />,
     label: 'CHUYẾN ĐI MIỄN PHÍ',
+    key: '/admin/free-trip-mgt'
   },
   {
     key: 'signOut',
@@ -54,67 +55,59 @@ const menuItem=[
 ]
 
 const LayoutAdmin = (props) => {
-  const {content}=props
+  const { content } = props
   const [collapsed, setCollapsed] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const history = useNavigate();
+  const { pathname } = useLocation();
+
+  console.log("pathname: ", pathname);
+
   return (
-    <Layout>
-      {/* <Menu/> */}
-      <Sider width={250} trigger={null} collapsible collapsed={collapsed}>
-        {/* <div className="logo">T.NET</div> */}
-        <div className='menu'>
+    <div style={{ display: 'flex' }}>
+      <Sider width={250} collapsible collapsed={collapsed} >
+        <div className='menu' style={{ height: 60, textAlign: 'center' }}>
         {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
             className: 'trigger',
             onClick: () => setCollapsed(!collapsed),
           })}
         </div>
         <Menu
-          theme='dark'
           mode="inline"
-          onClick={({key})=>{
+          theme='dark'
+          defaultSelectedKeys={menuItem[0].key}
+          selectedKeys={pathname}
+          items={menuItem}
+          onClick={({ key }) => {
             if(key==='signOut'){
               logoutUser(dispatch,navigate);
           
             }else{
-              if(key==1){
-                navigate('/admin/taixe-mgt')
-              }
-              if(key==2){
-                navigate('/admin/passenger-mgt')
-              }
-              if(key==3){
-                navigate('/admin/company-mgt')
-              }
-              if(key==4){
-                navigate('/admin/free-trip-mgt')
-              }
+               navigate(key)
             }
           }}
-   
-          items={menuItem}
         />
       </Sider>
-      <Layout  style={{ minHeight: "100vh" }} className="site-layout">
-        <Header  style={{backgroundColor:"#fff"}}>
-<Headers/>
+      <Layout className="site-layout">
+        <Header style={{ padding: 0, background: 'white', height: 100 }}>
+          <Headers/>
         </Header>
         <Content
-          className="site-layout-background"
           style={{
-            borderTopStyle:'solid',
-            borderTopColor:' rgb(187, 187, 187)',
+            margin: '24px 16px',
             padding: 24,
-            // minHeight: 560,
+            minHeight: 280,
+            background: 'white',
           }}
         >
-          <div className='content'>{content}</div>
+      <div  style={{minHeight:"80vh"}} className='content'>{content}</div>
         </Content>
         <Footer>
             <Footers/>
         </Footer>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

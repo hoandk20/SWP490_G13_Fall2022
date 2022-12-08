@@ -48,7 +48,7 @@ const SerachFreeTripForPassenger = () => {
             date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
-    const freeTrips = trips?.object.map((row) => ({ ...row, key: row.id, seatRemind: row.seat - row.seatRegistered, dateStart: dateFormat(row.timeStart) ,price:Math.round(row.price/1000)*1000}));
+    const freeTrips = trips?.map((row) => ({ ...row, key: row.id, seatRemind: row.seat - row.seatRegistered, dateStart: dateFormat(row.timeStart) ,price:Math.round(row.price/1000)*1000}));
 
     useEffect(() => {
         getListFreeTripIsOpen(dispatch);

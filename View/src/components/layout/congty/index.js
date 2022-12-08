@@ -17,7 +17,7 @@ import Footers from '../../commons/footer/index';
 import { Footer } from 'antd/lib/layout/layout';
 import Headers from '../../commons/header/index';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../../redux/apiRequest';
 const { Sider } = Layout;
@@ -27,32 +27,32 @@ const { Sider } = Layout;
 const { Header, Content } = Layout;
 const menuItem=[
   {
-    key: '1',
+    key: '/home',
     icon: <InfoCircleOutlined />,
     label: 'TRANG CHỦ',
   },
   {
-    key: '5',
+    key: '/congty/info',
     icon: <LaptopOutlined />,
     label: 'HỒ SƠ',
   },
   {
-    key: '6',
+    key: '/congty/document',
     icon: <LaptopOutlined />,
     label: 'TÀI LIỆU',
   },
   {
-    key: '2',
+    key: '/congty/vehico-mgt',
     icon: <CarOutlined />,
     label: 'PHƯƠNG TIỆN',
   },
   {
-    key: '3',
+    key: '/congty/driver-mgt',
     icon: <IdcardOutlined />,
     label: 'TÀI XẾ',
   },
   {
-    key: '4',
+    key: '/congty/trips',
     icon: <HistoryOutlined />,
     label: 'TỔNG SỐ CHUYẾN ĐI ',
   },
@@ -65,74 +65,59 @@ const menuItem=[
 ]
 
 const LayoutCompany = (props) => {
-  const {content}=props
+  const { content } = props
   const [collapsed, setCollapsed] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const history = useNavigate();
+  const { pathname } = useLocation();
+
+  console.log("pathname: ", pathname);
+
   return (
-    <Layout>
-      {/* <Menu/> */}
-      <Sider width={250} trigger={null} collapsible collapsed={collapsed}>
-        {/* <div className="logo">T.NET</div> */}
-        <div className='menu'>
+    <div style={{ display: 'flex' }}>
+      <Sider width={250} collapsible collapsed={collapsed} >
+        <div className='menu' style={{ height: 60, textAlign: 'center' }}>
         {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
             className: 'trigger',
             onClick: () => setCollapsed(!collapsed),
           })}
         </div>
         <Menu
-          theme='dark'
           mode="inline"
-          onClick={({key})=>{
+          theme='dark'
+          defaultSelectedKeys={menuItem[0].key}
+          selectedKeys={pathname}
+          items={menuItem}
+          onClick={({ key }) => {
             if(key==='signOut'){
               logoutUser(dispatch,navigate);
           
             }else{
-              if(key==1){
-                navigate('/home')
-              }
-              if(key==2){
-                navigate('/congty/vehico-mgt')
-              }
-              if(key==3){
-                navigate('/congty/driver-mgt')
-              }
-              if(key==4){
-                navigate('/congty/trips')
-              }
-              if(key==5){
-                navigate('/congty/info')
-              }
-              if(key==6){
-                navigate('/congty/document')
-              }
+               navigate(key)
             }
           }}
-   
-          items={menuItem}
         />
       </Sider>
-      <Layout  style={{ minHeight: "100vh" }} className="site-layout">
-        <Header  style={{backgroundColor:"#fff"}}>
-<Headers/>
+      <Layout className="site-layout">
+        <Header style={{ padding: 0, background: 'white', height: 100 }}>
+          <Headers/>
         </Header>
         <Content
-          className="site-layout-background"
           style={{
-            borderTopStyle:'solid',
-            borderTopColor:' rgb(187, 187, 187)',
+            margin: '24px 16px',
             padding: 24,
-            // minHeight: 560,
+            minHeight: 280,
+            background: 'white',
           }}
         >
-          <div className='content'>{content}</div>
+          <div  style={{minHeight:"80vh"}} className='content'>{content}</div>
         </Content>
         <Footer>
             <Footers/>
         </Footer>
       </Layout>
-    </Layout>
+    </div>
   );
 };
-
 export default LayoutCompany;

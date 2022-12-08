@@ -1,0 +1,9 @@
+.table-striped-rows tr:nth-child(2n) td {
+    background-color: #fbfbfb;
+}
+.table-striped-rows thead {
+    background-color:blue;
+}
+.table-striped-rows{
+    background-color: aquamarine;
+}

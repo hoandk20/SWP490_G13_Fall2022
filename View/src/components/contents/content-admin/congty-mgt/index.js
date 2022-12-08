@@ -1,4 +1,4 @@
-import { Button, Form, Input, Row, Col, Select, Table, Popconfirm, DatePicker } from 'antd';
+import { Button, Form, Input, Row, Col, Select, Table, Popconfirm, DatePicker, Spin } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect, useState } from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
@@ -18,6 +18,7 @@ const CompanyManagementAdmin = () => {
     const [date1, setDate1] = useState('');
     const [date2, setDate2] = useState('');
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     console.log(user);
     const all = useSelector((state) => state.user.companys?.all);
@@ -91,9 +92,11 @@ const CompanyManagementAdmin = () => {
                 return <div>
                     <EyeOutlined onClick={() => {
                         getCompanyDetail(record.email, dispatch);
+                        setLoading(true);
                         setTimeout(() => {
+                            setLoading(false);
                             navigate('/admin/company-mgt/detail', { state: { record } })
-                        }, 1500)
+                        }, 1000)
                     }} />
 
                 </div>
@@ -103,6 +106,7 @@ const CompanyManagementAdmin = () => {
     ];
 
     return (
+        <Spin spinning={loading}  tip="Loading" size="large">
         <div className='container'>
             <div className='container-infos' style={{
                 textAlign: "left",
@@ -200,6 +204,8 @@ const CompanyManagementAdmin = () => {
                 </div>
             </div>
         </div >
+        </Spin>
+
     )
 }
 export default CompanyManagementAdmin

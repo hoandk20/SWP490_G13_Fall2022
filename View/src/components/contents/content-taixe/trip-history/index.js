@@ -119,10 +119,7 @@ const TripHistoryDriver = () => {
     ];
     return (
         <div className='container'>
-            <div className='container-infos' style={{
-                textAlign: "left",
-                marginLeft: "20px"
-            }}>
+            <div className='container-infos' >
                 <h2>LỊCH SỬ CHYẾN ĐI</h2>
                 <h3>Trạng thái</h3>
                 <div className='driver-info'>
@@ -182,6 +179,7 @@ const TripHistoryDriver = () => {
                                 <Option value='OPEN'>Đang mở</Option>
                                 <Option value='CLOS'>Đã đóng</Option>
                                 <Option value='CANC'>Đã bị hủy</Option>
+                                <Option value='RUN'>Đang chạy</Option>
                             </Select>
                         </FormItem>
 

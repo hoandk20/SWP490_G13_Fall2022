@@ -279,10 +279,7 @@ const VehicoManagement = () => {
     }
     return (
         <div className='container'>
-            <div className='container-infos' style={{
-                textAlign: "left",
-                marginLeft: "20px"
-            }}>
+            <div className='container-infos'>
                 <h2 style={{ marginBottom: "50px" }}>PHƯƠNG TIỆN</h2>
                 <div className='driver-info'>
                     <Form

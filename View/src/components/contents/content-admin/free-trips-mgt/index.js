@@ -1,4 +1,4 @@
-import { Button, Form, Input, Row, Col, Select, Table, Popconfirm, DatePicker } from 'antd';
+import { Button, Form, Input, Row, Col, Select, Table, Popconfirm, DatePicker, Spin } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect, useState } from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
@@ -17,6 +17,7 @@ const FreeTripManagementAdmin = () => {
     const navigate = useNavigate();
     const [date1, setDate1] = useState('');
     const [date2, setDate2] = useState('');
+    const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     // const user = useSelector((state) => state.user.userInfo?.currentUser);
     // console.log(user);
@@ -102,9 +103,11 @@ const FreeTripManagementAdmin = () => {
             render: (record) => {
                 return <div>
                     <EyeOutlined onClick={() => {
+                        //    setLoading(true);
                         // setTimeout(() => {
+                        //     setLoading(false);
                         //     navigate('/admin/free-trip-mgt/detail', { state: { record } })
-                        // }, 1500)
+                        // }, 1000)
                         navigate('/admin/free-trip-mgt/detail', { state: { record } })
                     }} />
 
@@ -115,6 +118,7 @@ const FreeTripManagementAdmin = () => {
     ];
 
     return (
+        <Spin spinning={loading}  tip="Loading" size="large">
         <div className='container'>
             <div className='container-infos' style={{
                 textAlign: "left",
@@ -200,6 +204,8 @@ const FreeTripManagementAdmin = () => {
                 </div>
             </div>
         </div >
+        </Spin>
+
     )
 }
 export default FreeTripManagementAdmin
