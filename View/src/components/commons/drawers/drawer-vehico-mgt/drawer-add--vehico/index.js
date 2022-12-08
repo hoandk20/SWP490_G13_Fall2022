@@ -20,16 +20,15 @@ const AddVehico = () => {
         setOpen(false);
     };
     const handleChange = (a) => {
-        setCity(a.value);
+        setCity(a.label);
     };
     const onfinish = (values) => {
 
         const vehico = {
             ...values,
             companyEmail: user.email,
-            platState:city.label
-        }
-
+            platState:city
+        }       
         AddVehicoByCompany(vehico, toast, dispatch);
         // getAllVehico(user.email,dispatch);
         setOpen(false);

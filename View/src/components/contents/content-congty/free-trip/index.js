@@ -117,10 +117,7 @@ const TripsCompany = () => {
     ];
     return (
         <div className='container'>
-            <div className='container-infos' style={{
-                textAlign: "left",
-                marginLeft: "20px"
-            }}>
+            <div className='container-infos' >
                 <h2>LỊCH SỬ CHYẾN ĐI</h2>
                 <h3>Trạng thái</h3>
                 <div className='driver-info'>

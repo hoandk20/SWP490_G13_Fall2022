@@ -1,36 +1,37 @@
-import { Button, Popconfirm } from 'antd';
-import React, { useState } from 'react';
+import React, { createContext } from 'react';
+import { Button, Modal, Space } from 'antd';
+const ReachableContext = createContext(null);
+const UnreachableContext = createContext(null);
+const config = {
+  title: 'Use Hook!',
+  content: (
+    <>
+      <ReachableContext.Consumer>{(name) => `Reachable: ${name}!`}</ReachableContext.Consumer>
+      <br />
+      <UnreachableContext.Consumer>{(name) => `Unreachable: ${name}!`}</UnreachableContext.Consumer>
+    </>
+  ),
+};
 const ModalConfirm = () => {
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const showPopconfirm = () => {
-    setOpen(true);
-  };
-  const handleOk = () => {
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-  const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false);
-  };
+  const [modal, contextHolder] = Modal.useModal();
   return (
-    <Popconfirm
-      title="Title"
-      open={open}
-      onConfirm={handleOk}
-      okButtonProps={{
-        loading: confirmLoading,
-      }}
-      onCancel={handleCancel}
-    >
-      <Button type="primary" onClick={showPopconfirm}>
-        Đăng ký chuyến đi
-      </Button>
-    </Popconfirm>
+    <ReachableContext.Provider value="Light">
+      <Space>
+        <Button
+          onClick={() => {
+            modal.confirm(config);
+          }}
+        >
+          Confirm
+        </Button>
+        
+      </Space>
+      {/* `contextHolder` should always be placed under the context you want to access */}
+      {contextHolder}
+
+      {/* Can not access this context since `contextHolder` is not in it */}
+      <UnreachableContext.Provider value="Bamboo" />
+    </ReachableContext.Provider>
   );
 };
 export default ModalConfirm;

@@ -210,7 +210,7 @@ const routers = [
     //admin
     {
         path: '/admin/taixe-mgt',
-        roleTarget: "ROLE_ADMIN",
+        roleTarget: "ALL",
         element: DriverManagementAdmin
     },
     {
@@ -220,7 +220,7 @@ const routers = [
     },
     {
         path: '/admin/company-mgt',
-        roleTarget: "ROLE_ADMIN",
+        roleTarget: "ALL",
         element: CompanyManagementAdmin
     },
     {
@@ -230,7 +230,7 @@ const routers = [
     },
     {
         path: '/admin/free-trip-mgt',
-        roleTarget: "ROLE_ADMIN",
+        roleTarget: "ALL",
         element: FreeTripManagementAdmin
     },
     {

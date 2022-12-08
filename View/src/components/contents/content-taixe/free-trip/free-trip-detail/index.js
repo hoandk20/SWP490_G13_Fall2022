@@ -1,5 +1,5 @@
-import { Col, button, DatePicker, Form, Row, Select, TimePicker, Button, Descriptions, List, Avatar, Badge } from 'antd';
-import React from 'react';
+import { Col, button, DatePicker, Form, Row, Select, TimePicker, Button, Descriptions, List, Avatar, Badge, Modal } from 'antd';
+import React, { createContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeStatusTripDriver, getTripDetailDriver } from '../../../../../redux/apiRequest';
 import PassengerCard from '../../../../commons/passenger-card';
@@ -16,7 +16,7 @@ import {
     Input
 } from '@chakra-ui/react'
 import { FaLocationArrow, FaTimes } from 'react-icons/fa'
-
+import { toast } from 'react-toastify';
 import {
     useJsApiLoader,
     GoogleMap,
@@ -29,6 +29,18 @@ import { useLocation, useNavigate } from 'react-router';
 const { Option } = Select;
 const center = { lat: 21.013255, lng: 105.52597 }
 
+const ReachableContext = createContext(null);
+const UnreachableContext = createContext(null);
+const config = {
+    title: 'Use Hook!',
+    content: (
+        <>
+            <ReachableContext.Consumer>{(name) => `Reachable: ${name}!`}</ReachableContext.Consumer>
+            <br />
+            <UnreachableContext.Consumer>{(name) => `Unreachable: ${name}!`}</UnreachableContext.Consumer>
+        </>
+    ),
+};
 const FreeTripDetail = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -46,13 +58,12 @@ const FreeTripDetail = () => {
     const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const listPassengerRegister = tripDriverDetail?.listPassenger;
 
-    console.log(tripDriverDetail);
 
     var date_str = tripDriverDetail?.timeStart,
         options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
         formatted = (new Date(date_str)).toLocaleDateString('en-US', options),
         date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
-
+    const [modal, contextHolder] = Modal.useModal();
     var formatted_date = date_parts + formatted.substr(formatted.indexOf(",") + 1);
     // console.log(formatted_date);
     // var timeStart=new Date(tripDriverDetail?.timeStart);
@@ -75,19 +86,15 @@ const FreeTripDetail = () => {
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
     }
-    // console.log(listPassengerRegister);
-    // console.log("freeTrip: ", freeTrip);
-    // console.log("createTrip: ", createTrip);
-    // console.log("tripDriverDetail: ", tripDriverDetail);
-    //  const [detailTrip,setDetailTrip]=useState(); 
+
     const cancelTrip = () => {
-        changeStatusTripDriver(tripDriverDetail.id, "CANC", dispatch, navigate);
+        changeStatusTripDriver(tripDriverDetail.id, "CANC", dispatch, navigate,toast);
     }
     const startTrip = () => {
-        changeStatusTripDriver(tripDriverDetail.id, "RUN", dispatch, navigate);
+        changeStatusTripDriver(tripDriverDetail.id, "RUN", dispatch, navigate,toast);
     }
     const endTrip = () => {
-        changeStatusTripDriver(tripDriverDetail.id, "CLOS", dispatch, navigate);
+        changeStatusTripDriver(tripDriverDetail.id, "CLOS", dispatch, navigate,toast);
     }
     useEffect(() => {
         getTripDetailDriver(detail.id, dispatch);
@@ -141,12 +148,46 @@ const FreeTripDetail = () => {
                                 {
                                     tripDriverDetail?.status === "OPEN" ? (
                                         <span>
-                                            <Button type="primary" onClick={cancelTrip} danger style={{ marginLeft: "27%", display: "inline-block" }}>
-                                                Hủy chuyến
-                                            </Button>
-                                            <Button type="primary" onClick={startTrip} style={{ marginLeft: "20px", display: "inline-block" }}>
-                                                Bắt đầu chuyến đi
-                                            </Button>
+                                            <ReachableContext.Provider value="Light">
+
+                                                <Button type="primary" onClick={() => {
+                                                    modal.confirm({
+                                                        title: "Bạn có muốn hủy chuyến đi",
+                                                        onOk() {
+                                                            cancelTrip();
+                                                        }
+                                                    })
+
+                                                }} danger style={{ marginLeft: "27%", display: "inline-block" }}>
+                                                    Hủy chuyến
+                                                </Button>
+
+                                                {contextHolder}
+
+                                                <UnreachableContext.Provider value="Bamboo" />
+                                            </ReachableContext.Provider>
+
+                                            <ReachableContext.Provider value="Light">
+
+                                                <Button type="primary" onClick={() => {
+                                                    modal.confirm({
+                                                        title: "Bạn có muốn bắt đầu chuyến đi",
+                                                        onOk() {
+                                                            startTrip();
+                                                        }
+                                                    })
+
+                                                }} style={{ marginLeft: "20px", display: "inline-block" }}>
+                                                    Bắt đầu chuyến đi
+                                                </Button>
+
+
+
+                                                {contextHolder}
+
+                                                <UnreachableContext.Provider value="Bamboo" />
+                                            </ReachableContext.Provider>
+
 
                                         </span>
 
@@ -155,9 +196,25 @@ const FreeTripDetail = () => {
                                             {
                                                 tripDriverDetail?.status === "RUN" ? (
                                                     <>
-                                                        <Button type="primary" onClick={endTrip} danger style={{ marginLeft: "30%"}}>
-                                                            Kết thúc chuyến đi
-                                                        </Button>
+
+                                                        <ReachableContext.Provider value="Light">
+
+
+                                                            <Button type="primary" onClick={() => {
+                                                                modal.confirm({
+                                                                    title: "Bạn có muốn kết thúc chuyến đi",
+                                                                    onOk() {
+                                                                        endTrip();
+                                                                    }
+                                                                })
+
+                                                            }} danger style={{ marginLeft: "30%" }}>
+                                                                Kết thúc chuyến đi
+                                                            </Button>
+                                                            {contextHolder}
+
+                                                            <UnreachableContext.Provider value="Bamboo" />
+                                                        </ReachableContext.Provider>
                                                     </>
                                                 ) : (
                                                     <>

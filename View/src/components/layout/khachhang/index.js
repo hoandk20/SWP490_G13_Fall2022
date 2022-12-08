@@ -1,7 +1,7 @@
 import React from 'react';
 import 'antd/dist/antd.css';
 import '../layout.css';
-import {Link, Navigate, useNavigate} from "react-router-dom";
+import {Link, Navigate, useLocation, useNavigate} from "react-router-dom";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -26,7 +26,7 @@ const { Sider } = Layout;
 const { Header, Content } = Layout;
 const menuItem=[
   {
-    key: '1',
+    key: '/khachhang/info',
     icon: <UserOutlined />,
     label: 'HỒ SƠ',
   },
@@ -36,12 +36,12 @@ const menuItem=[
   //   label: 'CHUYẾN ĐI MIỄN PHÍ',
   // },
   {
-    key: '3',
+    key: '/khachhang/search-freeTrip',
     icon: <SearchOutlined rotate={90}/>,
     label: 'TÌM CHUYẾN ĐI MIỄN PHÍ',
   },
   {
-    key: '4',
+    key: '/khachhang/trip-history',
     icon: <HistoryOutlined />,
     label: 'LỊCH SỬ CHUYẾN ĐI',
   },
@@ -53,69 +53,61 @@ const menuItem=[
   },
 ]
 
+
 const LayoutPassenger = (props) => {
-  const dispatch = useDispatch();
-  const {content}=props
+  const { content } = props
   const [collapsed, setCollapsed] = useState(false);
-  const navigate=useNavigate();
-  const user = useSelector((state) => state.user.userInfo?.currentUser)
-  console.log(user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const history = useNavigate();
+  const { pathname } = useLocation();
+
+  console.log("pathname: ", pathname);
+
   return (
-    <Layout>
-      {/* <Menu/> */}
-      <Sider width={250} trigger={null} collapsible collapsed={collapsed}>
-        {/* <div className="logo">T.NET</div> */}
-        <div className='menu'>
+    <div style={{ display: 'flex' }}>
+      <Sider width={250} collapsible collapsed={collapsed} >
+        <div className='menu' style={{ height: 60, textAlign: 'center' }}>
         {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
             className: 'trigger',
             onClick: () => setCollapsed(!collapsed),
           })}
         </div>
         <Menu
-          theme='dark'
           mode="inline"
-          onClick={({key})=>{
+          theme='dark'
+          defaultSelectedKeys={menuItem[0].key}
+          selectedKeys={pathname}
+          items={menuItem}
+          onClick={({ key }) => {
             if(key==='signOut'){
               logoutUser(dispatch,navigate);
           
             }else{
-
-              if(key==1){
-                navigate('/khachhang/info')
-              }
-              if(key==3){
-                navigate('/khachhang/search-freeTrip')
-              }
-              if(key==4){
-                navigate('/khachhang/trip-history')
-              }
+               navigate(key)
             }
           }}
-
-          items={menuItem}
         />
       </Sider>
-      <Layout  style={{ minHeight: "100vh" }} className="site-layout">
-        <Header  style={{backgroundColor:"#fff"}}>
-<Headers/>
+      <Layout className="site-layout">
+        <Header style={{ padding: 0, background: 'white', height: 100 }}>
+          <Headers/>
         </Header>
         <Content
-          className="site-layout-background"
           style={{
-            borderTopStyle:'solid',
-            borderTopColor:' rgb(187, 187, 187)',
+            margin: '24px 16px',
             padding: 24,
-            // minHeight: 560,
+            minHeight: 280,
+            background: 'white',
           }}
         >
-          <div className='content'>{content}</div>
+          <div  style={{minHeight:"80vh"}} className='content'>{content}</div>
         </Content>
         <Footer>
             <Footers/>
         </Footer>
       </Layout>
-    </Layout>
+    </div>
   );
 };
-
 export default LayoutPassenger;

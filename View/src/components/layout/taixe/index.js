@@ -16,7 +16,7 @@ import Footers from '../../commons/footer/index';
 import { Footer } from 'antd/lib/layout/layout';
 import Headers from '../../commons/header/index';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../../redux/apiRequest';
 const { Sider } = Layout;
@@ -26,11 +26,14 @@ const { Sider } = Layout;
 const { Header, Content } = Layout;
 
 
+
 const LayoutDriver = (props) => {
-  const {content}=props
+  const { content } = props
   const [collapsed, setCollapsed] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const history = useNavigate();
+  const { pathname } = useLocation();
   const user=useSelector((state)=>state.user.userInfo?.currentUser);
   console.log("layout",user);
   var menuItem=[];
@@ -38,30 +41,26 @@ const LayoutDriver = (props) => {
 
   const [menu,setMenu]=useState([]);
 
+  console.log("pathname: ", pathname);
   if(user.companyId===0){
     menuItem=[
-      // {
-      //   key: '0',
-      //   icon: <UserOutlined />,
-      //   label: 'TRANG CHỦ',
-      // },
       {
-        key: '1',
+        key: '/taixe/info',
         icon: <UserOutlined />,
         label: 'HỒ SƠ',
       },
       {
-        key: '2',
+        key: '/taixe/freeTrip/create',
         icon: <LaptopOutlined rotate={180}/>,
         label: 'CHUYẾN ĐI MIỄN PHÍ',
       },
       {
-        key: '3',
+        key: '/taixe/document',
         icon: <SearchOutlined rotate={90}/>,
         label: 'TÀI LIỆU',
       },
       {
-        key: '4',
+        key: '/taixe/trip-history',
         icon: <HistoryOutlined />,
         label: 'LỊCH SỬ CHUYẾN ĐI',
       },
@@ -74,22 +73,17 @@ const LayoutDriver = (props) => {
   }else{
      menuItem=[
       {
-        key: '0',
-        icon: <UserOutlined />,
-        label: 'TRANG CHỦ',
-      },
-      {
-        key: '1',
+        key: '/taixe/info',
         icon: <UserOutlined />,
         label: 'HỒ SƠ',
       },
       {
-        key: '2',
+        key: '/taixe/freeTrip/create',
         icon: <LaptopOutlined rotate={180}/>,
         label: 'CHUYẾN ĐI MIỄN PHÍ',
       },
       {
-        key: '4',
+        key: '/taixe/trip-history',
         icon: <HistoryOutlined />,
         label: 'LỊCH SỬ CHUYẾN ĐI',
       },
@@ -101,67 +95,50 @@ const LayoutDriver = (props) => {
     ]
   }
 
-
   return (
-    <Layout>
-      {/* <Menu/> */}
-      <Sider width={250} trigger={null} collapsible collapsed={collapsed}>
-        {/* <div className="logo">T.NET</div> */}
-        <div className='menu'>
+    <div style={{ display: 'flex' }}>
+      <Sider width={250} collapsible collapsed={collapsed} >
+        <div className='menu' style={{ height: 60, textAlign: 'center' }}>
         {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
             className: 'trigger',
             onClick: () => setCollapsed(!collapsed),
           })}
         </div>
         <Menu
-          theme='dark'
           mode="inline"
-          onClick={({key})=>{
+          theme='dark'
+          defaultSelectedKeys={menuItem[0].key}
+          selectedKeys={pathname}
+          items={menuItem}
+          onClick={({ key }) => {
             if(key==='signOut'){
               logoutUser(dispatch,navigate);
           
             }else{
-              // if(key==0){
-              //   navigate('/home')
-              // }
-              if(key==1){
-                navigate('/taixe/info')
-              }
-              if(key==2){
-                navigate('/taixe/freeTrip/create')
-              }
-              if(key==3){
-                navigate('/taixe/document')
-              }
-              if(key==4){
-                navigate('/taixe/trip-history')
-              }
+               navigate(key)
             }
           }}
-          items={menuItem}
-
         />
       </Sider>
-      <Layout  style={{ minHeight: "100vh" }} className="site-layout">
-        <Header  style={{backgroundColor:"#fff"}}>
-<Headers/>
+      <Layout className="site-layout">
+        <Header style={{ padding: 0, background: 'white', height: 100 }}>
+          <Headers/>
         </Header>
         <Content
-          className="site-layout-background"
           style={{
-            borderTopStyle:'solid',
-            borderTopColor:' rgb(187, 187, 187)',
+            margin: '24px 16px',
             padding: 24,
-            // minHeight: 560,
+            minHeight: 280,
+            background: 'white',
           }}
         >
-          <div className='content'>{content}</div>
+          <div  style={{minHeight:"80vh"}} className='content'>{content}</div>
         </Content>
         <Footer>
             <Footers/>
         </Footer>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

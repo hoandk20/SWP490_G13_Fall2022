@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, Row, Col, Select, Table, DatePicker, Popconfirm } from 'antd';
+import { Button, Checkbox, Form, Input, Row, Col, Select, Table, DatePicker, Popconfirm, Spin } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect, useState } from 'react';
 import { DeleteOutlined, EyeOutlined, FilterOutlined } from '@ant-design/icons';
@@ -17,6 +17,7 @@ const PassengerManagementAdmin = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     console.log(user);
     const all = useSelector((state) => state.user.passengers?.all);
@@ -67,9 +68,11 @@ const PassengerManagementAdmin = () => {
                 return <div>
                     <EyeOutlined onClick={() => {
                         getPassengerDetail(record.email,dispatch);
+                        setLoading(true);
                         setTimeout(()=>{
+                            setLoading(false);
                             navigate('/admin/passenger-mgt/detail', { state: { record } })
-                          },1500)   
+                          },1000)   
                          
                     }} />
 
@@ -81,6 +84,7 @@ const PassengerManagementAdmin = () => {
 
 
     return (
+        <Spin spinning={loading}  tip="Loading" size="large">
         <div className='container'>
             <div className='container-infos' style={{
                 textAlign: "left",
@@ -145,6 +149,8 @@ const PassengerManagementAdmin = () => {
                 </div>
             </div>
         </div >
+        </Spin>
+
     )
 }
 export default PassengerManagementAdmin

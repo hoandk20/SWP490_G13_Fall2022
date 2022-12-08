@@ -264,7 +264,7 @@ export const getListFreeTripIsOpen = async (dispatch) => {
   })
     .then(function (response) {
       console.log(response)
-      dispatch(getListFreeTripSuccess(response.data))
+      dispatch(getListFreeTripSuccess(response.data.object))
       //  navigate("/signin")
     })
     .catch(function (error) {
@@ -286,7 +286,7 @@ export const getListFreeTrip = async (trip, dispatch) => {
       {
         headers: { 'Content-Type': 'application/json' }
       })
-    dispatch(getListFreeTripSuccess(res.data))
+    dispatch(getListFreeTripSuccess(res.data.object))
   } catch (error) {
     getListFreeTripFailed();
   }
@@ -313,7 +313,7 @@ export const RegisterTripForPassenger = async (trip, dispatch, navigate, toast) 
           headers: { 'Content-Type': 'application/json' }
         })
         toast.success("Đăng ký thành công,vui lòng đợi tài xế xác nhận")
-    dispatch(passengerRegisterTripSuccess(res.data));
+    dispatch(passengerRegisterTripSuccess(res.data.object));
     // navigate('/taixe/freeTrip/detail')
   } catch (error) {
     toast.error("Đăng ký thất bại");
@@ -366,6 +366,11 @@ export const changeStatusTripDriver = async (id, status, dispatch, navigate) => 
       });
     if (status === "CANC") {
       navigate("/taixe/trip-history")
+      toast.success("Hủy chuyến đi thành công")
+    }else if(status==="RUN"){
+      toast.success("Chuyến đi bắt đầu chạy !!!")
+    }else if(status==="CLOS"){
+      toast.success("Chuyến đi đã kết thúc !!!")
     }
     getTripDetailDriver(id, dispatch)
   } catch (error) {
@@ -684,6 +689,7 @@ export const getTripsByAdmiAll = async (dispatch) => {
     const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetAllTrip?regFrom=${object.regFrom}&regTo=${object.regTo}&phoneDriver=${object.phoneDriver}&phonePassenger=${object.phonePassenger}&Status=${object.Status}`, {
       headers: { 'Content-Type': 'application/json' }
     });
+  
     dispatch(getListFreeTripSuccess(res.data.object));
   } catch (error) { }
 }

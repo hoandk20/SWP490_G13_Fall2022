@@ -8,7 +8,7 @@ const Header1 = () =>{
     const user = useSelector((state) => state.user.userInfo?.currentUser)
     
     return(
-        <div className='header-logo'>
+        <div className='header-logo' style={{width: '100%'}}>
             <span style={{float:"left", height:"35px" ,  padding: 0 ,  margin:"5px 3%"}}>
                 <a href="/"> <img className='image-logo' src={ImageTnet} alt="app store" /></a>
             </span>
