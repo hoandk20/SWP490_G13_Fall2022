@@ -41,6 +41,7 @@ public class PromotionTripTest {
         }
         when(promotiontripRepository.findTop10ByStatusOrderByCreatedDateDesc(masterTripStatus.TRIP_OPEN)).thenReturn(mocTripDriver);
         when(promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc("driver@gmail.com")).thenReturn(mocTripDriver);
+        when(promotiontripRepository.findAll()).thenReturn(mocTripDriver);
 
     }
     @BeforeEach
@@ -111,5 +112,13 @@ public class PromotionTripTest {
         String status = "REJE";
         List<Promotiontrip> list = promotionTripService.getAllByStatus(status);
         assertThat(list.size()).isEqualTo(0);
+    }
+    //new
+    //test get all Promotion trip
+    @Test
+    void testGetAllPromotionTrip(){
+        List<Promotiontrip> ActualPromotiontripList = promotionTripService.getAllTrip();
+        int ExpectSize =10;
+        assertThat(ActualPromotiontripList.size()).isEqualTo(10);
     }
 }

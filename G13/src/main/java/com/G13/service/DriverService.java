@@ -56,4 +56,8 @@ public class DriverService {
         driverRepository.delete(driver);
         return true;
     }
+
+    public List<Driver> getAllDriver(){
+        return driverRepository.findAll();
+    }
 }

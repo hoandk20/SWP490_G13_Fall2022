@@ -39,6 +39,7 @@ public class VehicleTest {
         when(vehicleRepository.findFirstByCompanyIDOrderByCreatedDateDesc(1)).thenReturn(vehicle);
         when(vehicleRepository.saveAndFlush(vehicle)).thenReturn(vehicle);
         when(vehicleRepository.findByCompanyIDAndStatus(1,"PE")).thenReturn(Actuallist);
+
     }
     //test get vehicle by id
     @Test
@@ -120,4 +121,5 @@ public class VehicleTest {
         boolean ActualStatus = vehicleService.DeleteVehicle(vehicle);
         assertThat(ActualStatus).isEqualTo(false);
     }
+
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +34,8 @@ public class CompanyService {
 
     public Company getCompanyByID(int id){
         return companyRepository.findCompanyById(id);
+    }
+    public List<Company> getAllCompany(){
+        return companyRepository.findAll();
     }
 }

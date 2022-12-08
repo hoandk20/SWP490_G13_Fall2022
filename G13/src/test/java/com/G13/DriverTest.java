@@ -13,6 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootTest
 public class DriverTest {
     @Mock
@@ -26,9 +29,12 @@ public class DriverTest {
         driver.setId("1");
         driver.setEmail("hoan123@gmail.com");
         driver.setCurrentVehicle(1);
+        List<Driver> list = new ArrayList<>();
+        list.add(driver);
         when(driverRepository.findDriverById("1")).thenReturn(driver);
         when(driverRepository.findByEmailOrderByCreatedDateDesc("hoan123@gmail.com")).thenReturn(driver);
         when(driverRepository.findDriverByCurrentVehicle(1)).thenReturn(driver);
+        when(driverRepository.findAll()).thenReturn(list);
     }
     //get driver by id
     @Test
@@ -146,5 +152,13 @@ public class DriverTest {
         driver.setCurrentVehicle(1);
         boolean ActualStatus = driverService.DeleteDriver(driver);
         assertThat(ActualStatus).isEqualTo(false);
+    }
+    //new
+    //test get all Driver
+    @Test
+    void testGetAllDriver(){
+        int ExpectSize = 1;
+        List<Driver> list = driverService.getAllDriver();
+        assertThat(list.size()).isEqualTo(ExpectSize);
     }
 }

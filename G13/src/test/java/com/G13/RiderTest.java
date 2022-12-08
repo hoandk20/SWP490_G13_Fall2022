@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 @SpringBootTest
 public class RiderTest {
     @Mock
@@ -27,7 +29,10 @@ public class RiderTest {
         Rider rider = new Rider();
         rider.setId("1");
         rider.setEmail("user1@gmail.com");
+        List<Rider> list = new ArrayList<>();
+        list.add(rider);
         when(riderRepository.findByEmail("user1@gmail.com")).thenReturn(rider);
+        when(riderRepository.findAll()).thenReturn(list);
     }
     //test get rider by email
     @Test
@@ -97,5 +102,12 @@ public class RiderTest {
         boolean ActualStatus= riderService.SaveRider(rider);
         assertThat(ActualStatus).isEqualTo(false);
     }
-
+    //new
+    // test get all rider
+    @Test
+    void testGetAllRider(){
+        int Expect = 1;
+        List<Rider> ActualList = riderService.getAllRider();
+        assertThat(ActualList.size()).isEqualTo(Expect);
+    }
 }
