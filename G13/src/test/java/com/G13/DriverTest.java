@@ -63,4 +63,52 @@ public class DriverTest {
         Driver Actualdriver = driverService.getDriverByEmail("");
         assertThat(Actualdriver).isEqualTo(null);
     }
+
+    //test save driver
+    @Test
+    void testSaveDriverSuccessfull(){
+        Driver driver = new Driver();
+        driver.setEmail("driver@gmail.com");
+        driver.setFirstName("hoan");
+        driver.setLastName("kieu");
+        driver.setMobileNo("012345678");
+        boolean ActualStatus  = driverService.SaveDriver(driver);
+        assertThat(ActualStatus).isEqualTo(true);
+    }
+    @Test
+    void testSaveDriverNoDriverEmail(){
+        Driver driver = new Driver();
+        driver.setFirstName("hoan");
+        driver.setLastName("kieu");
+        driver.setMobileNo("012345678");
+        boolean ActualStatus  = driverService.SaveDriver(driver);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testSaveDriverNoFirstName(){
+        Driver driver = new Driver();
+        driver.setEmail("driver@gmail.com");
+        driver.setLastName("kieu");
+        driver.setMobileNo("012345678");
+        boolean ActualStatus  = driverService.SaveDriver(driver);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testSaveDriverNoLastName(){
+        Driver driver = new Driver();
+        driver.setEmail("driver@gmail.com");
+        driver.setFirstName("hoan");
+        driver.setMobileNo("012345678");
+        boolean ActualStatus  = driverService.SaveDriver(driver);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testSaveDriverNoMobileNo(){
+        Driver driver = new Driver();
+        driver.setEmail("driver@gmail.com");
+        driver.setFirstName("hoan");
+        driver.setLastName("kieu");
+        boolean ActualStatus  = driverService.SaveDriver(driver);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
 }

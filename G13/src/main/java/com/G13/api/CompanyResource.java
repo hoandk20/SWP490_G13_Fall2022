@@ -5,7 +5,7 @@ import com.G13.domain.*;
 import com.G13.master.*;
 import com.G13.model.*;
 import com.G13.repo.*;
-import com.G13.service.UserService;
+import com.G13.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +19,16 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CompanyResource {
 
-    private final CompanyRepository companyRepository;
-    private final VehicleRepository vehicleRepository;
-    private final DriverRepository driverRepository;
+    private final CompanyService companyService;
+    private final VehicleService vehicleService;
+    private final DriverService driverService;
     private final UserService userService;
     private final UserRoleRepository userRoleRepository;
     private final DocumentRepository documentRepository;
     private final VehicledocumentRepository vehicledocumentRepository;
     private final PromotiontripRepository promotiontripRepository;
     private final TripRepository tripRepository;
-    private final RiderRepository riderRepository;
+    private final CommonService commonService;
 
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle(@RequestBody VehicleRequest vr) {
@@ -42,7 +42,7 @@ public class CompanyResource {
 
         try {
             Vehicle vehicle = new Vehicle();
-            int companyId = companyRepository.findByNote(vr.getCompanyEmail()).getId();
+            int companyId = companyService.getCompanyByEmail(vr.getCompanyEmail()).getId();
             vehicle.setCompanyID(companyId);
             vehicle.setProduceYear(vr.getProduceYear());
             vehicle.setInteriorColor(vr.getInteriorColor());
@@ -54,7 +54,7 @@ public class CompanyResource {
             vehicle.setCreatedBy(vr.getProducer());
             vehicle.setStatus(carStatus.Car_Pending);
             response.setContent("");
-            response.setObject(vehicleRepository.saveAndFlush(vehicle));
+            response.setObject(vehicleService.SaveVehicle(vehicle));
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -77,7 +77,7 @@ public class CompanyResource {
 
         try {
 
-            Vehicle vehicle = vehicleRepository.findById(vr.getId());
+            Vehicle vehicle = vehicleService.getVehicleByID(vr.getId());
             vehicle.setProduceYear(vr.getProduceYear());
             vehicle.setInteriorColor(vr.getInteriorColor());
             vehicle.setExteriorColor(vr.getExteriorColor());
@@ -88,7 +88,7 @@ public class CompanyResource {
             vehicle.setCreatedBy(vr.getProducer());
 
 
-            response.setContent(vehicleRepository.save(vehicle).toString());
+            response.setContent(vehicleService.SaveVehicle(vehicle).toString());
             response.setObject(vehicle);
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
@@ -108,8 +108,8 @@ public class CompanyResource {
         UploadFileMaster uploadFileMaster = new UploadFileMaster();
         try {
 
-            Company company = companyRepository.findByNote(companyEmail);
-            List<Vehicle> vehicles = vehicleRepository.findByCompanyIDOrderByCreatedDateDesc(company.getId());
+            Company company = companyService.getCompanyByEmail(companyEmail);
+            List<Vehicle> vehicles = vehicleService.getVehicleByCompanyId(company.getId());
             List<VehicleRequest> vehicleRequests = new ArrayList<>();
 
             for (Vehicle vehicle : vehicles) {
@@ -125,7 +125,7 @@ public class CompanyResource {
                 vehicleRequest.setPlateCountry(vehicle.getLisencePlatCountry());
                 vehicleRequest.setTypeId(vehicle.getCarTypeID());
                 vehicleRequest.setVehicleStatus(vehicle.getStatus());
-                Driver driver = driverRepository.findDriverByCurrentVehicle(vehicle.getId());
+                Driver driver = driverService.getDriverByVehicleId(vehicle.getId());
                 if (driver != null) {
                     vehicleRequest.setDriverEmail(driver.getEmail());
                 }
@@ -152,7 +152,8 @@ public class CompanyResource {
                 }
                 boolean isHasCNBH = false;
                 boolean isHasCNDK = false;
-                List<Vehicledocument> vehicledocuments = vehicledocumentRepository.findVehicledocumentsByVehicleidOrderByIdDesc(vehicleRepository.findVehicleById(vehicle.getId()));
+                List<Vehicledocument> vehicledocuments =
+                        vehicledocumentRepository.findVehicledocumentsByVehicleidOrderByIdDesc(vehicleService.getVehicleByID(vehicle.getId()));
                 for (Vehicledocument vehicledocument : vehicledocuments) {
                     DocumentRequest doc = new DocumentRequest();
                     FileManage fileManage = new FileManage();
@@ -227,13 +228,13 @@ public class CompanyResource {
         MasterStatus masterStatus = new MasterStatus();
         try {
 
-            Vehicle vehicle = vehicleRepository.findById(id);
+            Vehicle vehicle = vehicleService.getVehicleByID(id);
             if (vehicle == null) {
                 response.setStatus(masterStatus.FAILURE);
                 response.setObject("driver not existed!");
                 return ResponseEntity.badRequest().body(response);
             }
-            vehicleRepository.delete(vehicle);
+            vehicleService.DeleteVehicle(vehicle);
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(vehicle);
             return ResponseEntity.ok().body(response);
@@ -264,7 +265,7 @@ public class CompanyResource {
         }
         try {
             Driver driver = new Driver();
-            Company company = companyRepository.findByNote(rd.getCompanyEmail());
+            Company company = companyService.getCompanyByEmail(rd.getCompanyEmail());
             driver.setCompanyID(company.getId());
             driver.setCompanyName(company.getName());
             driver.setId(rd.getEmail());
@@ -278,7 +279,7 @@ public class CompanyResource {
             driver.setCountryCode(rd.getCountry());
             driver.setBranchCityId(rd.getCityId());
             driver.setStatus(driverStatus.NEW);
-            driverRepository.save(driver);
+            driverService.SaveDriver(driver);
             User u = new User();
             u.setEmail(rd.getEmail());
             u.setPassword(rd.getPassword());
@@ -307,7 +308,7 @@ public class CompanyResource {
         float nofloat = 0;
         short noShort = (short) 0;
         try {
-            Driver driver = driverRepository.findByEmail(rd.getEmail());
+            Driver driver = driverService.getDriverByEmail(rd.getEmail());
             driver.setLanguageCode("vi");
             driver.setDriverCode("DR");
             driver.setFirstName(rd.getFirstName());
@@ -316,7 +317,7 @@ public class CompanyResource {
             driver.setLanguageCode(rd.getLanguage());
             driver.setCountryCode(rd.getCountry());
             driver.setBranchCityId(rd.getCityId());
-            driverRepository.save(driver);
+            driverService.SaveDriver(driver);
 
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(driver);
@@ -338,7 +339,7 @@ public class CompanyResource {
         float nofloat = 0;
         short noShort = (short) 0;
         try {
-            Driver driver = driverRepository.findByEmail(rd.getEmail());
+            Driver driver = driverService.getDriverByEmail(rd.getEmail());
             if (driver == null) {
                 response.setContent("driver not existed");
                 response.setStatus(masterStatus.FAILURE);
@@ -347,20 +348,20 @@ public class CompanyResource {
             Vehicle vehicle = new Vehicle();
             try {
                 if (rd.getVehicle() != 0) {
-                    vehicle = vehicleRepository.findById(rd.getVehicle());
+                    vehicle = vehicleService.getVehicleByID(rd.getVehicle());
                     vehicle.setStatus("US");
-                    vehicleRepository.save(vehicle);
+                    vehicleService.SaveVehicle(vehicle);
                 } else {
-                    vehicle = vehicleRepository.findById(rd.getRemoveVehicleId());
+                    vehicle = vehicleService.getVehicleByID(rd.getRemoveVehicleId());
                     vehicle.setStatus("PE");
-                    vehicleRepository.save(vehicle);
+                    vehicleService.SaveVehicle(vehicle);
                 }
             } catch (Exception e) {
             }
 
             driver.setCurrentVehicle(rd.getVehicle());
             driver.setDeviceType("N/A");
-            driverRepository.save(driver);
+            driverService.SaveDriver(driver);
 
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(driver);
@@ -381,13 +382,13 @@ public class CompanyResource {
         MasterStatus masterStatus = new MasterStatus();
         try {
 
-            Driver driver = driverRepository.findByEmailOrderByCreatedDateDesc(email);
+            Driver driver = driverService.getDriverByEmail(email);
             if (driver == null) {
                 response.setStatus(masterStatus.FAILURE);
                 response.setObject("driver not existed!");
                 return ResponseEntity.badRequest().body(response);
             }
-            driverRepository.delete(driver);
+            driverService.DeleteDriver(driver);
 
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(driver);
@@ -405,8 +406,8 @@ public class CompanyResource {
         MasterStatus masterStatus = new MasterStatus();
         try {
 
-            Company company = companyRepository.findByNote(companyEmail);
-            List<Driver> drivers = driverRepository.findDriversByCompanyID(company.getId());
+            Company company = companyService.getCompanyByEmail(companyEmail);
+            List<Driver> drivers = driverService.getDriverByCompanyId(company.getId());
             List<RegisterDriverCompany> registerDriverCompanies = new ArrayList<>();
 
             for (Driver driver : drivers) {
@@ -426,7 +427,7 @@ public class CompanyResource {
                 } catch (Exception e) {
                 }
                 try {
-                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                     if (vehicle != null) {
                         VehicleRequest vehicleRequest = new VehicleRequest();
                         vehicleRequest.setId(vehicle.getId());
@@ -500,7 +501,7 @@ public class CompanyResource {
         MasterStatus masterStatus = new MasterStatus();
         try {
 
-            List<Driver> driverList = driverRepository.findDriversByCompanyID(filter.companyID);
+            List<Driver> driverList = driverService.getDriverByCompanyId(filter.companyID);
             List<TripDriver> driverTrips = new ArrayList<>();
             for (Driver d : driverList) {
                 List<Promotiontrip> list = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(d.getEmail());
@@ -516,8 +517,8 @@ public class CompanyResource {
                     tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
                     tripDriver.setWaitingTime(detail.getDuration());
                     tripDriver.setPrice(detail.getFee());
-                    Driver driver = driverRepository.findByEmail(tripDriver.getDriverEmail());
-                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    Driver driver = driverService.getDriverByEmail(tripDriver.getDriverEmail());
+                    Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                     if (vehicle != null) {
                         tripDriver.setVehiclePlate(vehicle.getPlate());
                         tripDriver.setVehicleColor(vehicle.getExteriorColor());
@@ -585,7 +586,7 @@ public class CompanyResource {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try {
-            Company c = companyRepository.findByNote(companyEmail);
+            Company c = companyService.getCompanyByEmail(companyEmail);
 
             CompanyInfo companyInfo = new CompanyInfo();
             companyInfo.setCompanyStatus(c.getStatus());
@@ -671,12 +672,10 @@ public class CompanyResource {
         CarStatus carStatus = new CarStatus();
         try {
             ReportCompany reportCompany = new ReportCompany();
-            List<Driver> driverList = driverRepository.findDriversByCompanyID(companyId);
-            List<Driver> driverListNoVehicle = driverRepository.findDriversByCompanyIDAndCurrentVehicle(companyId,0);
-            List<Vehicle> vehicleList = vehicleRepository.findByCompanyIDOrderByCreatedDateDesc(companyId);
-            List<Vehicle> vehicleNoDriver = vehicleRepository.findByCompanyIDAndStatus(companyId,carStatus.Car_Pending);
-
-
+            List<Driver> driverList = driverService.getDriverByCompanyId(companyId);
+            List<Driver> driverListNoVehicle = driverService.getListDriverNoVehicleByCompanyId(companyId);
+            List<Vehicle> vehicleList = vehicleService.getVehicleByCompanyId(companyId);
+            List<Vehicle> vehicleNoDriver = vehicleService.getVehicleByCompanyIdAndStatus(companyId,carStatus.Car_Pending);
             int Trip=0;
             int TripOpen=0;
             int TripClose=0;
@@ -696,9 +695,6 @@ public class CompanyResource {
                     }
                 }
             }
-
-
-
             reportCompany.setDriverNo(driverList.size());
             reportCompany.setVehicleNo(vehicleList.size());
             reportCompany.setTripOpenNo(TripOpen);
@@ -724,10 +720,9 @@ public class CompanyResource {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try{
-            Company company = companyRepository.findCompanyById(companyInfo.getCompanyId());
+            Company company = companyService.getCompanyByID(companyInfo.getCompanyId());
 
-            commonFuntion commonFuntion = new commonFuntion();
-            if(commonFuntion.IsPhoneExisted(companyInfo.getPhone(),riderRepository,driverRepository,companyRepository)
+            if(commonService.IsPhoneExisted(companyInfo.getPhone())
             &&!company.getPhoneNo().equals(companyInfo.getPhone())){
                 Map<String,Boolean> err = new HashMap<>();
                 err.put("IsExistedPhone",true);
@@ -739,7 +734,7 @@ public class CompanyResource {
             company.setCityID(companyInfo.getCityId());
             company.setPhoneNo(companyInfo.getPhone());
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.setObject(companyRepository.saveAndFlush(company));
+            response.setObject(companyService.SaveCompany(company));
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
             response.setContent(exception.toString());

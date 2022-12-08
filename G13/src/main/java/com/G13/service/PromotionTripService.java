@@ -15,10 +15,26 @@ import java.util.List;
 @Slf4j
 public class PromotionTripService {
     private final PromotiontripRepository promotiontripRepository;
-    private final DriverService driverService;
 
     public List<Promotiontrip> getTop10TripOpen() {
         MasterTripStatus masterTripStatus = new MasterTripStatus();
         return  promotiontripRepository.findTop10ByStatusOrderByCreatedDateDesc(masterTripStatus.TRIP_OPEN);
+    }
+    public List<Promotiontrip> getAllTrip() {
+        return  promotiontripRepository.findAll();
+    }
+    public Promotiontrip getPromotionTripById(String id){
+        return promotiontripRepository.findPromotiontripByIdOrderByCreatedDateDesc(id);
+    }
+
+    public Promotiontrip SavePromotionTrip(Promotiontrip promotiontrip){
+        return promotiontripRepository.saveAndFlush(promotiontrip);
+    }
+
+    public List<Promotiontrip> getAllTripByDriverId(String driverID){
+        return promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(driverID);
+    }
+    public List<Promotiontrip> getAllByStatus(String Status){
+        return promotiontripRepository.findAllByStatus(Status);
     }
 }

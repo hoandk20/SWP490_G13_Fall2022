@@ -18,4 +18,21 @@ public class RiderService {
     public Rider getRiderByEmail(String email) {
      return   riderRepository.findByEmail(email);
     }
+    public boolean SaveRider(Rider rider){
+
+        if(rider.getEmail()==null||rider.getEmail().equals("")){
+            return false;
+        }
+        if(rider.getFirstName()==null||rider.getFirstName().equals("")){
+            return false;
+        }
+        if(rider.getLastName()==null||rider.getLastName().equals("")){
+            return false;
+        }
+        if(rider.getMobileNo()==null||rider.getMobileNo().equals("")){
+            return false;
+        }
+        riderRepository.save(rider);
+        return true;
+    }
 }

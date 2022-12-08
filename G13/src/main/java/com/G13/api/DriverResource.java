@@ -8,6 +8,7 @@ import com.G13.master.MasterTripStatus;
 import com.G13.master.UploadFileMaster;
 import com.G13.model.*;
 import com.G13.repo.*;
+import com.G13.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,12 @@ import java.util.*;
 @CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RequiredArgsConstructor
 public class DriverResource {
-    private final DriverRepository driverRepository;
-    private final CompanyRepository companyRepository;
-    private final VehicleRepository vehicleRepository;
-    private final DocumentRepository documentRepository;
-    private final PromotiontripRepository promotiontripRepository;
-    private final TripRepository tripRepository;
-    private final RiderRepository riderRepository;
+    private final DriverService driverService;
+    private final CompanyService companyService;
+    private final VehicleService vehicleService;
+    private final DocumentService documentService;
+    private final PromotionTripService promotionTripService;
+    private final CommonService commonService;
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle (@RequestBody VehicleRequest vr) {
         Date date = new Date();
@@ -49,11 +49,11 @@ public class DriverResource {
             vehicle.setCarTypeID(vr.getTypeId());
             vehicle.setCreatedBy(vr.getProducer());
             vehicle.setStatus(carStatus.Car_Using);
-            Vehicle vehicleSave = vehicleRepository.saveAndFlush(vehicle);
-            Driver driver  = driverRepository.findByEmail(vr.getDriverEmail());
+            Vehicle vehicleSave = vehicleService.SaveVehicle(vehicle);
+            Driver driver  = driverService.getDriverByEmail(vr.getDriverEmail());
             driver.setCurrentVehicle(vehicleSave.getId());
             driver.setDeviceType("N/A");
-            driverRepository.save(driver);
+            driverService.SaveDriver(driver);
             response.setObject(vehicleSave);
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
@@ -69,7 +69,7 @@ public class DriverResource {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
             try {
-            Driver driver = driverRepository.findByEmailOrderByCreatedDateDesc(driverEmail);
+            Driver driver = driverService.getDriverByEmail(driverEmail);
                 RegisterDriverCompany r = new RegisterDriverCompany();
                 r.setAddress(driver.getAddressID());
                 r.setEmail(driver.getEmail());
@@ -88,7 +88,7 @@ public class DriverResource {
                 r.setCountry(driver.getCountryCode());
                 try {
                     int companyId = driver.getCompanyID();
-                    Company company = companyRepository.findCompanyById(companyId);
+                    Company company = companyService.getCompanyByID(companyId);
                     CompanyInfo companyInfo = new CompanyInfo();
                     companyInfo.setCompanyAddress(company.getAddressID());
                     companyInfo.setCompanyName(company.getName());
@@ -99,8 +99,8 @@ public class DriverResource {
                     System.out.println(e.toString());
                 }
                 UploadFileMaster uploadFileMaster = new UploadFileMaster();
-                Document document1 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Bang_lai_xe);
+                Document document1 = documentService
+                        .GetDocumentByCreateByAndFileName(driver.getEmail(), uploadFileMaster.Bang_lai_xe);
                 if (document1 != null) {
                     DocumentRequest documentRequest1 = new DocumentRequest();
                     documentRequest1.setExpired_month(document1.getExpiredMonth());
@@ -111,8 +111,8 @@ public class DriverResource {
                     documentRequest1.setCreateBy(document1.getCreatedBy());
                     r.setBLX(documentRequest1);
                 }
-                Document document2 = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
+                Document document2 = documentService
+                        .GetDocumentByCreateByAndFileName(driver.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
                 if (document2 != null) {
                     DocumentRequest documentRequest2 = new DocumentRequest();
                     documentRequest2.setExpired_month(document2.getExpiredMonth());
@@ -125,7 +125,7 @@ public class DriverResource {
                 }
 
                 try {
-                    Vehicle vehicle = vehicleRepository.findVehicleById(driver.getCurrentVehicle());
+                    Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
                     if (vehicle != null) {
                         VehicleRequest vehicleRequest = new VehicleRequest();
                         vehicleRequest.setId(vehicle.getId());
@@ -138,8 +138,8 @@ public class DriverResource {
                         vehicleRequest.setPlatState(vehicle.getLisencePlatState());
                         vehicleRequest.setPlateCountry(vehicle.getLisencePlatCountry());
                         vehicleRequest.setTypeId(vehicle.getCarTypeID());
-                        Document document3 = documentRepository
-                                .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Bao_Hiem);
+                        Document document3 = documentService
+                                .GetDocumentByCreateByAndFileName(driver.getEmail(), uploadFileMaster.Chung_Nhan_Bao_Hiem);
                         if (document3 != null) {
                             DocumentRequest documentRequest = new DocumentRequest();
                             documentRequest.setExpired_month(document3.getExpiredMonth());
@@ -150,8 +150,8 @@ public class DriverResource {
                             documentRequest.setCreateBy(document3.getCreatedBy());
                             vehicleRequest.setCNBH(documentRequest);
                         }
-                        Document document4 = documentRepository
-                                .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(), uploadFileMaster.Chung_Nhan_Dang_Kiem);
+                        Document document4 = documentService
+                                .GetDocumentByCreateByAndFileName(driver.getEmail(), uploadFileMaster.Chung_Nhan_Dang_Kiem);
                         if (document4 != null) {
                             DocumentRequest documentRequest = new DocumentRequest();
                             documentRequest.setExpired_month(document4.getExpiredMonth());
@@ -168,8 +168,8 @@ public class DriverResource {
                     System.out.println(e.toString());
                 }
 
-                Document document = documentRepository
-                        .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(driver.getEmail(),uploadFileMaster.avatar);
+                Document document = documentService
+                        .GetDocumentByCreateByAndFileName(driver.getEmail(),uploadFileMaster.avatar);
                 if(document!=null){
                     FileManage fileManage = new FileManage();
                     r.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
@@ -198,7 +198,7 @@ public class DriverResource {
             int TripClose=0;
             int TripCancel=0;
 
-                List<Promotiontrip> promotiontripList = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(driverEmail);
+                List<Promotiontrip> promotiontripList = promotionTripService.getAllTripByDriverId(driverEmail);
                 for (Promotiontrip p:promotiontripList) {
                     Trip++;
                     if(p.getStatus().equals(masterTripStatus.TRIP_OPEN)){
@@ -229,13 +229,12 @@ public class DriverResource {
     }
     @PostMapping("/changeinfo")
     public ResponseEntity<?> changeDriver(@RequestBody UserInfo userInfo){
-        Driver driver = driverRepository.findByEmail(userInfo.getUsername());
+        Driver driver = driverService.getDriverByEmail(userInfo.getUsername());
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try{
             if(driver!=null){
-                commonFuntion commonFuntion = new commonFuntion();
-                if(commonFuntion.IsPhoneExisted(userInfo.getPhone(),riderRepository,driverRepository,companyRepository)
+                if(commonService.IsPhoneExisted(userInfo.getPhone())
                         &&!driver.getMobileNo().equals(userInfo.getPhone())){
                     Map<String,Boolean> err = new HashMap<>();
                     err.put("IsExistedPhone",true);
@@ -250,7 +249,7 @@ public class DriverResource {
                 driver.setCountryCode(userInfo.getCountry());
                 driver.setBranchCityId(userInfo.getCityId());
                 response.setStatus(masterStatus.SUCCESSFULL);
-                response.setObject(driverRepository.save(driver));
+                response.setObject(driverService.SaveDriver(driver));
                 return ResponseEntity.ok().body(response);
             }else{
                 response.setContent("driver not existed");

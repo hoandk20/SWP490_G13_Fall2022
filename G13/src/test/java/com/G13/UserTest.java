@@ -14,13 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.event.annotation.PrepareTestInstance;
 
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -72,9 +68,7 @@ public class UserTest {
         assertThat(userService.changePassword(userChangePassword)).isEqualTo(false);
     }
     @Test
-    void testNewPasswordLong(){
-
-
+    void testChangePasswordNewPasswordLong(){
         UserChangePassword userChangePassword = new UserChangePassword();
         //new password is too long
         userChangePassword.setEmail("congtyFPT5@qa.team");
@@ -84,7 +78,7 @@ public class UserTest {
         assertThat(userService.changePassword(userChangePassword)).isEqualTo(false);
     }
     @Test
-    void testRightPassword(){
+    void testChangePasswordRightPassword(){
         UserChangePassword userChangePassword = new UserChangePassword();
         //new password is blank
         userChangePassword.setEmail("congtyFPT5@qa.team");
@@ -93,7 +87,7 @@ public class UserTest {
         assertThat(userService.changePassword(userChangePassword)).isEqualTo(true);
     }
     @Test
-    void testRightPasswordButNewPasswordBlank(){
+    void testChangePasswordButNewPasswordBlank(){
 
         UserChangePassword userChangePassword = new UserChangePassword();
         //new password is blank
@@ -114,8 +108,16 @@ public class UserTest {
         assertThat(userService.changePassword(userChangePassword)).isEqualTo(false);
     }
     @Test
+    void testOldPassBlank(){
+        UserChangePassword userChangePassword = new UserChangePassword();
+        //new password is blank
+        userChangePassword.setEmail("congtyFPT5@qa.team");
+        userChangePassword.setNewPassword("123123");
+        userChangePassword.setOldPassword("");
+        assertThat(userService.changePassword(userChangePassword)).isEqualTo(false);
+    }
+    @Test
     void testOldPassAndNewPassBlank(){
-
         UserChangePassword userChangePassword = new UserChangePassword();
         //new password is blank
         userChangePassword.setEmail("congtyFPT5@qa.team");
@@ -153,6 +155,16 @@ public class UserTest {
     @Test
     void testCheckEmailNotExisted(){
         boolean ActualStatus = userService.IsEmailExisted("congtyzzqa.team");
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testCheckEmailExistedWithInvalidEmail(){
+        boolean ActualStatus = userService.IsEmailExisted("congtyzzqa");
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+    @Test
+    void testCheckEmailExistedWithBlankEmail(){
+        boolean ActualStatus = userService.IsEmailExisted("congtyzzqa");
         assertThat(ActualStatus).isEqualTo(false);
     }
 }
