@@ -10,6 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,8 +31,11 @@ public class CompanyTest {
         Company company = new Company();
         company.setId(1);
         company.setNote("congty1@gmail.com");
+        List<Company> list = new ArrayList<>();
+        list.add(company);
         when(companyRepository.findByNote("congty1@gmail.com")).thenReturn(company);
         when(companyRepository.findCompanyById(1)).thenReturn(company);
+        when(companyRepository.findAll()).thenReturn(list);
     }
 
    //test get company by email
@@ -63,5 +69,13 @@ public class CompanyTest {
         int companyId = 99;
         Company ActuaCompany = companyService.getCompanyByID(companyId);
         assertThat(ActuaCompany).isEqualTo(null);
+    }
+    //new
+    //test get all company
+    @Test
+    void testGetAllCompany(){
+        int ExpectSize=1;
+        List<Company> list = companyService.getAllCompany();
+        assertThat(list.size()).isEqualTo(ExpectSize);
     }
 }

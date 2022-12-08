@@ -39,6 +39,7 @@ public class VehicleTest {
         when(vehicleRepository.findFirstByCompanyIDOrderByCreatedDateDesc(1)).thenReturn(vehicle);
         when(vehicleRepository.saveAndFlush(vehicle)).thenReturn(vehicle);
         when(vehicleRepository.findByCompanyIDAndStatus(1,"PE")).thenReturn(Actuallist);
+
     }
     //test get vehicle by id
     @Test
@@ -103,4 +104,22 @@ public class VehicleTest {
         List<Vehicle>Actuallist = vehicleService.getVehicleByCompanyIdAndStatus(1,"US");
         assertThat(Actuallist.size()).isEqualTo(0);
     }
+    //new
+    //test delete vehicle
+    @Test
+    void testDeleteVehicleSuccess(){
+        Vehicle vehicle = new Vehicle();
+        vehicle.setId(1);
+        vehicle.setCompanyID(1);
+        boolean ActualStatus = vehicleService.DeleteVehicle(vehicle);
+        assertThat(ActualStatus).isEqualTo(true);
+    }
+    @Test
+    void testDeleteVehicleWithNoVehicleID(){
+        Vehicle vehicle = new Vehicle();
+        vehicle.setCompanyID(1);
+        boolean ActualStatus = vehicleService.DeleteVehicle(vehicle);
+        assertThat(ActualStatus).isEqualTo(false);
+    }
+
 }

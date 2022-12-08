@@ -35,7 +35,7 @@ public class VehicleService {
         return vehicleRepository.findByCompanyIDAndStatus(id,status);
     }
     public boolean DeleteVehicle(Vehicle vehicle){
-        if(vehicle.getId()==null){
+        if(vehicle.getId()==null||vehicle.getId()==0){
             return false;
         }
          vehicleRepository.delete(vehicle);return true;

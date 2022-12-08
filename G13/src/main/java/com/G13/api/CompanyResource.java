@@ -23,11 +23,11 @@ public class CompanyResource {
     private final VehicleService vehicleService;
     private final DriverService driverService;
     private final UserService userService;
-    private final UserRoleRepository userRoleRepository;
-    private final DocumentRepository documentRepository;
-    private final VehicledocumentRepository vehicledocumentRepository;
-    private final PromotiontripRepository promotiontripRepository;
-    private final TripRepository tripRepository;
+    private final UserRoleService userRoleService;
+    private final DocumentService documentService;
+    private final VehicleDocumentService vehicleDocumentService;
+    private final PromotionTripService promotionTripService;
+    private final TripService tripService;
     private final CommonService commonService;
 
     @PostMapping("/addVehicle")
@@ -153,12 +153,12 @@ public class CompanyResource {
                 boolean isHasCNBH = false;
                 boolean isHasCNDK = false;
                 List<Vehicledocument> vehicledocuments =
-                        vehicledocumentRepository.findVehicledocumentsByVehicleidOrderByIdDesc(vehicleService.getVehicleByID(vehicle.getId()));
+                        vehicleDocumentService.getVehicleDocumentByVehicle(vehicleService.getVehicleByID(vehicle.getId()));
                 for (Vehicledocument vehicledocument : vehicledocuments) {
                     DocumentRequest doc = new DocumentRequest();
                     FileManage fileManage = new FileManage();
-                    Document document = documentRepository
-                            .findDocumentById(vehicledocument.getDocumentid().getId());
+                    Document document = documentService
+                            .GetDocById(vehicledocument.getDocumentid().getId());
                     doc.setExpired_month(document.getExpiredMonth());
                     doc.setExpired_year(document.getExpiredYear());
                     doc.setFile_name(document.getFileName());
@@ -199,8 +199,8 @@ public class CompanyResource {
             int id = Integer.parseInt(docId);
             DocumentRequest doc = new DocumentRequest();
             FileManage fileManage = new FileManage();
-            Document document = documentRepository
-                    .findDocumentById(id);
+            Document document = documentService
+                    .GetDocById(id);
             doc.setExpired_month(document.getExpiredMonth());
             doc.setExpired_year(document.getExpiredYear());
             doc.setFile_name(document.getFileName());
@@ -284,10 +284,7 @@ public class CompanyResource {
             u.setEmail(rd.getEmail());
             u.setPassword(rd.getPassword());
             User usersave = userService.saveUser(u);
-            UserRole userRole = new UserRole();
-            userRole.setUserId(new Long(usersave.getId()));
-            userRole.setRoleId(new Long(1));
-            userRoleRepository.save(userRole);
+            userRoleService.SaveUserRole(usersave.getId(),1);
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(driver);
             return ResponseEntity.ok().body(response);
@@ -504,7 +501,7 @@ public class CompanyResource {
             List<Driver> driverList = driverService.getDriverByCompanyId(filter.companyID);
             List<TripDriver> driverTrips = new ArrayList<>();
             for (Driver d : driverList) {
-                List<Promotiontrip> list = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(d.getEmail());
+                List<Promotiontrip> list = promotionTripService.getAllTripByDriverId(d.getEmail());
                 for (Promotiontrip detail : list) {
                     TripDriver tripDriver = new TripDriver();
                     tripDriver.setDriverEmail(detail.getDriverID());
@@ -560,7 +557,7 @@ public class CompanyResource {
                 }
             }
             if (filter.passengerEmail != null && !filter.passengerEmail.equals("")) {
-                List<Trip> listRegister = tripRepository.findAllByTripCodeOrderByCreatedDateDesc(t.getTripID());
+                List<Trip> listRegister = tripService.getAllByTripCode(t.getTripID());
                 boolean isHasPassenger = false;
                 for (Trip trip : listRegister) {
                     if (trip.getRiderID().equals(filter.passengerEmail)) {
@@ -596,8 +593,8 @@ public class CompanyResource {
             companyInfo.setPhone(c.getPhoneNo());
             companyInfo.setCompanyName(c.getName());
             UploadFileMaster uploadFileMaster = new UploadFileMaster();
-            Document document1 = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Bang_lai_xe);
+            Document document1 = documentService
+                    .GetDocumentByCreateByAndFileName(companyInfo.getEmail(), uploadFileMaster.Bang_lai_xe);
             if (document1 != null) {
                 DocumentRequest documentRequest = new DocumentRequest();
                 documentRequest.setExpired_month(document1.getExpiredMonth());
@@ -608,8 +605,8 @@ public class CompanyResource {
                 documentRequest.setCreateBy(document1.getCreatedBy());
                 companyInfo.setBLX(documentRequest);
             }
-            Document document2 = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
+            Document document2 = documentService
+                    .GetDocumentByCreateByAndFileName(companyInfo.getEmail(), uploadFileMaster.Chung_Nhan_Kinh_nghiem);
             if (document2 != null) {
                 DocumentRequest documentRequest = new DocumentRequest();
                 documentRequest.setExpired_month(document2.getExpiredMonth());
@@ -620,8 +617,8 @@ public class CompanyResource {
                 documentRequest.setCreateBy(document2.getCreatedBy());
                 companyInfo.setCNKN(documentRequest);
             }
-            Document document3 = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Kinh_Doanh);
+            Document document3 = documentService
+                    .GetDocumentByCreateByAndFileName(companyInfo.getEmail(), uploadFileMaster.GP_Kinh_Doanh);
             if (document3 != null) {
                 DocumentRequest documentRequest = new DocumentRequest();
                 documentRequest.setExpired_month(document3.getExpiredMonth());
@@ -632,8 +629,8 @@ public class CompanyResource {
                 documentRequest.setCreateBy(document3.getCreatedBy());
                 companyInfo.setGPKD(documentRequest);
             }
-            Document document4 = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(), uploadFileMaster.GP_Hoat_Dong);
+            Document document4 = documentService
+                    .GetDocumentByCreateByAndFileName(companyInfo.getEmail(), uploadFileMaster.GP_Hoat_Dong);
             if (document3 != null) {
                 DocumentRequest documentRequest = new DocumentRequest();
                 documentRequest.setExpired_month(document4.getExpiredMonth());
@@ -644,8 +641,8 @@ public class CompanyResource {
                 documentRequest.setCreateBy(document4.getCreatedBy());
                 companyInfo.setGPHD(documentRequest);
             }
-            Document document = documentRepository
-                    .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(companyInfo.getEmail(),uploadFileMaster.avatar);
+            Document document = documentService
+                    .GetDocumentByCreateByAndFileName(companyInfo.getEmail(),uploadFileMaster.avatar);
 
             if(document!=null){
                 FileManage fileManage = new FileManage();
@@ -681,7 +678,7 @@ public class CompanyResource {
             int TripClose=0;
             int TripCancel=0;
             for (Driver d : driverList) {
-                List<Promotiontrip> promotiontripList = promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(d.getId());
+                List<Promotiontrip> promotiontripList = promotionTripService.getAllTripByDriverId(d.getId());
                 for (Promotiontrip p:promotiontripList) {
                     Trip++;
                     if(p.getStatus().equals(masterTripStatus.TRIP_OPEN)){
