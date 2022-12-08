@@ -41,7 +41,7 @@ const ModalRePassword = () => {
             <Button type="primary" onClick={showModal}>
                 Thay đổi mật khẩu
             </Button>
-            <Modal title="Thay đổi mật khẩu" open={isModalOpen} onCancel={handleCancel} onOk={handleOk}>
+            <Modal title="Thay đổi mật khẩu" open={isModalOpen} onCancel={handleCancel} onOk={handleOk} >
                 <Form
                     form={form}
                     labelCol={{

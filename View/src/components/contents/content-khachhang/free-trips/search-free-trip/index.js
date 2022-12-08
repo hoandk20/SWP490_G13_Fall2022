@@ -258,7 +258,7 @@ const SerachFreeTripForPassenger = () => {
                                 <Autocomplete
                                     onPlaceChanged={onPlaceChanged}
                                 >
-                                    <Input type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ width: "400px", marginBottom: "20px" }}
+                                    <Input type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ borderColor:"blue", borderRadius:"5px",height:"37px",width: "400px" }}
                                     />
                                 </Autocomplete>
                                 </Form.Item>
@@ -271,7 +271,7 @@ const SerachFreeTripForPassenger = () => {
                                         type='text'
                                         placeholder='Điểm kết thúc'
                                         ref={destiantionRef}
-                                        style={{ width: "400px", marginBottom: "27px" }}
+                                        style={{ borderColor:"red", borderRadius:"5px",height:"37px",width: "400px" ,marginBottom:"20px"}}
                                     />
                                 </Autocomplete>
 
@@ -311,8 +311,8 @@ const SerachFreeTripForPassenger = () => {
                                 </Form.Item>
                             </Form>
                         </Col>
-                        <Col sm={16} md={8}>
-                            <div style={{ marginLeft: "60px" }}>
+                        <Col sm={32} md={16}>
+                            <div style={{ marginLeft: "20px" }} >
                                 <Flex
                                     position='relative'
                                     flexDirection='column'
@@ -320,7 +320,7 @@ const SerachFreeTripForPassenger = () => {
                                     h='100vh'
                                     w='100vw'
                                 >
-                                    <Box position='absolute' left={0} top={0} h='60%' w='50%'>
+                                    <Box position='absolute' left={0} top={0} h='80%' w='52%'>
                                         {/* Google Map Box */}
                                         <GoogleMap
                                             center={center}

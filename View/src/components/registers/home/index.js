@@ -7,7 +7,8 @@ import { useDispatch } from 'react-redux';
 import { deleteUser } from '../../../redux/userSlice';
 import { useEffect } from 'react';
 import { getAllCity } from '../../../redux/apiRequest';
-
+import ImagePassenger from '../../../assets/image-app/passenger-register.jpg';
+import ImageDriver from '../../../assets/image-app/driver-register.jpg';
 
 const { Meta } = Card;
 const RegisterHome = () => {
@@ -29,40 +30,40 @@ const RegisterHome = () => {
         <div className='container'>
             <div className='container-register'>
                 <Row>
-                    <Col sm={16} md={8}>
+                    <Col sm={24} md={12}>
                         <div className='cards'>
                             <Card
                                 hoverable
                                 style={{
-                                    width: 340,
+                                    width: 370,
                                 }}
-                                cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                                cover={<img alt="example" src={ImagePassenger} />}
                             >
                                 <Meta title="HÀNH KHÁCH" description="Tìm các chuyến đi miến phí, quản lý tùy chọn phương thức thanh toán, xem lại lịch sử chuyến đi và thực hiện nhiều hoạt động khác." />
                                 <div>
-                                    <Button className='btn-regiter-home' type="primary"  onClick={onClickPassenger} >Register Passenger</Button>
+                                    <Button className='btn-regiter-home' type="primary"  onClick={onClickPassenger} >Đăng ký cho hành khách</Button>
                                 </div>
                             </Card>
                         </div>
                     </Col>
-                    <Col sm={16} md={8}>
+                    <Col sm={24} md={12}>
                         <div className='cards'>
                             <Card
                                 hoverable
                                 style={{
-                                    width: 340,
+                                    width: 370,
                                 }}
-                                cover={<img alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                                cover={<img style={{height:"460px"}} alt="example" src={ImageDriver} />}
                             >
                                 <Meta title="TÀI XẾ" description="Quản lý các hoạt động, tìm thông tin bạn cần để theo dõi thành công trong hành trình." />
                                 <br/>
                                 <div>
-                                    <Button className='btn-regiter-home' type="primary"  onClick={onClickDriver} >Register Driver</Button>
+                                    <Button className='btn-regiter-home' type="primary"  onClick={onClickDriver} >Đăng ký cho tài xế</Button>
                                 </div>
                             </Card>
                         </div>
                     </Col>
-                    <Col sm={16} md={8}>
+                    {/* <Col sm={16} md={8}>
                         <div className='cards'>
                             <Card
                                 hoverable
@@ -78,7 +79,7 @@ const RegisterHome = () => {
                                 </div>
                             </Card>
                         </div>
-                    </Col>
+                    </Col> */}
                 </Row>
             </div>
         </div>

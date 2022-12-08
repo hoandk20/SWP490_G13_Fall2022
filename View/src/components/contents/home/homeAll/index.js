@@ -1,21 +1,15 @@
 
-import { Table } from 'antd';
+import { Button, Col, Row, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import CarouselHome from '../../../commons/carousel';
 import { EyeOutlined } from '@ant-design/icons';
 import "./homeAll.css"
 import axios from 'axios';
-import { getAllCity } from '../../../../redux/apiRequest';
+import { getAllCity, getListFreeTrip } from '../../../../redux/apiRequest';
 import { useDispatch } from 'react-redux';
 import {
-    Box,
-    ButtonGroup,
-    Flex,
-    HStack,
-    IconButton,
-    SkeletonText,
-    Text,
+
     Input
 } from '@chakra-ui/react'
 import { FaLocationArrow, FaTimes } from 'react-icons/fa'
@@ -39,9 +33,8 @@ const center = { lat: 21.013255, lng: 105.52597 }
 
 const HomeAll = () => {
     const navigate = useNavigate();
-    const dispatch =useDispatch();
+    const dispatch = useDispatch();
     const [allTrip, setAllTrip] = useState();
-
     const getTop10Trips = async () => {
         try {
 
@@ -55,7 +48,7 @@ const HomeAll = () => {
     }
 
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: 'AIzaSyCyo0qz6IJV5L6nnLBrAQpMT7HoWybKtsM',
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
 
@@ -96,9 +89,41 @@ const HomeAll = () => {
         else if (item.status === "CANC") {
             return { ...item, item, key: item.tripID, dateStart: dateFormat(item.timeStart), status: "Đã bị hủy" }
         }
+        else if (item.status === "RUN") {
+            return { ...item, item, key: item.tripID, dateStart: dateFormat(item.timeStart), status: "Đang chạy" }
+        }
 
     })
+    const onFinish = async() => {
+        // calculateRoute();
+        const trip = {
+            from: originRef.current.value,
+            to: destiantionRef.current.value,
+            registerSeat: "",
+            timeStart: "",
+            dateStart: "",
+            listPolyline: listPolyline,
+            // price:values.price,
+        }
+        // getListFreeTrip(trip, dispatch);
+        try {
+        
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/search`, {
+              listPolyline: trip.listPolyline,
+              status: "OPEN",
+              registerSeat: trip.registerSeat,
+              dateStart: trip.dateStart,
+              timeStart: trip.timeStart
+            },
+              {
+                headers: { 'Content-Type': 'application/json' }
+              })
+              setAllTrip(res.data.object);
+          } catch (error) {
+           
+          }
 
+    }
     useEffect(() => {
         getTop10Trips();
         getAllCity(dispatch);
@@ -238,28 +263,45 @@ const HomeAll = () => {
                         </div>
                         <div style={{ margin: "20px 10%" }}>
                             <div className='home-table-header'>
-                                <span className='text-home'>CHUYẾN ĐI MIỄN PHÍ</span>
-                                <span>
-                                <Autocomplete
-                                    onPlaceChanged={onPlaceChanged}
-                                >
-                                    <Input type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ width: "400px", marginBottom: "20px" }}
-                                    />
-                                </Autocomplete>
-                                </span>
-                                <span>
-                                    
-                                <Autocomplete
-                                    onPlaceChanged={onPlaceChanged}
-                                >
-                                    <Input
-                                        type='text'
-                                        placeholder='Điểm kết thúc'
-                                        ref={destiantionRef}
-                                        style={{ width: "400px", marginBottom: "27px" }}
-                                    />
-                                </Autocomplete>
-                                </span>
+                                <Row>
+                                    <Col span={7.8}>
+                                        <span className='text-home'>CHUYẾN ĐI MIỄN PHÍ</span>
+                                    </Col>
+                                    <Col span={7}>
+
+                                        <span style={{ margin: "20px 10px" }}>
+                                            <Autocomplete
+                                                onPlaceChanged={onPlaceChanged}
+                                            >
+                                                <Input focusBorderColor='lime' type='text' placeholder='Điểm bắt đầu' ref={originRef} 
+                                                style={{ borderColor:"blue", borderRadius:"5px",height:"40px",width: "320px" }}
+                                                />
+                                            </Autocomplete>
+                                        </span>
+
+                                    </Col>
+                                    <Col span={7}>
+                                        <span style={{ margin: "20px 10px" }}>
+                                            <Autocomplete
+                                                onPlaceChanged={onPlaceChanged}
+                                            >
+                                                <Input
+                                                    type='text'
+                                                    placeholder='Điểm kết thúc'
+                                                    ref={destiantionRef}
+                                                    style={{ borderColor:"red", borderRadius:"5px",height:"40px",width: "320px"}}
+                                                />
+                                            </Autocomplete>
+                                        </span>
+                                    </Col>
+                                    <Col span={2}>
+                                        {/* <Button style={{marginTop:"25px"}}>Tìm kiếm</Button> */}
+                                        <button onClick={onFinish} class="btn-home" role="button">Tìm kiếm</button>
+                                    </Col>
+                                </Row>
+
+
+
                             </div>
                             <div className='home-content-table'>
                                 <Table columns={columns} dataSource={trips} size="middle" />

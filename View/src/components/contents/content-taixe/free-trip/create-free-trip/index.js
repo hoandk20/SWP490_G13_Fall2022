@@ -122,7 +122,7 @@ const CreateFreeTripForDriver = () => {
     }
 
     const feeTrip = () =>{
-        console.log("distance",distance);
+        console.log("distance",distance/1000);
         const a=0
         if(distance<31){
             if(distance<1){
@@ -137,18 +137,27 @@ const CreateFreeTripForDriver = () => {
     }
 
     const onFinish = (values) => {
-        const trip = {
-            driverEmail: user.email,
-            from: originRef.current.value,
-            to: destiantionRef.current.value,
-            seat: values.seat,
-            timeStart: date,
-            waitingTime: values.waitingTime,
-            price: values.price,
-            listPolyline: listPolyline,
+        if(fee===""){
+            toast.error("Vui lòng nhập điểm bắt đầu và điểm kết thúc")
+        }else{
+            if(values.price>fee){
+                toast.error("Cước không được vượt quá giá cước tối đa")
+            }else{
+                const trip = {
+                    driverEmail: user.email,
+                    from: originRef.current.value,
+                    to: destiantionRef.current.value,
+                    seat: values.seat,
+                    timeStart: date,
+                    waitingTime: values.waitingTime,
+                    price: values.price,
+                    listPolyline: listPolyline,
+                }
+                CreateFreeTrip(trip, dispatch, navigate, toast);
+            }
         }
-        console.log(trip);
-        CreateFreeTrip(trip, dispatch, navigate, toast);
+   
+     
     }
 
     async function calculateRoute() {
@@ -168,19 +177,31 @@ const CreateFreeTripForDriver = () => {
             travelMode: google.maps.TravelMode.DRIVING,
         })
         setDirectionsResponse(results)
-        setDistance(results.routes[0].legs[0].distance.text)
-        setDuration(results.routes[0].legs[0].duration.text)
+        setDistance(results.routes[0].legs[0].distance.value)
+        setDuration(results.routes[0].legs[0].duration.value)
 
         for (let index = 0; index < results.routes[0].overview_path.length; index++) {
             const e = results.routes[0].overview_path[index];
             polyline += e.lat() + ',' + e.lng() + ';';
         }
         setListPolyline(polyline);
+        const a=results.routes[0].legs[0].distance.value;
+     
+        if(a/1000<31){
+            if(a/1000<1){
+                setFee(9000);
+            }else{
+                setFee(9000+(a/1000-1)*11000)
+            }
+        }else{
+            setFee(9000+11000*29+(a/1000-31)*9500);
+        } 
 
-        feeTrip();
-        console.log("fee",fee);
+      
+        // feeTrip();
+        // console.log("fee",fee);
     }
-
+    console.log(fee);
     // const changeTo = () => {
     //     calculateRoute();
     // }
@@ -204,7 +225,6 @@ const CreateFreeTripForDriver = () => {
     const onPlaceChanged = () => {
         // eslint-disable-next-line no-undef
         const geocoder = new google.maps.Geocoder();
-        const address = 'Hồ Gươm, Phố Lê Thái Tổ, Hàng Trống, Hoàn Kiếm, Hà Nội, Việt Nam';
 
         if (originRef.current.value === "" && destiantionRef.current.value === "") {
             return
@@ -270,28 +290,18 @@ const CreateFreeTripForDriver = () => {
                             >
                                 <Form.Item
                                     name="origin"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Điểm bắt đầu không được để trống',
-                                        },
-                                    ]}
+
                                 >
                                     <Autocomplete
                                         onLoad={onLoad}
                                         onPlaceChanged={onPlaceChanged}
                                     >
-                                        <Input className='abc' type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ width: "400px", marginBottom: "20px" }} />
+                                        <Input className='abc' type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ borderColor:"blue", borderRadius:"5px",height:"37px",width: "400px" }} />
                                     </Autocomplete>
                                 </Form.Item>
                                 <Form.Item
                                     name="destination"
-                                    rules={[
-                                        {
-                                            required: true,
-                                            message: 'Điểm kết thúc không được để trống',
-                                        },
-                                    ]}
+ 
                                 >
                                     <Autocomplete
                                         onPlaceChanged={onPlaceChanged}
@@ -301,7 +311,7 @@ const CreateFreeTripForDriver = () => {
                                             type='text'
                                             placeholder='Điểm kết thúc'
                                             ref={destiantionRef}
-                                            style={{ width: "400px" }}
+                                            style={{ borderColor:"red", borderRadius:"5px",height:"37px",width: "400px" }}
                                         />
                                     </Autocomplete>
                                 </Form.Item>
@@ -342,21 +352,34 @@ const CreateFreeTripForDriver = () => {
                                         }}
                                         onChange={onChange}
                                     /> ± */}
-                                    <DatePicker placeholder='Chọn ngày' onChange={onChange}
+                                    <DatePicker placeholder='Chọn ngày' disabledDate={(current) => current.isBefore(moment().subtract(1,"day"))} onChange={onChange}
                                         renderExtraFooter={() => ''} showTime />
                                 </Form.Item>
                                 <Form.Item
-                                    style={{ display: "inline-block", width: "60px" }}
+                                    style={{ display: "inline-block", width: "20px" }}
                                     name="waitingTime"
                                     rules={[
                                         {
                                             required: true,
-                                            message: 'không được để trống',
+                                            message: 'Thời gian chờ không được để trống',
                                         }
                                     ]}
                                 >
-                                    <Input placeholder='Thời gian chờ' />
+                                    <Input    style={{ borderRadius:"5px",height:"34px" }} placeholder='Thời gian chờ (Phút)' />
+                                    {/* <span style={{ display: "inline-block",marginLeft:"10px"}} >Phút</span> */}
                                 </Form.Item>
+                                {/* <Form.Item
+                                name="abc" 
+                                initialValue={fee}
+                                    label="Cước tối đa"
+                                >
+                                    <Input disabled/>
+                                </Form.Item> */}
+                               <div style={{marginBottom:"20px"}}>
+                                <span style={{marginRight:"10px"}}>Cước tối đa:</span>
+                               <Input value={Math.round(fee/1000)*1000 +" VNĐ"} style={{ borderRadius:"5px",height:"34px" }}  disabled/>
+                               {/* <span style={{marginLeft:"10px"}} >VNĐ</span> */}
+                               </div>
                                 <Form.Item
                                     name="price"
                                     rules={[
@@ -366,9 +389,9 @@ const CreateFreeTripForDriver = () => {
                                         }
                                     ]}
                                     label="Cước"
-                                // style={{ width: "200px" }}
                                 >
-                                    <Input />
+                                    <Input style={{ borderRadius:"5px",height:"34px" }}  placeholder='VNĐ'/>
+                                    {/* <span style={{marginLeft:"10px"}} >VNĐ</span> */}
                                 </Form.Item>
 
                                 <Form.Item>
@@ -379,8 +402,8 @@ const CreateFreeTripForDriver = () => {
 
                             </Form>
                         </Col>
-                        <Col sm={16} md={8}>
-                            <div style={{ marginLeft: "60px" }}>
+                        <Col sm={32} md={16}>
+                            <div style={{ marginLeft: "20px" }}>
                                 <Flex
                                     position='relative'
                                     flexDirection='column'
@@ -388,7 +411,7 @@ const CreateFreeTripForDriver = () => {
                                     h='100vh'
                                     w='100vw'
                                 >
-                                    <Box position='absolute' left={0} top={0} h='70%' w='50%'>
+                                    <Box position='absolute' left={0} top={0} h='70%' w='52%'>
                                         {/* Google Map Box */}
                                         <GoogleMap
                                             center={center}

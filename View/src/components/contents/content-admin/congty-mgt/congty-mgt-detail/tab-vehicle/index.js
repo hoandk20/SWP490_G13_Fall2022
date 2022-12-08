@@ -81,25 +81,25 @@ const VehicleOfCompany = (props) => {
             },
         },
 
-        {
-            title: '',
-            dataIndex: '',
-            key: 'y',
-            render: (text, record, index) => {
-                return <div>
-                    <Popconfirm
-                        title="Bạn có muốn xóa phương tiện này?"
-                        onConfirm={() => handleDelete(record.key)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <DeleteOutlined />
-                    </Popconfirm>
-                </div>
+        // {
+        //     title: '',
+        //     dataIndex: '',
+        //     key: 'y',
+        //     render: (text, record, index) => {
+        //         return <div>
+        //             <Popconfirm
+        //                 title="Bạn có muốn xóa phương tiện này?"
+        //                 onConfirm={() => handleDelete(record.key)}
+        //                 onCancel={cancel}
+        //                 okText="Yes"
+        //                 cancelText="No"
+        //             >
+        //                 <DeleteOutlined />
+        //             </Popconfirm>
+        //         </div>
 
-            },
-        },
+        //     },
+        // },
     ];
 
     return (
@@ -171,7 +171,7 @@ const VehicleOfCompany = (props) => {
                     </div> */}
                 </div>
                 <div style={{ marginLeft: "50px", float: "left" }}>
-                    <AddVehico />
+                    {/* <AddVehico /> */}
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
                     <Table columns={columns} dataSource={vehicos} size="middle" />

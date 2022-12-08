@@ -42,6 +42,9 @@ const TripHistoryDriver = () => {
     else if(item.status==="CANC"){
         return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),seatRemind: item.seat - item.seatRegistered,status:"Đã bị hủy"}
     }
+    else if(item.status==="RUN"){
+        return {...item,item,key:item.tripID,dateStart:dateFormat(item.timeStart),seatRemind: item.seat - item.seatRegistered,status:"Đang chạy"}
+    }
 
   })
   console.log(trips);
@@ -174,7 +177,7 @@ const TripHistoryDriver = () => {
                         >
                             <Select
                                 style={{ width: "200px" }}
-                                defaultValue="OPEN"
+               
                             >
                                 <Option value='OPEN'>Đang mở</Option>
                                 <Option value='CLOS'>Đã đóng</Option>

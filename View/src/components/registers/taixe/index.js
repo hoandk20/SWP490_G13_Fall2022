@@ -17,6 +17,8 @@ import { useNavigate } from 'react-router';
 
 import {  toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
+import ImageRegister from '../../../assets/image-app/registertx.jpg'
+
 const { Option } = Select;
 
 // const onChangeCheck = (e) => {
@@ -63,12 +65,12 @@ const RegisterDriver = () => {
 
             <div className='container-info'>
                 <Row>
-                    <Col sm={24} md={12} >
+                    <Col sm={28} md={14} >
                         <div className='container-left'>
-                            {/* <img src={} alt="abc" /> */}
+                            <img width="95%" height="600vh" src={ImageRegister} alt="abc" />
                         </div>
                     </Col>
-                    <Col sm={24} md={12}>
+                    <Col sm={20} md={10}>
                         <div className='container-right'>
 
                             <div className='right-info'>
@@ -164,7 +166,7 @@ const RegisterDriver = () => {
                                 <FormItem
                                 >
                                     <Button className='btn-register' type="primary" htmlType="submit">
-                                        Submit
+                                        Gửi
                                     </Button>
                                 </FormItem>
                             </Form>

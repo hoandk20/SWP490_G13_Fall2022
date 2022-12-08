@@ -268,7 +268,6 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Ảnh
-                                        <div className='status'>Chưa gửi</div>
                                     </span>
 
                                 </div>
@@ -319,7 +318,13 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                        <div className='status'>Chưa gửi</div>
+                                        {
+                                            Bang_lai_xe===false?(
+                                                <div className='status'>Chưa gửi</div>
+                                            ):(
+                                                <div className='status'>Đã gửi</div>
+                                            )
+                                        }
                                     </span>
 
                                 </div>
@@ -356,7 +361,11 @@ const RegisterCompanyDoc1 = () => {
                                             hoặc lý lịch tư pháp
                                         </Col>
                                         <Col sm={8} md={4}>
-                                            <div className='status'>Chưa gửi</div>
+                                            Chung_Nhan_Kinh_nghiem===false?(
+                                                <div className='status'>Chưa gửi</div>
+                                            ):(
+                                                <div className='status'>Đã gửi</div>
+                                            )
                                         </Col>
                                     </Row>
                                 </div>
@@ -388,7 +397,11 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
-                                        <div className='status'>Chưa gửi</div>
+                                        GP_Kinh_Doanh===false?(
+                                                <div className='status'>Chưa gửi</div>
+                                            ):(
+                                                <div className='status'>Đã gửi</div>
+                                            )
                                     </span>
 
                                 </div>
@@ -417,7 +430,11 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
-                                        <div className='status'>Chưa gửi</div>
+                                        GP_Hoat_Dong===false?(
+                                                <div className='status'>Chưa gửi</div>
+                                            ):(
+                                                <div className='status'>Đã gửi</div>
+                                            )
                                     </span>
 
                                 </div>
