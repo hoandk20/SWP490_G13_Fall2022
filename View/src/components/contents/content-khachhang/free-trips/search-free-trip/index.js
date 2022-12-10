@@ -242,7 +242,7 @@ const SerachFreeTripForPassenger = () => {
                 <h2>CHUYẾN ĐI MIỄN PHÍ</h2>
                 <div className='contents' style={{ marginTop: "50px" }}>
                     <Row>
-                        <Col sm={16} md={8}>
+                        <Col sm={14} md={7}>
                             <Form
                                 onFinish={onFinish}
                             >
@@ -312,7 +312,7 @@ const SerachFreeTripForPassenger = () => {
                             </Form>
                         </Col>
                         <Col sm={32} md={16}>
-                            <div style={{ marginLeft: "20px" }} >
+                            <div style={{ float:"left" }} >
                                 <Flex
                                     position='relative'
                                     flexDirection='column'
@@ -394,7 +394,7 @@ const SerachFreeTripForPassenger = () => {
 
                         </Col>
                     </Row>
-                    <div className='table-info' style={{ marginTop: "5%" }}>
+                    <div className='table-info' style={{ width:"80%"}}>
                         <Table columns={columns} dataSource={freeTrips} size="middle" />
                     </div>
                 </div>

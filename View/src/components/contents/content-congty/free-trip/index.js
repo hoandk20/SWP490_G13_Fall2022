@@ -108,7 +108,7 @@ const TripsCompany = () => {
             render: (text, record, index) => {
 
                 return <div>
-                    <EyeOutlined onClick={() => { navigate('/taixe/freeTrip/detail', { state: { record } }) }} />
+                    <EyeOutlined onClick={() => { navigate('/congty/trips/detail', { state: { record } }) }} />
 
                 </div>
             },

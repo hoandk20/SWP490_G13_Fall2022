@@ -62,7 +62,7 @@ const FreeTripDetailOfDriver = () => {
 
     var formatted_date = date_parts + formatted.substr(formatted.indexOf(",") + 1);
     async function calculateRoute() {
-
+ 
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
 
