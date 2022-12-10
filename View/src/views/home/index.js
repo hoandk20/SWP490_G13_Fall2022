@@ -17,6 +17,8 @@ import { useState } from 'react';
 import SerachFreeTripForPassenger from '../khachhang/free-trips/search-free-trip';
 import CreateFreeTripForDriver from '../taixe/free-trip/create-free-trip'
 import DriverManagementAdmin  from '../admin/taixe-mgt/index.js'
+import HomeAdmin from '../../components/contents/home/home-admin';
+import LayoutAdmin from '../../components/layout/admin';
 const { Header, Content } = Layout;
 // const role="ROLE_PASSENGER"
 
@@ -106,7 +108,7 @@ const Home = () => {
       }else 
       return <LayoutCompany content={<HomeCompany/>}/>
     }else if(role==="ROLE_ADMIN"){
-      return <DriverManagementAdmin/>
+      return <LayoutAdmin content={<HomeAdmin/>}/>
     }
   }
 };

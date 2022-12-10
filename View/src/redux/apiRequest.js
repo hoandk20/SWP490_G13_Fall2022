@@ -543,10 +543,10 @@ export const getDriversForCompanyFilter = async (driver, dispatch) => {
 
 export const getDriversByAdmin = async (object, dispatch) => {
   try {
-    if (object.regFrom === undefined) {
+    if (object.regFrom1 === null) {
       object.regFrom = "";
     }
-    if (object.regTo === undefined) {
+    if (object.regTo1 === null) {
       object.regTo = "";
     }
     if (object.phone === undefined) {
@@ -567,6 +567,7 @@ export const getDriversByAdmin = async (object, dispatch) => {
     if (object.plate === undefined) {
       object.plate = "";
     }
+    console.log(object);
     const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetDrivers?regFrom=${object.regFrom}&regTo=${object.regTo}&phone=${object.phone}&driverName=${object.driverName}&email=${object.email}&Status=${object.status}&city=${object.city}&plate=${object.plate}`, {
       headers: { 'Content-Type': 'application/json' }
     });
@@ -596,10 +597,10 @@ export const getDriversByAdminAll = async (dispatch) => {
   } catch (error) { }
 }
 export const getCompanysByAdmin = async (object, dispatch) => {
-  if (object.regFrom === undefined) {
+  if (object.regFrom1 === null) {
     object.regFrom = "";
   }
-  if (object.regTo === undefined) {
+  if (object.regTo1 === null) {
     object.regTo = "";
   }
   if (object.phone === undefined) {
@@ -617,6 +618,7 @@ export const getCompanysByAdmin = async (object, dispatch) => {
   if (object.city === undefined) {
     object.city = "";
   }
+  console.log(object);
   try {
     const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/GetCompanies?regFrom=${object.regFrom}&regTo=${object.regTo}&companyName=${object.companyName}&email=${object.email}&Status=${object.status}&city=${object.city}`, {
       headers: { 'Content-Type': 'application/json' }
