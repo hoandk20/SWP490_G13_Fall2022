@@ -69,7 +69,7 @@ const CreateFreeTripForDriver = () => {
     const navigate = useNavigate();
 
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
+  
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
@@ -137,25 +137,30 @@ const CreateFreeTripForDriver = () => {
     }
 
     const onFinish = (values) => {
-        if(fee===""){
-            toast.error("Vui lòng nhập điểm bắt đầu và điểm kết thúc")
+        if(user.statusDriver==="NEW"){
+            toast.error("Tài xế chưa được cấp phép hoạt động.Vui lòng upload đầy đủ tài liệu và chờ xác nhận!")
         }else{
-            if(values.price>fee){
-                toast.error("Cước không được vượt quá giá cước tối đa")
+            if(fee===""){
+                toast.error("Vui lòng nhập điểm bắt đầu và điểm kết thúc")
             }else{
-                const trip = {
-                    driverEmail: user.email,
-                    from: originRef.current.value,
-                    to: destiantionRef.current.value,
-                    seat: values.seat,
-                    timeStart: date,
-                    waitingTime: values.waitingTime,
-                    price: values.price,
-                    listPolyline: listPolyline,
+                if(values.price>fee){
+                    toast.error("Cước không được vượt quá giá cước tối đa")
+                }else{
+                    const trip = {
+                        driverEmail: user.email,
+                        from: originRef.current.value,
+                        to: destiantionRef.current.value,
+                        seat: values.seat,
+                        timeStart: date,
+                        waitingTime: values.waitingTime,
+                        price: values.price,
+                        listPolyline: listPolyline,
+                    }
+                    CreateFreeTrip(trip, dispatch, navigate, toast);
                 }
-                CreateFreeTrip(trip, dispatch, navigate, toast);
             }
         }
+
    
      
     }

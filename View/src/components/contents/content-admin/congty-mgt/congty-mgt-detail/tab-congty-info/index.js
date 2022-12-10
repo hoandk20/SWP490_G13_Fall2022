@@ -1,15 +1,30 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Row, Select, Space, Image, } from 'antd';
+import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Row, Select, Space, Image, Modal, } from 'antd';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { createContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
 
-import { AddDriverByCompany, ChaangeStatusDoc, EditCompany, EditDriverByCompany, getCompanyDetail, getDriversForCompany, UploadFile} from '../../../../../../redux/apiRequest'
+import { AcceptCompanyAdmin, AddDriverByCompany, ChaangeStatusDoc, EditCompany, EditDriverByCompany, getCompanyDetail, getDriversForCompany, UploadFile} from '../../../../../../redux/apiRequest'
+import ModalSendEmail from '../../../../../commons/modals/modal-send-email';
 
 // import '../taixe-detail.css'
 const { Option } = Select;
+const ReachableContext = createContext(null);
+const UnreachableContext = createContext(null);
+
+const config = {
+    title: 'Use Hook!',
+    content: (
+        <>
+            <ReachableContext.Consumer>{(name) => `Reachable: ${name}!`}</ReachableContext.Consumer>
+            <br />
+            <UnreachableContext.Consumer>{(name) => `Unreachable: ${name}!`}</UnreachableContext.Consumer>
+        </>
+    ),
+};
+
 const prefixSelector = (
     <Form.Item name="prefix" noStyle>
         <Select
@@ -35,7 +50,7 @@ const TabCompanyInfo = (props) => {
     const Chung_Nhan_Kinh_nghiem = companys.cnkn;
     const GP_Kinh_Doanh = companys.gpkd;
     const GP_Hoat_Dong = companys.gphd;
-
+    const [modal, contextHolder] = Modal.useModal();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
@@ -347,6 +362,12 @@ const TabCompanyInfo = (props) => {
             toast.error("Upload file thất bại")
         }
     };
+    const acceptCompany =()=>{
+        AcceptCompanyAdmin(companys.companyId,"AT",toast,companys.email,dispatch);
+    }
+    const notAcceptCompany =()=>{
+        AcceptCompanyAdmin(companys.companyId,"NE",toast,companys.email,dispatch);
+    }
 
     return (
         <>
@@ -933,6 +954,57 @@ const TabCompanyInfo = (props) => {
                     </div>
                 )
             }
+            </div>
+
+            <div style={{ marginTop: "50px" }}>
+                <span style={{ display: "inline-block", marginRight: "50px" }}><ModalSendEmail email={companys?.email} /></span>
+                {
+                    companys.companyStatus!=="AT"?(
+                                        <span style={{ display: "inline-block" }}>
+                    <ReachableContext.Provider value="Light">
+
+
+                        <Button type="primary" onClick={() => {
+                            modal.confirm({
+                                title: "Bạn có muốn cho phép tài xế hoạt động",
+                                onOk() {
+                                    acceptCompany();
+                                }
+                            })
+
+                        }}  style={{ marginLeft: "30%" }}>
+                            Xác nhận công ty hoạt động
+                        </Button>
+                        {contextHolder}
+
+                        <UnreachableContext.Provider value="Bamboo" />
+                    </ReachableContext.Provider>
+                </span>
+                    ):(
+                        <span style={{ display: "inline-block" }}>
+                        <ReachableContext.Provider value="Light">
+    
+    
+                            <Button type="primary" onClick={() => {
+                                modal.confirm({
+                                    title: "Bạn có muốn hủy hoạt động của tài xế",
+                                    onOk() {
+                                        notAcceptCompany();
+                                    }
+                                })
+    
+                            }} danger  style={{ marginLeft: "30%" }}>
+                                Hủy hoạt động
+                            </Button>
+                            {contextHolder}
+    
+                            <UnreachableContext.Provider value="Bamboo" />
+                        </ReachableContext.Provider>
+                    </span>
+                    )
+                }
+
+
             </div>
         </>
 

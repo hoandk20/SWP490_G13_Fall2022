@@ -1,18 +1,32 @@
 import { CheckOutlined, CloseOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Row, Select, Space, Image, } from 'antd';
+import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Row, Select, Space, Image, Modal, } from 'antd';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
 
-import { AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, editInforDriver, getDriverDetail, getDriversForCompany, UploadFile } from '../../../../../redux/apiRequest';
+import { AcceptDriverAdmin, AddDriverByCompany, ChaangeStatusDoc, EditDriverByCompany, editInforDriver, getDriverDetail, getDriversForCompany, UploadFile } from '../../../../../redux/apiRequest';
 
 import ModalSendEmail from '../../../../commons/modals/modal-send-email';
 
 import './taixe-detail.css'
 import { useEffect } from 'react';
+import { createContext } from 'react';
 const { Option } = Select;
+const ReachableContext = createContext(null);
+const UnreachableContext = createContext(null);
+
+const config = {
+    title: 'Use Hook!',
+    content: (
+        <>
+            <ReachableContext.Consumer>{(name) => `Reachable: ${name}!`}</ReachableContext.Consumer>
+            <br />
+            <UnreachableContext.Consumer>{(name) => `Unreachable: ${name}!`}</UnreachableContext.Consumer>
+        </>
+    ),
+};
 
 const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -30,7 +44,7 @@ const DriverDetailAdmin = (props) => {
     const { Panel } = Collapse;
     const location = useLocation();
     const dispatch = useDispatch();
-
+    const [modal, contextHolder] = Modal.useModal();
     const info = location.state?.record;
     const drivers = useSelector((state) => state.user.driver?.info);
     const allCity = useSelector((state) => state.data.citys?.all);
@@ -40,9 +54,13 @@ const DriverDetailAdmin = (props) => {
     const Bang_lai_xe = drivers.blx;
     console.log(Bang_lai_xe);
     const Chung_Nhan_Kinh_nghiem = drivers.cnkn;
-    const Chung_Nhan_Bao_Hiem = drivers.cnbh;
-    const Chung_Nhan_Dang_Kiem = drivers.cndk;
-
+    var Chung_Nhan_Bao_Hiem=null;
+    var Chung_Nhan_Dang_Kiem=null
+    if(drivers.vehicleInfo===null){
+    }else{
+         Chung_Nhan_Bao_Hiem = drivers.vehicleInfo.cnbh;
+         Chung_Nhan_Dang_Kiem = drivers.vehicleInfo.cndk;
+    }
 
     const [open, setOpen] = useState(false);
     // const [check1, setCheck1] = useState(Bang_lai_xe.status != "SENDED");
@@ -367,7 +385,12 @@ const DriverDetailAdmin = (props) => {
 
 
     };
-
+    const acceptDriver =()=>{
+        AcceptDriverAdmin(drivers.driverID,"ACT",toast,drivers.email,dispatch);
+    }
+    const notAcceptDriver =()=>{
+        AcceptDriverAdmin(drivers.driverID,"NEW",toast,drivers.email,dispatch);
+    }
 
     // const getDriverDetail = async () => {
     //     try {
@@ -389,9 +412,9 @@ const DriverDetailAdmin = (props) => {
     return (
         <>
             <Form onFinish={onfinish}
-              initialValues={{
-                prefix: '+84'
-            }}
+                initialValues={{
+                    prefix: '+84'
+                }}
                 labelCol={{
                     span: 8,
                 }}
@@ -448,7 +471,7 @@ const DriverDetailAdmin = (props) => {
 
                                         label="Số Điện thoại"
                                     >
-                                        <Input disabled addonBefore={prefixSelector}/>
+                                        <Input disabled addonBefore={prefixSelector} />
                                     </Form.Item>
 
                                 </Col>
@@ -553,7 +576,7 @@ const DriverDetailAdmin = (props) => {
 
                             label="Số di động"
                         >
-                            <Input   addonBefore={prefixSelector}  />
+                            <Input addonBefore={prefixSelector} />
                         </Form.Item>
                         <Form.Item
                             name="status"
@@ -562,7 +585,7 @@ const DriverDetailAdmin = (props) => {
                             label="Trạng thái"
                         >
 
-                            <Input  disabled />
+                            <Input disabled />
 
                         </Form.Item>
 
@@ -649,7 +672,7 @@ const DriverDetailAdmin = (props) => {
                                     {
                                         Bang_lai_xe === null ? (
                                             <>
-                                              <div className='status-ad'>Chưa gửi</div>
+                                                <div className='status-ad'>Chưa gửi</div>
                                             </>
                                         ) : (
                                             <>
@@ -1008,7 +1031,7 @@ const DriverDetailAdmin = (props) => {
                                                                 <span>
                                                                     Giấy chứng nhận bảo hiểm
                                                                     {
-                                                                        Chung_Nhan_Dang_Kiem === null ? (
+                                                                        Chung_Nhan_Bao_Hiem === null ? (
                                                                             <>
                                                                                 <div className='status-ad'>Chưa gửi</div>
                                                                             </>
@@ -1220,7 +1243,52 @@ const DriverDetailAdmin = (props) => {
 
 
             <div style={{ marginTop: "50px" }}>
-                <ModalSendEmail email={drivers?.email} />
+                <span style={{ display: "inline-block", marginRight: "50px" }}><ModalSendEmail email={drivers?.email} /></span>
+                {
+                    drivers.status!=="ACT"?(
+                                        <span style={{ display: "inline-block" }}>
+                    <ReachableContext.Provider value="Light">
+
+
+                        <Button type="primary" onClick={() => {
+                            modal.confirm({
+                                title: "Bạn có muốn cho phép tài xế hoạt động",
+                                onOk() {
+                                    acceptDriver();
+                                }
+                            })
+
+                        }}  style={{ marginLeft: "30%" }}>
+                            Xác nhận tài xế hoạt động
+                        </Button>
+                        {contextHolder}
+
+                        <UnreachableContext.Provider value="Bamboo" />
+                    </ReachableContext.Provider>
+                </span>
+                    ):(
+                        <span style={{ display: "inline-block" }}>
+                        <ReachableContext.Provider value="Light">
+    
+    
+                            <Button type="primary" onClick={() => {
+                                modal.confirm({
+                                    title: "Bạn có muốn hủy hoạt động của tài xế",
+                                    onOk() {
+                                        notAcceptDriver();
+                                    }
+                                })
+    
+                            }} danger  style={{ marginLeft: "30%" }}>
+                                Hủy hoạt động
+                            </Button>
+                            {contextHolder}
+    
+                            <UnreachableContext.Provider value="Bamboo" />
+                        </ReachableContext.Provider>
+                    </span>
+                    )
+                }
 
 
             </div>

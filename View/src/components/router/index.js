@@ -12,6 +12,7 @@ import AddDriver from "../../views/congty/driver-mgt/add-driver";
 import DriverDetail from "../../views/congty/driver-mgt/driver-detail";
 import DriverManagementInfo from "../../views/congty/driver-mgt/driver-mgt-info";
 import AllTripCompany from "../../views/congty/free-trips";
+import FreeTripDetailCompany from "../../views/congty/free-trips/free-trip-detail";
 import InfoCompany from "../../views/congty/info";
 import VehicoManagement from "../../views/congty/vehico-mgt";
 import Home from "../../views/home";
@@ -148,6 +149,11 @@ const routers = [
         path: '/congty/trips',
         roleTarget: "ROLE_COMPANY",
         element: AllTripCompany
+    },
+    {
+        path: '/congty/trips/detail',
+        roleTarget: "ROLE_COMPANY",
+        element: FreeTripDetailCompany
     },
     {
         path: '/congty/document',

@@ -1219,3 +1219,56 @@ export const EditCompany = async (object, dispatch, toast) => {
 
 }
 
+export const SearchHomeCompany = async (object, dispatch) => {
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/listTrip`,
+      {
+        companyID: object.companyID,
+        passengerEmail: object.passengerEmail,
+        driverEmail: object.driverEmail,
+        dateFrom: object.dateFrom,
+        dateTo: object.dateTo,
+        status: object.status
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+    dispatch(getTripHistorySuccess(res.data.object));
+
+  } catch (error) {}
+}
+
+  export const AcceptDriverAdmin = async (id,status,toast,email,dispatch) =>{
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/ChangeStatusDriver`,
+      {
+        id:id,
+        status: status,
+      }
+      , {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      getDriverDetail(email, dispatch);
+      toast.success("Thay đổi hoạt động của tài xế thành công")
+  } catch (error) {
+    toast.error("Thay đổi hoạt động của tài xế không thành công")
+  }
+  }
+
+  
+  export const AcceptCompanyAdmin = async (id,status,toast,email,dispatch) =>{
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/ChangeStatusCompany`,
+        {
+          id:id,
+          status: status,
+        }
+        , {
+          headers: { 'Content-Type': 'application/json' }
+        });
+        getCompanyDetail(email, dispatch);
+        toast.success("Thay đổi hoạt động của tài xế thành công")
+    } catch (error) {
+      toast.error("Thay đổi hoạt động của tài xế không thành công") 
+    }
+    }

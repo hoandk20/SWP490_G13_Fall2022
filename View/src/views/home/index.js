@@ -20,7 +20,7 @@ import DriverManagementAdmin  from '../admin/taixe-mgt/index.js'
 const { Header, Content } = Layout;
 // const role="ROLE_PASSENGER"
 
-const URL = "http://26.36.110.116";
+
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const Home = () => {
   const getDataPassenger = async() =>{
     if(role==="ROLE_DRIVER"){
       try {
-        const res = await axios.get(`${URL}:8080/api/driver/reportDriver?driverEmail=${userName}`, {
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/reportDriver?driverEmail=${userName}`, {
           headers: { 'Content-Type': 'application/json' }
         })
         setData(res.data.object);
@@ -47,7 +47,7 @@ const Home = () => {
       }
     }else if(role==="ROLE_PASSENGER"){
       try {
-        const res = await axios.get(`${URL}:8080/api/passenger/reportPassenger?passengerEmail=${userName}`, {
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/passenger/reportPassenger?passengerEmail=${userName}`, {
           headers: { 'Content-Type': 'application/json' }
         })
         setData(res.data.object);
@@ -56,7 +56,7 @@ const Home = () => {
       }
     }else if(role==="ROLE_COMPANY"){
       try {
-        const res = await axios.get(`${URL}:8080/api/company/reportCompany?companyId=${newUser.companyId}`, {
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/reportCompany?companyId=${newUser.companyId}&month=${12}&year=${2022}`, {
           headers: { 'Content-Type': 'application/json' }
         })
         setData(res.data.object);
@@ -71,7 +71,7 @@ const Home = () => {
   useEffect(()=>{
     getUser(userName,dispatch);
     getAllCity(dispatch);
-    getDataPassenger();
+    // getDataPassenger();
    
   },[])
 
@@ -104,7 +104,7 @@ const Home = () => {
       }else if(newUser.statusVerify==3){
         navigate('/signup/vehico-info', { state: { newUser } })
       }else 
-      return <LayoutCompany content={<HomeCompany data={data}/>}/>
+      return <LayoutCompany content={<HomeCompany/>}/>
     }else if(role==="ROLE_ADMIN"){
       return <DriverManagementAdmin/>
     }

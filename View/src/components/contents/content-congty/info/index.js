@@ -109,7 +109,7 @@ const InfoCompany = () => {
                         </Form.Item>
                         <Form.Item
                                 name="city"
-                                initialValue={companys.cityId}
+                                // initialValue={companys.cityId}
                                 label="Thành phố"
                                 rules={[
                                     {
