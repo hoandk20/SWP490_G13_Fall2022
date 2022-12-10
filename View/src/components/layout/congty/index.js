@@ -10,6 +10,7 @@ import {
   IdcardOutlined,
   HistoryOutlined,
   LogoutOutlined,
+  HomeOutlined,
 
 } from '@ant-design/icons';
 import { Layout,Menu } from 'antd';
@@ -28,7 +29,7 @@ const { Header, Content } = Layout;
 const menuItem=[
   {
     key: '/home',
-    icon: <InfoCircleOutlined />,
+    icon: <HomeOutlined />,
     label: 'TRANG CHỦ',
   },
   {

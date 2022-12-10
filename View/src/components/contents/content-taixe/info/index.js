@@ -39,6 +39,7 @@ const InfoContactTaixe = () => {
     const [address, setAddress] = useState(user.address);
     const [avatar, setAvatar] = useState(user.avatarBase64);
     const [city, setCity] = useState(user.cityId);
+    const [status, setStatus] = useState(user.statusDriver);
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
             <Select
@@ -65,21 +66,21 @@ const InfoContactTaixe = () => {
         });
     };
     const uploadAvatar = async (e) => {
-        const file = await  e.target.files[0];
-        const base64 = await convertBase64(file);        
+        const file = await e.target.files[0];
+        const base64 = await convertBase64(file);
         await setAvatar(base64);
     };
 
 
     const onFinish = (values) => {
-        const image= {
-            base64:avatar,
-            createBy:user.email,
-            fileName:"Avatar",
-            year:'',
-            month:''
+        const image = {
+            base64: avatar,
+            createBy: user.email,
+            fileName: "Avatar",
+            year: '',
+            month: ''
         }
-        UploadFile(image,toast,dispatch);
+        UploadFile(image, toast, dispatch);
         const object = {
             email: email,
             firstname: firstName,
@@ -88,7 +89,7 @@ const InfoContactTaixe = () => {
             phone: phone,
             address: address,
             country: 'vi',
-            cityId:city,
+            cityId: city,
         }
         console.log(object);
         editInforDriver(object, toast, dispatch);
@@ -116,7 +117,7 @@ const InfoContactTaixe = () => {
         setCity(e.key)
     }
     return (
-        
+
         <div className='container-edit'>
             <h2>Hồ sơ</h2>
             <h3>Thông tin chung</h3>
@@ -140,12 +141,12 @@ const InfoContactTaixe = () => {
                             <FormItem
                                 name='name'
                                 label="Tên *"
-                                // rules={[
-                                //     {
-                                //         required: true,
-                                //         message: 'Tên không được để trống',
-                                //     },
-                                // ]}
+                            // rules={[
+                            //     {
+                            //         required: true,
+                            //         message: 'Tên không được để trống',
+                            //     },
+                            // ]}
                             >
                                 <Input.Group>
                                     <Input value={firstName} onChange={handleChangeFirstName} style={{ width: "35%", marginRight: "5%" }} />
@@ -169,7 +170,7 @@ const InfoContactTaixe = () => {
                                     },
                                 ]}
                             >
-                                <Input onChange={handleChangeEmail} defaultValue={email} disabled/>
+                                <Input onChange={handleChangeEmail} defaultValue={email} disabled />
                             </FormItem>
                             <Form.Item
                                 label="Số di động *"
@@ -223,6 +224,15 @@ const InfoContactTaixe = () => {
                                     options={citys}
                                 />
                             </Form.Item>
+                            <Form.Item
+                                labelCol={{
+                                    span: 12,
+                                }}
+                                label="Trạng thái *"
+                            >
+                                <Input value={status} disabled
+                                />
+                            </Form.Item>
                         </Col>
                         <Col sm={16} md={8}>
                             <div >
@@ -245,26 +255,26 @@ const InfoContactTaixe = () => {
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{marginTop:"50px"}}>
-              
-                      <Col sm={16} md={8}  >
+                    <Row style={{ marginTop: "50px" }}>
+
+                        <Col sm={16} md={8}  >
                             <FormItem
-                                    wrapperCol={{
-                                        span: 22,
-                                    }}
-                             >
-                                <Button className='btn' type="primary" htmlType="submit" style={{float:"right"}}>
+                                wrapperCol={{
+                                    span: 22,
+                                }}
+                            >
+                                <Button className='btn' type="primary" htmlType="submit" style={{ float: "right" }}>
                                     <SaveOutlined /> Thay đổi thông tin
                                 </Button>
 
                             </FormItem>
                         </Col>
                         <Col sm={16} md={8}  >
-                            <div style={{float:"left"}}>
-                            <ModalRePassword />
+                            <div style={{ float: "left" }}>
+                                <ModalRePassword />
                             </div>
                         </Col>
-                     
+
                     </Row>
 
 

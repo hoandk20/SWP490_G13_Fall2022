@@ -106,7 +106,7 @@ const FreeTripDetail = () => {
                 <h2>CHI TIẾT CHUYẾN ĐI</h2>
                 <div className='contents' style={{ marginTop: "50px" }}>
                     <Row>
-                        <Col sm={16} md={8}>
+                        <Col sm={12} md={6}>
                             <div className='tripDriverDetail-detail'>
 
                                 <Descriptions size='middle' bordered title="Thông tin chi tiết chuyến đi">
@@ -228,7 +228,7 @@ const FreeTripDetail = () => {
 
                             </div>
                         </Col>
-                        <Col sm={16} md={8}>
+                        <Col sm={36} md={18}>
                             <div style={{ marginLeft: "60px" }}>
                                 <Flex
                                     position='relative'

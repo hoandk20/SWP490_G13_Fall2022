@@ -124,8 +124,8 @@ const FreeTripManagementAdmin = () => {
                 textAlign: "left",
                 marginLeft: "20px"
             }}>
-                <h2>QUẢN TRỊ VÀ NHÂN VIÊN</h2>
-                <h3>TÌM ĐỐI TÁC</h3>
+                <h2>CHUYẾN ĐI MIỄN PHÍ</h2>
+                <h3>TÌM CHUYẾN ĐI</h3>
                 <div className='driver-info'>
                     <Form labelCol={{
                         span: 6,
