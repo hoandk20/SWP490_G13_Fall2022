@@ -69,6 +69,7 @@ const CreateFreeTripForDriver = () => {
     const navigate = useNavigate();
 
     const user = useSelector((state) => state.user.userInfo?.currentUser);
+    console.log(user);
   
 
     const { isLoaded } = useJsApiLoader({
@@ -283,7 +284,7 @@ const CreateFreeTripForDriver = () => {
 
                 <div className='contents' style={{ marginTop: "50px" }}>
                     <Row>
-                        <Col sm={16} md={8}>
+                        <Col sm={12} md={6}>
                             <Form
                                 labelCol={{
                                     span: 3.5,
@@ -407,7 +408,7 @@ const CreateFreeTripForDriver = () => {
 
                             </Form>
                         </Col>
-                        <Col sm={32} md={16}>
+                        <Col sm={36} md={18}>
                             <div style={{ marginLeft: "20px" }}>
                                 <Flex
                                     position='relative'

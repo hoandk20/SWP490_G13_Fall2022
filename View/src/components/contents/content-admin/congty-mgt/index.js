@@ -140,7 +140,7 @@ const CompanyManagementAdmin = () => {
                                 </FormItem>
                                 <FormItem
                                     name="city"
-                                    label="Thành phố"
+                                    label="Địa chỉ"
 
                                 >
                                     <Input />

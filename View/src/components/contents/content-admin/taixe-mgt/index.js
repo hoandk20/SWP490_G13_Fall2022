@@ -35,13 +35,20 @@ const DriverManagementAdmin = () => {
     console.log(drivers);
     function onChangeDateStart(date, dateString) {
         setDate1(date.toISOString());
+
     }
     function onChangeDateEnd(date, dateString) {
         setDate2(date.toISOString());
     }
     const onFinish = (values) => {
-        console.log(values);
-        getDriversByAdmin(values, dispatch);
+
+        const object ={
+            ...values,
+            regFrom:date1,
+            regTo:date2
+        }
+        console.log(object);
+        getDriversByAdmin(object, dispatch);
 
     }
 
