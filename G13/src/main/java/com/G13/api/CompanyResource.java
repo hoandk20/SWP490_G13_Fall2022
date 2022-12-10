@@ -586,12 +586,14 @@ public class CompanyResource {
             Company c = companyService.getCompanyByEmail(companyEmail);
 
             CompanyInfo companyInfo = new CompanyInfo();
+            companyInfo.setCompanyId(c.getId());
             companyInfo.setCompanyStatus(c.getStatus());
             companyInfo.setCreateDate(c.getCreatedDate());
             companyInfo.setCompanyAddress(c.getAddressID());
             companyInfo.setEmail(c.getNote());
             companyInfo.setPhone(c.getPhoneNo());
             companyInfo.setCompanyName(c.getName());
+            companyInfo.setCompanyStatus(c.getStatus());
             UploadFileMaster uploadFileMaster = new UploadFileMaster();
             Document document1 = documentService
                     .GetDocumentByCreateByAndFileName(companyInfo.getEmail(), uploadFileMaster.Bang_lai_xe);
@@ -670,8 +672,15 @@ public class CompanyResource {
         try {
             int monthI = Integer.parseInt(month);
             int yearI = Integer.parseInt(year);
+
             ReportCompany reportCompany = new ReportCompany();
-            List<Driver> driverList = driverService.getDriverByCompanyId(companyId,monthI,yearI);
+            List<Driver> driverList;
+            if(monthI==0&&yearI==0){
+                    driverList = driverService.getDriverByCompanyId(companyId);
+            }else{
+                driverList= driverService.getDriverByCompanyId(companyId,monthI,yearI);
+            }
+
             List<Driver> driverListNoVehicle = driverService.getListDriverNoVehicleByCompanyId(companyId);
             List<Vehicle> vehicleList = vehicleService.getVehicleByCompanyId(companyId);
             List<Vehicle> vehicleNoDriver = vehicleService.getVehicleByCompanyIdAndStatus(companyId,carStatus.Car_Pending);
@@ -679,8 +688,15 @@ public class CompanyResource {
             int TripOpen=0;
             int TripClose=0;
             int TripCancel=0;
+
             for (Driver d : driverList) {
-                List<Promotiontrip> promotiontripList = promotionTripService.getAllTripByDriverId(d.getId(),monthI,yearI);
+                List<Promotiontrip> promotiontripList = new ArrayList<>();
+                if(monthI==0&&yearI==0){
+                    promotiontripList = promotionTripService.getAllTripByDriverId(d.getId());
+                }else{
+                    promotiontripList  = promotionTripService.getAllTripByDriverId(d.getId(),monthI,
+                            yearI);;
+                }
                 for (Promotiontrip p:promotiontripList) {
                     Trip++;
                     if(p.getStatus().equals(masterTripStatus.TRIP_OPEN)){

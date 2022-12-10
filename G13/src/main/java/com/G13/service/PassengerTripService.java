@@ -20,7 +20,7 @@ public class PassengerTripService {
         for (TripPassenger t:tripPassengerList
         ) {
             if(filter.driverEmail!=null&&!filter.driverEmail.equals("")){
-                if(!t.getDriverEmail().contains(filter.driverEmail)){
+                if(!t.getDriverEmail().toLowerCase().contains(filter.driverEmail.toLowerCase())){
                     continue;
                 }
             }

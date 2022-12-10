@@ -69,6 +69,7 @@ const CreateFreeTripForDriver = () => {
     const navigate = useNavigate();
 
     const user = useSelector((state) => state.user.userInfo?.currentUser);
+    console.log(user);
   
 
     const { isLoaded } = useJsApiLoader({

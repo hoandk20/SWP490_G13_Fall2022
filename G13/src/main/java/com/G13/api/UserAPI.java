@@ -66,6 +66,7 @@ public class UserAPI {
             userInfo.setPhone(driver.getMobileNo());
             userInfo.setCountry(driver.getCountryCode());
             userInfo.setRole("ROLE_DRIVER");
+            userInfo.setStatusDriver(driver.getStatus());
             try{
                 userInfo.setCompanyId(driver.getCompanyID());
             }catch (Exception e){
@@ -121,6 +122,7 @@ public class UserAPI {
             userInfo.setEmail(company.getNote());
             userInfo.setRole("ROLE_COMPANY");
             userInfo.setCompanyId(company.getId());
+            userInfo.setStatusCompany(company.getStatus());
             try{
                 userInfo.setCityId(company.getCityID());
             }catch (Exception e){

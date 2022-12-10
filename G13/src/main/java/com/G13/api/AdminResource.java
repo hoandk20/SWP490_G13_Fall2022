@@ -1,7 +1,9 @@
 package com.G13.api;
 
 import com.G13.domain.*;
+import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
+import com.G13.master.MasterTripStatus;
 import com.G13.model.*;
 import com.G13.repo.*;
 import com.G13.service.*;
@@ -31,8 +33,9 @@ public class AdminResource {
     private final RiderService riderService;
     private final AdminService adminService;
 
+
     @GetMapping("/GetDrivers")
-    public ResponseEntity<?> getDrivers(Date regFrom, Date regTo, String phone, String driverName, String email,
+    public ResponseEntity<?> getDrivers(String regFrom, String regTo, String phone, String driverName, String email,
                                         String Status, String city, String plate) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
@@ -87,9 +90,19 @@ public class AdminResource {
                 }
                 registerDriverCompanies.add(r);
             }
+            Date dateFrom=null;
+            Date dateTo=null;
+            if(regFrom!=null&&!regFrom.equals("")){
+                Instant instant = Instant.parse(regFrom);
+                dateFrom =  Date.from(instant);
+            }
+            if(regTo!=null&&!regTo.equals("")){
+                Instant instant = Instant.parse(regTo);
+                dateTo =  Date.from(instant);
+            }
 
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.setObject(adminService.filterListDriverCompany(registerDriverCompanies, regFrom, regTo, phone,
+            response.setObject(adminService.filterListDriverCompany(registerDriverCompanies, dateFrom, dateTo, phone,
                     driverName,
                     email, Status, city, plate));
 
@@ -111,6 +124,7 @@ public class AdminResource {
             for (Company c : list
             ) {
                 CompanyInfo companyInfo = new CompanyInfo();
+                companyInfo.setCompanyId(c.getId());
                 companyInfo.setCompanyStatus(c.getStatus());
                 companyInfo.setCreateDate(c.getCreatedDate());
                 companyInfo.setCompanyAddress(c.getAddressID());
@@ -119,9 +133,18 @@ public class AdminResource {
                 companyInfo.setCompanyName(c.getName());
                 companyInfos.add(companyInfo);
             }
-
+            Date dateFrom=null;
+            Date dateTo=null;
+            if(regFrom!=null&&!regFrom.equals("")){
+                Instant instant = Instant.parse(regFrom);
+                dateFrom =  Date.from(instant);
+            }
+            if(regTo!=null&&!regTo.equals("")){
+                Instant instant = Instant.parse(regTo);
+                dateTo =  Date.from(instant);
+            }
             response.setStatus(masterStatus.SUCCESSFULL);
-            response.setObject(filterListCompany(companyInfos, regFrom, regTo, companyName, email, Status, city));
+            response.setObject(filterListCompany(companyInfos, dateFrom, dateTo, companyName, email, Status, city));
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -132,49 +155,28 @@ public class AdminResource {
 
     }
 
-    List<CompanyInfo> filterListCompany(List<CompanyInfo> list, String regFrom, String regTo, String companyName, String email, String Status, String city) {
+    List<CompanyInfo> filterListCompany(List<CompanyInfo> list, Date regFrom, Date regTo, String companyName,
+                                        String email, String Status, String city) {
 
-
-        List<CompanyInfo> listResult = list;
-        if (regFrom.equals(regTo) && !regFrom.equals("")) {
-            try {
-                listResult = listResult.stream().filter(c -> c.getCreateDate().equals(Instant.parse(regFrom))).collect(toList());
-            } catch (Exception e) {
-                System.out.println(e.toString());
+        List<CompanyInfo> listResult = new ArrayList<>();
+        for (CompanyInfo c:list) {
+            if(companyName!=null&&!companyName.equals("")){
+                if(!c.getCompanyName().toLowerCase().contains(companyName)){continue;}
             }
-        } else {
-            if (!regFrom.equals("")) {
-                try {
-                    listResult = listResult.stream().filter(c -> c.getCreateDate().isAfter(Instant.parse(regFrom))).collect(toList());
-                } catch (Exception e) {
-                    System.out.println(e.toString());
-                }
+            if(email!=null&&!email.equals("")){
+                if(!c.getEmail().toLowerCase().contains(email)){continue;}
             }
-            if (!regTo.equals("")) {
-                try {
-                    listResult = listResult.stream().filter(c -> c.getCreateDate().isAfter(Instant.parse(regTo))).collect(toList());
-                } catch (Exception e) {
-                    System.out.println(e.toString());
-                }
+            if(Status!=null&&!Status.equals("")){
+                if(!c.getCompanyStatus().toLowerCase().contains(Status)){continue;}
             }
-        }
+            if(city!=null&&!city.equals("")){
+                if(!c.getCompanyAddress().toLowerCase().contains(city)){continue;}
+            }
 
 
-        if (!companyName.equals("")) {
-            listResult = listResult.stream().filter(c -> c.getCompanyName().contains(companyName)).collect(toList());
+            listResult.add(c);
         }
-        if (!email.equals("")) {
-            listResult = listResult.stream().filter(c -> c.getEmail().contains(email)).collect(toList());
 
-        }
-        if (!Status.equals("")) {
-            listResult = listResult.stream().filter(c -> c.getCompanyStatus().contains(Status)).collect(toList());
-
-        }
-        if (!city.equals("")) {
-            listResult = listResult.stream().filter(c -> c.getCompanyAddress().contains(city)).collect(toList());
-
-        }
         return listResult;
     }
 
@@ -212,8 +214,18 @@ public class AdminResource {
                 }
                 driverTrips.add(tripDriver);
             }
+            Date dateFrom=null;
+            Date dateTo=null;
+            if(regFrom!=null&&!regFrom.equals("")){
+                Instant instant = Instant.parse(regFrom);
+                dateFrom =  Date.from(instant);
+            }
+            if(regTo!=null&&!regTo.equals("")){
+                Instant instant = Instant.parse(regTo);
+                dateTo =  Date.from(instant);
+            }
 
-            response.setObject(adminService.filterlistTrips(driverTrips, regFrom, regTo, phoneDriver, phonePassenger,
+            response.setObject(adminService.filterlistTrips(driverTrips, dateFrom, dateTo, phoneDriver, phonePassenger,
                     Status));
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
@@ -224,7 +236,28 @@ public class AdminResource {
         }
     }
 
+    @GetMapping("/reportAdmin")
+    public ResponseEntity<?> reportCompany() {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        ReportAdmin reportAdmin = new ReportAdmin();
+        try {
+            reportAdmin.setCompanyNo(companyService.getAllCompany().size());
+            reportAdmin.setDriveNo(driverService.getAllDriver().size());
+            reportAdmin.setVehicleNo(vehicleService.getAllVehicle().size());
+            reportAdmin.setPassengerNo(riderService.getAllRider().size());
+            reportAdmin.setTripNo(promotionTripService.getAllTrip().size());
 
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(reportAdmin);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
 
     @PostMapping("DocumentChangeStatus")
     public ResponseEntity<?> DocumentChangeStatus(@RequestBody DocumentRequest doc) {
@@ -285,6 +318,46 @@ public class AdminResource {
         }
     }
 
+    @PostMapping("/ChangeStatusDriver")
+    public ResponseEntity<?> ChangeStatusDriver(@RequestBody ChangeStatus changeStatus) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try {
+            Driver driver = driverService.getDriverByID(changeStatus.getId());
+            if(driver==null){
+                response.setContent("driver not existed");
+                return ResponseEntity.badRequest().body(response);
+            }
+            driver.setStatus(changeStatus.getStatus());
+            response.setObject(driverService.SaveDriver(driver));
+            response.setStatus(masterStatus.SUCCESSFULL);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    @PostMapping("/ChangeStatusCompany")
+    public ResponseEntity<?> ChangeStatusCompany(@RequestBody ChangeStatus changeStatus) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try {
+            Company company = companyService.getCompanyByID(Integer.parseInt(changeStatus.getId()));
+            if(company==null){
+                response.setContent("company not existed");
+                return ResponseEntity.badRequest().body(response);
+            }
+            company.setStatus(changeStatus.getStatus());
+            response.setObject(companyService.SaveCompany(company));
+            response.setStatus(masterStatus.SUCCESSFULL);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
 
 }
 

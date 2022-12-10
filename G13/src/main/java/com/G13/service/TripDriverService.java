@@ -40,7 +40,7 @@ public class TripDriverService {
                 List<Trip> listRegister = tripService.getAllByTripCode(t.getTripID());
                 boolean isHasPassenger = false;
                 for (Trip trip:listRegister) {
-                    if(trip.getRiderID().contains(filter.passengerEmail)){
+                    if(trip.getRiderID().toLowerCase().contains(filter.passengerEmail.toLowerCase())){
                         isHasPassenger = true;
                     }
                 }

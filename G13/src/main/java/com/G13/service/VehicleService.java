@@ -30,6 +30,9 @@ public class VehicleService {
     public List<Vehicle> getVehicleByCompanyId(int id){
         return vehicleRepository.findByCompanyIDOrderByCreatedDateDesc(id);
     }
+    public List<Vehicle> getAllVehicle(){
+        return vehicleRepository.findAll();
+    }
 
     public List<Vehicle> getVehicleByCompanyIdAndStatus(int id,String status){
         return vehicleRepository.findByCompanyIDAndStatus(id,status);

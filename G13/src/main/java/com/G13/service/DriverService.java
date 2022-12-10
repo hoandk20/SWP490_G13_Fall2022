@@ -35,8 +35,8 @@ public class DriverService {
     public List<Driver> getDriverByCompanyId(int companyId, int month, int year) {
         List<Driver> list = driverRepository.findDriversByCompanyID(companyId);
         int lastDay = YearMonth.of(year,month).lengthOfMonth();
-        Date from = new Date(year, month, 1);
-        Date to = new Date(year, month, lastDay);
+        Date from = new Date(year-1900, month-1, 1);
+        Date to = new Date(year-1900, month-1, lastDay);
         List<Driver> listResult = new ArrayList<>();
         for (Driver d : list
         ) {

@@ -17,4 +17,6 @@ public class UserInfo {
     VehicleRequest vehicleRequest;
     int companyId;
     int cityId;
+    String statusDriver;
+    String statusCompany;
 }
