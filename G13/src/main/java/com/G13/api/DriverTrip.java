@@ -173,6 +173,7 @@ public class DriverTrip {
                 tripDriver.setTo(detail.getToAddress());
                 tripDriver.setSeat(detail.getCapacity());
                 tripDriver.setId(detail.getId());
+                tripDriver.setTripID(detail.getId());
                 tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());
                 tripDriver.setStatus(detail.getStatus());
                 tripDriver.setTimeStart(Date.from(detail.getTimeStart()));
@@ -222,8 +223,6 @@ public class DriverTrip {
         int  RegisterSeat = commonService.parseIntWithDefault(registerSeat,0);
         int  TimeStart = commonService.parseIntWithDefault(timeStart,0);
 
-
-
         String[] listPoly = SlistPoly.split(";");
         listPoly[0]="";
         listPoly[listPoly.length-1]="";
@@ -232,21 +231,25 @@ public class DriverTrip {
                 continue;
             }
             int i = 0;
-         //   String sameWay = "";
+            String sameWay = "";
             for (String o : listPoly) {
                 String poly = o;
                 if (t.getListPolyline().contains(poly)&&!poly.equals("")) {
                     i++;
-                    System.out.println(i);
-      //            sameWay = sameWay + o+";";
+                    if(i<3){
+                        sameWay = sameWay + o+";";
+                    }
+
                 }
             }
-//            if(!t.getListPolyline().contains(sameWay)){
-//                continue;
-//            }
+            if(!t.getListPolyline().contains(sameWay)){
+                continue;
+            }
 
             //not match of the routes
-            if(i<0.5*listPoly.length){continue;}
+            System.out.println(""+t.getFrom()+" - "+t.getTo()+", same: "+i+"/"+listPoly.length);
+            //match less than 10% skip
+            if(i<0.1*listPoly.length){continue;}
             t.setNoOfPolyline(i);
             DecimalFormat df = new DecimalFormat("#.###");
             t.setPrice(t.getPrice()*i/listPoly.length);
@@ -390,7 +393,6 @@ public class DriverTrip {
             tripDriver.setPhoneDriver(driver.getMobileNo());
             Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
             if(vehicle!=null){
-
                 tripDriver.setVehiclePlate(vehicle.getPlate());
                 tripDriver.setVehicleColor(vehicle.getExteriorColor());
                 tripDriver.setVehicleName(vehicle.getCreatedBy());

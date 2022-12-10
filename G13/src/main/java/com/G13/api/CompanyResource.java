@@ -662,14 +662,16 @@ public class CompanyResource {
     }
 
     @GetMapping("/reportCompany")
-    public ResponseEntity<?> reportCompany(int companyId) {
+    public ResponseEntity<?> reportCompany(int companyId,String month,String year) {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         MasterTripStatus masterTripStatus = new MasterTripStatus();
         CarStatus carStatus = new CarStatus();
         try {
+            int monthI = Integer.parseInt(month);
+            int yearI = Integer.parseInt(year);
             ReportCompany reportCompany = new ReportCompany();
-            List<Driver> driverList = driverService.getDriverByCompanyId(companyId);
+            List<Driver> driverList = driverService.getDriverByCompanyId(companyId,monthI,yearI);
             List<Driver> driverListNoVehicle = driverService.getListDriverNoVehicleByCompanyId(companyId);
             List<Vehicle> vehicleList = vehicleService.getVehicleByCompanyId(companyId);
             List<Vehicle> vehicleNoDriver = vehicleService.getVehicleByCompanyIdAndStatus(companyId,carStatus.Car_Pending);
@@ -678,7 +680,7 @@ public class CompanyResource {
             int TripClose=0;
             int TripCancel=0;
             for (Driver d : driverList) {
-                List<Promotiontrip> promotiontripList = promotionTripService.getAllTripByDriverId(d.getId());
+                List<Promotiontrip> promotiontripList = promotionTripService.getAllTripByDriverId(d.getId(),monthI,yearI);
                 for (Promotiontrip p:promotiontripList) {
                     Trip++;
                     if(p.getStatus().equals(masterTripStatus.TRIP_OPEN)){
@@ -701,6 +703,7 @@ public class CompanyResource {
             reportCompany.setVehicleNoDriver(vehicleNoDriver.size());
             reportCompany.setDriverNoVehicle(driverListNoVehicle.size());
 
+
             response.setStatus(masterStatus.SUCCESSFULL);
             response.setObject(reportCompany);
             return ResponseEntity.ok().body(response);
@@ -711,6 +714,7 @@ public class CompanyResource {
         }
 
     }
+
 
     @PostMapping("/changeInfo")
     public ResponseEntity<?> changeInfoCompany(@RequestBody CompanyInfo companyInfo){

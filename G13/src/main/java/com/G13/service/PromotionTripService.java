@@ -1,5 +1,6 @@
 package com.G13.service;
 
+import com.G13.domain.Driver;
 import com.G13.domain.Promotiontrip;
 import com.G13.master.MasterTripStatus;
 import com.G13.repo.PromotiontripRepository;
@@ -8,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,30 @@ public class PromotionTripService {
 
     public List<Promotiontrip> getAllTripByDriverId(String driverID){
         return promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(driverID);
+    }
+    public List<Promotiontrip> getAllTripByDriverId(String driverID,int month,int year){
+        List<Promotiontrip>promotiontripList =
+                promotiontripRepository.findAllByDriverIDOrderByCreatedDateDesc(driverID);
+        int lastDay = YearMonth.of(year, month).lengthOfMonth();
+        Date from = new Date(year, month, 1);
+        Date to = new Date(year, month, lastDay);
+        List<Promotiontrip> listResult = new ArrayList<>();
+
+        for (Promotiontrip p:promotiontripList
+             ) {
+            if(from!=null){
+                if(from.toInstant().compareTo(p.getTimeStart())>0){
+                    continue;
+                }
+            }
+            if(to!=null){
+                if(to.toInstant().compareTo(p.getTimeStart())<0){
+                    continue;
+                }
+            }
+            listResult.add(p);
+        }
+        return listResult;
     }
     public List<Promotiontrip> getAllByStatus(String Status){
         return promotiontripRepository.findAllByStatus(Status);
