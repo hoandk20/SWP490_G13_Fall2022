@@ -1,11 +1,8 @@
 package com.G13.api;
 
 import com.G13.domain.*;
-import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
-import com.G13.master.MasterTripStatus;
-import com.G13.model.*;
-import com.G13.repo.*;
+import com.G13.modelDto.*;
 import com.G13.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +12,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -171,6 +166,18 @@ public class AdminResource {
             }
             if(city!=null&&!city.equals("")){
                 if(!c.getCompanyAddress().toLowerCase().contains(city)){continue;}
+            }
+            if (regFrom != null) {
+                Instant instantFrom = regFrom.toInstant();
+                if (instantFrom.compareTo(c.getCreateDate()) > 0) {
+                    continue;
+                }
+            }
+            if (regTo != null) {
+                Instant instantTo = regTo.toInstant();
+                if (instantTo.compareTo(c.getCreateDate()) < 0) {
+                    continue;
+                }
             }
 
 

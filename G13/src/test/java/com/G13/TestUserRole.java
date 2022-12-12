@@ -1,7 +1,7 @@
 package com.G13;
 
 import com.G13.domain.UserRole;
-import com.G13.repo.UserRoleRepository;
+import com.G13.repository.UserRoleRepository;
 import com.G13.service.UserRoleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

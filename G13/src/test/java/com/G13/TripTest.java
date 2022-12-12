@@ -1,7 +1,7 @@
 package com.G13;
 
 import com.G13.domain.Trip;
-import com.G13.repo.TripRepository;
+import com.G13.repository.TripRepository;
 import com.G13.service.TripService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

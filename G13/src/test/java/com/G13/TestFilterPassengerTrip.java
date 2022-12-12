@@ -1,13 +1,11 @@
 package com.G13;
 
-import com.G13.model.TripPassenger;
-import com.G13.model.filterTripPassenger;
+import com.G13.modelDto.TripPassenger;
+import com.G13.modelDto.filterTripPassenger;
 import com.G13.service.PassengerTripService;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;

@@ -1,9 +1,8 @@
 package com.G13;
 
-import com.G13.model.TripDriver;
-import com.G13.model.filterTripPassenger;
+import com.G13.modelDto.TripDriver;
+import com.G13.modelDto.filterTripPassenger;
 import com.G13.service.TripDriverService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;

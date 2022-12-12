@@ -2,7 +2,7 @@ package com.G13;
 
 import com.G13.domain.Cityname;
 import com.G13.domain.CitynameId;
-import com.G13.repo.CitynameRepository;
+import com.G13.repository.CitynameRepository;
 
 import com.G13.service.CityService;
 import org.junit.jupiter.api.BeforeEach;

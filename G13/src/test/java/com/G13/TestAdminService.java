@@ -1,12 +1,9 @@
 package com.G13;
 
-import com.G13.domain.Vehicle;
-import com.G13.model.PassengerInfo;
-import com.G13.model.RegisterDriverCompany;
-import com.G13.model.TripDriver;
-import com.G13.model.VehicleRequest;
+import com.G13.modelDto.PassengerInfo;
+import com.G13.modelDto.RegisterDriverCompany;
+import com.G13.modelDto.VehicleRequest;
 import com.G13.service.AdminService;
-import com.G13.service.TripDriverService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.boot.test.context.SpringBootTest;

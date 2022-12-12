@@ -4,8 +4,8 @@ package com.G13.api;
 import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.*;
-import com.G13.model.*;
-import com.G13.repo.*;
+import com.G13.modelDto.*;
+import com.G13.repository.*;
 import com.G13.service.*;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -41,9 +41,10 @@ public class UserAPI {
     private final DriverService driverService;
     private final CityService cityService;
     private final VehicleService vehicleService;
+    private final CommonService commonService;
 
     @GetMapping("user/info")
-    public ResponseEntity<?> getUserInfo(String username){
+    public ResponseEntity<?> getUserInfo(String username) {
         UserInfo userInfo = new UserInfo();
         userInfo.setEmail(username);
         userInfo.setUsername(username);
@@ -51,15 +52,15 @@ public class UserAPI {
         user = userService.getUserByEmail(username);
         UploadFileMaster uploadFileMaster = new UploadFileMaster();
         Document document = documentRepository
-                .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(username,uploadFileMaster.avatar);
+                .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(username, uploadFileMaster.avatar);
 
-        if(document!=null){
+        if (document != null) {
             FileManage fileManage = new FileManage();
             userInfo.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
             userInfo.setEmail(username);
         }
         Driver driver = driverService.getDriverByEmail(username);
-        if(driver!=null){
+        if (driver != null) {
             userInfo.setFirstname(driver.getFirstName());
             userInfo.setLastname(driver.getLastName());
             userInfo.setAddress(driver.getAddressID());
@@ -67,19 +68,19 @@ public class UserAPI {
             userInfo.setCountry(driver.getCountryCode());
             userInfo.setRole("ROLE_DRIVER");
             userInfo.setStatusDriver(driver.getStatus());
-            try{
+            try {
                 userInfo.setCompanyId(driver.getCompanyID());
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.toString());
             }
-            try{
+            try {
                 userInfo.setCityId(driver.getBranchCityId());
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.toString());
             }
-            try{
+            try {
                 Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
-                if(vehicle!=null){
+                if (vehicle != null) {
                     VehicleRequest vehicleRequest = new VehicleRequest();
                     vehicleRequest.setId(vehicle.getId());
                     vehicleRequest.setCompanyEmail("");
@@ -93,12 +94,13 @@ public class UserAPI {
                     vehicleRequest.setTypeId(vehicle.getCarTypeID());
                     userInfo.setVehicleRequest(vehicleRequest);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.toString());
             }
         }
-        Rider rider = riderService.getRiderByEmail(username);;
-        if(rider!=null){
+        Rider rider = riderService.getRiderByEmail(username);
+        ;
+        if (rider != null) {
             userInfo.setFirstname(rider.getFirstName());
             userInfo.setLastname(rider.getLastName());
             userInfo.setAddress(rider.getHomeAddressID());
@@ -107,14 +109,14 @@ public class UserAPI {
             userInfo.setUsername(rider.getEmail());
             userInfo.setEmail(rider.getEmail());
             userInfo.setRole("ROLE_PASSENGER");
-            try{
+            try {
                 userInfo.setCityId(rider.getCityID());
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.toString());
             }
         }
         Company company = companyService.getCompanyByEmail(username);
-        if(company!=null){
+        if (company != null) {
             userInfo.setFirstname(company.getName());
             userInfo.setAddress(company.getAddressID());
             userInfo.setPhone(company.getPhoneNo());
@@ -123,14 +125,14 @@ public class UserAPI {
             userInfo.setRole("ROLE_COMPANY");
             userInfo.setCompanyId(company.getId());
             userInfo.setStatusCompany(company.getStatus());
-            try{
+            try {
                 userInfo.setCityId(company.getCityID());
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.toString());
             }
-            try{
+            try {
                 Vehicle vehicle = vehicleService.getFistVehicleByCompanyId(company.getId());
-                if(vehicle!=null){
+                if (vehicle != null) {
                     VehicleRequest vehicleRequest = new VehicleRequest();
                     vehicleRequest.setId(vehicle.getId());
                     vehicleRequest.setCompanyEmail("");
@@ -144,16 +146,16 @@ public class UserAPI {
                     vehicleRequest.setTypeId(vehicle.getCarTypeID());
                     userInfo.setVehicleRequest(vehicleRequest);
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println(e.toString());
             }
         }
-        if(user.getEmail().equals("admin")){
+        if (user.getEmail().equals("admin")) {
             userInfo.setRole("ROLE_ADMIN");
         }
 
         Verifyaccount verifyaccount = verifyAccountService.getVerifyAccountByUserId(user.getId());
-        if(verifyaccount!=null){
+        if (verifyaccount != null) {
             userInfo.setStatusVerify(verifyaccount.getStatus());
         }
         return ResponseEntity.ok().body(userInfo);
@@ -161,27 +163,26 @@ public class UserAPI {
 
     @PostMapping("user/changePassword")
 
-    public ResponseEntity<?> changePassword(@RequestBody UserChangePassword user){
+    public ResponseEntity<?> changePassword(@RequestBody UserChangePassword user) {
 
         ResopnseContent response = new ResopnseContent();
-        try{
-            if(userService.changePassword(user)){
+        try {
+            if (userService.changePassword(user)) {
                 return ResponseEntity.ok().body(response);
-            }else{
+            } else {
                 return ResponseEntity.badRequest().body(response);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(response);
         }
 
 
     }
-    @PostMapping("/role/AddToUser")
 
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
         String authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if(authorizationHeader!=null && authorizationHeader.startsWith("Bearer ")){
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
@@ -194,34 +195,36 @@ public class UserAPI {
                 Role role = userService.GetRoleByUser(username);
                 String access_token = JWT.create()
                         .withSubject(user.getEmail())
-                        .withExpiresAt(new Date(System.currentTimeMillis()+30*60*1000))
-                        .withClaim("roles",role.getName())
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                        .withClaim("roles", role.getName())
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
-                tokens.put("access_token",access_token);
-                tokens.put("refresh_token",refresh_token);
+                tokens.put("access_token", access_token);
+                tokens.put("refresh_token", refresh_token);
                 httpServletResponse.setContentType(APPLICATION_JSON_VALUE);
 
-                new ObjectMapper().writeValue(httpServletResponse.getOutputStream(),tokens);
+                new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), tokens);
 
-            }catch (Exception exception){
-                httpServletResponse.setHeader("error",exception.getMessage());
+            } catch (Exception exception) {
+                httpServletResponse.setHeader("error", exception.getMessage());
                 httpServletResponse.setStatus(FORBIDDEN.value());
                 //  response.sendError(FORBIDDEN.value());
                 Map<String, String> error = new HashMap<>();
-                error.put("error_message",exception.getMessage());
+                error.put("error_message", exception.getMessage());
                 httpServletResponse.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(httpServletResponse.getOutputStream(),error);
+                new ObjectMapper().writeValue(httpServletResponse.getOutputStream(), error);
             }
-        }else{
+        } else {
             throw new RuntimeException("Refresh token is missing");
         }
     }
+
     @GetMapping("/city")
-    public ResponseEntity<?> getcity(){
-       List<Cityname> list = cityService.getListCity();
+    public ResponseEntity<?> getcity() {
+        List<Cityname> list = cityService.getListCity();
         return ResponseEntity.ok().body(list);
     }
+
     @GetMapping("/GetTop10Trip")
     public ResponseEntity<?> Top10Trip() {
         ResopnseContent response = new ResopnseContent();
@@ -253,6 +256,29 @@ public class UserAPI {
             }
             response.setObject(driverTrips);
             response.setStatus(masterStatus.SUCCESSFULL);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("ForgotPassword")
+    public ResponseEntity<?> ForgotPassword(String email) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        try {
+            if (email.equals("admin")) {
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            User user = userService.getUser(email);
+            String newPassword = commonService.generatePassword(8);
+            user.setPassword(newPassword);
+            userService.saveUser(user);
+            MailAPI mailAPI = new MailAPI();
+            mailAPI.ForgotPasswor(user.getEmail(), newPassword);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
             response.setContent(exception.toString());

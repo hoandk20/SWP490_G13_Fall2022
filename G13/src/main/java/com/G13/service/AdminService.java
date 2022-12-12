@@ -1,8 +1,8 @@
 package com.G13.service;
 
-import com.G13.model.PassengerInfo;
-import com.G13.model.RegisterDriverCompany;
-import com.G13.model.TripDriver;
+import com.G13.modelDto.PassengerInfo;
+import com.G13.modelDto.RegisterDriverCompany;
+import com.G13.modelDto.TripDriver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

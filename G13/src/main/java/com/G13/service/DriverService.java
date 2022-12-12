@@ -1,7 +1,7 @@
 package com.G13.service;
 
 import com.G13.domain.Driver;
-import com.G13.repo.DriverRepository;
+import com.G13.repository.DriverRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

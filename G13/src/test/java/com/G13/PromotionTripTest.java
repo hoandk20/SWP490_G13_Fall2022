@@ -2,7 +2,7 @@ package com.G13;
 
 import com.G13.domain.Promotiontrip;
 import com.G13.master.MasterTripStatus;
-import com.G13.repo.PromotiontripRepository;
+import com.G13.repository.PromotiontripRepository;
 import com.G13.service.PromotionTripService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

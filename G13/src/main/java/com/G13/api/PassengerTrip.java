@@ -4,13 +4,11 @@ import com.G13.domain.*;
 import com.G13.master.MasterStatus;
 import com.G13.master.MasterTripStatus;
 import com.G13.master.RegisterStatus;
-import com.G13.model.ChangeStatus;
-import com.G13.model.ResopnseContent;
-import com.G13.model.TripPassenger;
-import com.G13.model.filterTripPassenger;
-import com.G13.repo.*;
+import com.G13.modelDto.ChangeStatus;
+import com.G13.modelDto.ResopnseContent;
+import com.G13.modelDto.TripPassenger;
+import com.G13.modelDto.filterTripPassenger;
 import com.G13.service.*;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -112,7 +110,15 @@ public class PassengerTrip {
             t.setStatus(masterTripStatus.TRIP_PENDING);
             t.setMobileRelative(rider.getMobileNo());
 
+            if(tripService.IsRegistedTrip(t.getTripCode(),t.getRiderID())){
+                Map<String, Boolean> err = new HashMap<>();
+                err.put("IsRegisted", true);
+                response.setObject(err);
+                response.setStatus(masterStatus.FAILURE);
+                return ResponseEntity.badRequest().body(response);
+            }
             Promotiontrip promotiontrip = promotionTripService.getPromotionTripById(t.getTripCode());
+
             if(promotiontrip.getCapacity()-promotiontrip.getNumberCapacityRegistered()<t.getDuration()){
                 response.setContent("do not enough seat");
                 response.setStatus(masterStatus.FAILURE);
@@ -179,8 +185,6 @@ public class PassengerTrip {
             List<TripPassenger> listTripHistory = new ArrayList<>();
             for (Trip detail:list
             ) {
-                if(detail.getStatus().equals(registerStatus.CLOSE)||detail.getStatus().equals(registerStatus.APPROVE)){
-
                     TripPassenger tripPassenger = new TripPassenger();
                     tripPassenger.setId(detail.getId());
                     tripPassenger.setTripID(detail.getTripCode());
@@ -193,6 +197,7 @@ public class PassengerTrip {
                     tripPassenger.setTimeStart(Date.from(detail.getTimeStart()));
                     tripPassenger.setWaitingTime(detail.getDriverWaitingTime());
                     tripPassenger.setPrice(detail.getOpenPrice());
+                    tripPassenger.setRegisterStatus(detail.getStatus());
 
                     Driver driver = driverService.getDriverByEmail(tripPassenger.getDriverEmail());
                     Vehicle vehicle = vehicleService.getVehicleByID(driver.getCurrentVehicle());
@@ -204,9 +209,8 @@ public class PassengerTrip {
                     Promotiontrip promotiontrip = promotionTripService.getPromotionTripById(detail.getTripCode());
                     tripPassenger.setTripStatus(promotiontrip.getStatus());
                     listTripHistory.add(tripPassenger);
-                }
-            }
 
+            }
             listTripHistory = passengerTripService.filterTripPassenger(listTripHistory,filterTripPassenger);
             response.setObject(listTripHistory);
             response.setStatus(masterStatus.SUCCESSFULL);
@@ -218,7 +222,32 @@ public class PassengerTrip {
         }
     }
 
+    @PostMapping("/PassengerCancelTrip")
+    public ResponseEntity<?> PassengerCancelTrip (@RequestBody TripPassenger rp) {
+            ResopnseContent response = new ResopnseContent();
+        try {
+            MasterTripStatus m = new MasterTripStatus();
+            Trip t = tripService.getTripById(rp.getTripID());
+            RegisterStatus registerStatus =new RegisterStatus();
+            if(!t.getRiderID().equals(rp.getPassengerEmail())){
+                response.setContent("You have no permistion!");
+                return ResponseEntity.badRequest().body(response);
+            }
+            if(t.getStatus().equals(registerStatus.APPROVE)){
+                Promotiontrip promotiontrip = promotionTripService.getPromotionTripById(t.getTripCode());
+                promotiontrip.setNumberCapacityRegistered(promotiontrip.getNumberCapacityRegistered()-t.getDuration());
+                promotionTripService.SavePromotionTrip(promotiontrip);
+            }
+            t.setStatus(registerStatus.CANCEL);
+            response.setContent(tripService.DeleteTrip(t)+"");
+            response.setObject(t);
+            return ResponseEntity.ok().body(response);
+        }catch (Exception exception){
+            response.setContent(exception.toString());
+            return ResponseEntity.badRequest().body(response);
+        }
 
+    }
 
 //    @GetMapping("/detail")
 //    public ResponseEntity<?> TripDetail (String id){

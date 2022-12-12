@@ -1,8 +1,7 @@
 package com.G13;
 
 import com.G13.domain.Driver;
-import com.G13.domain.Vehicle;
-import com.G13.repo.DriverRepository;
+import com.G13.repository.DriverRepository;
 import com.G13.service.DriverService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
