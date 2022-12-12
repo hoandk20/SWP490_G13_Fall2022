@@ -1,7 +1,7 @@
 package com.G13.service;
 
 import com.G13.domain.Trip;
-import com.G13.master.RegisterStatus;
+import com.G13.masterData.RegisterStatus;
 import com.G13.repository.TripRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

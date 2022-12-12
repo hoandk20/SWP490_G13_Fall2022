@@ -1,7 +1,7 @@
 package com.G13.service;
 
 import com.G13.domain.Promotiontrip;
-import com.G13.master.MasterTripStatus;
+import com.G13.masterData.MasterTripStatus;
 import com.G13.repository.PromotiontripRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.G13.domain;
 
 import com.G13.modelDto.ResopnseContent;
-import com.G13.master.MasterStatus;
+import com.G13.masterData.MasterStatus;
 
 import javax.persistence.*;
 import java.time.Instant;

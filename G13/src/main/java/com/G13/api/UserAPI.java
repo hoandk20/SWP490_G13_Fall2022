@@ -2,7 +2,7 @@ package com.G13.api;
 
 
 import com.G13.domain.*;
-import com.G13.master.*;
+import com.G13.masterData.*;
 import com.G13.modelDto.*;
 import com.G13.repository.*;
 import com.G13.service.*;

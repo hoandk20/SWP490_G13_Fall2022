@@ -1,4 +1,4 @@
-package com.G13.master;
+package com.G13.masterData;
 
 public class RegisterStatus {
     public String PENDING = "PEND";

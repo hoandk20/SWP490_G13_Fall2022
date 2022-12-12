@@ -1,7 +1,7 @@
 package com.G13.api;
 
 import com.G13.domain.*;
-import com.G13.master.MasterStatus;
+import com.G13.masterData.MasterStatus;
 import com.G13.modelDto.*;
 import com.G13.service.*;
 import lombok.RequiredArgsConstructor;

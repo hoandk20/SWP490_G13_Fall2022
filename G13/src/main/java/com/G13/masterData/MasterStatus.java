@@ -1,4 +1,4 @@
-package com.G13.master;
+package com.G13.masterData;
 
 public class MasterStatus {
     public String SUCCESSFULL = "SUCCESSFULL";

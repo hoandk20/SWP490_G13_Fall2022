@@ -1,9 +1,9 @@
 package com.G13.api;
 
 import com.G13.domain.*;
-import com.G13.master.MasterStatus;
-import com.G13.master.MasterTripStatus;
-import com.G13.master.RegisterStatus;
+import com.G13.masterData.MasterStatus;
+import com.G13.masterData.MasterTripStatus;
+import com.G13.masterData.RegisterStatus;
 import com.G13.modelDto.ChangeStatus;
 import com.G13.modelDto.ResopnseContent;
 import com.G13.modelDto.TripPassenger;
