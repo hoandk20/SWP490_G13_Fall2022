@@ -1,6 +1,5 @@
 package com.G13.api;
 
-import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.*;
 import com.G13.modelDto.*;
@@ -28,6 +27,7 @@ public class Register {
     private final CommonService commonService;
     private final DriverService driverService;
     private final RiderService riderService;
+    private final FileService fileService;
 
     @PostMapping("/RegisterCompany")
     public ResponseEntity<?> RegisterCompany(@RequestBody RegisterCompany rc) {
@@ -281,8 +281,7 @@ public class Register {
             document.setExpiredYear(doc.getExpired_year());
 
             Instant instant1 = Instant.now();
-            FileManage fileManage = new FileManage();
-            String filePath = fileManage.convertBase64ToImage(doc.getBase64(), time + "");
+            String filePath = fileService.convertBase64ToImage(doc.getBase64(), time + "");
             document.setLink(filePath);
             document.setCreatedBy(doc.getCreateBy());
             document.setCreatedDate(instant);
@@ -321,8 +320,7 @@ public class Register {
             document.setExpiredMonth(doc.getExpired_month());
             document.setExpiredYear(doc.getExpired_year());
             Instant instant1 = Instant.now();
-            FileManage fileManage = new FileManage();
-            String filePath = fileManage.convertBase64ToImage(doc.getBase64(), time + "");
+            String filePath = fileService.convertBase64ToImage(doc.getBase64(), time + "");
             document.setLink(filePath);
             document.setCreatedBy(doc.getCreateBy());
             document.setCreatedDate(instant);
@@ -359,12 +357,11 @@ public class Register {
             List<DocumentRequest> documentRequests = new ArrayList<>();
             for (Vehicledocument vehicledocument : vehicledocuments) {
                 DocumentRequest documentRequest = new DocumentRequest();
-                FileManage fileManage = new FileManage();
                 Document document = documentService
                         .GetDocById(vehicledocument.getDocumentid().getId());
                 doc.setExpired_month(document.getExpiredMonth());
                 doc.setExpired_year(document.getExpiredYear());
-                doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
+                doc.setBase64(fileService.GetBase64FromPath(document.getLink()));
                 doc.setId(document.getId());
                 documentRequests.add(doc);
             }
@@ -385,7 +382,6 @@ public class Register {
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
         try {
-            FileManage fileManage = new FileManage();
             Document document = documentService
                     .GetDocumentByCreateByAndFileName(createBy, file_name);
             try {
@@ -400,7 +396,7 @@ public class Register {
             if (document != null) {
                 doc.setExpired_month(document.getExpiredMonth());
                 doc.setExpired_year(document.getExpiredYear());
-                doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
+                doc.setBase64(fileService.GetBase64FromPath(document.getLink()));
                 doc.setId(document.getId());
                 doc.setStatus(document.getStatus());
                 doc.setFile_name(document.getFileName());

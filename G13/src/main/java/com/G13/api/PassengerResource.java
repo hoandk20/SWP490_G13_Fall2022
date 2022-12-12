@@ -1,6 +1,5 @@
 package com.G13.api;
 
-import com.G13.File.FileManage;
 import com.G13.domain.Document;
 import com.G13.domain.Promotiontrip;
 import com.G13.domain.Rider;
@@ -14,10 +13,7 @@ import com.G13.modelDto.ReportDriverPassenger;
 import com.G13.modelDto.ResopnseContent;
 import com.G13.modelDto.UserInfo;
 import com.G13.repository.*;
-import com.G13.service.CommonService;
-import com.G13.service.DocumentService;
-import com.G13.service.PromotionTripService;
-import com.G13.service.RiderService;
+import com.G13.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +31,7 @@ public class PassengerResource {
     private final DocumentService documentService;
     private final CommonService commonService;
     private final RiderService riderService;
+    private final FileService fileService;
 
     @GetMapping("/reportPassenger")
     public ResponseEntity<?> reportDriver(String passengerEmail) {
@@ -139,8 +136,7 @@ public class PassengerResource {
                     .GetDocumentByCreateByAndFileName(passengerInfo.getEmail(),uploadFileMaster.avatar);
 
             if(document!=null){
-                FileManage fileManage = new FileManage();
-                passengerInfo.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
+                passengerInfo.setAvatarBase64(fileService.GetBase64FromPath(document.getLink()));
             }
 
             response.setObject(passengerInfo);

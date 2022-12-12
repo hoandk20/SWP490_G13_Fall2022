@@ -1,6 +1,5 @@
 package com.G13.api;
 
-import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.CarStatus;
 import com.G13.master.MasterStatus;
@@ -25,6 +24,7 @@ public class DriverResource {
     private final DocumentService documentService;
     private final PromotionTripService promotionTripService;
     private final CommonService commonService;
+    private final FileService fileService;
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle (@RequestBody VehicleRequest vr) {
         Date date = new Date();
@@ -170,8 +170,7 @@ public class DriverResource {
                 Document document = documentService
                         .GetDocumentByCreateByAndFileName(driver.getEmail(),uploadFileMaster.avatar);
                 if(document!=null){
-                    FileManage fileManage = new FileManage();
-                    r.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
+                    r.setAvatarBase64(fileService.GetBase64FromPath(document.getLink()));
                 }
 
             response.setStatus(masterStatus.SUCCESSFULL);

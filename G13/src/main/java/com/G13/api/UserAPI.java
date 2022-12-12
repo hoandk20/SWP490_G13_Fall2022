@@ -1,7 +1,6 @@
 package com.G13.api;
 
 
-import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.*;
 import com.G13.modelDto.*;
@@ -32,7 +31,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class UserAPI {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final CompanyService companyService;
     private final RiderService riderService;
     private final DocumentRepository documentRepository;
@@ -42,6 +40,7 @@ public class UserAPI {
     private final CityService cityService;
     private final VehicleService vehicleService;
     private final CommonService commonService;
+    private final FileService fileService;
 
     @GetMapping("user/info")
     public ResponseEntity<?> getUserInfo(String username) {
@@ -55,8 +54,7 @@ public class UserAPI {
                 .findFirst1ByCreatedByAndFileNameOrderByCreatedDateDesc(username, uploadFileMaster.avatar);
 
         if (document != null) {
-            FileManage fileManage = new FileManage();
-            userInfo.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
+            userInfo.setAvatarBase64(fileService.GetBase64FromPath(document.getLink()));
             userInfo.setEmail(username);
         }
         Driver driver = driverService.getDriverByEmail(username);

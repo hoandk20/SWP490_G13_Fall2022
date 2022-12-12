@@ -1,6 +1,5 @@
 package com.G13.api;
 
-import com.G13.File.FileManage;
 import com.G13.domain.*;
 import com.G13.master.*;
 import com.G13.modelDto.*;
@@ -28,6 +27,7 @@ public class CompanyResource {
     private final PromotionTripService promotionTripService;
     private final TripService tripService;
     private final CommonService commonService;
+    private final FileService fileService;
 
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle(@RequestBody VehicleRequest vr) {
@@ -155,7 +155,6 @@ public class CompanyResource {
                         vehicleDocumentService.getVehicleDocumentByVehicle(vehicleService.getVehicleByID(vehicle.getId()));
                 for (Vehicledocument vehicledocument : vehicledocuments) {
                     DocumentRequest doc = new DocumentRequest();
-                    FileManage fileManage = new FileManage();
                     Document document = documentService
                             .GetDocById(vehicledocument.getDocumentid().getId());
                     doc.setExpired_month(document.getExpiredMonth());
@@ -197,14 +196,13 @@ public class CompanyResource {
 
             int id = Integer.parseInt(docId);
             DocumentRequest doc = new DocumentRequest();
-            FileManage fileManage = new FileManage();
             Document document = documentService
                     .GetDocById(id);
             doc.setExpired_month(document.getExpiredMonth());
             doc.setExpired_year(document.getExpiredYear());
             doc.setFile_name(document.getFileName());
             doc.setStatus(document.getStatus());
-            doc.setBase64(fileManage.GetBase64FromPath(document.getLink()));
+            doc.setBase64(fileService.GetBase64FromPath(document.getLink()));
             doc.setId(document.getId());
 
 
@@ -646,8 +644,7 @@ public class CompanyResource {
                     .GetDocumentByCreateByAndFileName(companyInfo.getEmail(),uploadFileMaster.avatar);
 
             if(document!=null){
-                FileManage fileManage = new FileManage();
-                companyInfo.setAvatarBase64(fileManage.GetBase64FromPath(document.getLink()));
+                companyInfo.setAvatarBase64(fileService.GetBase64FromPath(document.getLink()));
             }
 
 
