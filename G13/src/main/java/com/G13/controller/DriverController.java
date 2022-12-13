@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.domain.*;
 import com.G13.masterData.CarStatus;
@@ -17,7 +17,7 @@ import java.util.*;
 @RequestMapping("/api/driver")
 @CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RequiredArgsConstructor
-public class DriverResource {
+public class DriverController {
     private final DriverService driverService;
     private final CompanyService companyService;
     private final VehicleService vehicleService;

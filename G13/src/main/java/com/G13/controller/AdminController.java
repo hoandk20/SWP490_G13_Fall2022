@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.domain.*;
 import com.G13.masterData.MasterStatus;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/admin")
 @CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequiredArgsConstructor
-public class AdminResource {
+public class AdminController {
     private final DriverService driverService;
     private final TripService tripService;
     private final CompanyService companyService;

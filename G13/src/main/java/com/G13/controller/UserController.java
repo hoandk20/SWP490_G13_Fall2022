@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 
 import com.G13.domain.*;
@@ -28,7 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class UserAPI {
+public class UserController {
 
     private final UserService userService;
     private final CompanyService companyService;
@@ -275,7 +275,7 @@ public class UserAPI {
             String newPassword = commonService.generatePassword(8);
             user.setPassword(newPassword);
             userService.saveUser(user);
-            MailAPI mailAPI = new MailAPI();
+            MailController mailAPI = new MailController();
             mailAPI.ForgotPasswor(user.getEmail(), newPassword);
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {

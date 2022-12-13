@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.modelDto.emailSend;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.Properties;
 @RequestMapping("/api/admin")
 @CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RequiredArgsConstructor
-public class MailAPI {
+public class MailController {
 
 
     final String fromEmail = "hoantnet12345@gmail.com";

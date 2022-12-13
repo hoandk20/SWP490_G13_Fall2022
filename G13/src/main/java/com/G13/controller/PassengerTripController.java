@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.domain.*;
 import com.G13.masterData.MasterStatus;
@@ -20,7 +20,7 @@ import java.util.*;
 @RequestMapping("/api/tripPassenger")
 @CrossOrigin(origins= {"*"}, maxAge = 4800, allowCredentials = "false" )
 @RequiredArgsConstructor
-public class PassengerTrip {
+public class PassengerTripController {
 
     private final TripService tripService;
     private final RiderService riderService;

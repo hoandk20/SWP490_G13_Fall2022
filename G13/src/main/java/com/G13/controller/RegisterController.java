@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.domain.*;
 import com.G13.masterData.*;
@@ -15,7 +15,7 @@ import java.util.*;
 @RequestMapping("/api")
 @CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequiredArgsConstructor
-public class Register {
+public class RegisterController {
 
     private final UserService userService;
     private final UserRoleService userRoleService;
@@ -75,7 +75,7 @@ public class Register {
             verifyaccount.setStatus("0");
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
-            MailAPI mailAPI = new MailAPI();
+            MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(rc.getEmail(), verifyaccount.getVerificode());
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
             return ResponseEntity.ok().body(response);
@@ -167,7 +167,7 @@ public class Register {
             verifyaccount.setStatus("0");
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
-            MailAPI mailAPI = new MailAPI();
+            MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(rd.getEmail(), verifyaccount.getVerificode());
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
             response.setStatus(masterStatus.SUCCESSFULL);
@@ -249,7 +249,7 @@ public class Register {
             verifyaccount.setStatus("0");
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
-            MailAPI mailAPI = new MailAPI();
+            MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(rp.getEmail(), verifyaccount.getVerificode());
 
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
@@ -467,7 +467,7 @@ public class Register {
             GenerateGUID guid = new GenerateGUID();
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(now.plusSeconds(60));
-            MailAPI mailAPI = new MailAPI();
+            MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(email, verifyaccount.getVerificode());
             verifyAccountService.SaveVerifyAccount(verifyaccount);
             response.setContent("send successfull");

@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.domain.*;
 import com.G13.masterData.*;
@@ -15,7 +15,7 @@ import java.util.*;
 @RequestMapping("/api/company")
 @CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequiredArgsConstructor
-public class CompanyResource {
+public class CompanyController {
 
     private final CompanyService companyService;
     private final VehicleService vehicleService;

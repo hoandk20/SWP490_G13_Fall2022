@@ -1,13 +1,10 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.domain.*;
 import com.G13.masterData.MasterStatus;
 import com.G13.masterData.MasterTripStatus;
 import com.G13.masterData.RegisterStatus;
-import com.G13.modelDto.ResopnseContent;
-import com.G13.modelDto.TripDriver;
-import com.G13.modelDto.TripPassenger;
-import com.G13.modelDto.filterTripPassenger;
+import com.G13.modelDto.*;
 import com.G13.service.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +20,7 @@ import java.util.*;
 @RequestMapping("/api/tripdriver")
 @CrossOrigin(origins = {"*"}, maxAge = 4800, allowCredentials = "false")
 @RequiredArgsConstructor
-
-public class DriverTrip {
+public class DriverTripController {
 
     private final PromotionTripService promotionTripService;
     private final TripService tripService;
@@ -161,7 +157,7 @@ public class DriverTrip {
         MasterStatus masterStatus = new MasterStatus();
         try {
 
-            List<Promotiontrip> list = promotionTripService.getAllByStatus(searchTrip.status);
+            List<Promotiontrip> list = promotionTripService.getAllByStatus(searchTrip.getStatus());
             List<TripDriver> driverTrips = new ArrayList<>();
             for (Promotiontrip detail : list
             ) {
@@ -190,7 +186,8 @@ public class DriverTrip {
 
                 driverTrips.add(tripDriver);
             }
-            driverTrips = filterTrip(driverTrips, searchTrip.listPolyline, searchTrip.registerSeat, searchTrip.dateStart, searchTrip.timeStart);
+            driverTrips = filterTrip(driverTrips, searchTrip.getListPolyline(), searchTrip.getRegisterSeat(), searchTrip.getDateStart(),
+                    searchTrip.getTimeStart());
             Collections.sort(driverTrips, new Comparator<TripDriver>() {
                 @Override
                 public int compare(TripDriver o1, TripDriver o2) {
@@ -414,13 +411,5 @@ public class DriverTrip {
 
 }
 
-@Data
-class SearchTrip {
-    String id;
-    String listPolyline;
-    String registerSeat;
-    String status;
-    Date dateStart;
-    String timeStart;
-}
+
 

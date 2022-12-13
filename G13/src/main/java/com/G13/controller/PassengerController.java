@@ -1,4 +1,4 @@
-package com.G13.api;
+package com.G13.controller;
 
 import com.G13.domain.Document;
 import com.G13.domain.Promotiontrip;
@@ -25,7 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/passenger")
 @RequiredArgsConstructor
-public class PassengerResource {
+public class PassengerController {
     private final PromotionTripService promotionTripService;
     private final TripRepository tripRepository;
     private final DocumentService documentService;
