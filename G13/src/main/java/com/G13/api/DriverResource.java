@@ -85,6 +85,12 @@ public class DriverResource {
                 r.setDocStatus("");
                 r.setLh("");
                 r.setCountry(driver.getCountryCode());
+                try{
+                    r.setCityId(driver.getBranchCityId());
+                }catch (Exception e){
+                    System.out.println(e.toString());
+                }
+
                 try {
                     int companyId = driver.getCompanyID();
                     Company company = companyService.getCompanyByID(companyId);

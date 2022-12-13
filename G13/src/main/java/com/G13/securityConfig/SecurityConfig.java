@@ -1,4 +1,4 @@
-package com.G13.security;
+package com.G13.securityConfig;
 
 
 

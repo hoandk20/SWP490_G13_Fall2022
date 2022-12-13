@@ -124,10 +124,7 @@ public class CompanyResource {
                 vehicleRequest.setPlateCountry(vehicle.getLisencePlatCountry());
                 vehicleRequest.setTypeId(vehicle.getCarTypeID());
                 vehicleRequest.setVehicleStatus(vehicle.getStatus());
-                Driver driver = driverService.getDriverByVehicleId(vehicle.getId());
-                if (driver != null) {
-                    vehicleRequest.setDriverEmail(driver.getEmail());
-                }
+
                 if (!plate.equals("")) {
                     if (!vehicleRequest.getPlate().contains(plate)) {
                         continue;
@@ -591,6 +588,11 @@ public class CompanyResource {
             companyInfo.setPhone(c.getPhoneNo());
             companyInfo.setCompanyName(c.getName());
             companyInfo.setCompanyStatus(c.getStatus());
+            try{
+                companyInfo.setCityId(c.getCityID());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
             UploadFileMaster uploadFileMaster = new UploadFileMaster();
             Document document1 = documentService
                     .GetDocumentByCreateByAndFileName(companyInfo.getEmail(), uploadFileMaster.Bang_lai_xe);
