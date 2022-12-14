@@ -1,7 +1,7 @@
 package com.G13;
 
 import com.G13.domain.Document;
-import com.G13.repo.DocumentRepository;
+import com.G13.repository.DocumentRepository;
 import com.G13.service.DocumentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

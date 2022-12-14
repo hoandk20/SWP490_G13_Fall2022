@@ -1,7 +1,7 @@
 package com.G13.service;
 
-import com.G13.model.TripPassenger;
-import com.G13.model.filterTripPassenger;
+import com.G13.modelDto.TripPassenger;
+import com.G13.modelDto.filterTripPassenger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class PassengerTripService {
         for (TripPassenger t:tripPassengerList
         ) {
             if(filter.driverEmail!=null&&!filter.driverEmail.equals("")){
-                if(!t.getDriverEmail().contains(filter.driverEmail)){
+                if(!t.getDriverEmail().toLowerCase().contains(filter.driverEmail.toLowerCase())){
                     continue;
                 }
             }

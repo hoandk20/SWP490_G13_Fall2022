@@ -1,11 +1,8 @@
 package com.G13;
 
 import com.G13.domain.Company;
-import com.G13.domain.Driver;
-import com.G13.repo.CompanyRepository;
-import com.G13.repo.DriverRepository;
+import com.G13.repository.CompanyRepository;
 import com.G13.service.CompanyService;
-import com.G13.service.DriverService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

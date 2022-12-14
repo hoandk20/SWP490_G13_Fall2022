@@ -1,8 +1,8 @@
 package com.G13.service;
 
 import com.G13.domain.Trip;
-import com.G13.model.TripDriver;
-import com.G13.model.filterTripPassenger;
+import com.G13.modelDto.TripDriver;
+import com.G13.modelDto.filterTripPassenger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class TripDriverService {
                 List<Trip> listRegister = tripService.getAllByTripCode(t.getTripID());
                 boolean isHasPassenger = false;
                 for (Trip trip:listRegister) {
-                    if(trip.getRiderID().contains(filter.passengerEmail)){
+                    if(trip.getRiderID().toLowerCase().contains(filter.passengerEmail.toLowerCase())){
                         isHasPassenger = true;
                     }
                 }

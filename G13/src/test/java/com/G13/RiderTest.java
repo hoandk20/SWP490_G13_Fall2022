@@ -1,11 +1,8 @@
 package com.G13;
 
 import com.G13.domain.Rider;
-import com.G13.domain.User;
-import com.G13.repo.RiderRepository;
-import com.G13.repo.UserRepository;
+import com.G13.repository.RiderRepository;
 import com.G13.service.RiderService;
-import com.G13.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

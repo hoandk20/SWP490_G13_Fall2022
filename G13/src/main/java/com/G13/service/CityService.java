@@ -1,7 +1,7 @@
 package com.G13.service;
 
 import com.G13.domain.Cityname;
-import com.G13.repo.CitynameRepository;
+import com.G13.repository.CitynameRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

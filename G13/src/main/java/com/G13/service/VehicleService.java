@@ -1,7 +1,7 @@
 package com.G13.service;
 
 import com.G13.domain.Vehicle;
-import com.G13.repo.VehicleRepository;
+import com.G13.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +29,9 @@ public class VehicleService {
     }
     public List<Vehicle> getVehicleByCompanyId(int id){
         return vehicleRepository.findByCompanyIDOrderByCreatedDateDesc(id);
+    }
+    public List<Vehicle> getAllVehicle(){
+        return vehicleRepository.findAll();
     }
 
     public List<Vehicle> getVehicleByCompanyIdAndStatus(int id,String status){

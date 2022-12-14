@@ -1,10 +1,7 @@
 package com.G13;
 
-import com.G13.domain.Vehicle;
 import com.G13.domain.Verifyaccount;
-import com.G13.repo.VehicleRepository;
-import com.G13.repo.VerifyaccountRepository;
-import com.G13.service.VehicleService;
+import com.G13.repository.VerifyaccountRepository;
 import com.G13.service.VerifyAccountService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import java.time.YearMonth;
+
 @SpringBootTest
 public class VerifyAccountTest {
     @Mock

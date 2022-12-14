@@ -2,14 +2,10 @@ package com.G13;
 
 
 
-import com.G13.domain.Cityname;
 import com.G13.domain.User;
-import com.G13.domain.Vehicle;
-import com.G13.model.UserChangePassword;
-import com.G13.repo.UserRepository;
-import com.G13.security.SecurityConfig;
+import com.G13.modelDto.UserChangePassword;
+import com.G13.repository.UserRepository;
 import com.G13.service.UserService;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

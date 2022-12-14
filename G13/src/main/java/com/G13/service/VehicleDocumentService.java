@@ -3,7 +3,7 @@ package com.G13.service;
 import com.G13.domain.Document;
 import com.G13.domain.Vehicle;
 import com.G13.domain.Vehicledocument;
-import com.G13.repo.VehicledocumentRepository;
+import com.G13.repository.VehicledocumentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.G13.service;
 
-import com.G13.model.PassengerInfo;
-import com.G13.model.RegisterDriverCompany;
-import com.G13.model.TripDriver;
+import com.G13.modelDto.PassengerInfo;
+import com.G13.modelDto.RegisterDriverCompany;
+import com.G13.modelDto.TripDriver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -30,7 +28,7 @@ public class AdminService {
         for (RegisterDriverCompany r : list
         ) {
             if (email != null && !email.equals("")) {
-                if (!r.getEmail().contains(email)) {
+                if (!r.getEmail().toLowerCase().contains(email.toLowerCase())) {
                     continue;
                 }
             }
@@ -40,7 +38,7 @@ public class AdminService {
                 }
             }
             if (driverName != null && !driverName.equals("")) {
-                if (!(driverName).contains(r.getFirstName())
+                if (!(driverName.toLowerCase()).contains(r.getFirstName().toLowerCase())
                         && !driverName.contains((r.getLastName()))) {
                     continue;
                 }
@@ -95,55 +93,36 @@ public class AdminService {
 
         return listResult;
     }
-    public List<TripDriver> filterlistTrips(List<TripDriver> list, String regFrom, String regTo, String phoneDriver,
+    public List<TripDriver> filterlistTrips(List<TripDriver> list, Date regFrom, Date regTo, String phoneDriver,
                                       String phonePassenger, String Status) {
-        List<TripDriver> listResult = list;
-        if (regFrom.equals(regTo) && !regFrom.equals("")) {
-            try {
-                listResult = listResult.stream().filter(c -> c.getInstantTimeStart().equals(Instant.parse(regFrom))).collect(toList());
-            } catch (Exception e) {
-                System.out.println(e.toString());
+        List<TripDriver> listResult = new ArrayList<>();
+
+        for (TripDriver t:list) {
+            if(phoneDriver!=null&&!phoneDriver.equals("")){
+                if(!t.getPhoneDriver().contains(phoneDriver)){continue;}
             }
-        } else {
-            if (!regFrom.equals("")) {
-                try {
-                    listResult = listResult.stream().filter(c -> c.getInstantTimeStart().isAfter(Instant.parse(regFrom))).collect(toList());
-                } catch (Exception e) {
-                    System.out.println(e.toString());
+            if(phonePassenger!=null&&!phonePassenger.equals("")){
+                if(!t.getPhonePassenger().contains(phonePassenger)){continue;}
+            }
+            if(Status!=null&&!Status.equals("")){
+                if(!t.getStatus().contains(Status)){continue;}
+            }
+            if (regFrom != null) {
+                Instant instantFrom = regFrom.toInstant();
+                if (instantFrom.compareTo(t.getInstantTimeStart()) > 0) {
+                    continue;
                 }
             }
-            if (!regTo.equals("")) {
-                try {
-                    listResult = listResult.stream().filter(c -> c.getInstantTimeStart().isAfter(Instant.parse(regTo))).collect(toList());
-                } catch (Exception e) {
-                    System.out.println(e.toString());
+            if (regTo != null) {
+                Instant instantTo = regTo.toInstant();
+                if (instantTo.compareTo(t.getInstantTimeStart()) < 0) {
+                    continue;
                 }
             }
+
+            listResult.add(t);
         }
 
-
-        if (!phoneDriver.equals("")) {
-            listResult = listResult.stream().filter(c -> c.getPhoneDriver().contains(phoneDriver)).collect(toList());
-        }
-        try {
-            if (!phonePassenger.equals("")) {
-                List<TripDriver> list1 = new ArrayList<>();
-                for (TripDriver t : listResult
-                ) {
-                    if (t.getPhonePassenger() != null && t.getPhonePassenger().contains(phonePassenger)) {
-                        list1.add(t);
-                    }
-                }
-                listResult = list1;
-            }
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-
-        if (!Status.equals("")) {
-            listResult = listResult.stream().filter(c -> c.getStatus().contains(Status)).collect(toList());
-
-        }
         return listResult;
     }
 }

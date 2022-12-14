@@ -1,17 +1,13 @@
 package com.G13;
 
-import com.G13.domain.Promotiontrip;
 import com.G13.domain.Vehicle;
-import com.G13.repo.UserRepository;
-import com.G13.repo.VehicleRepository;
-import com.G13.service.UserService;
+import com.G13.repository.VehicleRepository;
 import com.G13.service.VehicleService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
