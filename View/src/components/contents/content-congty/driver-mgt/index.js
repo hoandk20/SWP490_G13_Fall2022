@@ -21,10 +21,18 @@ const DriverManagement = () => {
     const user=useSelector((state)=>state.user.userInfo?.currentUser);
     const all=useSelector((state)=>state.user.drivers?.all);
      const drivers=all?.map((row)=> ({ ...row,key:row.driverID,name:row.firstName+" "+row.lastName }));
+    const allDriver = drivers?.map((row)=>{
+        if(row.status==="NEW"){
+            return { ...row, row,  statusDriver: "Chưa hoạt động" }
+        }else if(row.status==="ACT"){
+            return { ...row, row,  statusDriver: "Hoạt động" }
+        }
+    })
+
      const allCity = useSelector((state) => state.data.citys?.all);
      const citys=allCity?.map((row)=> ({value:row.id.cityID,label:row.cityName}));
      const [city, setCity] = useState("");
-console.log("drivers",drivers);
+
     const handleDelete = (key) => {
         console.log(key);
          deleteDriverByCompany(key,user.email,toast,dispatch);
@@ -88,9 +96,9 @@ const columns = [
         dataIndex: 'phoneNumber',
     },
     {
-        key: 'status',
+        key: 'statusDriver',
         title: 'Trạng thái',
-        dataIndex: 'status',
+        dataIndex: 'statusDriver',
     },
 
     
@@ -198,7 +206,7 @@ const columns = [
                     <AddDriverForCompany/>
                 </div>
                 <div className='table-info' style={{marginTop:"5%"}}>
-                <Table columns={columns} dataSource={drivers} size="middle" />
+                <Table columns={columns} dataSource={allDriver} size="middle" />
                 </div>
 
             </div>

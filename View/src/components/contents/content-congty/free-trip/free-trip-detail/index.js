@@ -53,13 +53,20 @@ const TripDetailCompany = () => {
         date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
 
     var formatted_date = date_parts + formatted.substr(formatted.indexOf(",") + 1);
-    // console.log(formatted_date);
-    // var timeStart=new Date(tripDriverDetail?.timeStart);
-    // console.log(timeStart.toString("dd/M/yyyy hh:mm:ss tt"));
+
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
+    useEffect(() => {
+        calculateRoute();
+     }, [isLoaded]) 
+ 
+  
+     if (!isLoaded) {
+         return <></>
+     }
+
     async function calculateRoute() {
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
@@ -88,10 +95,10 @@ const TripDetailCompany = () => {
     const endTrip = () => {
         changeStatusTripDriver(tripDriverDetail.id, "CLOS", dispatch, navigate);
     }
-    useEffect(() => {
-        getTripDetailDriver(detail.id, dispatch);
-        calculateRoute()
-    }, [])
+    // useEffect(() => {
+    //     getTripDetailDriver(detail.id, dispatch);
+    //     calculateRoute()
+    // }, [])
     return (
         <div className='container'>
             <div className='container-info'>

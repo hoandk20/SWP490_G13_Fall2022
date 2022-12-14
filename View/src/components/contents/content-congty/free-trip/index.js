@@ -1,10 +1,10 @@
-import { Button, Checkbox, Form, Input, item, Col, Select, Table, DatePicker, Row } from 'antd';
+import { Button, Checkbox, Form, Input, item, Col, Select, Table, DatePicker, Row, Spin } from 'antd';
 import FormItem from 'antd/es/form/FormItem';
 import React, { useEffect } from 'react';
 import { FilterOutlined, EyeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetAllTripByCompany, getTripHistoryDriver, tripHistoryDriver } from '../../../../redux/apiRequest';
+import { GetAllTripByCompany, getTripDetailDriver, getTripHistoryDriver, tripHistoryDriver } from '../../../../redux/apiRequest';
 import { useState } from 'react';
 
 
@@ -19,6 +19,7 @@ const TripsCompany = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
     // const [tripHistory,setTripHistory] =useState();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     console.log(user);
@@ -46,7 +47,6 @@ const TripsCompany = () => {
   })
   console.log(trips);
     const onfinish = (values) => {
-        console.log("ád");
         const object = {
             companyID:user?.companyId,
             driverEmail: values.driverEmail,
@@ -66,11 +66,7 @@ const TripsCompany = () => {
         GetAllTripByCompany(object,dispatch);
     }, [])
     const columns = [
-        {
-            key: 'index',
-            title: 'Số',
-            dataIndex: 'index',
-        },
+
         {
             key: 'dateStart',
             title: 'Thời gian bắt đầu',
@@ -108,7 +104,16 @@ const TripsCompany = () => {
             render: (text, record, index) => {
 
                 return <div>
-                    <EyeOutlined onClick={() => { navigate('/congty/trips/detail', { state: { record } }) }} />
+                    <EyeOutlined onClick={() => {
+                         getTripDetailDriver(record.id,dispatch);
+                         setLoading(true);
+                        
+                         setTimeout(() => {
+                             setLoading(false);
+                             navigate('/congty/trips/detail', { state: { record } }) 
+                         }, 1000)
+                      
+                         }} />
 
                 </div>
             },
@@ -116,6 +121,7 @@ const TripsCompany = () => {
 
     ];
     return (
+        <Spin spinning={loading} tip="Loading" size="large">
         <div className='container'>
             <div className='container-infos' >
                 <h2>LỊCH SỬ CHYẾN ĐI</h2>
@@ -154,7 +160,7 @@ const TripsCompany = () => {
                                     name="dateFrom"
                                     label="Từ ngày"
                                     labelCol={{
-                                        span: 8,
+                                        span: 12,
                                     }}
                                 >
                                     <DatePicker />
@@ -165,7 +171,7 @@ const TripsCompany = () => {
                                     name="dateTo"
                                     label="Đến ngày"
                                     labelCol={{
-                                        span: 6,
+                                        span: 4,
                                     }}
                                 >
                                     <DatePicker />
@@ -204,6 +210,7 @@ const TripsCompany = () => {
                 </div>
             </div>
         </div>
+        </Spin>
     )
 }
 export default TripsCompany

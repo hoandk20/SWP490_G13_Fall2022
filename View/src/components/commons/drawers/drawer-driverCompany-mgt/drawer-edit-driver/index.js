@@ -173,7 +173,7 @@ const EditDriverForCompany = (props) => {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input disabled/>
                             </Form.Item>
                         </Col>
 
@@ -214,9 +214,9 @@ const EditDriverForCompany = (props) => {
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
-                                name="Số điện thoại"
+                                name="phoneNumber"
                                 initialValue={drivers.phoneNumber}
-                                label="Phone number"
+                                label="Số điện thoại"
                                 rules={[
                                     {
 

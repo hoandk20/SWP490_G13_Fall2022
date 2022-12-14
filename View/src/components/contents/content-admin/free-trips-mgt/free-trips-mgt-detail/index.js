@@ -60,6 +60,14 @@ const TripDetailAdmin = () => {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
+    useEffect(() => {
+        // getTripDetailDriver(detail.id, dispatch);
+       calculateRoute();
+    }, [isLoaded]) 
+
+    if (!isLoaded) {
+        return <></>
+    }
     async function calculateRoute() {
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
@@ -88,10 +96,10 @@ const TripDetailAdmin = () => {
     const endTrip = () => {
         changeStatusTripDriver(tripDriverDetail.id, "CLOS", dispatch, navigate);
     }
-    useEffect(() => {
-        getTripDetailDriver(detail.id, dispatch);
-        calculateRoute()
-    }, [])
+    // useEffect(() => {
+    //     getTripDetailDriver(detail.id, dispatch);
+    //     calculateRoute()
+    // }, [])
     return (
         <div className='container'>
             <div className='container-info'>

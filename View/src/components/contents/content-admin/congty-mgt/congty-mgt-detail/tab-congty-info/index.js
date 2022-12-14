@@ -42,7 +42,19 @@ const TabCompanyInfo = (props) => {
     const location = useLocation();
     const dispatch = useDispatch();
     // const [companys, setCompanys] = useState(props.companys);
-    const companys = useSelector((state) => state.user.company?.info);
+    const company = useSelector((state) => state.user.company?.info);
+    var companys
+    if(company.companyStatus==="NE"){
+        companys={
+            ...company,
+            companyStatus:"Chưa hoạt động"
+        }
+    }else{
+        companys={
+            ...company,
+            companyStatus:"Chưa hoạt động"
+        }
+    }
     const listDoc = companys.listDoc;
     console.log(companys);
     const allCity = useSelector((state) => state.data.citys?.all);
@@ -55,7 +67,7 @@ const TabCompanyInfo = (props) => {
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm();
-    const URL = "http://26.36.110.116";
+    const [city, setCity] = useState(companys.cityId);
     // if(check1!="SEND")
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
@@ -75,16 +87,20 @@ const TabCompanyInfo = (props) => {
 
 //     const getFileAvatar = async () => {
 //         const file_name = "Avatar";
-//         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
+//         const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
 //             , {
 //                 headers: { 'Content-Type': 'application/json' }
 //             });
 //         setBaseImageAvatar(res.data.object.base64)
 //     }
 // >>>>>>> main
+const handleChangeCity = (e) => {
+    // console.log(e.key);
+    setCity(e.key)
+}
     const getFile1 = async () => {
         const file_name = "Bang_lai_xe";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -93,7 +109,7 @@ const TabCompanyInfo = (props) => {
     }
     const getFile2 = async () => {
         const file_name = "Chung_Nhan_Kinh_nghiem";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -102,7 +118,7 @@ const TabCompanyInfo = (props) => {
     }
     const getFile6 = async () => {
         const file_name = "GP_Kinh_Doanh";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -111,7 +127,7 @@ const TabCompanyInfo = (props) => {
     }
     const getFile7 = async () => {
         const file_name = "GP_Hoat_Dong";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -171,9 +187,13 @@ const TabCompanyInfo = (props) => {
         // UploadFile(image,toast,dispatch);
         const company = {
             ...values,
+            cityId:city,
             companyEmail: user.email,
-        }
+            companyId:companys.companyId,
 
+        }
+        console.log("com",company);
+        EditCompany(company,dispatch,toast)
         setOpen(false);
     };
 
@@ -252,7 +272,7 @@ const TabCompanyInfo = (props) => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -284,7 +304,7 @@ const TabCompanyInfo = (props) => {
             month: month,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -315,7 +335,7 @@ const TabCompanyInfo = (props) => {
             month: month,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -345,7 +365,7 @@ const TabCompanyInfo = (props) => {
             month: month,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -383,7 +403,7 @@ const TabCompanyInfo = (props) => {
                     span: 18,
                 }}
             >
-                <p>Thông tin công ty</p>
+                <h2>Thông tin công ty</h2>
                 <Row>
                     <Col span={8}>
                         <Form.Item
@@ -457,6 +477,7 @@ const TabCompanyInfo = (props) => {
                                 <Select
                                     labelInValue
                                     options={citys}
+                                    onChange={handleChangeCity}
                                 />
                             </Form.Item>
 
@@ -612,7 +633,7 @@ const TabCompanyInfo = (props) => {
                     <div className='card-doc'>
                         <div className='form-header'>
                             <span>
-                                Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
+                            Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên) hoặc lý lịch tư pháp
                                 <div className='status'></div>
                             </span>
 

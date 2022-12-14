@@ -1,11 +1,11 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Col, DatePicker, Form, Row, Select, TimePicker, Button, Table, InputNumber } from 'antd';
+import { Col, DatePicker, Form, Row, Select, TimePicker, Button, Table, InputNumber, Spin } from 'antd';
 import axios from 'axios';
 import React from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { getListFreeTrip, getListFreeTripIsOpen } from '../../../../../redux/apiRequest';
+import { getListFreeTrip, getListFreeTripIsOpen, getTripDetailDriver } from '../../../../../redux/apiRequest';
 import ModalViewDetail from '../../../../commons/modals/modal-view-detail';
 
 import {
@@ -37,7 +37,7 @@ const SerachFreeTripForPassenger = () => {
 
     // const [freeTrips,setFreeTrips] =useState([]);
     const dispatch = useDispatch();
-
+    const [loading, setLoading] = useState(false);
     const trips = useSelector((state) => state.freeTrip.trips?.allTrip);
     console.log("tríp",trips); 
 
@@ -49,7 +49,7 @@ const SerachFreeTripForPassenger = () => {
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
     const freeTrips = trips?.map((row) => ({ ...row, key: row.id, seatRemind: row.seat - row.seatRegistered, dateStart: dateFormat(row.timeStart) ,price:Math.round(row.price/1000)*1000}));
-
+    console.log("trip",freeTrips);
     useEffect(() => {
         getListFreeTripIsOpen(dispatch);
 
@@ -91,46 +91,20 @@ const SerachFreeTripForPassenger = () => {
                 return <div>
 
                     <EyeOutlined onClick={() => {
-                        navigate('/khachhang/freeTrip/detail-of-taixe', { state: { record } })
-
+                        getTripDetailDriver(record.id,dispatch);
+                        setLoading(true);
+                       
+                        setTimeout(() => {
+                            setLoading(false);
+                            navigate('/khachhang/freeTrip/detail-of-taixe', { state: { record } })
+                        }, 1000)
                     }} />
 
                 </div>
             },
         }
     ];
-    const data = [
-        {
-            key: '1',
-            timeStart: '08:00:00 ngày 20/10/2000',
-            from: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-            to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-            fee: '10000 vnd',
-            seat: '3',
-            // status:'Đang mở',
-            // action: <EyeOutlined onClick={showModal} />,
-        },
-        {
-            key: '2',
-            timeStart: '09:00:00 ngày 20/10/2000',
-            from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
-            to: 'Tân Xã, Thạch Thất, Hà Nội, Việt Nam',
-            fee: '20000 vnd',
-            seat: '2',
-            // status:'Đang mở',
-            // action: <EyeOutlined onClick={showModal} />,
-        },
-        {
-            key: '3',
-            timeStart: '09:20:00 ngày 20/10/2000',
-            from: 'Thạch Hòa, Thạch Thất, Hà Nội, Việt Nam',
-            to: 'Bình Yên, Thạch Thất, Hà Nội, Việt Nam',
-            fee: '15000 vnd',
-            seat: '1',
-            // status:'Đang mở',
-            // action: <EyeOutlined onClick={showModal} />,
-        },
-    ];
+
     const navigate = useNavigate();
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
@@ -141,7 +115,6 @@ const SerachFreeTripForPassenger = () => {
     const [directionsResponse, setDirectionsResponse] = useState(null)
     const [distance, setDistance] = useState('')
     const [duration, setDuration] = useState('')
-    const [filterData, setfilterData] = useState(data);
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [listPolyline, setListPolyline] = useState('')
@@ -237,6 +210,7 @@ const SerachFreeTripForPassenger = () => {
     }
 
     return (
+        <Spin spinning={loading}  tip="Loading" size="large">
         <div className='container'>
             <div className='container-info'>
                 <h2>CHUYẾN ĐI MIỄN PHÍ</h2>
@@ -400,6 +374,7 @@ const SerachFreeTripForPassenger = () => {
                 </div>
             </div>
         </div>
+        </Spin>
     )
 }
 export default SerachFreeTripForPassenger;

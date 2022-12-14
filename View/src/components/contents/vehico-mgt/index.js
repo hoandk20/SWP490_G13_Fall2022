@@ -9,7 +9,7 @@ import { deleteVehicelByCompany, getAllVehico, getAllVehicoFilter, getDocumentVe
 import EditVehico from '../../commons/drawers/drawer-vehico-mgt/drawer-edit-vehico';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-const URL = "http://26.36.110.116";
+
 
 const { Option } = Select;
 const VehicoManagement = () => {
@@ -19,10 +19,10 @@ const VehicoManagement = () => {
     const [image, setImage] = useState("");
     const all = useSelector((state) => state.vehico.vehicos?.all);
     const vehicos = all?.map((row) => ({ ...row, key: row.id }))
-    console.log(all);
+
     const getDocumentVehicleId = async (docId) => {
         try {
-            const res = await axios.get(`${URL}:8080/api/company/getDocument?docId=${docId}`, {
+            const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/getDocument?docId=${docId}`, {
                 headers: { 'Content-Type': 'application/json' }
 
             })
@@ -136,7 +136,7 @@ const VehicoManagement = () => {
         }
     })
     const handleDelete = (key) => {
-        console.log(key);
+
         deleteVehicelByCompany(key, user.email, toast, dispatch);
     };
     const cancel = (e) => {
@@ -275,7 +275,6 @@ const VehicoManagement = () => {
             status: ""
         }
         getAllVehicoFilter(vehicle, dispatch);
-        console.log(vehicle);
     }
     return (
         <div className='container'>
@@ -294,7 +293,7 @@ const VehicoManagement = () => {
                         <Row>
                             <Col md={12} sm={24}>
                                 <FormItem
-                                    name="account"
+                                    name="plate"
                                     label="Biển số"
                                 >
                                     <Input />

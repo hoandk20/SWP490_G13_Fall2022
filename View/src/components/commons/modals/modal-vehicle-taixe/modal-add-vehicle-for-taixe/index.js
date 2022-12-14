@@ -37,7 +37,7 @@ const ModalAddVehicleForDriver = (props) => {
     useEffect(() => {
         const vehicle={
             email:user.email,
-            status:"PE",
+            status:"",
             plate:"",
             typeId:"",
         }

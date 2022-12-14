@@ -139,7 +139,14 @@ const FreeTripDetail = () => {
                                         </div>
                                     </div>
                                 </div> */}
-                                <PassengerCard />
+                                {
+                                    listPassengerRegister?.length===0?( 
+                                        <></>
+                                    ):(
+                                        <PassengerCard/>
+                                    )
+                                }
+                    
                                 <div className='s' style={{ marginTop: "20px", textAlign: "center" }}>
 
                                 </div>

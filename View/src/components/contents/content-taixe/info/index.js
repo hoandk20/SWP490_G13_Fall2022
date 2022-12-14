@@ -28,7 +28,19 @@ const InfoContactTaixe = () => {
     // const currentUser = useSelector((state) => state.auth.login?.currentUser);
     // const decodedTocken = jwtDecode(currentUser.access_token);
     const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.userInfo?.currentUser);
+    const u = useSelector((state) => state.user.userInfo?.currentUser);
+    var user
+    if(u.statusDriver==="NE"){
+        user={
+            ...u,
+            statusDriver:"Chưa hoạt động"
+        }
+    }else{
+        user={
+            ...u,
+            statusDriver:"Chưa hoạt động"
+        }
+    }
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     console.log(user);
@@ -185,7 +197,7 @@ const InfoContactTaixe = () => {
                                 ]}
                             >
                                 <Input onChange={handleChangePhone}
-                                    addonBefore={prefixSelector} disabled
+                                    addonBefore={prefixSelector} 
                                 />
                             </Form.Item>
                             <Form.Item

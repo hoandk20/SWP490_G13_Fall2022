@@ -17,7 +17,7 @@ import { useState } from 'react';
 import SerachFreeTripForPassenger from '../khachhang/free-trips/search-free-trip';
 import CreateFreeTripForDriver from '../taixe/free-trip/create-free-trip'
 import DriverManagementAdmin  from '../admin/taixe-mgt/index.js'
-import HomeAdmin from '../../components/contents/home/home-admin';
+import HomeAdmin from "../../components/contents/home/home-admin"
 import LayoutAdmin from '../../components/layout/admin';
 const { Header, Content } = Layout;
 // const role="ROLE_PASSENGER"
@@ -68,11 +68,21 @@ const Home = () => {
     }
 
   }
-
+  const SearchInfoCompany = async () =>{
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/reportCompany?companyId=${newUser.companyId}&month=${0}&year=${0}`, {
+        headers: { 'Content-Type': 'application/json' }
+      })
+      setData(res.data.object);
+    } catch (error) {
+  
+    }
+  }
   
   useEffect(()=>{
     getUser(userName,dispatch);
     getAllCity(dispatch);
+    // SearchInfoCompany();
     // getDataPassenger();
    
   },[])
@@ -105,10 +115,14 @@ const Home = () => {
         navigate('/signup/add-vehico', { state: { newUser } })
       }else if(newUser.statusVerify==3){
         navigate('/signup/vehico-info', { state: { newUser } })
-      }else 
-      return <LayoutCompany content={<HomeCompany/>}/>
+      }else {
+          if(newUser!==""){
+            return <LayoutCompany content={<HomeCompany data={data}/>}/>
+          }
+      }
+
     }else if(role==="ROLE_ADMIN"){
-      return <LayoutAdmin content={<HomeAdmin/>}/>
+      return <LayoutAdmin content={<HomeAdmin id={newUser.companyId}/>}/>
     }
   }
 };

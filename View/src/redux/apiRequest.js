@@ -7,7 +7,7 @@ import { createTripFailed, createTripStart, createTripSuccess, getListFreeTripFa
 import { getTripHistoryFailed, getTripHistoryOfDriverFailed, getTripHistoryOfDriverStart, getTripHistoryOfDriverSuccess, getTripHistoryStart, getTripHistorySuccess } from './tripHistorySlice';
 import { getUserStart, getUserSuccess, deleteUser, getUserFailed, getALlDriverForCompany, getAllDriverForCompany, getAllDrivers, getAllCompanyForAdmin, getDriverByDriverEmail, getCompanyByCompanyEmail, getAllPassengerForAdmin, getPassengerByEmail } from './userSlice';
 import { getAllVehicos } from './vehicoSlice';
-const BASE_URL = "http://localhost"
+
 
 
  
@@ -67,9 +67,28 @@ export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
       {
         headers: { 'Content-Type': 'application/json' }
       })
-    .then(function (response) {
-      dispatch(registerSuccess(response.data))
-      
+    .then(async(respon) => {
+      dispatch(registerSuccess(respon.data))
+      const user = {
+        username: newUser.email,
+        password: newUser.password
+      }
+      const rest = await axios({
+        method: "post",
+        url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
+        data: user,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+        .then(function (response) {
+          dispatch(loginSuccess(response.data));
+          navigate("/signup/confirm-email", { state: { newUser } });
+        })
+        .catch(function (error) {
+          if (error.response.status == 401) {
+            toast.error("Tài khoản hoặc mật khẩu không chính xác")
+          }
+          dispatch(loginFailed());
+        });
     })
     .catch(function (error) {
       if (error.response.data.object.IsExistedPhone) {
@@ -82,27 +101,9 @@ export const registerPassenger = async (newUser, dispatch, navigate, toast) => {
       dispatch(registerFailed())
     });
   dispatch(loginStart())
-  const user = {
-    username: newUser.email,
-    password: newUser.password
-  }
 
-  const rest = await axios({
-    method: "post",
-    url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
-    data: user,
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  })
-    .then(function (response) {
-      dispatch(loginSuccess(response.data));
-      navigate("/signup/confirm-email", { state: { newUser } });
-    })
-    .catch(function (error) {
-      if (error.response.status == 401) {
-        toast.error("Tài khoản hoặc mật khẩu không chính xác")
-      }
-      dispatch(loginFailed());
-    });
+
+ 
 
 
 }
@@ -124,10 +125,27 @@ export const registerDriver = async (newUser, dispatch, navigate, toast) => {
       {
         headers: { 'Content-Type': 'application/json' }
       })
-    .then(function (response) {
-      console.log(response)
+    .then( async(response) => {
+      
       dispatch(registerSuccess(response.data))
-
+      const user = {
+        username: newUser.email,
+        password: newUser.password
+      }
+      const rest = await axios({
+        method: "post",
+        url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
+        data: user,
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      })
+        .then(function (response) {
+          dispatch(loginSuccess(response.data));
+          navigate("/signup/confirm-email", { state: { newUser } });
+        })
+        .catch(function (error) {
+          dispatch(loginFailed());
+        });
+  
     })
     .catch(function (error) {
       if (error.response.data.object.IsExistedPhone) {
@@ -139,24 +157,7 @@ export const registerDriver = async (newUser, dispatch, navigate, toast) => {
       }
       dispatch(registerFailed())
     });
-    const user = {
-      username: newUser.email,
-      password: newUser.password
-    }
-    const rest = await axios({
-      method: "post",
-      url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
-      data: user,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    })
-      .then(function (response) {
-        dispatch(loginSuccess(response.data));
-        navigate("/signup/confirm-email", { state: { newUser } });
-      })
-      .catch(function (error) {
-        dispatch(loginFailed());
-      });
-
+   
 
 
 }
@@ -176,14 +177,14 @@ export const registerCompany = async (newUser, dispatch, navigate, toast) => {
       {
         headers: { 'Content-Type': 'application/json' }
       })
-    .then(function (response) {
-      console.log(response)
+    .then( async(response)=> {
+
       dispatch(registerSuccess(response.data))
       const user = {
         username: newUser.email,
         password: newUser.password
       }
-      const rest = axios({
+      const rest = await axios({
         method: "post",
         url: `${process.env.REACT_APP_BACKEND_KEY}:8080/api/login`,
         data: user,
@@ -1274,3 +1275,33 @@ export const SearchHomeCompany = async (object, dispatch) => {
       toast.error("Thay đổi hoạt động của tài xế không thành công") 
     }
     }
+
+    export const CancleTripForPassenger = async (object,navigate) =>{
+      try {
+        const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripPassenger/PassengerCancelTrip`,
+          {
+            tripID:object.id,
+            passengerEmail: object.passengerEmail,
+          }
+          , {
+            headers: { 'Content-Type': 'application/json' }
+          });
+          toast.success("Hủy chuyến thành công")
+          navigate('/khachhang/trip-history');
+      } catch (error) {
+        toast.error("Hủy chuyến không không thành công") 
+      }
+      }
+
+      export const forgotPasswordApi = async (email,toast) => {
+        try {
+          const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/ForgotPassword?email=${email}`, {
+            headers: { 'Content-Type': 'application/json' }
+          })
+          toast.success("Mật khẩu mới đã được gửi vào Email của bạn")
+        } catch (error) {
+          toast.error("Email không tồn tại hoặc chưa chính xác .Vui lòng nhập lại ")
+        }
+      }
+      
+      

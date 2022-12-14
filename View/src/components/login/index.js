@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { loginUser } from '../../redux/apiRequest';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
+import ForgotPassword from '../commons/modals/modal-forgotPassword';
 
 const Login = () => {
     const [form] = Form.useForm();
@@ -100,10 +101,10 @@ const Login = () => {
 
                         <div className="form-bottom">
                             <div className="a links">
-                                <a href='#'>Quên mật khẩu?</a>
+                                <ForgotPassword/>
                             </div>
                             <div className=" links">
-                                <a href='#'>Bạn chưa có tài khoản?</a>
+                                <a href='/'>Trang chủ</a>
                                 <a style={{float:"right",marginRight:"40px"}} href='http://localhost:3000/signup/home'>ĐĂNG KÍ</a>
                             </div>
                         </div>

@@ -22,11 +22,23 @@ const prefixSelector = (
 );
 const InfoCompany = () => {
     const dispatch =useDispatch();
-    const companys = useSelector((state) => state.user.userInfo?.currentUser);
+    const company = useSelector((state) => state.user.userInfo?.currentUser);
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
-    console.log("company", companys);
 
+    console.log("company", companys);
+    var companys
+    if(company.statusCompany==="NE"){
+        companys={
+            ...company,
+            statusCompany:"Chưa hoạt động"
+        }
+    }else{
+        companys={
+            ...company,
+            statusCompany:"Chưa hoạt động"
+        }
+    }
     const onfinish = (values) => {
         const object ={
             ...values,
@@ -69,7 +81,7 @@ const InfoCompany = () => {
 
                         <Form.Item
                             name="status"
-                            initialValue={companys.status}
+                            initialValue={companys.statusCompany}
                             label="Trạng thái"
                         >
                             <Input disabled />
@@ -109,7 +121,7 @@ const InfoCompany = () => {
                         </Form.Item>
                         <Form.Item
                                 name="city"
-                                // initialValue={companys.cityId}
+                                initialValue={companys.cityId}
                                 label="Thành phố"
                                 rules={[
                                     {

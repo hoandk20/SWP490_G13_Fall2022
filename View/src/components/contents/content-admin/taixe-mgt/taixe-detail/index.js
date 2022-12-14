@@ -46,10 +46,23 @@ const DriverDetailAdmin = (props) => {
     const dispatch = useDispatch();
     const [modal, contextHolder] = Modal.useModal();
     const info = location.state?.record;
-    const drivers = useSelector((state) => state.user.driver?.info);
+    const all = useSelector((state) => state.user.driver?.info);
+    var drivers
+    if(all.status==="NE"){
+        drivers={
+            ...all,
+            status:"Chưa hoạt động"
+        }
+    }else{
+        drivers={
+            ...all,
+            status:"Chưa hoạt động"
+        }
+    }
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     console.log(drivers);
+    const [city, setCity] = useState(drivers.cityId);
     const listDoc = drivers?.listDocs;
     const Bang_lai_xe = drivers.blx;
     console.log(Bang_lai_xe);
@@ -68,7 +81,7 @@ const DriverDetailAdmin = (props) => {
     // const [check3, setCheck3] = useState(Chung_Nhan_Bao_Hiem.status != "SENDED");
     // const [check4, setCheck4] = useState(Chung_Nhan_Dang_Kiem.status != "SENDED");
     const [form] = Form.useForm();
-    const URL = "http://26.36.110.116";
+
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
@@ -84,11 +97,15 @@ const DriverDetailAdmin = (props) => {
     const [checkdoc6, setCheckdoc6] = useState(false);
     const [checkdoc7, setCheckdoc7] = useState(false);
 
+    const handleChangeCity = (e) => {
+        // console.log(e.key);
+        setCity(e.key)
+    }
 
 
     const getFileAvatar = async () => {
         const file_name = "Avatar";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -96,7 +113,7 @@ const DriverDetailAdmin = (props) => {
     }
     const getFile1 = async () => {
         const file_name = "Bang_lai_xe";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -105,7 +122,7 @@ const DriverDetailAdmin = (props) => {
     }
     const getFile2 = async () => {
         const file_name = "Chung_Nhan_Kinh_nghiem";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -114,7 +131,7 @@ const DriverDetailAdmin = (props) => {
     }
     const getFile6 = async () => {
         const file_name = "Chung_Nhan_Bao_Hiem";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -123,7 +140,7 @@ const DriverDetailAdmin = (props) => {
     }
     const getFile7 = async () => {
         const file_name = "Chung_Nhan_Dang_Kiem";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -173,14 +190,14 @@ const DriverDetailAdmin = (props) => {
     };
 
     const onfinish = (values) => {
-        console.log(values);
-        const image = {
-            base64: baseImageAvatar,
-            createBy: drivers.email,
-            fileName: "Avatar",
-            year: '',
-            month: ''
-        }
+
+        // const image = {
+        //     base64: baseImageAvatar,
+        //     createBy: drivers.email,
+        //     fileName: "Avatar",
+        //     year: '',
+        //     month: ''
+        // }
         // UploadFile(image, toast, dispatch);
         const driver = {
             username: values.email,
@@ -190,7 +207,8 @@ const DriverDetailAdmin = (props) => {
             address: values.address,
             email: values.email,
             phone: values.phoneNumber,
-            country: 'vi'
+            country: 'vi',
+            cityId:city,
         }
         editInforDriver(driver, toast, dispatch)
         setOpen(false);
@@ -269,7 +287,7 @@ const DriverDetailAdmin = (props) => {
             month: month
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -302,7 +320,7 @@ const DriverDetailAdmin = (props) => {
             month: month,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -334,7 +352,7 @@ const DriverDetailAdmin = (props) => {
             month: month,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -365,7 +383,7 @@ const DriverDetailAdmin = (props) => {
             month: month,
         }
         try {
-            const res = await axios.post(`${URL}:8080/api/Upload/Document`,
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
                 {
                     base64: object.base64,
                     expired_month: object.month,
@@ -394,7 +412,7 @@ const DriverDetailAdmin = (props) => {
 
     // const getDriverDetail = async () => {
     //     try {
-    //         const res = await axios.get(`${URL}:8080/api/driver/detail?driverEmail=${info.email}`, {
+    //         const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/detail?driverEmail=${info.email}`, {
     //             headers: { 'Content-Type': 'application/json' }
     //         })
     //         setDrivers(res.data.object)
@@ -543,6 +561,7 @@ const DriverDetailAdmin = (props) => {
                             <Select
                                 labelInValue
                                 options={citys}
+                                onChange={handleChangeCity}
                             />
                         </Form.Item>
                     </Col>
@@ -758,7 +777,7 @@ const DriverDetailAdmin = (props) => {
                     <div className='card-doc'>
                         <div className='form-header'>
                             <span>
-                                Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
+                                Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên) hoặc lý lịch tư pháp
                                 <div className='status'></div>
                             </span>
 
@@ -1013,6 +1032,7 @@ const DriverDetailAdmin = (props) => {
                                                                 <span style={{ marginRight: "20px" }}>
                                                                     Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
                                                                 </span>
+                                                                <span style={{display:"inline-block"}}>
                                                                 <input
                                                                     type="file"
                                                                     style={{ color: "#fff" }}
@@ -1020,7 +1040,11 @@ const DriverDetailAdmin = (props) => {
                                                                         uploadImage6(e);
                                                                     }}
                                                                 />
-                                                                <Button className='btn-submit' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                </span>
+
+                                                                <span style={{display:"inline-block",float:"right"}}>
+                                                                <Button className='a' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                    </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1126,10 +1150,12 @@ const DriverDetailAdmin = (props) => {
                                                             <div className='form-image' style={{ height: "230px" }}>
                                                                 <img src={baseImage7} height="220px" />
                                                             </div>
+                                                           
                                                             <div className='content-bottom'>
                                                                 <span style={{ marginRight: "20px" }}>
                                                                     Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
                                                                 </span>
+                                                                <span style={{display:"inline-block"}}>
                                                                 <input
                                                                     type="file"
                                                                     style={{ color: "#fff" }}
@@ -1137,7 +1163,11 @@ const DriverDetailAdmin = (props) => {
                                                                         uploadImage7(e);
                                                                     }}
                                                                 />
-                                                                <Button className='btn-submit' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                </span>
+
+                                                                <span style={{display:"inline-block",float:"right"}}>
+                                                                <Button className='a' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                    </span>
                                                             </div>
                                                         </div>
                                                     </div>

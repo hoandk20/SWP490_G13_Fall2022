@@ -50,7 +50,7 @@ const PassengerCard = (props) => {
                                                                             Hủy
                                                                         </Button>
                                                                         <Button type="primary" onClick={() => {
-                                                                            changeStatusPassengerRegister(obj?.id, 2,toast,dispatch,tripDriverDetail.id);
+                                                                             changeStatusPassengerRegister(obj?.id, 2,toast,dispatch,tripDriverDetail.id);
                                                                         }} style={{ marginLeft: "20px" }}  >Xác nhận</Button>
                                                                     </span>
                                                                 )

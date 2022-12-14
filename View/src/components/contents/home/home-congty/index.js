@@ -8,10 +8,12 @@ import axios from 'axios';
 
 const HomeCompany = (props) => {
 
-    // const data = props.data;
-    const [dataCompay,setDataCompany] = useState('');
+    const [dataCompay,setDataCompany] = useState();
     const newUser=useSelector((state)=>state.user.userInfo?.currentUser);
+
+    console.log(newUser);
      const SearchInfoCompany = async (object) =>{
+         if(newUser==="")return
         try {
           const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/reportCompany?companyId=${object.companyId}&month=${object.month}&year=${object.year}`, {
             headers: { 'Content-Type': 'application/json' }
@@ -59,7 +61,7 @@ const HomeCompany = (props) => {
         }
         SearchInfoCompany(object);
     }    
-    console.log(dataCompay);
+  
     useEffect(()=>{
         SearchAllData();
        
@@ -200,7 +202,7 @@ const HomeCompany = (props) => {
                                     <h2>Tổng số tài xế</h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.driverNo}</span>
+                                    <span className='number-home'>{dataCompay?.driverNo}</span>
                                 </div>
                             </div>
 
@@ -211,7 +213,7 @@ const HomeCompany = (props) => {
                                     <h2>Tổng số phương tiện</h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.vehicleNo}</span>
+                                    <span className='number-home'>{dataCompay?.vehicleNo}</span>
                                 </div>
                             </div>
                         </Col>
@@ -222,7 +224,7 @@ const HomeCompany = (props) => {
                                     <h2>Tổng số chuyến đi</h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.tripNo}</span>
+                                    <span className='number-home'>{dataCompay?.tripNo}</span>
                                 </div>
                             </div>
 
@@ -234,7 +236,7 @@ const HomeCompany = (props) => {
                                     <h2>Tổng số chuyến đi đang mở</h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.tripOpenNo}</span>
+                                    <span className='number-home'>{dataCompay?.tripOpenNo}</span>
                                 </div>
                             </div>
                         </Col>
@@ -247,7 +249,7 @@ const HomeCompany = (props) => {
                                     <h2>Số tài xế không có phương tiện</h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.driverNoVehicle}</span>
+                                    <span className='number-home'>{dataCompay?.driverNoVehicle}</span>
                                 </div>
 
                             </div>
@@ -259,7 +261,7 @@ const HomeCompany = (props) => {
                                     <h2>Số phương tiện không có tài xế</h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.vehicleNoDriver}</span>
+                                    <span className='number-home'>{dataCompay?.vehicleNoDriver}</span>
                                 </div>
 
                             </div>
@@ -271,7 +273,7 @@ const HomeCompany = (props) => {
                                     <h2>Tổng số chuyến đi đã bị hủy </h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.tripCancel}</span>
+                                    <span className='number-home'>{dataCompay?.tripCancel}</span>
                                 </div>
 
                             </div>
@@ -283,7 +285,7 @@ const HomeCompany = (props) => {
                                     <h2>Tổng số chuyến đi đã bị đóng</h2>
                                 </div>
                                 <div className='content-card-home'>
-                                    <span className='number-home'>{dataCompay.tripClose}</span>
+                                    <span className='number-home'>{dataCompay?.tripClose}</span>
                                 </div>
 
                             </div>

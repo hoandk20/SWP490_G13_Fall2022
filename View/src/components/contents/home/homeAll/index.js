@@ -261,10 +261,10 @@ const HomeAll = () => {
                         <div className='home-content-a'>
                             <CarouselHome />
                         </div>
-                        <div style={{ margin: "20px 10%" }}>
+                        <div style={{ margin: "20px 9%" }}>
                             <div className='home-table-header'>
                                 <Row>
-                                    <Col span={7.8}>
+                                    <Col span={8}>
                                         <span className='text-home'>CHUYẾN ĐI MIỄN PHÍ</span>
                                     </Col>
                                     <Col span={7}>
@@ -274,7 +274,7 @@ const HomeAll = () => {
                                                 onPlaceChanged={onPlaceChanged}
                                             >
                                                 <Input focusBorderColor='lime' type='text' placeholder='Điểm bắt đầu' ref={originRef} 
-                                                style={{ borderColor:"blue", borderRadius:"5px",height:"40px",width: "320px" }}
+                                                style={{ borderColor:"blue", borderRadius:"5px",height:"40px",width: "330px" }}
                                                 />
                                             </Autocomplete>
                                         </span>
@@ -289,7 +289,7 @@ const HomeAll = () => {
                                                     type='text'
                                                     placeholder='Điểm kết thúc'
                                                     ref={destiantionRef}
-                                                    style={{ borderColor:"red", borderRadius:"5px",height:"40px",width: "320px"}}
+                                                    style={{ borderColor:"red", borderRadius:"5px",height:"40px",width: "330px"}}
                                                 />
                                             </Autocomplete>
                                         </span>
