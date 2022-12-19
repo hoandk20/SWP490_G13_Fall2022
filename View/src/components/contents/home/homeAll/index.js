@@ -52,7 +52,7 @@ const HomeAll = () => {
         libraries: ['places'],
     })
 
-    console.log(allTrip);
+
     const dateFormat = (date) => {
         const date_str = date,
             options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -235,19 +235,13 @@ const HomeAll = () => {
             geocoder.geocode({ address: originRef.current.value }, (results, status) => {
                 if (status === 'OK') {
                     center = results[0].geometry.location;
-                } else {
-                    console.log("not ok");
-                }
+                } 
             })
         } else if (destiantionRef.current.value !== "" && originRef.current.value === "") {
-            console.log(originRef.current.value);
-            console.log(destiantionRef.current.value);
             geocoder.geocode({ address: destiantionRef.current.value }, (results, status) => {
                 if (status === 'OK') {
                     center = results[0].geometry.location;
-                } else {
-                    console.log("not ok");
-                }
+                } 
             })
         } else {
             calculateRoute();

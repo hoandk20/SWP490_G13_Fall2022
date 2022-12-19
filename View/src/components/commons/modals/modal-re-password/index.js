@@ -29,7 +29,7 @@ const ModalRePassword = () => {
             oldPassword: oldPassword,
             newPassword: newPassword
         }
-        console.log("object",object);
+      
         changePassword(object,toast);
         setIsModalOpen(false);
         form.resetFields();

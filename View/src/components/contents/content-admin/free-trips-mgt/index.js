@@ -19,13 +19,9 @@ const FreeTripManagementAdmin = () => {
     const [date2, setDate2] = useState('');
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
-    // const user = useSelector((state) => state.user.userInfo?.currentUser);
-    // console.log(user);
-    // const all = useSelector((state) => state.user.companys?.all);
-    // console.log(all);
 
     const all = useSelector((state) => state.freeTrip.trips?.allTrip);
-    console.log("all", all);
+
     const dateFormat = (date) => {
         const date_str = date,
             options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -46,8 +42,7 @@ const FreeTripManagementAdmin = () => {
             return { ...item, item, key: item.id, dateStart: dateFormat(item.timeStart), tripStatus: "Đang chạy" }
         }
     })
-    // const drivers = all?.map((row) => ({ ...row, key: row.companyID, bangphi: 'Không',regDate:dateFormat(row.createDate) }));
-    console.log("trips", trips);
+
 
     function onChangeDateStart(date, dateString) {
         setDate1(date.toISOString());

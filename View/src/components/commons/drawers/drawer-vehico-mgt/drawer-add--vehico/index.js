@@ -50,6 +50,25 @@ const AddVehico = () => {
             >
                 <Form onFinish={onfinish} layout="vertical" hideRequiredMark>
                     <Row gutter={16}>
+                    <Col span={12}>
+                            <Form.Item
+                                name="typeId"
+                                label="Loại phương tiện "                               
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn loại xe',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="1">Xe máy</Option>
+                                    <Option value="2">Ô tô</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col span={12}>
                             <Form.Item
                                 name="producer"
@@ -87,29 +106,6 @@ const AddVehico = () => {
                                 <Input />
                             </Form.Item>
                         </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="interiorColor"
-                                label="Màu nội thất"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng chọn màu nội thất',
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    allowClear
-                                >
-                                    <Option value="Đen">Đen</Option>
-                                    <Option value="Trắng">Trắng</Option>
-                                    <Option value="Đỏ">Đỏ</Option>
-                                    <Option value="Xanh">Xanh</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
                         <Col span={12}>
                             <Form.Item
                                 name="exteriorColor"
@@ -133,6 +129,30 @@ const AddVehico = () => {
                         </Col>
                     </Row>
                     <Row gutter={16}>
+                        {/* <Col span={12}>
+                            <Form.Item
+                                name="interiorColor"
+                                label="Màu nội thất"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn màu nội thất',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="Đen">Đen</Option>
+                                    <Option value="Trắng">Trắng</Option>
+                                    <Option value="Đỏ">Đỏ</Option>
+                                    <Option value="Xanh">Xanh</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col> */}
+
+                    </Row>
+                    <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 name="plate"
@@ -147,25 +167,7 @@ const AddVehico = () => {
                                 <Input />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="typeId"
-                                label="Loại phương tiện "                               
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng chọn loại xe',
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    allowClear
-                                >
-                                    <Option value="1">Xe máy</Option>
-                                    <Option value="2">Ô tô</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
+
                         <Col span={24}>
                             <Form.Item
                                 name="plateCountry"

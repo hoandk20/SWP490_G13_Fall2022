@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { loginUser } from '../../redux/apiRequest';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import ForgotPassword from '../commons/modals/modal-forgotPassword';
+import ForgotPassword from '../../components/commons/modals/modal-forgotPassword'
 
 const Login = () => {
     const [form] = Form.useForm();

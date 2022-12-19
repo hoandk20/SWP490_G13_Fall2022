@@ -2,15 +2,15 @@ import { CheckOutlined, CloseOutlined, EyeOutlined, PlusOutlined } from '@ant-de
 import { Button, Col, Collapse, DatePicker, Drawer, Form, Input, Row, Select, Space, Image, Modal, } from 'antd';
 import axios from 'axios';
 import React, { createContext, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify';
 
-import { AcceptCompanyAdmin, AddDriverByCompany, ChaangeStatusDoc, EditCompany, EditDriverByCompany, getCompanyDetail, getDriversForCompany, UploadFile} from '../../../../../../redux/apiRequest'
+import { AcceptCompanyAdmin, AddDriverByCompany, ChaangeStatusDoc, EditCompany, EditDriverByCompany, getCompanyDetail, getDriversForCompany, UploadFile } from '../../../../../../redux/apiRequest'
 import ModalSendEmail from '../../../../../commons/modals/modal-send-email';
- 
 
-// import '../taixe-detail.css'
+
 const { Option } = Select;
 const ReachableContext = createContext(null);
 const UnreachableContext = createContext(null);
@@ -44,19 +44,18 @@ const TabCompanyInfo = (props) => {
     // const [companys, setCompanys] = useState(props.companys);
     const company = useSelector((state) => state.user.company?.info);
     var companys
-    if(company.companyStatus==="NE"){
-        companys={
+    if (company.companyStatus === "NE") {
+        companys = {
             ...company,
-            companyStatus:"Chưa hoạt động"
+            companyStatus: "Chưa hoạt động"
         }
-    }else{
-        companys={
+    } else {
+        companys = {
             ...company,
-            companyStatus:"Chưa hoạt động"
+            companyStatus: "Chưa hoạt động"
         }
     }
     const listDoc = companys.listDoc;
-    console.log(companys);
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const Bang_lai_xe = companys.blx;
@@ -83,28 +82,18 @@ const TabCompanyInfo = (props) => {
     const [checkdoc2, setCheckdoc2] = useState(false);
     const [checkdoc6, setCheckdoc6] = useState(false);
     const [checkdoc7, setCheckdoc7] = useState(false);
-// =======
 
-//     const getFileAvatar = async () => {
-//         const file_name = "Avatar";
-//         const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
-//             , {
-//                 headers: { 'Content-Type': 'application/json' }
-//             });
-//         setBaseImageAvatar(res.data.object.base64)
-//     }
-// >>>>>>> main
-const handleChangeCity = (e) => {
-    // console.log(e.key);
-    setCity(e.key)
-}
+    const handleChangeCity = (e) => {
+  
+        setCity(e.key)
+    }
     const getFile1 = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${companys.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+
         setBaseImage1(res.data.object.base64)
     }
     const getFile2 = async () => {
@@ -113,7 +102,7 @@ const handleChangeCity = (e) => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+
         setBaseImage2(res.data.object.base64)
     }
     const getFile6 = async () => {
@@ -122,7 +111,7 @@ const handleChangeCity = (e) => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+ 
         setBaseImage6(res.data.object.base64)
     }
     const getFile7 = async () => {
@@ -131,34 +120,34 @@ const handleChangeCity = (e) => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+
         setBaseImage7(res.data.object.base64)
     }
 
     const changeStatusValid1 = () => {
-        ChaangeStatusDoc(Bang_lai_xe.id, "VALID",companys?.email, toast, dispatch);
+        ChaangeStatusDoc(Bang_lai_xe.id, "VALID", companys?.email, toast, dispatch);
     }
     const changeStatusInValid1 = () => {
 
-        ChaangeStatusDoc(Bang_lai_xe.id, "INVALID",companys?.email, toast, dispatch);
+        ChaangeStatusDoc(Bang_lai_xe.id, "INVALID", companys?.email, toast, dispatch);
     }
     const changeStatusValid2 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "VALID", companys?.email,toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "VALID", companys?.email, toast, dispatch);
     }
     const changeStatusInValid2 = () => {
-        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID",companys?.email, toast, dispatch);
+        ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID", companys?.email, toast, dispatch);
     }
     const changeStatusValid6 = () => {
-        ChaangeStatusDoc(GP_Kinh_Doanh.id, "VALID",companys?.email, toast, dispatch);
+        ChaangeStatusDoc(GP_Kinh_Doanh.id, "VALID", companys?.email, toast, dispatch);
     }
     const changeStatusInValid6 = () => {
-        ChaangeStatusDoc(GP_Kinh_Doanh.id, "INVALID",companys?.email, toast, dispatch);
+        ChaangeStatusDoc(GP_Kinh_Doanh.id, "INVALID", companys?.email, toast, dispatch);
     }
     const changeStatusValid7 = () => {
-        ChaangeStatusDoc(GP_Hoat_Dong.id, "VALID",companys?.email, toast, dispatch);
+        ChaangeStatusDoc(GP_Hoat_Dong.id, "VALID", companys?.email, toast, dispatch);
     }
     const changeStatusInValid7 = () => {
-        ChaangeStatusDoc(GP_Hoat_Dong.id, "INVALID",companys?.email, toast, dispatch);
+        ChaangeStatusDoc(GP_Hoat_Dong.id, "INVALID", companys?.email, toast, dispatch);
     }
     const convertBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -176,24 +165,16 @@ const handleChangeCity = (e) => {
     };
 
     const onfinish = (values) => {
-        // console.log(values);
-        // const image= {
-        //     base64:baseImageAvatar,
-        //     createBy:companys.email,
-        //     fileName:"Avatar",
-        //     year:'',
-        //     month:''
-        // }
-        // UploadFile(image,toast,dispatch);
+
         const company = {
             ...values,
-            cityId:city,
+            cityId: city,
             companyEmail: user.email,
-            companyId:companys.companyId,
+            companyId: companys.companyId,
 
         }
-        console.log("com",company);
-        EditCompany(company,dispatch,toast)
+
+        EditCompany(company, dispatch, toast)
         setOpen(false);
     };
 
@@ -213,23 +194,9 @@ const handleChangeCity = (e) => {
     const onfinishUploadVehicle = (values) => {
 
     }
-    // const convertBase64 = (file) => {
-    //     return new Promise((resolve, reject) => {
-    //         const fileReader = new FileReader();
-    //         fileReader.readAsDataURL(file);
 
-    //         fileReader.onload = () => {
-    //             resolve(fileReader.result);
-    //         };
-
-    //         fileReader.onerror = (error) => {
-    //             reject(error);
-    //         };
-    //     });
-    // };
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
-        console.log(file);
         const base64 = await convertBase64(file);
         setBaseImage1(base64);
     };
@@ -260,7 +227,7 @@ const handleChangeCity = (e) => {
     function getTime7(date, dateString) {
         setDate7(dateString);
     }
-    const uploadfile1 = async() => {
+    const uploadfile1 = async () => {
         const arr = date1.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -292,7 +259,7 @@ const handleChangeCity = (e) => {
 
     };
 
-    const uploadfile2 = async() => {
+    const uploadfile2 = async () => {
         const arr = date2.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -323,7 +290,7 @@ const handleChangeCity = (e) => {
         }
     };
 
-    const uploadfile6 = async() => {
+    const uploadfile6 = async () => {
         const arr = date6.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -353,7 +320,7 @@ const handleChangeCity = (e) => {
             toast.error("Upload file thất bại")
         }
     };
-    const uploadfile7 = async() => {
+    const uploadfile7 = async () => {
         const arr = date7.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -383,19 +350,23 @@ const handleChangeCity = (e) => {
             toast.error("Upload file thất bại")
         }
     };
-    const acceptCompany =()=>{
-        AcceptCompanyAdmin(companys.companyId,"AT",toast,companys.email,dispatch);
+    const acceptCompany = () => {
+        AcceptCompanyAdmin(companys.companyId, "AT", toast, companys.email, dispatch);
     }
-    const notAcceptCompany =()=>{
-        AcceptCompanyAdmin(companys.companyId,"NE",toast,companys.email,dispatch);
+    const notAcceptCompany = () => {
+        AcceptCompanyAdmin(companys.companyId, "NE", toast, companys.email, dispatch);
     }
 
+    useEffect(()=>{
+        getCompanyDetail(company.email, dispatch);
+       
+      },[])
     return (
         <>
             <Form onFinish={onfinish} layout="vertical" hideRequiredMark name="basic" form={form}
-                              initialValues={{
-                                prefix: '+84'
-                            }}
+                initialValues={{
+                    prefix: '+84'
+                }}
                 labelCol={{
                     span: 8,
                 }}
@@ -464,22 +435,22 @@ const handleChangeCity = (e) => {
                             <Input addonBefore={prefixSelector} />
                         </Form.Item>
                         <Form.Item
-                                name="city"
-                                initialValue={companys.cityId}
-                                label="Thành phố"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng chọn thành phố',
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    labelInValue
-                                    options={citys}
-                                    onChange={handleChangeCity}
-                                />
-                            </Form.Item>
+                            name="city"
+                            initialValue={companys.cityId}
+                            label="Thành phố"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Vui lòng chọn thành phố',
+                                },
+                            ]}
+                        >
+                            <Select
+                                labelInValue
+                                options={citys}
+                                onChange={handleChangeCity}
+                            />
+                        </Form.Item>
 
                     </Col>
                     <Col span={8}>
@@ -509,94 +480,66 @@ const handleChangeCity = (e) => {
                 <p>Các tài liệu</p>
 
                 {
-                checkdoc1 === true ? (
-                    <div className='card-doc'>
-                        <div className='form-header'>
-                            <span>
-                                Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                {/* <div className='status'>Chưa gửi</div> */}
-                            </span>
-
-                        </div>
-                        <div className='form-content'>
-                            <div className='form-image' style={{ height: "230px" }}>
-                                <img src={baseImage1} height="220px" />
-                            </div>
-                            <div className='content-bottom'>
-                                <span style={{ marginRight: "20px" }}>
-                                    Ngày hết hạn <DatePicker onChange={getTime1} picker='month' />
-                                </span>
-                                <input
-                                    type="file"
-                                    style={{ color: "#fff" }}
-                                    onChange={(e) => {
-                                        uploadImage1(e);
-                                    }}
-                                />
-                                <Button className='btn-submit' onClick={uploadfile1} type='primary'>Gửi <CheckOutlined /></Button>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className='doc-taixe'>
-
-                        <div className='card-doc-ad'>
-                            <div className='form-header-ad' style={{ height: "40px" }}>
+                    checkdoc1 === true ? (
+                        <div className='card-doc'>
+                            <div className='form-header'>
                                 <span>
                                     Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                    {
-                                        Bang_lai_xe === null ? (
-                                            <>
-                                              <div className='status-ad'>Chưa gửi</div>
-                                            </>
-                                        ) : (
-                                            <>
-                                                {
-                                                    Bang_lai_xe?.status === "SENDED" ? (
-                                                        <>
-                                                            <div className='status-ad'>Đã gửi</div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            {
-                                                                Bang_lai_xe?.status === "VALID" ? (
-                                                                    <>
-                                                                        <div className='status-ad'>Hợp lệ</div>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <div className='status-ad'>Không hợp lệ</div>
-                                                                    </>
-                                                                )
-                                                            }
-                                                        </>
-                                                    )
-                                                }
-                                            </>
-                                        )
-                                    }
-
-
+                                    {/* <div className='status'>Chưa gửi</div> */}
                                 </span>
 
                             </div>
-                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                <div className='form-image-ad' style={{ minHeight: "50px" }} >
-                                    <img src={baseImage1} height="150px" />
+                            <div className='form-content'>
+                                <div className='form-image' style={{ height: "230px" }}>
+                                    <img src={baseImage1} height="220px" />
                                 </div>
-                                <div className='upload-doc'>
+                                <div className='content-bottom'>
+                                    <span style={{ marginRight: "20px" }}>
+                                        Ngày hết hạn <DatePicker onChange={getTime1} picker='month' />
+                                    </span>
+                                    <input
+                                        type="file"
+                                        style={{ color: "#fff" }}
+                                        onChange={(e) => {
+                                            uploadImage1(e);
+                                        }}
+                                    />
+                                    <Button className='btn-submit' onClick={uploadfile1} type='primary'>Gửi <CheckOutlined /></Button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className='doc-taixe'>
+
+                            <div className='card-doc-ad'>
+                                <div className='form-header-ad' style={{ height: "40px" }}>
                                     <span>
+                                        Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
                                         {
                                             Bang_lai_xe === null ? (
-                                                <></>
+                                                <>
+                                                    <div className='status-ad'>Chưa gửi</div>
+                                                </>
                                             ) : (
                                                 <>
                                                     {
-                                                        baseImage1 !== "" ? (
-                                                            <></>
+                                                        Bang_lai_xe?.status === "SENDED" ? (
+                                                            <>
+                                                                <div className='status-ad'>Đã gửi</div>
+                                                            </>
                                                         ) : (
                                                             <>
-                                                                <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                {
+                                                                    Bang_lai_xe?.status === "VALID" ? (
+                                                                        <>
+                                                                            <div className='status-ad'>Hợp lệ</div>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className='status-ad'>Không hợp lệ</div>
+                                                                        </>
+                                                                    )
+                                                                }
                                                             </>
                                                         )
                                                     }
@@ -604,118 +547,119 @@ const handleChangeCity = (e) => {
                                             )
                                         }
 
-                                        <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Bang_lai_xe?.expired_month}-{Bang_lai_xe?.expired_year}</span>
-                                        <Button onClick={editDocument1} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+
                                     </span>
 
-
                                 </div>
-                                {
-                                    Bang_lai_xe?.status === "SENDED" ? (
-                                        <div className='form-bottom-ad' >
-                                            <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                            <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                        </div>
-                                    ) : (
-                                        <></>
-                                    )
-                                }
-                            </div>
-                        </div>
+                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                    <div className='form-image-ad' style={{ minHeight: "50px" }} >
+                                        <img src={baseImage1} height="150px" />
+                                    </div>
+                                    <div className='upload-doc'>
+                                        <span>
+                                            {
+                                                Bang_lai_xe === null ? (
+                                                    <></>
+                                                ) : (
+                                                    <>
+                                                        {
+                                                            baseImage1 !== "" ? (
+                                                                <></>
+                                                            ) : (
+                                                                <>
+                                                                    <Button onClick={getFile1} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                </>
+                                                            )
+                                                        }
+                                                    </>
+                                                )
+                                            }
 
-                    </div>
-                )
-            }
+                                            <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Bang_lai_xe?.expired_month}-{Bang_lai_xe?.expired_year}</span>
+                                            <Button onClick={editDocument1} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+                                        </span>
 
-            {
-                checkdoc2 === true ? (
 
-                    <div className='card-doc'>
-                        <div className='form-header'>
-                            <span>
-                            Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên) hoặc lý lịch tư pháp
-                                <div className='status'></div>
-                            </span>
-
-                        </div>
-                        <div className='form-content'>
-                            <div className='form-image' style={{ height: "230px" }}>
-                                <img src={baseImage2} height="220px" />
-                            </div>
-                            <div className='content-bottom'>
-                                <span style={{ marginRight: "20px" }}>
-                                    Ngày hết hạn <DatePicker onChange={getTime2} picker='month' />
-                                </span>
-                                <input
-                                    type="file"
-                                    style={{ color: "#fff" }}
-                                    onChange={(e) => {
-                                        uploadImage2(e);
-                                    }}
-                                />
-                                <Button className='btn-submit' onClick={uploadfile2} type='primary'>Gửi <CheckOutlined /></Button>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className='doc-taixe'>
-                        <div className='card-doc-ad'>
-                            <div className='form-header-ad' style={{ height: "40px" }}>
-                                <span>
-                                    Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên)
-                                    hoặc lý lịch tư pháp
+                                    </div>
                                     {
-                                        Chung_Nhan_Kinh_nghiem === null ? (
-                                            <>
-                                                <div className='status-ad'>Chưa gửi</div>
-                                            </>
+                                        Bang_lai_xe?.status === "SENDED" ? (
+                                            <div className='form-bottom-ad' >
+                                                <Button onClick={changeStatusValid1} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                <Button onClick={changeStatusInValid1} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                            </div>
                                         ) : (
-                                            <>
-                                                {
-                                                    Chung_Nhan_Kinh_nghiem?.status === "SENDED" ? (
-                                                        <>
-                                                            <div className='status-ad'>Đã gửi</div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            {
-                                                                Chung_Nhan_Kinh_nghiem?.status === "VALID" ? (
-                                                                    <>
-                                                                        <div className='status-ad'>Hợp lệ</div>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <div className='status-ad'>Không hợp lệ</div>
-                                                                    </>
-                                                                )
-                                                            }
-                                                        </>
-                                                    )
-                                                }
-                                            </>
+                                            <></>
                                         )
                                     }
+                                </div>
+                            </div>
 
+                        </div>
+                    )
+                }
+
+                {
+                    checkdoc2 === true ? (
+
+                        <div className='card-doc'>
+                            <div className='form-header'>
+                                <span>
+                                    Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên) hoặc lý lịch tư pháp
+                                    <div className='status'></div>
                                 </span>
 
                             </div>
-                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                <div className='form-image-ad' style={{ minHeight: "50px" }} >
-                                    <img src={baseImage2} height="150px" />
+                            <div className='form-content'>
+                                <div className='form-image' style={{ height: "230px" }}>
+                                    <img src={baseImage2} height="220px" />
                                 </div>
-                                <div className='upload-doc'>
+                                <div className='content-bottom'>
+                                    <span style={{ marginRight: "20px" }}>
+                                        Ngày hết hạn <DatePicker onChange={getTime2} picker='month' />
+                                    </span>
+                                    <input
+                                        type="file"
+                                        style={{ color: "#fff" }}
+                                        onChange={(e) => {
+                                            uploadImage2(e);
+                                        }}
+                                    />
+                                    <Button className='btn-submit' onClick={uploadfile2} type='primary'>Gửi <CheckOutlined /></Button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className='doc-taixe'>
+                            <div className='card-doc-ad'>
+                                <div className='form-header-ad' style={{ height: "40px" }}>
                                     <span>
+                                        Giấy Chứng Nhận Kinh Nghiệm (3 năm kinh nghiệm trở lên)
+                                        hoặc lý lịch tư pháp
                                         {
                                             Chung_Nhan_Kinh_nghiem === null ? (
-                                                <></>
+                                                <>
+                                                    <div className='status-ad'>Chưa gửi</div>
+                                                </>
                                             ) : (
                                                 <>
                                                     {
-                                                        baseImage2 !== "" ? (
-                                                            <></>
+                                                        Chung_Nhan_Kinh_nghiem?.status === "SENDED" ? (
+                                                            <>
+                                                                <div className='status-ad'>Đã gửi</div>
+                                                            </>
                                                         ) : (
                                                             <>
-                                                                <Button onClick={getFile2} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                {
+                                                                    Chung_Nhan_Kinh_nghiem?.status === "VALID" ? (
+                                                                        <>
+                                                                            <div className='status-ad'>Hợp lệ</div>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className='status-ad'>Không hợp lệ</div>
+                                                                        </>
+                                                                    )
+                                                                }
                                                             </>
                                                         )
                                                     }
@@ -723,115 +667,114 @@ const handleChangeCity = (e) => {
                                             )
                                         }
 
-                                        <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Chung_Nhan_Kinh_nghiem?.expired_month}-{Chung_Nhan_Kinh_nghiem?.expired_year}</span>
-                                        <Button onClick={editDocument2} style={{ float: "right" }} type="primary"> Thay đổi</Button>
                                     </span>
 
-
                                 </div>
-                                {
-                                    Chung_Nhan_Kinh_nghiem?.status === "SENDED" ? (
-                                        <div className='form-bottom-ad' >
-                                            <Button onClick={changeStatusValid2} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                            <Button onClick={changeStatusInValid2} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                        </div>
-                                    ) : (
-                                        <></>
-                                    )
-                                }
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
-  {
-                checkdoc6 === true ? (
-                    <div className='card-doc'>
-                        <div className='form-header'>
-                            <span>
-                            Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
-                            </span>
+                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                    <div className='form-image-ad' style={{ minHeight: "50px" }} >
+                                        <img src={baseImage2} height="150px" />
+                                    </div>
+                                    <div className='upload-doc'>
+                                        <span>
+                                            {
+                                                Chung_Nhan_Kinh_nghiem === null ? (
+                                                    <></>
+                                                ) : (
+                                                    <>
+                                                        {
+                                                            baseImage2 !== "" ? (
+                                                                <></>
+                                                            ) : (
+                                                                <>
+                                                                    <Button onClick={getFile2} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                </>
+                                                            )
+                                                        }
+                                                    </>
+                                                )
+                                            }
 
-                        </div>
-                        <div className='form-content'>
-                            <div className='form-image' style={{ height: "230px" }}>
-                                <img src={baseImage6} height="220px" />
-                            </div>
-                            <div className='content-bottom'>
-                                <span style={{ marginRight: "20px" }}>
-                                    Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
-                                </span>
-                                <input
-                                    type="file"
-                                    style={{ color: "#fff" }}
-                                    onChange={(e) => {
-                                        uploadImage6(e);
-                                    }}
-                                />
-                                <Button className='btn-submit' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className='doc-taixe'>
+                                            <span style={{ fontSize: "20px" }}>Ngày hết hạn : {Chung_Nhan_Kinh_nghiem?.expired_month}-{Chung_Nhan_Kinh_nghiem?.expired_year}</span>
+                                            <Button onClick={editDocument2} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+                                        </span>
 
-                        <div className='card-doc-ad'>
-                            <div className='form-header-ad' style={{ height: "40px" }}>
-                                <span>
-                                Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+
+                                    </div>
                                     {
-                                        GP_Kinh_Doanh === null ? (
-                                            <>
-                                              <div className='status-ad'>Chưa gửi</div>
-                                            </>
+                                        Chung_Nhan_Kinh_nghiem?.status === "SENDED" ? (
+                                            <div className='form-bottom-ad' >
+                                                <Button onClick={changeStatusValid2} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                <Button onClick={changeStatusInValid2} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                            </div>
                                         ) : (
-                                            <>
-                                                {
-                                                    GP_Kinh_Doanh?.status === "SENDED" ? (
-                                                        <>
-                                                            <div className='status-ad'>Đã gửi</div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            {
-                                                                GP_Kinh_Doanh?.status === "VALID" ? (
-                                                                    <>
-                                                                        <div className='status-ad'>Hợp lệ</div>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <div className='status-ad'>Không hợp lệ</div>
-                                                                    </>
-                                                                )
-                                                            }
-                                                        </>
-                                                    )
-                                                }
-                                            </>
+                                            <></>
                                         )
                                     }
-
-
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    checkdoc6 === true ? (
+                        <div className='card-doc'>
+                            <div className='form-header'>
+                                <span>
+                                    Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
                                 </span>
 
                             </div>
-                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                <div className='form-image-ad' style={{ minHeight: "50px" }} >
-                                    <img src={baseImage1} height="150px" />
+                            <div className='form-content'>
+                                <div className='form-image' style={{ height: "230px" }}>
+                                    <img src={baseImage6} height="220px" />
                                 </div>
-                                <div className='upload-doc'>
+                                <div className='content-bottom'>
+                                    <span style={{ marginRight: "20px" }}>
+                                        Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
+                                    </span>
+                                    <input
+                                        type="file"
+                                        style={{ color: "#fff" }}
+                                        onChange={(e) => {
+                                            uploadImage6(e);
+                                        }}
+                                    />
+                                    <Button className='btn-submit' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className='doc-taixe'>
+
+                            <div className='card-doc-ad'>
+                                <div className='form-header-ad' style={{ height: "40px" }}>
                                     <span>
+                                        Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
                                         {
                                             GP_Kinh_Doanh === null ? (
-                                                <></>
+                                                <>
+                                                    <div className='status-ad'>Chưa gửi</div>
+                                                </>
                                             ) : (
                                                 <>
                                                     {
-                                                        baseImage6 !== "" ? (
-                                                            <></>
+                                                        GP_Kinh_Doanh?.status === "SENDED" ? (
+                                                            <>
+                                                                <div className='status-ad'>Đã gửi</div>
+                                                            </>
                                                         ) : (
                                                             <>
-                                                                <Button onClick={getFile6} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                {
+                                                                    GP_Kinh_Doanh?.status === "VALID" ? (
+                                                                        <>
+                                                                            <div className='status-ad'>Hợp lệ</div>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className='status-ad'>Không hợp lệ</div>
+                                                                        </>
+                                                                    )
+                                                                }
                                                             </>
                                                         )
                                                     }
@@ -839,117 +782,118 @@ const handleChangeCity = (e) => {
                                             )
                                         }
 
-                                        <span style={{ fontSize: "20px" }}>Ngày hết hạn : {GP_Kinh_Doanh?.expired_month}-{GP_Kinh_Doanh?.expired_year}</span>
-                                        <Button onClick={editDocument6} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+
                                     </span>
 
-
                                 </div>
-                                {
-                                    GP_Kinh_Doanh?.status === "SENDED" ? (
-                                        <div className='form-bottom-ad' >
-                                            <Button onClick={changeStatusValid6} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                            <Button onClick={changeStatusInValid6} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                        </div>
-                                    ) : (
-                                        <></>
-                                    )
-                                }
-                            </div>
-                        </div>
+                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                    <div className='form-image-ad' style={{ minHeight: "50px" }} >
+                                        <img src={baseImage1} height="150px" />
+                                    </div>
+                                    <div className='upload-doc'>
+                                        <span>
+                                            {
+                                                GP_Kinh_Doanh === null ? (
+                                                    <></>
+                                                ) : (
+                                                    <>
+                                                        {
+                                                            baseImage6 !== "" ? (
+                                                                <></>
+                                                            ) : (
+                                                                <>
+                                                                    <Button onClick={getFile6} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                </>
+                                                            )
+                                                        }
+                                                    </>
+                                                )
+                                            }
 
-                    </div>
-                )
-            }
+                                            <span style={{ fontSize: "20px" }}>Ngày hết hạn : {GP_Kinh_Doanh?.expired_month}-{GP_Kinh_Doanh?.expired_year}</span>
+                                            <Button onClick={editDocument6} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+                                        </span>
 
-            {
-                checkdoc7 === true ? (
 
-                    <div className='card-doc'>
-                        <div className='form-header'>
-                            <span>
-                            Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
-                                <div className='status'></div>
-                            </span>
-
-                        </div>
-                        <div className='form-content'>
-                            <div className='form-image' style={{ height: "230px" }}>
-                                <img src={baseImage7} height="220px" />
-                            </div>
-                            <div className='content-bottom'>
-                                <span style={{ marginRight: "20px" }}>
-                                    Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
-                                </span>
-                                <input
-                                    type="file"
-                                    style={{ color: "#fff" }}
-                                    onChange={(e) => {
-                                        uploadImage7(e);
-                                    }}
-                                />
-                                <Button className='btn-submit' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className='doc-taixe'>
-                        <div className='card-doc-ad'>
-                            <div className='form-header-ad' style={{ height: "40px" }}>
-                                <span>
-                                Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                    </div>
                                     {
-                                        GP_Hoat_Dong === null ? (
-                                            <>
-                                                <div className='status-ad'>Chưa gửi</div>
-                                            </>
+                                        GP_Kinh_Doanh?.status === "SENDED" ? (
+                                            <div className='form-bottom-ad' >
+                                                <Button onClick={changeStatusValid6} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                <Button onClick={changeStatusInValid6} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                            </div>
                                         ) : (
-                                            <>
-                                                {
-                                                    GP_Hoat_Dong?.status === "SENDED" ? (
-                                                        <>
-                                                            <div className='status-ad'>Đã gửi</div>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            {
-                                                                GP_Hoat_Dong?.status === "VALID" ? (
-                                                                    <>
-                                                                        <div className='status-ad'>Hợp lệ</div>
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <div className='status-ad'>Không hợp lệ</div>
-                                                                    </>
-                                                                )
-                                                            }
-                                                        </>
-                                                    )
-                                                }
-                                            </>
+                                            <></>
                                         )
                                     }
+                                </div>
+                            </div>
 
+                        </div>
+                    )
+                }
+
+                {
+                    checkdoc7 === true ? (
+
+                        <div className='card-doc'>
+                            <div className='form-header'>
+                                <span>
+                                    Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
+                                    <div className='status'></div>
                                 </span>
 
                             </div>
-                            <div className='form-content-ad' style={{ minHeight: "100px" }}>
-                                <div className='form-image-ad' style={{ minHeight: "50px" }} >
-                                    <img src={baseImage2} height="150px" />
+                            <div className='form-content'>
+                                <div className='form-image' style={{ height: "230px" }}>
+                                    <img src={baseImage7} height="220px" />
                                 </div>
-                                <div className='upload-doc'>
+                                <div className='content-bottom'>
+                                    <span style={{ marginRight: "20px" }}>
+                                        Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
+                                    </span>
+                                    <input
+                                        type="file"
+                                        style={{ color: "#fff" }}
+                                        onChange={(e) => {
+                                            uploadImage7(e);
+                                        }}
+                                    />
+                                    <Button className='btn-submit' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className='doc-taixe'>
+                            <div className='card-doc-ad'>
+                                <div className='form-header-ad' style={{ height: "40px" }}>
                                     <span>
+                                        Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
                                         {
                                             GP_Hoat_Dong === null ? (
-                                                <></>
+                                                <>
+                                                    <div className='status-ad'>Chưa gửi</div>
+                                                </>
                                             ) : (
                                                 <>
                                                     {
-                                                        baseImage7 !== "" ? (
-                                                            <></>
+                                                        GP_Hoat_Dong?.status === "SENDED" ? (
+                                                            <>
+                                                                <div className='status-ad'>Đã gửi</div>
+                                                            </>
                                                         ) : (
                                                             <>
-                                                                <Button onClick={getFile7} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                {
+                                                                    GP_Hoat_Dong?.status === "VALID" ? (
+                                                                        <>
+                                                                            <div className='status-ad'>Hợp lệ</div>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <div className='status-ad'>Không hợp lệ</div>
+                                                                        </>
+                                                                    )
+                                                                }
                                                             </>
                                                         )
                                                     }
@@ -957,74 +901,101 @@ const handleChangeCity = (e) => {
                                             )
                                         }
 
-                                        <span style={{ fontSize: "20px" }}>Ngày hết hạn : {GP_Hoat_Dong?.expired_month}-{GP_Hoat_Dong?.expired_year}</span>
-                                        <Button onClick={editDocument7} style={{ float: "right" }} type="primary"> Thay đổi</Button>
                                     </span>
 
-
                                 </div>
-                                {
-                                    GP_Hoat_Dong?.status === "SENDED" ? (
-                                        <div className='form-bottom-ad' >
-                                            <Button onClick={changeStatusValid7} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
-                                            <Button onClick={changeStatusInValid7} type="primary"> <CloseOutlined /> Từ chối</Button>
-                                        </div>
-                                    ) : (
-                                        <></>
-                                    )
-                                }
+                                <div className='form-content-ad' style={{ minHeight: "100px" }}>
+                                    <div className='form-image-ad' style={{ minHeight: "50px" }} >
+                                        <img src={baseImage2} height="150px" />
+                                    </div>
+                                    <div className='upload-doc'>
+                                        <span>
+                                            {
+                                                GP_Hoat_Dong === null ? (
+                                                    <></>
+                                                ) : (
+                                                    <>
+                                                        {
+                                                            baseImage7 !== "" ? (
+                                                                <></>
+                                                            ) : (
+                                                                <>
+                                                                    <Button onClick={getFile7} style={{ marginRight: "10px" }} type="primary"> Tải lên</Button>
+                                                                </>
+                                                            )
+                                                        }
+                                                    </>
+                                                )
+                                            }
+
+                                            <span style={{ fontSize: "20px" }}>Ngày hết hạn : {GP_Hoat_Dong?.expired_month}-{GP_Hoat_Dong?.expired_year}</span>
+                                            <Button onClick={editDocument7} style={{ float: "right" }} type="primary"> Thay đổi</Button>
+                                        </span>
+
+
+                                    </div>
+                                    {
+                                        GP_Hoat_Dong?.status === "SENDED" ? (
+                                            <div className='form-bottom-ad' >
+                                                <Button onClick={changeStatusValid7} style={{ marginRight: "20px" }} type="primary"><CheckOutlined /> Kiểm tra</Button >
+                                                <Button onClick={changeStatusInValid7} type="primary"> <CloseOutlined /> Từ chối</Button>
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )
-            }
+                    )
+                }
             </div>
 
             <div style={{ marginTop: "50px" }}>
                 <span style={{ display: "inline-block", marginRight: "50px" }}><ModalSendEmail email={companys?.email} /></span>
                 {
-                    companys.companyStatus!=="AT"?(
-                                        <span style={{ display: "inline-block" }}>
-                    <ReachableContext.Provider value="Light">
-
-
-                        <Button type="primary" onClick={() => {
-                            modal.confirm({
-                                title: "Bạn có muốn cho phép tài xế hoạt động",
-                                onOk() {
-                                    acceptCompany();
-                                }
-                            })
-
-                        }}  style={{ marginLeft: "30%" }}>
-                            Xác nhận công ty hoạt động
-                        </Button>
-                        {contextHolder}
-
-                        <UnreachableContext.Provider value="Bamboo" />
-                    </ReachableContext.Provider>
-                </span>
-                    ):(
+                    companys.companyStatus !== "AT" ? (
                         <span style={{ display: "inline-block" }}>
-                        <ReachableContext.Provider value="Light">
-    
-    
-                            <Button type="primary" onClick={() => {
-                                modal.confirm({
-                                    title: "Bạn có muốn hủy hoạt động của tài xế",
-                                    onOk() {
-                                        notAcceptCompany();
-                                    }
-                                })
-    
-                            }} danger  style={{ marginLeft: "30%" }}>
-                                Hủy hoạt động
-                            </Button>
-                            {contextHolder}
-    
-                            <UnreachableContext.Provider value="Bamboo" />
-                        </ReachableContext.Provider>
-                    </span>
+                            <ReachableContext.Provider value="Light">
+
+
+                                <Button type="primary" onClick={() => {
+                                    modal.confirm({
+                                        title: "Bạn có muốn cho phép tài xế hoạt động",
+                                        onOk() {
+                                            acceptCompany();
+                                        }
+                                    })
+
+                                }} style={{ marginLeft: "30%" }}>
+                                    Xác nhận công ty hoạt động
+                                </Button>
+                                {contextHolder}
+
+                                <UnreachableContext.Provider value="Bamboo" />
+                            </ReachableContext.Provider>
+                        </span>
+                    ) : (
+                        <span style={{ display: "inline-block" }}>
+                            <ReachableContext.Provider value="Light">
+
+
+                                <Button type="primary" onClick={() => {
+                                    modal.confirm({
+                                        title: "Bạn có muốn hủy hoạt động của tài xế",
+                                        onOk() {
+                                            notAcceptCompany();
+                                        }
+                                    })
+
+                                }} danger style={{ marginLeft: "30%" }}>
+                                    Hủy hoạt động
+                                </Button>
+                                {contextHolder}
+
+                                <UnreachableContext.Provider value="Bamboo" />
+                            </ReachableContext.Provider>
+                        </span>
                     )
                 }
 

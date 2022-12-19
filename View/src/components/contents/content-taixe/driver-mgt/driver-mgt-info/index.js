@@ -10,7 +10,7 @@ import {
 import React, { useState } from 'react';
 import FormItem from 'antd/es/form/FormItem';
 import './driver-mgt-info.css'
-import UploadImage from '../../../../commons/uploadAvatar';
+
 
 
 const { Option } = Select;

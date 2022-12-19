@@ -48,14 +48,14 @@ const DocumentDriver = () => {
     const addDocChung_Nhan_Dang_Kiem = () => {
         setcheckChung_Nhan_Dang_Kiem(true);
     }
-    console.log("ac", setChung_Nhan_Bao_Hiem);
+   
     const getDocBang_lai_xe = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+
         setBang_lai_xe(res.data.object);
     }
     const getDocChung_Nhan_Kinh_nghiem = async () => {
@@ -64,7 +64,7 @@ const DocumentDriver = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+       
         setChung_Nhan_Kinh_nghiem(res.data.object);
     }
     const getDocChung_Nhan_Bao_Hiem = async () => {
@@ -73,7 +73,7 @@ const DocumentDriver = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+  
         setChung_Nhan_Bao_Hiem(res.data.object);
     }
     const getDocChung_Nhan_Dang_Kiem = async () => {
@@ -82,11 +82,11 @@ const DocumentDriver = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+      
         setChung_Nhan_Dang_Kiem(res.data.object);
     }
 
-    console.log(Chung_Nhan_Bao_Hiem);
+
 
 
     const convertBase64 = (file) => {
@@ -105,7 +105,6 @@ const DocumentDriver = () => {
     };
     const uploadImageBang_lai_xe = async (e) => {
         const file = e.target.files[0];
-        console.log(file);
         const base64 = await convertBase64(file);
         setBaseImageBang_lai_xe(base64);
     };

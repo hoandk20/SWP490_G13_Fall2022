@@ -32,7 +32,7 @@ const DriverManagementAdmin = () => {
     }
 
     const drivers = all?.map((row) => ({ ...row, key: row.driverID, crDate: dateFormat(row.createDate), name: row.firstName + " " + row.lastName }));
-    console.log(drivers);
+ 
     function onChangeDateStart(date, dateString) {
         setDate1(date.toISOString());
 
@@ -47,7 +47,7 @@ const DriverManagementAdmin = () => {
             regFrom:date1,
             regTo:date2
         }
-        console.log(object);
+
         getDriversByAdmin(object, dispatch);
 
     }
@@ -106,7 +106,7 @@ const DriverManagementAdmin = () => {
             render: (record) => {
                 return <div>
                     <EyeOutlined onClick={() => {
-                        console.log(record.email);
+           
                         getDriverDetail(record.email, dispatch);
                         setLoading(true);
                         setTimeout(() => {

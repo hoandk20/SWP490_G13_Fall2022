@@ -9,15 +9,7 @@ const PassengerCard = (props) => {
     const dispatch = useDispatch();
     const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const listPassengerRegister = tripDriverDetail?.listPassenger;
-    console.log(tripDriverDetail); 
-    // const handleAccept = () => {
-    //     changeStatusPassengerRegister(obj?.id, 2);
-    // }
 
-    // const handleReject = () => {
-    //     changeStatusPassengerRegister(obj?.id, 1);
-    // }
-    console.log(tripDriverDetail);
     return (
         <div className='scroll-bg'>
             <div className='scroll-div'>

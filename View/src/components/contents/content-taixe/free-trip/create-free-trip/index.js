@@ -69,8 +69,8 @@ const CreateFreeTripForDriver = () => {
     const navigate = useNavigate();
 
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
-  
+
+
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
@@ -83,7 +83,7 @@ const CreateFreeTripForDriver = () => {
     const [duration, setDuration] = useState('')
     const [from, setFrom] = useState('')
     const [to, setTo] = useState('')
-    const [fee,setFee]=useState('');
+    const [fee, setFee] = useState('');
     const [listPolyline, setListPolyline] = useState('')
     var polyline = '';
 
@@ -122,31 +122,31 @@ const CreateFreeTripForDriver = () => {
         setDate(date.toISOString());
     }
 
-    const feeTrip = () =>{
-        console.log("distance",distance/1000);
-        const a=0
-        if(distance<31){
-            if(distance<1){
+    const feeTrip = () => {
+   
+        const a = 0
+        if (distance < 31) {
+            if (distance < 1) {
                 setFee(9000);
-            }else{
-                setFee(9000+(distance-1)*11000)
+            } else {
+                setFee(9000 + (distance - 1) * 11000)
             }
-        }else{
-            setFee(9000+11000*29+(distance-31)*9500);
-        } 
-        
+        } else {
+            setFee(9000 + 11000 * 29 + (distance - 31) * 9500);
+        }
+
     }
 
     const onFinish = (values) => {
-        if(user.statusDriver==="NEW"){
+        if (user.statusDriver === "NEW") {
             toast.error("Tài xế chưa được cấp phép hoạt động.Vui lòng upload đầy đủ tài liệu và chờ xác nhận!")
-        }else{
-            if(fee===""){
+        } else {
+            if (fee === "") {
                 toast.error("Vui lòng nhập điểm bắt đầu và điểm kết thúc")
-            }else{
-                if(values.price>fee){
+            } else {
+                if (values.price > fee) {
                     toast.error("Cước không được vượt quá giá cước tối đa")
-                }else{
+                } else {
                     const trip = {
                         driverEmail: user.email,
                         from: originRef.current.value,
@@ -162,8 +162,8 @@ const CreateFreeTripForDriver = () => {
             }
         }
 
-   
-     
+
+
     }
 
     async function calculateRoute() {
@@ -191,39 +191,24 @@ const CreateFreeTripForDriver = () => {
             polyline += e.lat() + ',' + e.lng() + ';';
         }
         setListPolyline(polyline);
-        const a=results.routes[0].legs[0].distance.value;
-     
-        if(a/1000<31){
-            if(a/1000<1){
-                setFee(9000);
-            }else{
-                setFee(9000+(a/1000-1)*11000)
-            }
-        }else{
-            setFee(9000+11000*29+(a/1000-31)*9500);
-        } 
+        const a = results.routes[0].legs[0].distance.value;
 
-      
-        // feeTrip();
-        // console.log("fee",fee);
+        if (a / 1000 < 31) {
+            if (a / 1000 < 1) {
+                setFee(9000);
+            } else {
+                setFee(9000 + (a / 1000 - 1) * 11000)
+            }
+        } else {
+            setFee(9000 + 11000 * 29 + (a / 1000 - 31) * 9500);
+        }
+
+
+  
     }
-    console.log(fee);
-    // const changeTo = () => {
-    //     calculateRoute();
-    // }
-    // const changeFrom = () => {
-    //     calculateRoute();
-    // }
-    // function clearRoute() {
-    //     setDirectionsResponse(null)
-    //     setDistance('')
-    //     setDuration('')
-    //     originRef.current.value = ''
-    //     destiantionRef.current.value = ''
-    // }
+   
     const autocomplete = null;
     const onLoad = (autocomplete) => {
-        console.log('autocomplete: ', autocomplete)
 
         autocomplete = autocomplete
     }
@@ -235,29 +220,17 @@ const CreateFreeTripForDriver = () => {
         if (originRef.current.value === "" && destiantionRef.current.value === "") {
             return
         } else if (originRef.current.value !== "" && destiantionRef.current.value === "") {
-            console.log(originRef.current.value);
-            console.log(destiantionRef.current.value);
+
             geocoder.geocode({ address: originRef.current.value }, (results, status) => {
                 if (status === 'OK') {
-                    // const point={
-                    //     lat: results[0].geometry.location.lat(),
-                    //     lng: results[0].geometry.location.lng()
-                    // }
+
                     const lat = results[0].geometry.location.lat();
                     const lng = results[0].geometry.location.lng();
-                    // console.log(center);
 
-
-
-                    // setMaker(prevState => ({
-                    //     ...prevState,
-                    //     lat:point.lat,
-                    //     lng:point.lng
-                    //  }));
                     setMaker({ lat, lng })
-                    console.log(maker);
+                
                 } else {
-                    console.log("not ok");
+      
                 }
             })
         } else if (destiantionRef.current.value !== "" && originRef.current.value === "") {
@@ -302,12 +275,12 @@ const CreateFreeTripForDriver = () => {
                                         onLoad={onLoad}
                                         onPlaceChanged={onPlaceChanged}
                                     >
-                                        <Input className='abc' type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ borderColor:"blue", borderRadius:"5px",height:"37px",width: "400px" }} />
+                                        <Input className='abc' type='text' placeholder='Điểm bắt đầu' ref={originRef} style={{ borderColor: "blue", borderRadius: "5px", height: "37px", width: "400px" }} />
                                     </Autocomplete>
                                 </Form.Item>
                                 <Form.Item
                                     name="destination"
- 
+
                                 >
                                     <Autocomplete
                                         onPlaceChanged={onPlaceChanged}
@@ -317,27 +290,48 @@ const CreateFreeTripForDriver = () => {
                                             type='text'
                                             placeholder='Điểm kết thúc'
                                             ref={destiantionRef}
-                                            style={{ borderColor:"red", borderRadius:"5px",height:"37px",width: "400px" }}
+                                            style={{ borderColor: "red", borderRadius: "5px", height: "37px", width: "400px" }}
                                         />
                                     </Autocomplete>
                                 </Form.Item>
+                                {
+                                    user.vehicleRequest.typeId === 1 ? (
+                                        <>
+                                            <div style={{ marginBottom: "20px" }}>
+                                                <span style={{ marginRight: "10px" }}>Phương tiện:</span>
+                                                <Input value={"Xe máy"} disabled />
+                                                {/* <span style={{marginLeft:"10px"}} >VNĐ</span> */}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div style={{ marginBottom: "20px" }}>
+                                                <span style={{ marginRight: "10px" }}>Phương tiện:</span>
+                                                <Input value={"Ô tô"} disabled />
 
-                                <Form.Item
-                                    style={{ marginTop: "27px" }}
-                                    label="Đăng ký"
-                                    name="seat"
-                                    
-                                >
-                                    <Select
-                                        style={{ width: "200px" }}
-                                        defaultValue = '1'
-                                    >
-                                        <Option value='1'>1 chỗ</Option>
-                                        <Option value='2'>2 chỗ</Option>
-                                        <Option value='3'>3 chỗ</Option>
-                                        <Option value='4'>4 chỗ</Option>
-                                    </Select>
-                                </Form.Item>
+                                            </div>
+                                            <Form.Item
+                                                style={{ marginTop: "27px" }}
+                                                label="Đăng ký"
+                                                name="seat"
+
+                                            >
+                                                <Select
+                                                    style={{ width: "200px" }}
+                                                    defaultValue='1'
+                                                >
+                                                    <Option value='1'>1 chỗ</Option>
+                                                    <Option value='2'>2 chỗ</Option>
+                                                    <Option value='3'>3 chỗ</Option>
+                                                    <Option value='4'>4 chỗ</Option>
+                                                </Select>
+                                            </Form.Item>
+                                        </>
+                                    )
+
+                                }
+
+
 
                                 <Form.Item
                                     style={{ display: "inline-block" }}
@@ -358,7 +352,7 @@ const CreateFreeTripForDriver = () => {
                                         }}
                                         onChange={onChange}
                                     /> ± */}
-                                    <DatePicker placeholder='Chọn ngày' disabledDate={(current) => current.isBefore(moment().subtract(1,"day"))} onChange={onChange}
+                                    <DatePicker placeholder='Chọn ngày' disabledDate={(current) => current.isBefore(moment().subtract(1, "day"))} onChange={onChange}
                                         renderExtraFooter={() => ''} showTime />
                                 </Form.Item>
                                 <Form.Item
@@ -371,7 +365,7 @@ const CreateFreeTripForDriver = () => {
                                         }
                                     ]}
                                 >
-                                    <Input    style={{ borderRadius:"5px",height:"34px" }} placeholder='Thời gian chờ (Phút)' />
+                                    <Input style={{ borderRadius: "5px", height: "34px" }} placeholder='Thời gian chờ (Phút)' />
                                     {/* <span style={{ display: "inline-block",marginLeft:"10px"}} >Phút</span> */}
                                 </Form.Item>
                                 {/* <Form.Item
@@ -381,11 +375,11 @@ const CreateFreeTripForDriver = () => {
                                 >
                                     <Input disabled/>
                                 </Form.Item> */}
-                               <div style={{marginBottom:"20px"}}>
-                                <span style={{marginRight:"10px"}}>Cước tối đa:</span>
-                               <Input value={Math.round(fee/1000)*1000 +" VNĐ"} style={{ borderRadius:"5px",height:"34px" }}  disabled/>
-                               {/* <span style={{marginLeft:"10px"}} >VNĐ</span> */}
-                               </div>
+                                <div style={{ marginBottom: "20px" }}>
+                                    <span style={{ marginRight: "10px" }}>Cước tối đa:</span>
+                                    <Input value={Math.round(fee / 1000) * 1000 + " VNĐ"} style={{ borderRadius: "5px", height: "34px" }} disabled />
+                                    {/* <span style={{marginLeft:"10px"}} >VNĐ</span> */}
+                                </div>
                                 <Form.Item
                                     name="price"
                                     rules={[
@@ -396,7 +390,7 @@ const CreateFreeTripForDriver = () => {
                                     ]}
                                     label="Cước"
                                 >
-                                    <Input style={{ borderRadius:"5px",height:"34px" }}  placeholder='VNĐ'/>
+                                    <Input style={{ borderRadius: "5px", height: "34px" }} placeholder='VNĐ' />
                                     {/* <span style={{marginLeft:"10px"}} >VNĐ</span> */}
                                 </Form.Item>
 

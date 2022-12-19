@@ -22,9 +22,8 @@ const DriverOfCompanyByAdmin = (props) => {
     const dispatch = useDispatch();
     const navigate =useNavigate();
     const [companys,setCompanys]=useState(props.companys);
-    // const user=useSelector((state)=>state.user.userInfo?.currentUser);
     const all=useSelector((state)=>state.user.drivers?.all);
-    console.log(all);
+  
      const drivers=all?.map((row)=> ({ ...row,key:row.driverID,name:row.firstName+" "+row.lastName }));
      const allCity = useSelector((state) => state.data.citys?.all);
      const citys=allCity?.map((row)=> ({value:row.id.cityID,label:row.cityName}));
@@ -32,7 +31,6 @@ const DriverOfCompanyByAdmin = (props) => {
      const [city, setCity] = useState("");
 
     const handleDelete = (key) => {
-        console.log(key);
          deleteDriverByCompany(key,companys.email,toast,dispatch);
     };
     const cancel = (e) => {
@@ -60,7 +58,7 @@ const DriverOfCompanyByAdmin = (props) => {
             address:city,
             companyEmail:companys.email,
         }
-        console.log(driver);
+
         getDriversForCompanyFilter(driver,dispatch);
     }
     useEffect(()=>{
@@ -108,7 +106,7 @@ const columns = [
         render: (text, record, index) => {
             return <div>
                    <EyeOutlined onClick={() => {
-                        console.log(record.email);
+
                         getDriverDetail(record.email,dispatch);
                         setTimeout(()=>{
                             navigate('/admin/taixe-mgt/detail', { state: { record } })

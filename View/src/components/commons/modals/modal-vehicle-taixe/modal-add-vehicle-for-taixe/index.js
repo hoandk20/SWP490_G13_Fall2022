@@ -17,9 +17,14 @@ const ModalAddVehicleForDriver = (props) => {
 
     const all = useSelector((state) => state.vehico.vehicos?.all);
     const vehicos = all?.map((row) => ({ ...row, key: row.id }))
-
+    const allVehicle = vehicos?.map((item) => {
+        if (item.typeId === 1) {
+            return { ...item, item, key: item.id, type: "Xe máy" }
+        } else if (item.typeId === 2) {
+            return { ...item, item, key: item.id, type: "Ô tô" }
+        }
+    })
     const handleAdd = (key) => {
-        console.log(key);
         const object ={
             driverEmail:email,
             vehicle:key,
@@ -65,19 +70,9 @@ const ModalAddVehicleForDriver = (props) => {
             dataIndex: 'produceYear',
         },
         {
-            key: 'price',
-            title: 'Giấy chứng nhận bảo hiểm',
-            dataIndex: 'price',
-        },
-        {
-            key: 'irs',
-            title: 'Giấy đăng kiểm',
-            dataIndex: 'irs',
-        },
-        {
-            key: 'status',
-            title: 'Trạng thái',
-            dataIndex: 'status',
+            key: 'type',
+            title: 'Loại xe',
+            dataIndex: 'type',
         },
 
 
@@ -136,7 +131,7 @@ const ModalAddVehicleForDriver = (props) => {
                    
 
                         <div className='table-info' style={{ marginTop: "5%" }}>
-                            <Table columns={columns} dataSource={vehicos} size="middle" />
+                            <Table columns={columns} dataSource={allVehicle} size="middle" />
                         </div>
                     </div>
                 </div >

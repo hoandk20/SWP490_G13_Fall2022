@@ -65,7 +65,6 @@ const LayoutHome = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate=useNavigate();
   const user = useSelector((state) => state.user.userInfo?.currentUser)
-  console.log(user);
   return (
     <Layout>
       {/* <Menu/> */}

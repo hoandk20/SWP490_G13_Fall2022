@@ -18,18 +18,18 @@ const RegisterSignup = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const newUser = location.state.newUser;
-    console.log(newUser);
+  
     const navigate = useNavigate();
     const user = {
         username: newUser.email,
         password: newUser.password,
     };
     const currentUser = useSelector((state)=>state.auth.login?.currentUser);
-    console.log(currentUser);
+   
     const decodedTocken=jwtDecode(currentUser.access_token);
     const userName=decodedTocken.sub; 
     const user1=useSelector((state)=>state.user.userInfo?.currentUser);
-    console.log(user1);
+ 
 
     const handleChangeCode = (e) => {
         setCode(e.target.value)

@@ -28,29 +28,29 @@ const EditDriverForCompany = (props) => {
         setOpen(false);
     };
     const onfinish = (values) => {
-        console.log(values);
+
         const driver = {
             ...values,
             companyEmail: user.email,
-            
+
         }
         EditDriverByCompany(driver, toast, dispatch)
         // getDriversForCompany(user.email,dispatch);
         setOpen(false);
     };
     const cancel = (e) => {
-        
+
     };
     const handleDelete = () => {
         // AddVehicleForDriver(drivers?.email,key,toast)
         // setOpenModal(false);
-        const object={
-            driverEmail:drivers.email,
-            companyEmail:user.email,
-            vehicle:0,
-            removeVehicleId:drivers.vehicleInfo.id,
+        const object = {
+            driverEmail: drivers.email,
+            companyEmail: user.email,
+            vehicle: 0,
+            removeVehicleId: drivers.vehicleInfo.id,
         }
-        DeleteVehicleForDriver(object,toast,dispatch);
+        DeleteVehicleForDriver(object, toast, dispatch);
     };
 
     const genExtra = () => (
@@ -62,11 +62,11 @@ const EditDriverForCompany = (props) => {
             cancelText="No"
         >
             <DeleteOutlined style={{ fontSize: "24px" }}
-                // onClick={(event) => {
-                  
-                //     // If you don't want click extra trigger collapse, you can prevent this:
-                //     event.stopPropagation();
-                // }}
+            // onClick={(event) => {
+
+            //     // If you don't want click extra trigger collapse, you can prevent this:
+            //     event.stopPropagation();
+            // }}
 
             />
         </Popconfirm>
@@ -173,7 +173,7 @@ const EditDriverForCompany = (props) => {
                                     },
                                 ]}
                             >
-                                <Input disabled/>
+                                <Input disabled />
                             </Form.Item>
                         </Col>
 
@@ -280,7 +280,7 @@ const EditDriverForCompany = (props) => {
                                 drivers.vehicleInfo === null ? (
                                     <>
                                         <Form.Item>
-                                            <span style={{ marginRight: "40px" }}><ModalUploadDocument driver={drivers}/></span>
+                                            <span style={{ marginRight: "40px" }}><ModalUploadDocument driver={drivers} /></span>
                                             <span><ModalAddVehicleForDriver email={drivers.email} companyEmail={user.email} /></span>
                                         </Form.Item>
                                     </>
@@ -298,9 +298,22 @@ const EditDriverForCompany = (props) => {
                                                                 <Col sm={12} md={6} >
                                                                     <p>Biển số xe:</p> {drivers.vehicleInfo.plate}
                                                                 </Col>
-                                                                <Col sm={12} md={6} >
-                                                                    <p>Loại xe:</p> {drivers.vehicleInfo.typeId}
-                                                                </Col>
+                                                                {
+                                                                    drivers.vehicleInfo.typeId === 1 ? (
+                                                                        <>
+                                                                            <Col sm={12} md={6} >
+                                                                                <p>Loại xe:</p> Xe máy
+                                                                            </Col>
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <Col sm={12} md={6} >
+                                                                                <p>Loại xe:</p> Ô tô
+                                                                            </Col>
+                                                                        </>
+                                                                    )
+                                                                }
+
                                                                 <Col sm={12} md={6} >
                                                                     <p>Màu xe:</p> {drivers.vehicleInfo.exteriorColor}
                                                                 </Col>

@@ -26,7 +26,6 @@ const AddDriverForCompany = () => {
         setCity(a.value);
       };
     const onfinish = (values) => {
-        console.log(values);
         const driver = {
             ...values,
             companyEmail: user.email,

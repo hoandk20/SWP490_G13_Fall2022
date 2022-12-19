@@ -18,10 +18,8 @@ const AddVehico = () => {
     const newUser = location.state.newUser;
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
-    console.log(newUser);
     const onfinish = (values) => {
         if (newUser.role == "ROLE_DRIVER") {
-            console.log(values);
             const vehico = {
                 ...values,
                 driverEmail: newUser.email,
@@ -29,7 +27,6 @@ const AddVehico = () => {
             AddVehicoByDriver(vehico,toast);
         }
         else {
-            console.log(values);
             const vehico = {
                 ...values,
                 companyEmail: newUser.email,

@@ -21,27 +21,7 @@ const HomeAdmin = (props) => {
 
         }
     }
-    console.log(data);
-    // const SearchAllData = async () =>{
-    //     try {
-    //         const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/reportCompany?companyId=${newUser.companyId}&month=${12}&year=${2022}`, {
-    //           headers: { 'Content-Type': 'application/json' }
-    //         })
-    //         setData(res.data.object);
-    //       } catch (error) {
 
-    //       }
-    // }
-
-    const onFinish = () => {
-
-    }
-
-    const onClick = () => {
-
-
-    }
-    console.log(data);
     useEffect(() => {
         AllInfoAdmin();
 

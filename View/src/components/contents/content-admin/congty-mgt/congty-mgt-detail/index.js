@@ -8,7 +8,7 @@ import VehicleOfCompany from './tab-vehicle';
 const CompanyDetailAdmin = () => {
     const location = useLocation();
     const companys = location.state?.record;
-    console.log(companys);
+
     return (
         <>
             <Tabs defaultActiveKey="1">

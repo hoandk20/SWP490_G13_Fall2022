@@ -26,7 +26,7 @@ const InfoCompany = () => {
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
 
-    console.log("company", companys);
+
     var companys
     if(company.statusCompany==="NE"){
         companys={
@@ -44,7 +44,7 @@ const InfoCompany = () => {
             ...values,
             companyId:companys.companyId
         }
-        console.log(object);
+  
         EditCompany(object,dispatch,toast)
     }
 

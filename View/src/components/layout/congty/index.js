@@ -73,7 +73,7 @@ const LayoutCompany = (props) => {
   const history = useNavigate();
   const { pathname } = useLocation();
 
-  console.log("pathname: ", pathname);
+
 
   return (
     <div style={{ display: 'flex' }}>

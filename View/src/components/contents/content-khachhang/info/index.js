@@ -32,7 +32,6 @@ const InfoContactUsers = () => {
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
     const [firstName, setFirstName] = useState(user.firstname);
     const [lastName, setLastName] = useState(user.lastname);
     const [email, setEmail] = useState(user.email);
@@ -113,7 +112,6 @@ const InfoContactUsers = () => {
         setAddress(e.target.value)
     }
     const handleChangeCity = (e) => {
-        // console.log(e.key);
         setCity(e.key)
     }
     return (

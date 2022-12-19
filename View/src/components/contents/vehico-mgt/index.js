@@ -76,58 +76,6 @@ const VehicoManagement = () => {
 
     })
 
-    // const vehicles = all?.map((item) => {
-
-    //     if (item.listDoc.length === 0) {
-    //         return { ...item, item, key: item.id, cnbhStatus: "Chưa gửi", cndkStatus: "Chưa gửi" }
-    //     } else if (item.listDoc.length === 1) {
-    //         if (item.listDoc[0].file_name === "Chung_Nhan_Bao_Hiem") {
-    //             if (item.listDoc[0].status === "SENDED") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndkStatus: "Chưa gửi" }
-    //             } else if (item.listDoc[0].status === "VALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndkStatus: "Chưa gửi" }
-    //             } else if (item.listDoc[0].status === "INVALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndkStatus: "Chưa gửi" }
-    //             }
-    //         } else if (item.listDoc[0].file_name === "Chung_Nhan_Dang_Kiem") {
-    //             if (item.listDoc[0].status === "SENDED") {
-    //                 return { ...item, item, key: item.id, cndkStatus: "Đã gửi", cndk: item.listDoc[0], cnbhStatus: "Chưa gửi" }
-    //             } else if (item.listDoc[0].status === "VALID") {
-    //                 return { ...item, item, key: item.id, cndkStatus: "Hợp lệ", cndk: item.listDoc[0], cnbhStatus: "Chưa gửi" }
-    //             } else if (item.listDoc[0].status === "INVALID") {
-    //                 return { ...item, item, key: item.id, cndkStatus: "Không Hợp lệ", cndk: item.listDoc[0], cnbhStatus: "Chưa gửi" }
-    //             }
-    //         }
-    //     } else if (item.listDoc.length === 2) {
-
-    //         if (item.listDoc[0].status === "SENDED") {
-    //             if (item.listDoc[1].status === "SENDED") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Đã gửi" }
-    //             } else if (item.listDoc[1].status === "VALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Hợp lệ" }
-    //             } else if (item.listDoc[1].status === "INVALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Đã gửi", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Không Hợp lệ" }
-    //             }
-    //         } else if (item.listDoc[0].status === "VALID") {
-    //             if (item.listDoc[1].status === "SENDED") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Đã gửi" }
-    //             } else if (item.listDoc[1].status === "VALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Hợp lệ" }
-    //             } else if (item.listDoc[1].status === "INVALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Không Hợp lệ" }
-    //             }
-    //         } else if (item.listDoc[0].status === "INVALID") {
-    //             if (item.listDoc[1].status === "SENDED") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Đã gửi" }
-    //             } else if (item.listDoc[1].status === "VALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Hợp lệ" }
-    //             } else if (item.listDoc[1].status === "INVALID") {
-    //                 return { ...item, item, key: item.id, cnbhStatus: "Không Hợp lệ", cnbh: item.listDoc[0], cndk: item.listDoc[1], cndkStatus: "Không Hợp lệ" }
-    //             }
-    //         }
-    //     }
-    // })
-    // console.log("vehicles", vehicles);
     const allVehicle = vehicles?.map((item) => {
         if (item.typeId === 1) {
             return { ...item, item, key: item.id, type: "Xe máy" }
@@ -202,7 +150,7 @@ const VehicoManagement = () => {
                     return <div><span style={{ marginRight: "10px", color: 'red' }}>{record.cndkStatus}</span>
                         <EyeOutlined style={{ fontSize: "16px" }} onClick={() => {
                             setOpenModal(true);
-                            console.log(record.cndk.id);
+
                             getDocumentVehicleId(record.cndk.id);
 
                         }} />
@@ -214,18 +162,18 @@ const VehicoManagement = () => {
             },
         },
 
-        {
-            key: 'driverEmail',
-            title: 'Tài xế sử dụng',
-            dataIndex: 'driverEmail',
-            // render:(record) =>{
-            //     if(record.driverEmail===""){
-            //         return <>Chưa có tài xế sử dụng</>
-            //     }else{
-            //         return <>record.driverEmail</>
-            //     }
-            // }
-        },
+        // {
+        //     key: 'driverEmail',
+        //     title: 'Tài xế sử dụng',
+        //     dataIndex: 'driverEmail',
+        //     // render:(record) =>{
+        //     //     if(record.driverEmail===""){
+        //     //         return <>Chưa có tài xế sử dụng</>
+        //     //     }else{
+        //     //         return <>record.driverEmail</>
+        //     //     }
+        //     // }
+        // },
 
 
         {
@@ -241,25 +189,25 @@ const VehicoManagement = () => {
             },
         },
 
-        {
-            title: '',
-            dataIndex: '',
-            key: 'y',
-            render: (text, record, index) => {
-                return <div>
-                    <Popconfirm
-                        title="Bạn có muốn xóa phương tiện này?"
-                        onConfirm={() => handleDelete(record.key)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <DeleteOutlined />
-                    </Popconfirm>
-                </div>
+        // {
+        //     title: '',
+        //     dataIndex: '',
+        //     key: 'y',
+        //     render: (text, record, index) => {
+        //         return <div>
+        //             <Popconfirm
+        //                 title="Bạn có muốn xóa phương tiện này?"
+        //                 onConfirm={() => handleDelete(record.key)}
+        //                 onCancel={cancel}
+        //                 okText="Yes"
+        //                 cancelText="No"
+        //             >
+        //                 <DeleteOutlined />
+        //             </Popconfirm>
+        //         </div>
 
-            },
-        },
+        //     },
+        // },
     ];
 
     const onFinish = (values) => {

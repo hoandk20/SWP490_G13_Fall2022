@@ -45,7 +45,7 @@ const TripDetailAdmin = () => {
     const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const listPassengerRegister = tripDriverDetail?.listPassenger;
 
-    console.log(tripDriverDetail);
+
 
     var date_str = tripDriverDetail?.timeStart,
         options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -53,9 +53,6 @@ const TripDetailAdmin = () => {
         date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
 
     var formatted_date = date_parts + formatted.substr(formatted.indexOf(",") + 1);
-    // console.log(formatted_date);
-    // var timeStart=new Date(tripDriverDetail?.timeStart);
-    // console.log(timeStart.toString("dd/M/yyyy hh:mm:ss tt"));
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
@@ -78,15 +75,11 @@ const TripDetailAdmin = () => {
             travelMode: google.maps.TravelMode.DRIVING,
         })
         setDirectionsResponse(results)
-        console.log(results)
+
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
     }
-    // console.log(listPassengerRegister);
-    // console.log("freeTrip: ", freeTrip);
-    // console.log("createTrip: ", createTrip);
-    // console.log("tripDriverDetail: ", tripDriverDetail);
-    //  const [detailTrip,setDetailTrip]=useState(); 
+
     const cancelTrip = () => {
         changeStatusTripDriver(tripDriverDetail.id, "CANC", dispatch, navigate);
     }

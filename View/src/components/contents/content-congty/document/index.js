@@ -48,14 +48,14 @@ const DocumentCompany = () => {
     const addDocGP_Hoat_Dong = () => {
         checkGP_Hoat_Dong(true);
     }
-    console.log("ac", GP_Hoat_Dong);
+
     const getDocBang_lai_xe = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+   
         setBang_lai_xe(res.data.object);
     }
     const getDocChung_Nhan_Kinh_nghiem = async () => {
@@ -64,7 +64,7 @@ const DocumentCompany = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+
         setChung_Nhan_Kinh_nghiem(res.data.object);
     }
     const getDocGP_Kinh_Doanh = async () => {
@@ -73,7 +73,7 @@ const DocumentCompany = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+      
         setGP_Kinh_Doanh(res.data.object);
     }
     const getDocGP_Hoat_Dong = async () => {
@@ -82,11 +82,9 @@ const DocumentCompany = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+     
         setGP_Hoat_Dong(res.data.object);
     }
-
-    console.log();
 
 
     const convertBase64 = (file) => {
@@ -105,7 +103,6 @@ const DocumentCompany = () => {
     };
     const uploadImageBang_lai_xe = async (e) => {
         const file = e.target.files[0];
-        console.log(file);
         const base64 = await convertBase64(file);
         setBaseImageBang_lai_xe(base64);
     };
@@ -213,9 +210,6 @@ const DocumentCompany = () => {
         setcheckGP_Hoat_Dong(false)
      
     };
-
-    console.log("gphd",GP_Hoat_Dong);
-    console.log("gpkd",GP_Kinh_Doanh);
 
     useEffect(() => {
         getDocBang_lai_xe();
@@ -581,7 +575,7 @@ const DocumentCompany = () => {
                                                                                     <span>
                                                                                         <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                                         <span>Tài liệu không hợp lệ vui lòng gửi lại tài liệu</span>
-                                                                                        <span> onClick={addDocChung_Nhan_Kinh_nghiem} <Button style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
+                                                                                        <span>  <Button onClick={addDocChung_Nhan_Kinh_nghiem} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
                                                                                     </span>
                                                                                 </div>
                                                                             </div>

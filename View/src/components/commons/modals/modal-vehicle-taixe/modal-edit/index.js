@@ -18,7 +18,6 @@ const ModalEditVehicleForDriver = (props) => {
     const vehicos = all?.map((row) => ({ ...row, key: row.id }))
 
     const handleAdd = (key) => {
-        console.log(key);
         AddVehicleForDriver(email,key,toast)
         setOpen(false)
     };

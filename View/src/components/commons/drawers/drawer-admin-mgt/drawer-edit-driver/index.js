@@ -20,13 +20,13 @@ const EditDriverForCompany = (props) => {
         setOpen(false);
     };
     const onfinish = (values) => {
-        console.log(values);
+
         const driver = {
             ...values,
             companyEmail: user.email,
         }
         EditDriverByCompany(driver, toast, dispatch)
-        // getDriversForCompany(user.email,dispatch);
+  
         setOpen(false);
     };
 

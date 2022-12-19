@@ -41,11 +41,11 @@ const TripDetailCompany = () => {
     const originRef = useRef()
     const destiantionRef = useRef()
     const freeTrip = useSelector((state) => state.freeTrip);
-    // const createTrip = useSelector((state) => state.freeTrip.createTrip?.detail);
+
     const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const listPassengerRegister = tripDriverDetail?.listPassenger;
 
-    console.log(tripDriverDetail);
+
 
     var date_str = tripDriverDetail?.timeStart,
         options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -77,15 +77,10 @@ const TripDetailCompany = () => {
             travelMode: google.maps.TravelMode.DRIVING,
         })
         setDirectionsResponse(results)
-        console.log(results)
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
     }
-    // console.log(listPassengerRegister);
-    // console.log("freeTrip: ", freeTrip);
-    // console.log("createTrip: ", createTrip);
-    // console.log("tripDriverDetail: ", tripDriverDetail);
-    //  const [detailTrip,setDetailTrip]=useState(); 
+
     const cancelTrip = () => {
         changeStatusTripDriver(tripDriverDetail.id, "CANC", dispatch, navigate);
     }

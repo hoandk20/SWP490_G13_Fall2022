@@ -48,31 +48,31 @@ const DriverDetailAdmin = (props) => {
     const info = location.state?.record;
     const all = useSelector((state) => state.user.driver?.info);
     var drivers
-    if(all.status==="NE"){
-        drivers={
+    if (all.status === "NE") {
+        drivers = {
             ...all,
-            status:"Chưa hoạt động"
+            status: "Chưa hoạt động"
         }
-    }else{
-        drivers={
+    } else {
+        drivers = {
             ...all,
-            status:"Chưa hoạt động"
+            status: "Chưa hoạt động"
         }
     }
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
-    console.log(drivers);
+
     const [city, setCity] = useState(drivers.cityId);
     const listDoc = drivers?.listDocs;
     const Bang_lai_xe = drivers.blx;
-    console.log(Bang_lai_xe);
+
     const Chung_Nhan_Kinh_nghiem = drivers.cnkn;
-    var Chung_Nhan_Bao_Hiem=null;
-    var Chung_Nhan_Dang_Kiem=null
-    if(drivers.vehicleInfo===null){
-    }else{
-         Chung_Nhan_Bao_Hiem = drivers.vehicleInfo.cnbh;
-         Chung_Nhan_Dang_Kiem = drivers.vehicleInfo.cndk;
+    var Chung_Nhan_Bao_Hiem = null;
+    var Chung_Nhan_Dang_Kiem = null
+    if (drivers.vehicleInfo === null) {
+    } else {
+        Chung_Nhan_Bao_Hiem = drivers.vehicleInfo.cnbh;
+        Chung_Nhan_Dang_Kiem = drivers.vehicleInfo.cndk;
     }
 
     const [open, setOpen] = useState(false);
@@ -87,7 +87,7 @@ const DriverDetailAdmin = (props) => {
     const [baseImage2, setBaseImage2] = useState("");
     const [baseImage6, setBaseImage6] = useState("");
     const [baseImage7, setBaseImage7] = useState("");
-    console.log("image", baseImage7);
+  
     const [date1, setDate1] = useState();
     const [date2, setDate2] = useState();
     const [date6, setDate6] = useState();
@@ -98,7 +98,7 @@ const DriverDetailAdmin = (props) => {
     const [checkdoc7, setCheckdoc7] = useState(false);
 
     const handleChangeCity = (e) => {
-        // console.log(e.key);
+
         setCity(e.key)
     }
 
@@ -117,7 +117,7 @@ const DriverDetailAdmin = (props) => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+     
         setBaseImage1(res.data.object.base64)
     }
     const getFile2 = async () => {
@@ -126,7 +126,7 @@ const DriverDetailAdmin = (props) => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+    
         setBaseImage2(res.data.object.base64)
     }
     const getFile6 = async () => {
@@ -135,7 +135,7 @@ const DriverDetailAdmin = (props) => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+  
         setBaseImage6(res.data.object.base64)
     }
     const getFile7 = async () => {
@@ -144,9 +144,9 @@ const DriverDetailAdmin = (props) => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-        // console.log(res.data.object.base64);
+
         setBaseImage7(res.data.object.base64)
-        console.log(baseImage7);
+   
     }
 
     const changeStatusValid1 = () => {
@@ -208,7 +208,7 @@ const DriverDetailAdmin = (props) => {
             email: values.email,
             phone: values.phoneNumber,
             country: 'vi',
-            cityId:city,
+            cityId: city,
         }
         editInforDriver(driver, toast, dispatch)
         setOpen(false);
@@ -244,7 +244,7 @@ const DriverDetailAdmin = (props) => {
     };
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
-        console.log(file);
+   
         const base64 = await convertBase64(file);
         setBaseImage1(base64);
     };
@@ -403,11 +403,11 @@ const DriverDetailAdmin = (props) => {
 
 
     };
-    const acceptDriver =()=>{
-        AcceptDriverAdmin(drivers.driverID,"ACT",toast,drivers.email,dispatch);
+    const acceptDriver = () => {
+        AcceptDriverAdmin(drivers.driverID, "ACT", toast, drivers.email, dispatch);
     }
-    const notAcceptDriver =()=>{
-        AcceptDriverAdmin(drivers.driverID,"NEW",toast,drivers.email,dispatch);
+    const notAcceptDriver = () => {
+        AcceptDriverAdmin(drivers.driverID, "NEW", toast, drivers.email, dispatch);
     }
 
     // const getDriverDetail = async () => {
@@ -926,7 +926,7 @@ const DriverDetailAdmin = (props) => {
                                                             },
                                                         ]}
                                                     >
-                                                        <Input />
+                                                        <Input disabled/>
                                                     </Form.Item>
                                                     <Form.Item
                                                         name="produceYear"
@@ -939,7 +939,7 @@ const DriverDetailAdmin = (props) => {
                                                             },
                                                         ]}
                                                     >
-                                                        <Input />
+                                                        <Input disabled/>
                                                     </Form.Item>
                                                     <Form.Item
                                                         name="plate"
@@ -952,8 +952,11 @@ const DriverDetailAdmin = (props) => {
                                                             },
                                                         ]}
                                                     >
-                                                        <Input />
+                                                        <Input disabled/>
                                                     </Form.Item>
+
+                                                </Col>
+                                                <Col sm={24} md={12}>
                                                     <Form.Item
                                                         name="exteriorColor"
                                                         initialValue={drivers?.vehicleInfo?.exteriorColor}
@@ -965,11 +968,9 @@ const DriverDetailAdmin = (props) => {
                                                             },
                                                         ]}
                                                     >
-                                                        <Input />
+                                                        <Input disabled/>
                                                     </Form.Item>
-                                                </Col>
-                                                <Col sm={24} md={12}>
-                                                    <Form.Item
+                                                    {/* <Form.Item
                                                         name="interiorColor"
                                                         initialValue={drivers?.vehicleInfo?.interiorColor}
                                                         label="Màu nội thất"
@@ -981,7 +982,7 @@ const DriverDetailAdmin = (props) => {
                                                         ]}
                                                     >
                                                         <Input />
-                                                    </Form.Item>
+                                                    </Form.Item> */}
                                                     <Form.Item
                                                         name="plateCountry"
                                                         initialValue={drivers?.vehicleInfo?.plateCountry}
@@ -993,7 +994,7 @@ const DriverDetailAdmin = (props) => {
                                                             },
                                                         ]}
                                                     >
-                                                        <Input />
+                                                        <Input disabled/>
                                                     </Form.Item>
                                                     <Form.Item
                                                         name="platState"
@@ -1006,7 +1007,7 @@ const DriverDetailAdmin = (props) => {
                                                             },
                                                         ]}
                                                     >
-                                                        <Input />
+                                                        <Input disabled/>
                                                     </Form.Item>
 
                                                 </Col>
@@ -1032,19 +1033,19 @@ const DriverDetailAdmin = (props) => {
                                                                 <span style={{ marginRight: "20px" }}>
                                                                     Ngày hết hạn <DatePicker onChange={getTime6} picker='month' />
                                                                 </span>
-                                                                <span style={{display:"inline-block"}}>
-                                                                <input
-                                                                    type="file"
-                                                                    style={{ color: "#fff" }}
-                                                                    onChange={(e) => {
-                                                                        uploadImage6(e);
-                                                                    }}
-                                                                />
+                                                                <span style={{ display: "inline-block" }}>
+                                                                    <input
+                                                                        type="file"
+                                                                        style={{ color: "#fff" }}
+                                                                        onChange={(e) => {
+                                                                            uploadImage6(e);
+                                                                        }}
+                                                                    />
                                                                 </span>
 
-                                                                <span style={{display:"inline-block",float:"right"}}>
-                                                                <Button className='a' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
-                                                                    </span>
+                                                                <span style={{ display: "inline-block", float: "right" }}>
+                                                                    <Button className='a' onClick={uploadfile6} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1150,24 +1151,24 @@ const DriverDetailAdmin = (props) => {
                                                             <div className='form-image' style={{ height: "230px" }}>
                                                                 <img src={baseImage7} height="220px" />
                                                             </div>
-                                                           
+
                                                             <div className='content-bottom'>
                                                                 <span style={{ marginRight: "20px" }}>
                                                                     Ngày hết hạn <DatePicker onChange={getTime7} picker='month' />
                                                                 </span>
-                                                                <span style={{display:"inline-block"}}>
-                                                                <input
-                                                                    type="file"
-                                                                    style={{ color: "#fff" }}
-                                                                    onChange={(e) => {
-                                                                        uploadImage7(e);
-                                                                    }}
-                                                                />
+                                                                <span style={{ display: "inline-block" }}>
+                                                                    <input
+                                                                        type="file"
+                                                                        style={{ color: "#fff" }}
+                                                                        onChange={(e) => {
+                                                                            uploadImage7(e);
+                                                                        }}
+                                                                    />
                                                                 </span>
 
-                                                                <span style={{display:"inline-block",float:"right"}}>
-                                                                <Button className='a' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
-                                                                    </span>
+                                                                <span style={{ display: "inline-block", float: "right" }}>
+                                                                    <Button className='a' onClick={uploadfile7} type='primary'>Gửi <CheckOutlined /></Button>
+                                                                </span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1275,48 +1276,48 @@ const DriverDetailAdmin = (props) => {
             <div style={{ marginTop: "50px" }}>
                 <span style={{ display: "inline-block", marginRight: "50px" }}><ModalSendEmail email={drivers?.email} /></span>
                 {
-                    drivers.status!=="ACT"?(
-                                        <span style={{ display: "inline-block" }}>
-                    <ReachableContext.Provider value="Light">
-
-
-                        <Button type="primary" onClick={() => {
-                            modal.confirm({
-                                title: "Bạn có muốn cho phép tài xế hoạt động",
-                                onOk() {
-                                    acceptDriver();
-                                }
-                            })
-
-                        }}  style={{ marginLeft: "30%" }}>
-                            Xác nhận tài xế hoạt động
-                        </Button>
-                        {contextHolder}
-
-                        <UnreachableContext.Provider value="Bamboo" />
-                    </ReachableContext.Provider>
-                </span>
-                    ):(
+                    drivers.status !== "ACT" ? (
                         <span style={{ display: "inline-block" }}>
-                        <ReachableContext.Provider value="Light">
-    
-    
-                            <Button type="primary" onClick={() => {
-                                modal.confirm({
-                                    title: "Bạn có muốn hủy hoạt động của tài xế",
-                                    onOk() {
-                                        notAcceptDriver();
-                                    }
-                                })
-    
-                            }} danger  style={{ marginLeft: "30%" }}>
-                                Hủy hoạt động
-                            </Button>
-                            {contextHolder}
-    
-                            <UnreachableContext.Provider value="Bamboo" />
-                        </ReachableContext.Provider>
-                    </span>
+                            <ReachableContext.Provider value="Light">
+
+
+                                <Button type="primary" onClick={() => {
+                                    modal.confirm({
+                                        title: "Bạn có muốn cho phép tài xế hoạt động",
+                                        onOk() {
+                                            acceptDriver();
+                                        }
+                                    })
+
+                                }} style={{ marginLeft: "30%" }}>
+                                    Xác nhận tài xế hoạt động
+                                </Button>
+                                {contextHolder}
+
+                                <UnreachableContext.Provider value="Bamboo" />
+                            </ReachableContext.Provider>
+                        </span>
+                    ) : (
+                        <span style={{ display: "inline-block" }}>
+                            <ReachableContext.Provider value="Light">
+
+
+                                <Button type="primary" onClick={() => {
+                                    modal.confirm({
+                                        title: "Bạn có muốn hủy hoạt động của tài xế",
+                                        onOk() {
+                                            notAcceptDriver();
+                                        }
+                                    })
+
+                                }} danger style={{ marginLeft: "30%" }}>
+                                    Hủy hoạt động
+                                </Button>
+                                {contextHolder}
+
+                                <UnreachableContext.Provider value="Bamboo" />
+                            </ReachableContext.Provider>
+                        </span>
                     )
                 }
 

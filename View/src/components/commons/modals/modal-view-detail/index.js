@@ -8,7 +8,6 @@ import React, { useState } from 'react';
 const ModalViewDetail = () => {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // const [loading, setLoading] = useState(false);
     const [form] = Form.useForm();
     const showModal = () => {
         setIsModalOpen(true);
@@ -18,17 +17,13 @@ const ModalViewDetail = () => {
     const showPopconfirm = () => {
         setOpen(true);
     };
-    // const handleConfirmCancel = () => {
-    //     console.log('Clicked cancel button');
-    //     setOpen(false);
-    // };
 
     const handleOk = () => {
         
-        // setConfirmLoading(true);
+   
         setTimeout(() => {
             setIsModalOpen(false);
-            // setConfirmLoading(false);
+        
         }, 1000);
 
     };

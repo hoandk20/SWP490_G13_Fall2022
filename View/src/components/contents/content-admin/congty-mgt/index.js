@@ -20,9 +20,9 @@ const CompanyManagementAdmin = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
+ 
     const all = useSelector((state) => state.user.companys?.all);
-    console.log(all);
+
 
 
 

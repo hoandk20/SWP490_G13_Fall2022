@@ -21,10 +21,7 @@ import ImageRegister from '../../../assets/image-app/registertx.jpg'
 
 const { Option } = Select;
 
-// const onChangeCheck = (e) => {
-//     console.log('radio checked', e.target.value);
-//     setValue(e.target.value);
-// };
+
 
 const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -51,11 +48,9 @@ const RegisterDriver = () => {
             role:values.role
         }
         if (newUser.role == "ROLE_DRIVER") {
-            console.log('Received values of form: ', newUser);
             navigate('/signup/driver-info',{state:{newUser}});
         }
         else {
-            console.log('Received values of form: ', newUser);
             navigate('/signup/company-info',{state:{newUser}});
         }
     };

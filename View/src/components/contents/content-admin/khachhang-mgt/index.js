@@ -19,13 +19,13 @@ const PassengerManagementAdmin = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
+
     const all = useSelector((state) => state.user.passengers?.all);
 
     const passengers = all?.map((row) => ({ ...row, key: row.email, name: row.firstName + " " + row.lassName }));
-    console.log(all);
+
     const onFinish = (values) => {
-        console.log(values); 
+     
         getPassengersByAdmin(values,dispatch);
 
     }

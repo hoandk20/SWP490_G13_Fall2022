@@ -58,7 +58,6 @@ const RegisterCompanyDoc1 = () => {
 
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
-        console.log(file);
         const base64 = await convertBase64(file);
         setBaseImage1(base64);
     };

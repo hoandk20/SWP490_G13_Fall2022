@@ -24,15 +24,13 @@ const RegisterAddVehicle = () => {
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const onfinish = async (values) => {
         if (user.role == "ROLE_DRIVER") {
-            console.log(values);
-
             try {
                 const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/addVehicle`,
                     {
                         driverEmail: user.email,
                         producer: values.producer,
                         produceYear: values.produceYear,
-                        interiorColor: values.interiorColor,
+                        interiorColor: "",
                         exteriorColor: values.exteriorColor,
                         plate: values.plate,
                         platState: values.city.label,
@@ -57,7 +55,7 @@ const RegisterAddVehicle = () => {
                         companyEmail: user.email,
                         producer: values.producer,
                         produceYear: values.produceYear,
-                        interiorColor: values.interiorColor,
+                        interiorColor: "",
                         exteriorColor: values.exteriorColor,
                         plate: values.plate,
                         platState: values.city.label,
@@ -78,7 +76,6 @@ const RegisterAddVehicle = () => {
             // setCount(count+1);
         }
     };
-    console.log(count);
     const onClickNext = () => {
         ChangeStatusSignUp(user.email, 3);
         navigate('/signup/vehico-info');
@@ -92,12 +89,13 @@ const RegisterAddVehicle = () => {
                     tải giấy đăng ký lên thay cho giấy đăng kiểm
                 </p>
                 {/* <AddVehico/> */}
-                <div className='form-add' >
+                <div className='form-add' style={{ width: "100%" }}>
                     <div className='form-header'
                     >
                         Thông tin phương tiện
                     </div>
-                    <div className='form-contents'>
+                    <div className='form-contents' style={{height:"40vh"}}>
+                        <div style={{marginTop:"5vh"}}>
                         <Form
                             onFinish={onfinish}
                             labelCol={{
@@ -109,6 +107,23 @@ const RegisterAddVehicle = () => {
                         >
                             <Row>
                                 <Col sm={24} md={12} >
+                                    <Form.Item
+                                        name="typeId"
+                                        label="Loại xe "
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn loại xe',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="1">Xe máy</Option>
+                                            <Option value="2">Ô tô</Option>
+                                        </Select>
+                                    </Form.Item>
                                     <Form.Item
                                         name="producer"
                                         label="Nhà sản xuất *"
@@ -142,7 +157,7 @@ const RegisterAddVehicle = () => {
                                     >
                                         <Input />
                                     </Form.Item>
-                                    <Form.Item
+                                    {/* <Form.Item
                                         name="interiorColor"
                                         label="Màu nội thất *"
                                         rules={[
@@ -160,7 +175,7 @@ const RegisterAddVehicle = () => {
                                             <Option value="Đỏ">Đỏ</Option>
                                             <Option value="Xanh">Xanh</Option>
                                         </Select>
-                                    </Form.Item>
+                                    </Form.Item> */}
                                     <Form.Item
                                         name="exteriorColor"
                                         label="Màu sơn *"
@@ -217,35 +232,26 @@ const RegisterAddVehicle = () => {
                                         ]}
                                     >
                                         <Select
-                                            placeholder="*Lựa chọn thành phố"
+                                         
                                             labelInValue
                                             options={citys}
                                         />
                                     </Form.Item>
                                     <Form.Item
-                                        name="typeId"
-                                        label="Loại xe "
-
                                     >
-                                        <Select
-                                            allowClear
-                                        >
-                                            <Option value="1">Xe máy</Option>
-                                            <Option value="2">Ô tô</Option>
-                                        </Select>
+                                        <Button style={{marginLeft:"100%"}} type="primary" htmlType="submit">
+                                            <SaveOutlined /> Lưu
+                                        </Button>
                                     </Form.Item>
 
                                 </Col>
                             </Row>
 
-                            <Form.Item
-                            >
-                                <Button type="primary" htmlType="submit">
-                                    <SaveOutlined /> Lưu
-                                </Button>
-                            </Form.Item>
+ 
 
                         </Form>
+                        </div>
+
                     </div>
                 </div>
             </div>

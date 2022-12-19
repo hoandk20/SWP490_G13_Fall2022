@@ -28,7 +28,7 @@ const ModalSendEmail = (props) => {
             ...values,
             email: email,
         }
-        console.log(object);
+
 
         SendEmail(object,toast);
         setIsModalOpen(false);

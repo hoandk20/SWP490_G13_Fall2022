@@ -32,7 +32,6 @@ const RegisterCompanyInfo = () => {
             email: values.email,
             password: values.password,
         }
-        console.log(newUser);
         registerCompany(newUser, dispatch, navigate, toast);
 
     };

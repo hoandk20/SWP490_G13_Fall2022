@@ -13,8 +13,6 @@ const RegisterDriverInfoVehico = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const newUser = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(newUser);
-    // const newUser = location.state.newUser;
      const vehicle = newUser?.vehicleRequest;
     const [count, setCount] = useState(0);
     const [baseImage1, setBaseImage1] = useState("");
@@ -70,7 +68,6 @@ const RegisterDriverInfoVehico = () => {
             month: month,
             vehicleId:newUser.vehicleRequest.id
         }
-        console.log(object);
         try {
             const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/DocumentVehicle`,
               {
@@ -232,9 +229,9 @@ const RegisterDriverInfoVehico = () => {
                 <div style={{ marginTop: "50px" }}>
                     
                     {Chung_Nhan_Bao_Hiem===true && Chung_Nhan_Dang_Kiem===true? (
-                       <Button type='primary' onClick={onClickFinish}>Finish <RightOutlined /> </Button>
+                       <Button type='primary' onClick={onClickFinish}>Kết thúc <RightOutlined /> </Button>
                     ) : (
-                        <Button type='primary' disabled>Finish <RightOutlined /> </Button>
+                        <Button type='primary' disabled>Kết thúc <RightOutlined /> </Button>
                     )}
                 </div>
             </div>

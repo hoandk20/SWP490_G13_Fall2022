@@ -459,7 +459,7 @@ export const AddVehicoByCompany = async (vehicle, toast, dispatch) => {
         companyEmail: vehicle.companyEmail,
         producer: vehicle.producer,
         produceYear: vehicle.produceYear,
-        interiorColor: vehicle.interiorColor,
+        interiorColor: "",
         exteriorColor: vehicle.exteriorColor,
         plate: vehicle.plate,
         platState: vehicle.platState.label,

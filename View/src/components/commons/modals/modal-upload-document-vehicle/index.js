@@ -66,7 +66,6 @@ const ModalUploadDocumentVehicle = (props) => {
             month: month,
             companyEmail:newUser.email,
         }
-        console.log(object);
         UploadDocumentForVehicle(object, toast,dispatch);
    
     };
@@ -86,8 +85,6 @@ const ModalUploadDocumentVehicle = (props) => {
             month: month,
             companyEmail:newUser.email,
         }
-        // UploadDocumentForVehicle(object, toast,dispatch);
-        console.log("ve",object);
     };
     return (
         <>

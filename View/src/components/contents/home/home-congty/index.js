@@ -11,7 +11,6 @@ const HomeCompany = (props) => {
     const [dataCompay,setDataCompany] = useState();
     const newUser=useSelector((state)=>state.user.userInfo?.currentUser);
 
-    console.log(newUser);
      const SearchInfoCompany = async (object) =>{
          if(newUser==="")return
         try {
@@ -43,7 +42,6 @@ const HomeCompany = (props) => {
             year :values.year.value,
             companyId:newUser.companyId
         }
-        console.log(object);
         if(object.year===undefined){
             object.year=2022
         }

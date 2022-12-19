@@ -12,7 +12,7 @@ const ModalUploadDocument = (props) => {
     const [baseImage1, setBaseImage1] = useState("");
     const [baseImage2, setBaseImage2] = useState("");
     const driver = props.driver;
-    console.log("tãie",driver);
+ 
     const [date1, setDate1] = useState();
     const [date2, setDate2] = useState();
 
@@ -25,7 +25,7 @@ const ModalUploadDocument = (props) => {
  
     const uploadImage1 = async (e) => {
         const file = e.target.files[0];
-        console.log(file);
+   
         const base64 = await convertBase64(file);
         setBaseImage1(base64);
     };

@@ -44,7 +44,6 @@ const TripHistoryPassenger = () => {
         }
 
     })
-console.log(trips);
     useEffect(() => {
         const trip = {
             email: user?.email

@@ -57,7 +57,7 @@ const FreeTripDetailOfDriver = () => {
     const tripPassenger = tripInfo.listPassenger.find(t => t.passengerEmail === user.email);
 
     const listPassenger = tripInfo.listPassenger.filter(t => t.status === "APPR");  
-    console.log("listPassenger", listPassenger);
+
 
     var date_str = tripInfo?.timeStart,
         options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' },
@@ -98,7 +98,7 @@ const FreeTripDetailOfDriver = () => {
 
         })
         setDirectionsResponse(results)
-        console.log("results")
+
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
     }
@@ -177,7 +177,7 @@ const FreeTripDetailOfDriver = () => {
     const showModal = () => {
         setIsModalOpen(true);
     };
-    console.log("tripInfo", tripInfo);
+   
 
     return (
         <div className='container'>

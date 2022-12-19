@@ -20,7 +20,7 @@ const RegisterDriver = () =>{
             borderTopStyle:'solid',
             borderTopColor:' rgb(187, 187, 187)',
             padding: 24,
-            minHeight: 560,
+            minHeight: 800,
           }}
         >
    <Register/>

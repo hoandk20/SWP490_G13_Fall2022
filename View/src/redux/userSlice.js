@@ -43,7 +43,7 @@ const userSlice=createSlice({
          
         },
         deleteUser:(state)=>{
-            state.userInfo.currentUser="";
+            state.userInfo.currentUser=null;
         },
         getAllCompanyForAdmin:(state,action)=>{
             state.companys.all=action.payload;        

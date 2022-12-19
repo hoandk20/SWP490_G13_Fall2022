@@ -22,7 +22,7 @@ const TripsCompany = () => {
     const [loading, setLoading] = useState(false);
     // const [tripHistory,setTripHistory] =useState();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log(user);
+
     const all = useSelector((state) => state.tripHistory.tripHistory?.trips);
 
     const dateFormat = (date) =>{
@@ -45,7 +45,7 @@ const TripsCompany = () => {
     }
 
   })
-  console.log(trips);
+
     const onfinish = (values) => {
         const object = {
             companyID:user?.companyId,

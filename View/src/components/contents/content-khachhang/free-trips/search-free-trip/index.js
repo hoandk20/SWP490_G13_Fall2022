@@ -39,7 +39,7 @@ const SerachFreeTripForPassenger = () => {
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const trips = useSelector((state) => state.freeTrip.trips?.allTrip);
-    console.log("tríp",trips); 
+
 
     const dateFormat = (date) => {
         const date_str = date,
@@ -49,7 +49,6 @@ const SerachFreeTripForPassenger = () => {
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
     const freeTrips = trips?.map((row) => ({ ...row, key: row.id, seatRemind: row.seat - row.seatRegistered, dateStart: dateFormat(row.timeStart) ,price:Math.round(row.price/1000)*1000}));
-    console.log("trip",freeTrips);
     useEffect(() => {
         getListFreeTripIsOpen(dispatch);
 
@@ -190,19 +189,14 @@ const SerachFreeTripForPassenger = () => {
             geocoder.geocode({ address: originRef.current.value }, (results, status) => {
                 if (status === 'OK') {
                     center = results[0].geometry.location;
-                } else {
-                    console.log("not ok");
-                }
+                } 
             })
         } else if (destiantionRef.current.value !== "" && originRef.current.value === "") {
-            console.log(originRef.current.value);
-            console.log(destiantionRef.current.value);
+
             geocoder.geocode({ address: destiantionRef.current.value }, (results, status) => {
                 if (status === 'OK') {
                     center = results[0].geometry.location;
-                } else {
-                    console.log("not ok");
-                }
+                } 
             })
         } else {
             calculateRoute();

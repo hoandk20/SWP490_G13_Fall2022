@@ -20,7 +20,6 @@ const RegisterDriverDoc = () => {
     const decodedTocken = jwtDecode(currentUser.access_token);
     const userName = decodedTocken.sub;
     const newUser = useSelector((state) => state.user.userInfo?.currentUser);
-    console.log("newUser",newUser);
     const navigate = useNavigate();
     const [count, setCount] = useState(0);
     const [baseImageAvatar, setBaseImageAvatar] = useState("");
@@ -90,7 +89,7 @@ const RegisterDriverDoc = () => {
 
     };
 
-    console.log(Bang_lai_xe);
+
 
     const uploadfile2 = async () => {
         const arr = date2.split("-");

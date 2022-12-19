@@ -12,7 +12,6 @@ import { Col, Row } from 'antd';
 
 const HomePassenger = (props) => {
     const data=props.data;
-    console.log(data);
     return (
         <>
             <div className='container-home'>

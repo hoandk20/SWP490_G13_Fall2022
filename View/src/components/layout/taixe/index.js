@@ -35,13 +35,12 @@ const LayoutDriver = (props) => {
   const history = useNavigate();
   const { pathname } = useLocation();
   const user=useSelector((state)=>state.user.userInfo?.currentUser);
-  console.log("layout",user);
+
   var menuItem=[];
   
 
   const [menu,setMenu]=useState([]);
 
-  console.log("pathname: ", pathname);
   if(user.companyId===0){
     menuItem=[
       {

@@ -11,7 +11,7 @@ const EditVehico = (props) => {
     const user = useSelector((state) => state.user.userInfo?.currentUser);
     const [open, setOpen] = useState(false);
     const vehico = props.state;
-    console.log(vehico);
+
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const [city, setCity] = useState("");
@@ -32,7 +32,7 @@ const EditVehico = (props) => {
             id: vehico.id,
             platState: city.label,
         }
-        console.log(vehicoUpdate);
+      
         EditVehicoByCompany(vehicoUpdate, toast, dispatch);
         // getAllVehico(user.email,dispatch);
         setOpen(false);
@@ -54,6 +54,18 @@ const EditVehico = (props) => {
             >
                 <Form onFinish={onfinish} layout="vertical" hideRequiredMark>
                     <Row gutter={16}>
+                    <Col span={12}>
+                            <Form.Item
+                                name="type"
+                                label="Loại phương tiện "
+
+                                initialValue={vehico.type}
+
+                            >
+
+                                <Input disabled />
+                            </Form.Item>
+                        </Col>
                         <Col span={12}>
                             <Form.Item
                                 name="producer"
@@ -94,30 +106,6 @@ const EditVehico = (props) => {
                                 <Input />
                             </Form.Item>
                         </Col>
-                    </Row>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item
-                                name="interiorColor"
-                                initialValue={vehico.interiorColor}
-                                label="Màu nội thất"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Vui lòng chọn năm sản xuất',
-                                    },
-                                ]}
-                            >
-                                <Select
-                                    allowClear
-                                >
-                                    <Option value="Đen">Đen</Option>
-                                    <Option value="Trắng">Trắng</Option>
-                                    <Option value="Đỏ">Đỏ</Option>
-                                    <Option value="Xanh">Xanh</Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
                         <Col span={12}>
                             <Form.Item
                                 name="exteriorColor"
@@ -141,6 +129,31 @@ const EditVehico = (props) => {
                             </Form.Item>
                         </Col>
                     </Row>
+                    {/* <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item
+                                name="interiorColor"
+                                initialValue={vehico.interiorColor}
+                                label="Màu nội thất"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Vui lòng chọn năm sản xuất',
+                                    },
+                                ]}
+                            >
+                                <Select
+                                    allowClear
+                                >
+                                    <Option value="Đen">Đen</Option>
+                                    <Option value="Trắng">Trắng</Option>
+                                    <Option value="Đỏ">Đỏ</Option>
+                                    <Option value="Xanh">Xanh</Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                       
+                    </Row> */}
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
@@ -157,18 +170,7 @@ const EditVehico = (props) => {
                                 <Input />
                             </Form.Item>
                         </Col>
-                        <Col span={12}>
-                            <Form.Item
-                                name="type"
-                                label="Loại phương tiện "
 
-                                initialValue={vehico.type}
-
-                            >
-
-                                <Input disabled />
-                            </Form.Item>
-                        </Col>
                         <Col span={24}>
                             <Form.Item
                                 name="plateCountry"

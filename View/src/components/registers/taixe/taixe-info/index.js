@@ -25,7 +25,6 @@ const RegisterDriverInfo = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    console.log(location.state.newUser)
     const onFinish = (values) => {
         const newUser = {
             ...location.state.newUser,

@@ -32,7 +32,7 @@ const PassengerDetailAdmin = () => {
     const dispatch = useDispatch();
 
     const passenger = useSelector((state) => state.user.passenger?.info);
-    console.log(passenger);
+
     const [firstName, setFirstName] = useState(passenger.firstName);
     const [lastName, setLastName] = useState(passenger.lassName);
     const [email, setEmail] = useState(passenger.email);
@@ -40,7 +40,7 @@ const PassengerDetailAdmin = () => {
     const [address, setAddress] = useState(passenger.address);
     const [city, setCity] = useState(passenger.cityId);
     const [avatar, setAvatar] = useState(passenger.avatarBase64);
-    console.log("ln",lastName);
+  
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
             <Select
@@ -91,7 +91,7 @@ const PassengerDetailAdmin = () => {
             address: address,
             cityId:city,
         }
-        console.log(object);
+
         editInforPassengerAdmin(object, toast, dispatch);
 
     }
@@ -113,7 +113,7 @@ const PassengerDetailAdmin = () => {
         setAddress(e.target.value)
     }
     const handleChangeCity = (e) => {
-        // console.log(e.key);
+
         setCity(e.key)
     }
     return (

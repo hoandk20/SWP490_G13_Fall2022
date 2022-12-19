@@ -34,7 +34,7 @@ const Home = () => {
   console.log(newUser);
   const role=decodedTocken.roles[0];
 
-  const [data,setData]=useState("");
+  const [data,setData]=useState(""); 
 
 
   const getDataPassenger = async() =>{
@@ -87,42 +87,44 @@ const Home = () => {
    
   },[])
 
-  if(!role){
-    return <Forbidden/>
-  }else{
-    if(role==='ROLE_PASSENGER'){
-      if(newUser.statusVerify==0 ){
-        navigate('/signup/confirm-email', { state: { newUser } })
-      }else
-      return <SerachFreeTripForPassenger/>
-    }else if(role==='ROLE_DRIVER'){
-      if(newUser.statusVerify==0 ){
-        navigate('/signup/confirm-email', { state: { newUser } })
-      }else if(newUser.statusVerify==1){
-        navigate('/signup/driver-doc', { state: { newUser } })
-      }else if(newUser.statusVerify==2){
-        navigate('/signup/add-vehico', { state: { newUser } })
-      }else if(newUser.statusVerify==3){
-        navigate('/signup/vehico-info', { state: { newUser } })
-      }else
-      return <CreateFreeTripForDriver/>
-    }else if(role==='ROLE_COMPANY'){
-      if(newUser.statusVerify==0 ){
-        navigate('/signup/confirm-email', { state: { newUser } })
-      }else if(newUser.statusVerify==1){
-        navigate('/signup/company-doc1', { state: { newUser } })
-      }else if(newUser.statusVerify==2){
-        navigate('/signup/add-vehico', { state: { newUser } })
-      }else if(newUser.statusVerify==3){
-        navigate('/signup/vehico-info', { state: { newUser } })
-      }else {
-          if(newUser!==""){
-            return <LayoutCompany content={<HomeCompany data={data}/>}/>
-          }
+  if(newUser!==null){
+    if(!role){
+      return <Forbidden/>
+    }else{
+      if(role==='ROLE_PASSENGER'){
+        if(newUser.statusVerify==0 ){
+          navigate('/signup/confirm-email', { state: { newUser } })
+        }else
+        return <SerachFreeTripForPassenger/>
+      }else if(role==='ROLE_DRIVER'){
+        if(newUser.statusVerify==0 ){
+          navigate('/signup/confirm-email', { state: { newUser } })
+        }else if(newUser.statusVerify==1){
+          navigate('/signup/driver-doc', { state: { newUser } })
+        }else if(newUser.statusVerify==2){
+          navigate('/signup/add-vehico', { state: { newUser } })
+        }else if(newUser.statusVerify==3){
+          navigate('/signup/vehico-info', { state: { newUser } })
+        }else
+        return <CreateFreeTripForDriver/>
+      }else if(role==='ROLE_COMPANY'){
+        if(newUser.statusVerify==0 ){
+          navigate('/signup/confirm-email', { state: { newUser } })
+        }else if(newUser.statusVerify==1){
+          navigate('/signup/company-doc1', { state: { newUser } })
+        }else if(newUser.statusVerify==2){
+          navigate('/signup/add-vehico', { state: { newUser } })
+        }else if(newUser.statusVerify==3){
+          navigate('/signup/vehico-info', { state: { newUser } })
+        }else {
+            if(newUser!==""){
+              return <LayoutCompany content={<HomeCompany data={data}/>}/>
+            }
+        }
+  
+      }else if(role==="ROLE_ADMIN"){
+        return <LayoutAdmin content={<HomeAdmin id={newUser.companyId}/>}/>
       }
-
-    }else if(role==="ROLE_ADMIN"){
-      return <LayoutAdmin content={<HomeAdmin id={newUser.companyId}/>}/>
     }
   }
 };
