@@ -221,8 +221,6 @@ public class DriverTripController {
         int TimeStart = commonService.parseIntWithDefault(timeStart, 0);
 
         String[] listPoly = SlistPoly.split(";");
-        listPoly[0] = "";
-        listPoly[listPoly.length - 1] = "";
         for (TripDriver t : list) {
             if (t.getListPolyline() == null || t.getListPolyline().equals("")) {
                 continue;
@@ -251,13 +249,14 @@ public class DriverTripController {
             }
             t.setNoOfPolyline(i);
             DecimalFormat df = new DecimalFormat("#.###");
-            t.setPrice(t.getPrice() * i / listPoly.length);
             String[] listPoly2 = t.getListPolyline().split(";");
             t.setListPolyline(listPoly2[0] + "," + listPoly2[listPoly2.length - 1]);
+            t.setPrice(t.getPrice() * i / listPoly2.length);
             //not enough seat
             if (!(t.getSeat() - t.getSeatRegistered() >= RegisterSeat)) {
                 continue;
             }
+
             if (IsHasTime) {
                 if (TimeStart > 0) {
                     Date Date1 = Date.from(t.getInstantTimeStart());
