@@ -91,12 +91,14 @@ const SerachFreeTripForPassenger = () => {
                 return <div>
 
                     <EyeOutlined onClick={() => {
+                        const from=originRef.current.value;
+                        const to=destiantionRef.current.value;
                         getTripDetailDriver(record.id,dispatch);
                         setLoading(true);
                        
                         setTimeout(() => {
                             setLoading(false);
-                            navigate('/khachhang/freeTrip/detail-of-taixe', { state: { a } })
+                            navigate('/khachhang/freeTrip/detail-of-taixe', { state: { a ,from,to} })
                         }, 1000)
                     }} />
 

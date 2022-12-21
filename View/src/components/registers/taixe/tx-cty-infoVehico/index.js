@@ -141,7 +141,7 @@ const RegisterDriverInfoVehico = () => {
                     <div className='form-header1'>
                         <span>
                             Thông tin phương tiện :
-                            {/* <div className='status'>Đã gửi</div> */}
+                         
                         </span>
 
                     </div>
@@ -149,16 +149,26 @@ const RegisterDriverInfoVehico = () => {
                         <div className='form-info'>
                             <Row>
                                 <Col sm={12} md={6} >
-                                    <p>Năm sản xuất:</p> {vehicle.produceYear}
+                                    <p>Năm sản xuất:</p> {vehicle?.produceYear}
                                 </Col>
                                 <Col sm={12} md={6} >
-                                    <p>Màu sơn:</p> {vehicle.exteriorColor}
+                                    <p>Màu sơn:</p> {vehicle?.exteriorColor}
+                                </Col>
+                                <Col sm={12} md={6} >{
+                                    vehicle?.typeId===1?(
+                                        <>
+                                            <p>Loại xe:</p> Xe máy
+                                        </>
+                                    ):(
+                                        <>
+                                            <p>Loại xe:</p> Ô tô
+                                        </>
+                                    )
+                                }
+                                    
                                 </Col>
                                 <Col sm={12} md={6} >
-                                    <p>Màu nội thất:</p> {vehicle.interiorColor}
-                                </Col>
-                                <Col sm={12} md={6} >
-                                    <p>Nơi đăng ký:</p> {vehicle.platState}
+                                    <p>Nơi đăng ký:</p> {vehicle?.platState}
                                 </Col>
                             </Row>
                         </div>
@@ -171,7 +181,7 @@ const RegisterDriverInfoVehico = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy chứng nhận bảo hiểm.
-                                        <div className='status'>Đã gửi</div>
+                                     
                                     </span>
 
                                 </div>
@@ -200,7 +210,7 @@ const RegisterDriverInfoVehico = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy chứng nhận đăng kiểm
-                                        <div className='status'>Đã gửi</div>
+                                       
                                     </span>
 
                                 </div>

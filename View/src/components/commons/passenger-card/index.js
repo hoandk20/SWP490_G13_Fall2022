@@ -26,7 +26,18 @@ const PassengerCard = (props) => {
                                                     <div className='header-list'>
                                                         <span>
                                                             {obj?.passengerEmail}
-                                                            <div className='status'>{obj?.status}</div>
+                                                            {
+                                                               obj?.status==="PEND"?(
+                                                                <>
+                                                                    <div className='status'>Đang chờ</div>
+                                                                </>
+                                                               ):(
+                                                                <>
+                                                                     <div className='status'>Chấp nhận</div>
+                                                                </>
+                                                               )
+                                                            }
+                                                            
 
                                                         </span>
                                                         <div className='content-list'>

@@ -11,7 +11,6 @@ import { loginUser, resendCode, VerifyCodeEmail } from '../../../redux/apiReques
 import { loginFailed, loginSuccess } from '../../../redux/authSlice';
 import Timer from '../../commons/timer';
 import './confirm-email.css'
-const URL = "http://26.36.110.116";
 const RegisterSignup = () => {
     const [counter, setCounter] = useState(60);
     const [code, setCode] = useState("");
@@ -51,7 +50,7 @@ const RegisterSignup = () => {
             });
     }
     const getCodeAgain = async () => {
-        resendCode(newUser.email)
+        resendCode(newUser.email,toast)
         setCounter(60);
     }
     const verifyCode = async () => {
@@ -83,7 +82,7 @@ const RegisterSignup = () => {
                             </p>
                         )} */}
                             <p>
-                                Vui lòng nhập mã xác thực, mã sẽ hết hạn sau 60 s
+                                Vui lòng nhập mã xác thực, mã sẽ hết hạn sau 10 phút
                             </p>
                         <div className=''>
                             <Form.Item

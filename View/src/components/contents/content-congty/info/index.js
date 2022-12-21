@@ -39,6 +39,7 @@ const InfoCompany = () => {
             statusCompany:"Chưa hoạt động"
         }
     }
+    console.log("company",companys);
     const onfinish = (values) => {
         const object ={
             ...values,

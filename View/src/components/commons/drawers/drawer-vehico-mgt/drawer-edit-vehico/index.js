@@ -34,9 +34,8 @@ const EditVehico = (props) => {
         }
       
         EditVehicoByCompany(vehicoUpdate, toast, dispatch);
-        // getAllVehico(user.email,dispatch);
         setOpen(false);
-        // window.location.reload();
+
     };
     return (
         <>
