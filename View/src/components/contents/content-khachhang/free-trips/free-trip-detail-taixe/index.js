@@ -52,7 +52,7 @@ const FreeTripDetailOfDriver = () => {
     const [duration, setDuration] = useState('')
     const location = useLocation();
     const view = location.state?.a;
-
+    console.log(view);
     const tripInfo = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const tripPassenger = tripInfo.listPassenger.find(t => t.passengerEmail === user.email);
 
@@ -65,7 +65,7 @@ const FreeTripDetailOfDriver = () => {
         date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
 
     var formatted_date = date_parts + formatted.substr(formatted.indexOf(",") + 1);
-
+    console.log("tripsInfo",tripInfo);
     // const [tripInfo, setTripInfo] = useState('')
     const originRef = useRef()
     const destiantionRef = useRef()
@@ -141,8 +141,9 @@ const FreeTripDetailOfDriver = () => {
                 }
             });
     }
+    console.log("tripInfo",tripInfo);
     const handleOk = () => {
-        if (seatRegister < tripInfo.seat) {
+        if (seatRegister <= tripInfo.seat) {
             const trip = {
                 tripID: tripInfo.tripID,
                 driverEmail: tripInfo.driverEmail,
@@ -152,7 +153,7 @@ const FreeTripDetailOfDriver = () => {
                 seatRegister: seatRegister,
                 timeStart: tripInfo.timeStart,
                 waitingTime: tripInfo.waitingTime,
-                price: tripInfo.price,
+                price: view.price,
                 note: note,
             }
             registerTrip(trip, dispatch, navigate, toast);
@@ -201,16 +202,23 @@ const FreeTripDetailOfDriver = () => {
                                     )
                                 }
 
-                                <Descriptions.Item span={3} label="Thời gian xuất phát">{formatted_date}</Descriptions.Item>
-
+                                <Descriptions.Item span={2} label="Thời gian xuất phát">{formatted_date}</Descriptions.Item>
+                                <Descriptions.Item span={1} label="Cước tổng chuyến đi">{tripInfo?.price}</Descriptions.Item >
                                 {
                                     view === "history" ? (
-                                        <Descriptions.Item label="Số ghế đã đặt">{tripPassenger?.seatRegister}</Descriptions.Item>
+                                        <>
+                                        <Descriptions.Item span={2} label="Số ghế đã đặt">{tripPassenger?.seatRegister}</Descriptions.Item>
+                                        <Descriptions.Item span={1} label="Cước phải trả">{tripPassenger?.price}</Descriptions.Item >
+                                        </>
                                     ) : (
-                                        <Descriptions.Item label="Số ghế còn trống">{tripInfo?.seat - tripInfo?.seatRegistered}</Descriptions.Item>
+                                        <>
+                                            <Descriptions.Item span={2} label="Số ghế còn trống">{tripInfo?.seat - tripInfo?.seatRegistered}</Descriptions.Item>
+                                            <Descriptions.Item span={1} label="Cước phải trả">{view?.price}</Descriptions.Item >
+                                        </>
                                     )
                                 }
-                                <Descriptions.Item span={2} label="Cước">{tripInfo?.price}</Descriptions.Item >
+                               
+
 
                                 <Descriptions.Item span={2} label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
                                 <Descriptions.Item span={1} label="Số người đi cùng">{listPassenger.length}</Descriptions.Item >
@@ -255,8 +263,9 @@ const FreeTripDetailOfDriver = () => {
                             <div style={{ marginTop: "20px" }}>
                                 <Descriptions size='middle' bordered title="Thông tin phương tiện tài xế">
 
-                                    <Descriptions.Item span={3} label="Biển số xe">{tripInfo?.vehiclePlate}</Descriptions.Item>
+                                    <Descriptions.Item span={2} label="Biển số xe">{tripInfo?.vehiclePlate}</Descriptions.Item>
                                     <Descriptions.Item span={2} label="Loại xe">{tripInfo?.vehicleName}</Descriptions.Item>
+                                    <Descriptions.Item span={2} label="Hãng xe">{tripInfo?.vehicleName}</Descriptions.Item>
                                     <Descriptions.Item span={1} label="Màu xe">{tripInfo?.vehicleColor}</Descriptions.Item>
                                 </Descriptions>
                             </div>

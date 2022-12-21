@@ -17,7 +17,7 @@ const Header1 = () =>{
             <a href="#"> <Avatar src={user?.avatarBase64}  alt="abc"/></a>
 
 
-            <p style={{marginTop:'-20px', fontWeight: 'bold'}}>{user.firstname} {user.lastname}</p>
+            <p style={{marginTop:'-20px', fontWeight: 'bold'}}>{user?.firstname} {user?.lastname}</p>
             </div>
             </span>
 

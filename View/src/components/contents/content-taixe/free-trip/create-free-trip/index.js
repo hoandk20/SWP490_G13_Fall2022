@@ -147,16 +147,31 @@ const CreateFreeTripForDriver = () => {
                 if (values.price > fee) {
                     toast.error("Cước không được vượt quá giá cước tối đa")
                 } else {
-                    const trip = {
-                        driverEmail: user.email,
-                        from: originRef.current.value,
-                        to: destiantionRef.current.value,
-                        seat: values.seat,
-                        timeStart: date,
-                        waitingTime: values.waitingTime,
-                        price: values.price,
-                        listPolyline: listPolyline,
+                    var trip
+                    if(user.vehicleRequest.typeId === 1){
+                         trip = {
+                            driverEmail: user.email,
+                            from: originRef.current.value,
+                            to: destiantionRef.current.value,
+                            seat: 1,
+                            timeStart: date,
+                            waitingTime: values.waitingTime,
+                            price: values.price,
+                            listPolyline: listPolyline,
+                        }
+                    }else{
+                         trip = {
+                            driverEmail: user.email,
+                            from: originRef.current.value,
+                            to: destiantionRef.current.value,
+                            seat: values.seat,
+                            timeStart: date,
+                            waitingTime: values.waitingTime,
+                            price: values.price,
+                            listPolyline: listPolyline,
+                        }
                     }
+
                     CreateFreeTrip(trip, dispatch, navigate, toast);
                 }
             }

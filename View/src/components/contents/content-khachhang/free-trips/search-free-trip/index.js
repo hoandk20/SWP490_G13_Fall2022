@@ -87,6 +87,7 @@ const SerachFreeTripForPassenger = () => {
             dataIndex: '',
             key: 'x',
             render: (text, record, index) => {
+                const a=record;
                 return <div>
 
                     <EyeOutlined onClick={() => {
@@ -95,7 +96,7 @@ const SerachFreeTripForPassenger = () => {
                        
                         setTimeout(() => {
                             setLoading(false);
-                            navigate('/khachhang/freeTrip/detail-of-taixe', { state: { record } })
+                            navigate('/khachhang/freeTrip/detail-of-taixe', { state: { a } })
                         }, 1000)
                     }} />
 

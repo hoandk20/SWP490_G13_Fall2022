@@ -22,7 +22,7 @@ import {
     GoogleMap,
     Marker,
     Autocomplete,
-    DirectionsRenderer,
+    DirectionsRenderer, 
 } from '@react-google-maps/api'
 import { useRef, useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router';
@@ -72,6 +72,14 @@ const FreeTripDetail = () => {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_KEY,
         libraries: ['places'],
     })
+    useEffect(() => {
+        calculateRoute();
+     }, [isLoaded]) 
+ 
+  
+     if (!isLoaded) {
+         return <></>
+     }
     async function calculateRoute() {
         // eslint-disable-next-line no-undef
         const directionsService = new google.maps.DirectionsService()
@@ -96,10 +104,7 @@ const FreeTripDetail = () => {
     const endTrip = () => {
         changeStatusTripDriver(tripDriverDetail.id, "CLOS", dispatch, navigate,toast);
     }
-    useEffect(() => {
-        getTripDetailDriver(detail.id, dispatch);
-        calculateRoute()
-    }, [])
+
     return (
         <div className='container'>
             <div className='container-info'>
