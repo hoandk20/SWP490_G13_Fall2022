@@ -43,10 +43,11 @@ const RegisterDriver = () => {
     const onFinish = (values) => {
         const newUser={
             country:values.country,
-            city:values.city,
+            city:values.city.value,
             phoneNumber:values.phoneNumber,
             role:values.role
         }
+        console.log(newUser);
         if (newUser.role == "ROLE_DRIVER") {
             navigate('/signup/driver-info',{state:{newUser}});
         }
@@ -96,15 +97,7 @@ const RegisterDriver = () => {
                                         </Select>
 
                                     </FormItem>
-                                    <FormItem
-                                        name="city"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Vui lòng chọn thành phố ',
-                                            },
-                                        ]}
-                                    >
+                                   
                         <Form.Item
                                 name="city"
                                 rules={[
@@ -121,7 +114,7 @@ const RegisterDriver = () => {
                                 />
                             </Form.Item>
 
-                                    </FormItem>
+                                  
                                     <Form.Item
                                         name="phoneNumber"
                                         rules={[

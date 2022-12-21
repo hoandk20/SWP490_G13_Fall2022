@@ -46,17 +46,21 @@ const FreeTripDetailOfDriver = () => {
     const [note, setNote] = useState();
     const [modal, contextHolder] = Modal.useModal();
 
+
     const [map, setMap] = useState((null))
     const [directionsResponse, setDirectionsResponse] = useState(null)
     const [distance, setDistance] = useState('')
     const [duration, setDuration] = useState('')
     const location = useLocation();
     const view = location.state?.a;
-    console.log(view);
+    const fromPassenger = location.state?.from;
+    const toPassenger = location.state?.to;
+
+    console.log(toPassenger);
     const tripInfo = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const tripPassenger = tripInfo.listPassenger.find(t => t.passengerEmail === user.email);
 
-    const listPassenger = tripInfo.listPassenger.filter(t => t.status === "APPR");  
+    const listPassenger = tripInfo.listPassenger.filter(t => t.status === "APPR");
 
 
     var date_str = tripInfo?.timeStart,
@@ -65,7 +69,7 @@ const FreeTripDetailOfDriver = () => {
         date_parts = formatted.substring(0, formatted.indexOf(",")).split(" ").reverse().join(" ");
 
     var formatted_date = date_parts + formatted.substr(formatted.indexOf(",") + 1);
-    console.log("tripsInfo",tripInfo);
+    console.log("tripsInfo", tripInfo);
     // const [tripInfo, setTripInfo] = useState('')
     const originRef = useRef()
     const destiantionRef = useRef()
@@ -75,10 +79,10 @@ const FreeTripDetailOfDriver = () => {
         libraries: ['places'],
     })
     useEffect(() => {
-       calculateRoute();
-    }, [isLoaded]) 
+        calculateRoute();
+    }, [isLoaded])
 
- 
+
     if (!isLoaded) {
         return <></>
     }
@@ -106,9 +110,9 @@ const FreeTripDetailOfDriver = () => {
     const CancelTrip = () => {
         const object = {
             id: tripPassenger.id,
-            passengerEmail: user.email 
+            passengerEmail: user.email
         }
-        CancleTripForPassenger(object,navigate); 
+        CancleTripForPassenger(object, navigate);
     }
 
     const registerTrip = async (trip, dispatch, navigate, toast) => {
@@ -118,8 +122,8 @@ const FreeTripDetailOfDriver = () => {
                 tripID: trip.tripID,
                 driverEmail: trip.driverEmail,
                 passengerEmail: trip.passengerEmail,
-                from: trip.from,
-                to: trip.to,
+                from: fromPassenger,
+                to: toPassenger,
                 seatRegister: trip.seatRegister,
                 timeStart: trip.timeStart,
                 waitingTime: trip.waitingTime,
@@ -141,7 +145,6 @@ const FreeTripDetailOfDriver = () => {
                 }
             });
     }
-    console.log("tripInfo",tripInfo);
     const handleOk = () => {
         if (seatRegister <= tripInfo.seat) {
             const trip = {
@@ -178,7 +181,7 @@ const FreeTripDetailOfDriver = () => {
     const showModal = () => {
         setIsModalOpen(true);
     };
-   
+
 
     return (
         <div className='container'>
@@ -207,25 +210,25 @@ const FreeTripDetailOfDriver = () => {
                                 {
                                     view === "history" ? (
                                         <>
-                                        <Descriptions.Item span={2} label="Số ghế đã đặt">{tripPassenger?.seatRegister}</Descriptions.Item>
-                                        <Descriptions.Item span={1} label="Cước phải trả">{tripPassenger?.price}</Descriptions.Item >
+                                            <Descriptions.Item span={2} label="Số ghế đã đặt">{tripPassenger?.seatRegister}</Descriptions.Item>
+                                            <Descriptions.Item span={1} label="Cước phải trả">{tripPassenger?.price}</Descriptions.Item >
                                         </>
                                     ) : (
                                         <>
                                             <Descriptions.Item span={2} label="Số ghế còn trống">{tripInfo?.seat - tripInfo?.seatRegistered}</Descriptions.Item>
-                                            <Descriptions.Item span={1} label="Cước phải trả">{view?.price}</Descriptions.Item >
+                                            {/* <Descriptions.Item span={1} label="Cước phải trả">{view?.price}</Descriptions.Item > */}
                                         </>
                                     )
                                 }
-                               
 
 
-                                <Descriptions.Item span={2} label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
                                 <Descriptions.Item span={1} label="Số người đi cùng">{listPassenger.length}</Descriptions.Item >
+                                <Descriptions.Item span={3} label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
+
                                 {
                                     view === "history" ? (
                                         <>
-                                            <Descriptions.Item span={3} label="Trạng thái ">
+                                            <Descriptions.Item span={3} label="Trạng thái đăng ký ">
                                                 {
                                                     tripPassenger?.status === "APPR" ? (
                                                         <div style={{ color: "blue" }}>
@@ -238,9 +241,33 @@ const FreeTripDetailOfDriver = () => {
                                                                     <div style={{ color: "blue" }}>
                                                                         Đang chờ tài xế chấp nhận
                                                                     </div>
-                                                                ) : (  
+                                                                ) : (
                                                                     <div style={{ color: "blue" }}>
                                                                         Không được chấp nhận
+                                                                    </div>
+                                                                )
+                                                            }
+
+                                                        </div>
+                                                    )
+                                                }
+                                            </Descriptions.Item>
+                                            <Descriptions.Item span={3} label="Trạng thái chuyến đi ">
+                                                {
+                                                    tripInfo?.status === "CLOS" ? (
+                                                        <div style={{ color: "red" }}>
+                                                            Đã đóng
+                                                        </div>
+                                                    ) : (
+                                                        <div>
+                                                            {
+                                                                tripInfo?.status === "OPEN" ? (
+                                                                    <div style={{ color: "red" }}>
+                                                                        Đang mở
+                                                                    </div>
+                                                                ) : (
+                                                                    <div style={{ color: "red" }}>
+                                                                        Đã bị hủy
                                                                     </div>
                                                                 )
                                                             }
@@ -259,12 +286,55 @@ const FreeTripDetailOfDriver = () => {
 
 
                             </Descriptions>
+                            <div style={{ marginTop: "20px" }}>
+                                {
+                                    view === "history" ? (
+                                        <>
+
+                                        </>
+                                    ) : (
+                                        <>
+                                            {
+                                                fromPassenger === "" ? (
+                                                    <>
+                                                        <Descriptions size='middle' bordered title="Thông tin chuyến đi của người dùng">
+                                                            <Descriptions.Item span={3} label="Từ">{tripInfo?.from}</Descriptions.Item>
+                                                            <Descriptions.Item span={3} label="Đến">{tripInfo?.to}</Descriptions.Item>
+                                                            <Descriptions.Item span={3} label="Cước phải trả">{view?.price}</Descriptions.Item >
+                                                        </Descriptions>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Descriptions size='middle' bordered title="Thông tin chuyến đi của người dùng">
+                                                            <Descriptions.Item span={3} label="Từ">{fromPassenger}</Descriptions.Item>
+                                                            <Descriptions.Item span={3} label="Đến">{toPassenger}</Descriptions.Item>
+                                                            <Descriptions.Item span={3} label="Cước phải trả">{view?.price}</Descriptions.Item >
+                                                        </Descriptions>
+                                                    </>
+                                                )
+                                            }
+
+                                        </>
+                                    )
+                                }
+                            </div>
 
                             <div style={{ marginTop: "20px" }}>
                                 <Descriptions size='middle' bordered title="Thông tin phương tiện tài xế">
 
                                     <Descriptions.Item span={2} label="Biển số xe">{tripInfo?.vehiclePlate}</Descriptions.Item>
-                                    <Descriptions.Item span={2} label="Loại xe">{tripInfo?.vehicleName}</Descriptions.Item>
+                                    {
+                                        tripInfo?.vehicleType === 1 ? (
+                                            <>
+                                                <Descriptions.Item span={2} label="Loại xe">Xe máy</Descriptions.Item>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Descriptions.Item span={2} label="Loại xe">Ô tô</Descriptions.Item>
+                                            </>
+                                        )
+                                    }
+
                                     <Descriptions.Item span={2} label="Hãng xe">{tripInfo?.vehicleName}</Descriptions.Item>
                                     <Descriptions.Item span={1} label="Màu xe">{tripInfo?.vehicleColor}</Descriptions.Item>
                                 </Descriptions>
@@ -294,7 +364,7 @@ const FreeTripDetailOfDriver = () => {
 
                                                     <UnreachableContext.Provider value="Bamboo" />
                                                 </ReachableContext.Provider>
-                                               
+
                                             </>
                                         ) : (
                                             <div>

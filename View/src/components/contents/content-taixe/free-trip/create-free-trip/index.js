@@ -1,8 +1,8 @@
-import { Col, DatePicker, Form, Row, Select, TimePicker, Button } from 'antd';
+import { Col, DatePicker, Form, Row, Select, TimePicker, Button, Spin } from 'antd';
 import { useRef, useState, useEffect, useMemo } from 'react'
 import React from 'react';
 import { useNavigate } from 'react-router';
-import { CreateFreeTrip } from '../../../../../redux/apiRequest';
+import { CreateFreeTrip, getTripDetailDriver } from '../../../../../redux/apiRequest';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -27,6 +27,8 @@ import {
     useLoadScript,
 } from '@react-google-maps/api'
 import Geocode from "react-geocode";
+import { createTripSuccess } from '../../../../../redux/freeTripSlice';
+import axios from 'axios';
 // import usePlacesAutocomplete, {
 //     getGeocode,
 //     getLatLng,
@@ -80,6 +82,7 @@ const CreateFreeTripForDriver = () => {
     const [map, setMap] = useState(/** @type google.maps.Map */(null))
     const [directionsResponse, setDirectionsResponse] = useState(null)
     const [distance, setDistance] = useState('')
+    const [loading, setLoading] = useState(false);
     const [duration, setDuration] = useState('')
     const [from, setFrom] = useState('')
     const [to, setTo] = useState('')
@@ -136,7 +139,39 @@ const CreateFreeTripForDriver = () => {
         }
 
     }
+    const CreateTripDriver = async (trip) => {
+        try {
+          const res = await axios
+            .post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/tripdriver/create`, {
+              driverEmail: trip.driverEmail,
+              from: trip.from,
+              to: trip.to,
+              seat: trip.seat,
+              timeStart: trip.timeStart,
+              waitingTime: trip.waitingTime,
+              price: trip.price,
+              listPolyline: trip.listPolyline
+            },
+              {
+                headers: { 'Content-Type': 'application/json' }
+              });
+          
+          const record = res.data.object;
+          dispatch(createTripSuccess(res.data.object));
+          getTripDetailDriver(record.id, dispatch);
+      
+          setLoading(true);
 
+          setTimeout(() => {
+              setLoading(false);
+              navigate('/taixe/freeTrip/detail', { state: { record } })
+          }, 1000)
+      
+        } catch (error) {
+          toast.error(error);
+        }
+      
+      }
     const onFinish = (values) => {
         if (user.statusDriver === "NEW") {
             toast.error("Tài xế chưa được cấp phép hoạt động.Vui lòng upload đầy đủ tài liệu và chờ xác nhận!")
@@ -171,8 +206,8 @@ const CreateFreeTripForDriver = () => {
                             listPolyline: listPolyline,
                         }
                     }
-
-                    CreateFreeTrip(trip, dispatch, navigate, toast);
+                    CreateTripDriver(trip);
+                    // CreateFreeTrip(trip, dispatch, navigate, toast);
                 }
             }
         }
@@ -266,6 +301,7 @@ const CreateFreeTripForDriver = () => {
 
 
     return (
+        <Spin spinning={loading} tip="Loading" size="large">
         <div className='container'>
             <div className='container-info'>
                 <h2>CHUYẾN ĐI MIỄN PHÍ</h2>
@@ -457,6 +493,7 @@ const CreateFreeTripForDriver = () => {
                 </div>
             </div>
         </div>
+        </Spin>
     )
 }
 export default CreateFreeTripForDriver

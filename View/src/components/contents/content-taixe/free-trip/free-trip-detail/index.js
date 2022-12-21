@@ -90,7 +90,7 @@ const FreeTripDetail = () => {
             travelMode: google.maps.TravelMode.DRIVING,
         })
         setDirectionsResponse(results)
-        console.log(results)
+     
         setDistance(results.routes[0].legs[0].distance.text)
         setDuration(results.routes[0].legs[0].duration.text)
     }
@@ -106,6 +106,7 @@ const FreeTripDetail = () => {
     }
 
     return (
+        
         <div className='container'>
             <div className='container-info'>
                 <h2>CHI TIẾT CHUYẾN ĐI</h2>

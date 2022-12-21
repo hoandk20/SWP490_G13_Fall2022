@@ -18,7 +18,7 @@ const { Option } = Select;
 const RegisterCompanyDoc1 = () => {
 
     const location = useLocation();
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
     const currentUser = useSelector((state) => state.auth.login?.currentUser);
     const decodedTocken = jwtDecode(currentUser.access_token);
     const userName = decodedTocken.sub;
@@ -34,10 +34,10 @@ const RegisterCompanyDoc1 = () => {
     const [date2, setDate2] = useState();
     const [date3, setDate3] = useState();
     const [date4, setDate4] = useState();
-    const [Bang_lai_xe,setBang_lai_xe]=useState(false);
-    const [Chung_Nhan_Kinh_nghiem,setChung_Nhan_Kinh_nghiem]=useState(false);
-    const [GP_Kinh_Doanh,setGP_Kinh_Doanh]=useState(false);
-    const [GP_Hoat_Dong,setGP_Hoat_Dong]=useState(false);
+    const [Bang_lai_xe, setBang_lai_xe] = useState(false);
+    const [Chung_Nhan_Kinh_nghiem, setChung_Nhan_Kinh_nghiem] = useState(false);
+    const [GP_Kinh_Doanh, setGP_Kinh_Doanh] = useState(false);
+    const [GP_Hoat_Dong, setGP_Hoat_Dong] = useState(false);
     function getTime1(date, dateString) {
         setDate1(dateString);
     }
@@ -77,7 +77,7 @@ const RegisterCompanyDoc1 = () => {
         const base64 = await convertBase64(file);
         setBaseImage4(base64);
     };
-    const uploadfileAvatar = async() => {
+    const uploadfileAvatar = async () => {
         const year = "";
         const month = "";
         const object = {
@@ -89,24 +89,24 @@ const RegisterCompanyDoc1 = () => {
         }
         try {
             const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
-              {
-                base64: object.base64,
-                expired_month: object.month,
-                expired_year: object.year,
-                file_name: object.fileName,
-                createBy: object.createBy
-              }
-              , {
-                headers: { 'Content-Type': 'application/json' }
-              });
-              setChung_Nhan_Kinh_nghiem(true)
-              toast.success("Upload file thành công")
-          } catch (error) {
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            setChung_Nhan_Kinh_nghiem(true)
+            toast.success("Upload file thành công")
+        } catch (error) {
             toast.error("Upload file thất bại")
-          }
+        }
     };
 
-    const uploadfile1 = async() => {
+    const uploadfile1 = async () => {
         const arr = date1.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -119,27 +119,27 @@ const RegisterCompanyDoc1 = () => {
         }
         try {
             const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
-              {
-                base64: object.base64,
-                expired_month: object.month,
-                expired_year: object.year,
-                file_name: object.fileName,
-                createBy: object.createBy
-              }
-              , {
-                headers: { 'Content-Type': 'application/json' }
-              });
-              setBang_lai_xe(true)
-              toast.success("Upload file thành công")
-          } catch (error) {
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            setBang_lai_xe(true)
+            toast.success("Upload file thành công")
+        } catch (error) {
             toast.error("Upload file thất bại")
 
-          }
+        }
     };
 
 
 
-    const uploadfile2 = async() => {
+    const uploadfile2 = async () => {
         const arr = date2.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -152,25 +152,25 @@ const RegisterCompanyDoc1 = () => {
         }
         try {
             const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
-              {
-                base64: object.base64,
-                expired_month: object.month,
-                expired_year: object.year,
-                file_name: object.fileName,
-                createBy: object.createBy
-              }
-              , {
-                headers: { 'Content-Type': 'application/json' }
-              });
-              setChung_Nhan_Kinh_nghiem(true)
-              toast.success("Upload file thành công")
-          } catch (error) {
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            setChung_Nhan_Kinh_nghiem(true)
+            toast.success("Upload file thành công")
+        } catch (error) {
             toast.error("Upload file thất bại")
 
-          }
+        }
     };
 
-    const uploadfile3 = async() => {
+    const uploadfile3 = async () => {
         const arr = date3.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -183,25 +183,25 @@ const RegisterCompanyDoc1 = () => {
         }
         try {
             const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
-              {
-                base64: object.base64,
-                expired_month: object.month,
-                expired_year: object.year,
-                file_name: object.fileName,
-                createBy: object.createBy
-              }
-              , {
-                headers: { 'Content-Type': 'application/json' }
-              });
-              setGP_Kinh_Doanh(true)
-              toast.success("Upload file thành công")
-          } catch (error) {
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            setGP_Kinh_Doanh(true)
+            toast.success("Upload file thành công")
+        } catch (error) {
             toast.error("Upload file thất bại")
 
-          }
+        }
     };
 
-    const uploadfile4 = async() => {
+    const uploadfile4 = async () => {
         const arr = date4.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -214,22 +214,22 @@ const RegisterCompanyDoc1 = () => {
         }
         try {
             const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
-              {
-                base64: object.base64,
-                expired_month: object.month,
-                expired_year: object.year,
-                file_name: object.fileName,
-                createBy: object.createBy
-              }
-              , {
-                headers: { 'Content-Type': 'application/json' }
-              });
-              setGP_Hoat_Dong(true)
-              toast.success("Upload file thành công")
-          } catch (error) {
+                {
+                    base64: object.base64,
+                    expired_month: object.month,
+                    expired_year: object.year,
+                    file_name: object.fileName,
+                    createBy: object.createBy
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            setGP_Hoat_Dong(true)
+            toast.success("Upload file thành công")
+        } catch (error) {
             toast.error("Upload file thất bại")
 
-          }
+        }
     };
 
     const convertBase64 = (file) => {
@@ -250,11 +250,11 @@ const RegisterCompanyDoc1 = () => {
     const onClickNext = () => {
         navigate('/signup/add-vehico');
     };
-    
-    useEffect(()=>{
-        getUser(userName,dispatch);
-       
-      },[])
+
+    useEffect(() => {
+        getUser(userName, dispatch);
+
+    }, [])
     return (
         <div className='container'>
             <div className='container-info'>
@@ -263,7 +263,7 @@ const RegisterCompanyDoc1 = () => {
                 <div className='contents'>
                     <Row>
                         <Col sm={24} md={12}>
-                        <div className='card-doc'>
+                            <div className='card-doc'>
                                 <div className='form-header'>
                                     <span>
                                         Ảnh
@@ -272,7 +272,7 @@ const RegisterCompanyDoc1 = () => {
                                 </div>
                                 <div className='form-content' >
                                     <Row>
-                                        <Col sm={24} md={12} style={{ textAlign: "center",height:"230px"}}>
+                                        <Col sm={24} md={12} style={{ textAlign: "center", height: "230px" }}>
                                             <img src={baseImageAvatar} height="220px" />
                                         </Col>
                                         <Col sm={24} md={12} >
@@ -318,9 +318,9 @@ const RegisterCompanyDoc1 = () => {
                                     <span>
                                         Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
                                         {
-                                            Bang_lai_xe===false?(
+                                            Bang_lai_xe === false ? (
                                                 <div className='status'>Chưa gửi</div>
-                                            ):(
+                                            ) : (
                                                 <div className='status'>Đã gửi</div>
                                             )
                                         }
@@ -360,11 +360,14 @@ const RegisterCompanyDoc1 = () => {
                                             hoặc lý lịch tư pháp
                                         </Col>
                                         <Col sm={8} md={4}>
-                                            Chung_Nhan_Kinh_nghiem===false?(
-                                                <div className='status'>Chưa gửi</div>
-                                            ):(
-                                                <div className='status'>Đã gửi</div>
-                                            )
+                                            {
+                                                Chung_Nhan_Kinh_nghiem === false ? (
+                                                    <div className='status'>Chưa gửi</div>
+                                                ) : (
+                                                    <div className='status'>Đã gửi</div>
+                                                )
+                                            }
+
                                         </Col>
                                     </Row>
                                 </div>
@@ -396,11 +399,14 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy Phép Kinh Doanh vận tải hành khách bằng ô tô.
+                                        {
                                         GP_Kinh_Doanh===false?(
-                                                <div className='status'>Chưa gửi</div>
+                                            <div className='status'>Chưa gửi</div>
                                             ):(
-                                                <div className='status'>Đã gửi</div>
+                                            <div className='status'>Đã gửi</div>
                                             )
+                                        }
+
                                     </span>
 
                                 </div>
@@ -429,11 +435,14 @@ const RegisterCompanyDoc1 = () => {
                                 <div className='form-header'>
                                     <span>
                                         Giấy Phép Hoạt Động trong lĩnh vực vận tải khách bằng ô tô
-                                        GP_Hoat_Dong===false?(
-                                                <div className='status'>Chưa gửi</div>
+                                        {
+                                         GP_Hoat_Dong===false?(
+                                            <div className='status'>Chưa gửi</div>
                                             ):(
-                                                <div className='status'>Đã gửi</div>
+                                            <div className='status'>Đã gửi</div>
                                             )
+                                        }
+
                                     </span>
 
                                 </div>
@@ -461,7 +470,7 @@ const RegisterCompanyDoc1 = () => {
                     </Row>
                 </div>
                 <div style={{ marginTop: "50px" }}>
-                {Bang_lai_xe===true && Chung_Nhan_Kinh_nghiem===true && GP_Hoat_Dong===true && GP_Kinh_Doanh===true ? (
+                    {Bang_lai_xe === true && Chung_Nhan_Kinh_nghiem === true && GP_Hoat_Dong === true && GP_Kinh_Doanh === true ? (
                         <Button type='primary' onClick={onClickNext}>Tiếp tục <RightOutlined /> </Button>
                     ) : (
                         <Button type='primary' disabled >Tiếp tục <RightOutlined /> </Button>

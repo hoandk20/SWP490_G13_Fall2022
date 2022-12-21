@@ -120,7 +120,7 @@ export const registerDriver = async (newUser, dispatch, navigate, toast) => {
       phoneNumber: newUser.phoneNumber,
       language: "vi",
       country: newUser.country,
-      city: newUser.city.key
+      cityId: newUser.city
     },
       {
         headers: { 'Content-Type': 'application/json' }
@@ -172,7 +172,7 @@ export const registerCompany = async (newUser, dispatch, navigate, toast) => {
       address: newUser.address,
       phoneNumber: newUser.phoneNumber,
       language: "vi",
-      cityId:newUser.city.value
+      cityId:newUser.city
     },
       {
         headers: { 'Content-Type': 'application/json' }
@@ -1030,12 +1030,16 @@ export const SendEmail = async (object, toast) => {
 }
 
 
-export const resendCode = async (email) => {
+export const resendCode = async (email,toast) => {
   try {
     const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/getResendCode?email=${email}`, {
       headers: { 'Content-Type': 'application/json' }
+
     });
-  } catch (error) { }
+    toast.success("Mã xác nhận đã được gửi lại vào email của bạn")
+  } catch (error) {
+    toast.error("Mã xác nhận không được gửi lại")
+   }
 }
 
 export const VerifyCodeEmail = async (newUser, code, toast, navigate) => {
