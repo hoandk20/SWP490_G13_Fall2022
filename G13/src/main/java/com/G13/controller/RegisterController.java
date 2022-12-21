@@ -41,14 +41,12 @@ public class RegisterController {
             return ResponseEntity.badRequest().body(response);
         }
         if (IsEmailExisted(rc.getEmail())) {
-
             Map<String, Boolean> err = new HashMap<>();
             err.put("IsExistedEmail", true);
             response.setObject(err);
             response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
-
         Date date = new Date();
         Instant timeStamp = Instant.now();
         try {
@@ -61,6 +59,7 @@ public class RegisterController {
             company.setPhoneNo(rc.getPhoneNumber());
             company.setAddressID(rc.getAddress());
             company.setStatus(companyStatus.New);
+            company.setCityID(rc.getCityId());
             companyService.SaveCompany(company);
             User u = new User();
             u.setEmail(rc.getEmail());
@@ -74,7 +73,7 @@ public class RegisterController {
             verifyaccount.setUserid(usersave.getId());
             verifyaccount.setStatus("0");
             verifyaccount.setVerificode(guid.getRandomNumberString());
-            verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
+            verifyaccount.setExpiredate(timeStamp.plusSeconds(60*10));
             MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(rc.getEmail(), verifyaccount.getVerificode());
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
@@ -155,6 +154,7 @@ public class RegisterController {
             driver.setLanguageCode(rd.getLanguage());
             driver.setAddressID(rd.getCity() + " ");
             driver.setStatus(driverStatus.NEW);
+            driver.setBranchCityId(rd.getCityId());
             driverService.SaveDriver(driver);
             User u = new User();
             u.setEmail(rd.getEmail());
@@ -166,7 +166,7 @@ public class RegisterController {
             verifyaccount.setUserid(usersave.getId());
             verifyaccount.setStatus("0");
             verifyaccount.setVerificode(guid.getRandomNumberString());
-            verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
+            verifyaccount.setExpiredate(timeStamp.plusSeconds(60*10));
             MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(rd.getEmail(), verifyaccount.getVerificode());
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
@@ -248,7 +248,7 @@ public class RegisterController {
             verifyaccount.setUserid(usersave.getId());
             verifyaccount.setStatus("0");
             verifyaccount.setVerificode(guid.getRandomNumberString());
-            verifyaccount.setExpiredate(timeStamp.plusSeconds(60));
+            verifyaccount.setExpiredate(timeStamp.plusSeconds(60*10));
             MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(rp.getEmail(), verifyaccount.getVerificode());
 
@@ -466,7 +466,7 @@ public class RegisterController {
             Verifyaccount verifyaccount = verifyAccountService.getVerifyAccountByUserId(user.getId());
             GenerateGUID guid = new GenerateGUID();
             verifyaccount.setVerificode(guid.getRandomNumberString());
-            verifyaccount.setExpiredate(now.plusSeconds(60));
+            verifyaccount.setExpiredate(now.plusSeconds(60*10));
             MailController mailAPI = new MailController();
             mailAPI.SendEmailVerifyAccount(email, verifyaccount.getVerificode());
             verifyAccountService.SaveVerifyAccount(verifyaccount);

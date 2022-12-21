@@ -29,5 +29,7 @@ public class  TripDriver{
      String vehiclePlate;
      String vehicleName;
      String vehicleColor;
+     int vehicleType;
+
 
 }

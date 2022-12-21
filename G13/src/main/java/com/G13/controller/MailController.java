@@ -56,7 +56,7 @@ public class MailController {
         // dia chi email nguoi nhan
         final String toEmail = email;
         final String subject = "[VERIFY] Mã xác nhận";
-        final String body = "Mã xác nhận tnet của bạn là "+GUID+"\n Hết hạn trong 60 giây";
+        final String body = "Mã xác nhận tnet của bạn là "+GUID+"\n Hết hạn trong 10 phút";
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com"); //SMTP Host
         props.put("mail.smtp.port", "587"); //TLS Port

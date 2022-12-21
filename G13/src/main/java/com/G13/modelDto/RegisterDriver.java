@@ -16,4 +16,5 @@ public class RegisterDriver {
     String city;
     String CompanyName;
     CompanyInfo companyInfo;
+    int CityId;
 }

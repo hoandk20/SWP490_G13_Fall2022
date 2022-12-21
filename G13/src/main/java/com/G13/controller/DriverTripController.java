@@ -394,6 +394,7 @@ public class DriverTripController {
                 tripDriver.setVehiclePlate(vehicle.getPlate());
                 tripDriver.setVehicleColor(vehicle.getExteriorColor());
                 tripDriver.setVehicleName(vehicle.getCreatedBy());
+                tripDriver.setVehicleType(vehicle.getCarTypeID());
             }
             tripDriver.setListPassenger(tripPassengers);
             tripDriver.setSeatRegistered(detail.getNumberCapacityRegistered());

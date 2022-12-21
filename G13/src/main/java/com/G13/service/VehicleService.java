@@ -21,6 +21,10 @@ public class VehicleService {
     public Vehicle getFistVehicleByCompanyId(int id){
         return vehicleRepository.findFirstByCompanyIDOrderByCreatedDateDesc(id);
     }
+    public boolean IsExistedPlate(String plate){
+        return vehicleRepository.findVehiclesByPlate(plate).size()>0;
+    }
+
     public Vehicle SaveVehicle(Vehicle vehicle){
         if(vehicle.getPlate()==null||vehicle.getPlate().equals("")){
             return null;

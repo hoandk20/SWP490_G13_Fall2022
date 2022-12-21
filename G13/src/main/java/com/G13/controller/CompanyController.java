@@ -46,6 +46,14 @@ public class CompanyController {
             vehicle.setProduceYear(vr.getProduceYear());
             vehicle.setInteriorColor(vr.getInteriorColor());
             vehicle.setExteriorColor(vr.getExteriorColor());
+            if(vehicleService.IsExistedPlate(vr.getPlate())){
+
+                Map<String, Boolean> err = new HashMap<>();
+                err.put("IsExistedPlate", true);
+                response.setObject(err);
+                response.setStatus(masterStatus.FAILURE);
+                return ResponseEntity.badRequest().body(response);
+            }
             vehicle.setPlate(vr.getPlate());
             vehicle.setLisencePlatState(vr.getPlatState());
             vehicle.setLisencePlatCountry(vr.getPlateCountry());
