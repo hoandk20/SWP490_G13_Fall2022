@@ -29,7 +29,7 @@ const DriverManagement = () => {
             return { ...row, row, statusDriver: "Hoạt động" }
         }
     })
-
+console.log(allDriver);
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     const [city, setCity] = useState("");

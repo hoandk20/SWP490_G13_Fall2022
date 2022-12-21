@@ -31,7 +31,8 @@ const AddDriverForCompany = () => {
             companyEmail: user.email,
             city:city
         }
-        AddDriverByCompany(driver, toast, dispatch);
+        
+         AddDriverByCompany(driver, toast, dispatch);
         // getDriversForCompany(user.email,dispatch);
         setOpen(false);
     };
