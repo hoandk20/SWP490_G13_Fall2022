@@ -122,8 +122,8 @@ const FreeTripDetailOfDriver = () => {
                 tripID: trip.tripID,
                 driverEmail: trip.driverEmail,
                 passengerEmail: trip.passengerEmail,
-                from: fromPassenger,
-                to: toPassenger,
+                from: trip.from,
+                to: trip.to,
                 seatRegister: trip.seatRegister,
                 timeStart: trip.timeStart,
                 waitingTime: trip.waitingTime,
@@ -147,18 +147,36 @@ const FreeTripDetailOfDriver = () => {
     }
     const handleOk = () => {
         if (seatRegister <= tripInfo.seat) {
-            const trip = {
-                tripID: tripInfo.tripID,
-                driverEmail: tripInfo.driverEmail,
-                passengerEmail: user.email,
-                from: tripInfo.from,
-                to: tripInfo.to,
-                seatRegister: seatRegister,
-                timeStart: tripInfo.timeStart,
-                waitingTime: tripInfo.waitingTime,
-                price: view.price,
-                note: note,
+            var trip
+            if (fromPassenger === "") {
+                trip = {
+                    tripID: tripInfo.tripID,
+                    driverEmail: tripInfo.driverEmail,
+                    passengerEmail: user.email,
+                    from: tripInfo.from,
+                    to: tripInfo.to,
+                    seatRegister: seatRegister,
+                    timeStart: tripInfo.timeStart,
+                    waitingTime: tripInfo.waitingTime,
+                    price: view.price,
+                    note: note,
+                }
+            } else {
+                trip = {
+                    tripID: tripInfo.tripID,
+                    driverEmail: tripInfo.driverEmail,
+                    passengerEmail: user.email,
+                    from: fromPassenger,
+                    to: toPassenger,
+                    seatRegister: seatRegister,
+                    timeStart: tripInfo.timeStart,
+                    waitingTime: tripInfo.waitingTime,
+                    price: view.price,
+                    note: note,
+                }
             }
+
+            console.log("trip", trip);
             registerTrip(trip, dispatch, navigate, toast);
             getListFreeTripIsOpen(dispatch);
         } else {
@@ -373,6 +391,7 @@ const FreeTripDetailOfDriver = () => {
                                                     <Select
                                                         style={{ width: "100px" }}
                                                         onChange={handleOnChangeSelect}
+                                                        defaultValue="1"
                                                     >
                                                         <Option value='1'>1 chỗ</Option>
                                                         <Option value='2'>2 chỗ</Option>
@@ -382,10 +401,10 @@ const FreeTripDetailOfDriver = () => {
 
                                                 </div>
                                                 <div style={{ marginTop: "25px", textAlign: "center" }}>
-                                                    <Button type="primary" danger style={{ marginTop: "25px", display: 'inline-block' }}>
+                                                    {/* <Button type="primary" danger style={{ marginTop: "25px", display: 'inline-block' }}>
                                                         Hủy
-                                                    </Button>
-                                                    <Button type="primary" style={{ marginLeft: "15px", display: 'inline-block' }} onClick={showModal}   >Đăng ký</Button>
+                                                    </Button> */}
+                                                    <Button type="primary" style={{ width:"150px" }} onClick={showModal}   >Đăng ký</Button>
                                                 </div>
                                             </div>
                                         )

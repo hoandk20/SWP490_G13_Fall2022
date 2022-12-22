@@ -54,6 +54,7 @@ const InfoContactTaixe = () => {
     const [city, setCity] = useState(user?.cityId);
     const [city1, setCity1] = useState(user?.vehicleRequest?.platState);
     const [status, setStatus] = useState(user?.statusDriver);
+    const [check, setCheck] = useState(false);
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
             <Select
@@ -85,7 +86,7 @@ const InfoContactTaixe = () => {
         await setAvatar(base64);
     };
 
-    const onfinish1 = async(values) => {
+    const onfinish1 = async (values) => {
         try {
             const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/addVehicle`,
                 {
@@ -104,10 +105,14 @@ const InfoContactTaixe = () => {
                 });
             getUser(user.email, dispatch);
             toast.success("Thay đổi thông tin phương tiện thành công")
+            setCheck(false);
         } catch (error) {
             toast.error("Tạo phương tiện thất bại")
         }
     };
+    const onfinish2 = () => {
+        setCheck(true);
+    }
     const onFinish = (values) => {
         const image = {
             base64: avatar,
@@ -320,105 +325,111 @@ const InfoContactTaixe = () => {
 
             </div>
             <h3 style={{ float: "left", marginBottom: "20px" }}>Thông tin phương tiện</h3>
-            <div className='form-add' >
-                <div className='form-header' style={{ height: "30px" }}
-                >
-                </div>
-                <div className='form-contents' >
-                    <div >
-                        <Form
-                            onFinish={onfinish1}
-                            labelCol={{
-                                span: 8,
-                            }}
-                            wrapperCol={{
-                                span: 12,
-                            }}
-                        >
-                            <Row>
-                                <Col sm={24} md={12} >
-                                    {
-                                        user?.vehicleRequest.typeId === 1 ? (
-                                            <>
-                                                <Form.Item
-                                                    name="typeId"
-                                                    initialValue={"1"}
-                                                    label="Loại xe "
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message: 'Vui lòng chọn loại xe',
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Select
-                                                        allowClear
-                                                    >
-                                                        <Option value="1">Xe máy</Option>
-                                                        <Option value="2">Ô tô</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Form.Item
-                                                    name="typeId"
-                                                    initialValue={"2"}
-                                                    label="Loại xe "
-                                                    rules={[
-                                                        {
-                                                            required: true,
-                                                            message: 'Vui lòng chọn loại xe',
-                                                        },
-                                                    ]}
-                                                >
-                                                    <Select
-                                                        allowClear
-                                                    >
-                                                        <Option value="1">Xe máy</Option>
-                                                        <Option value="2">Ô tô</Option>
-                                                    </Select>
-                                                </Form.Item>
-                                            </>
-                                        )
-                                    }
+            {
+                check === false ? (
+                    <>
+                        <div className='form-add' >
+                            <div className='form-header' style={{ height: "30px" }}
+                            >
+                            </div>
+                            <div className='form-contents' >
+                                <div >
+                                    <Form
+                                        onFinish={onfinish2}
+                                        labelCol={{
+                                            span: 8,
+                                        }}
+                                        wrapperCol={{
+                                            span: 12,
+                                        }}
+                                    >
+                                        <Row>
+                                            <Col sm={24} md={12} >
+                                                {
+                                                    user?.vehicleRequest.typeId === 1 ? (
+                                                        <>
+                                                            <Form.Item
+                                                                name="typeId1"
+                                                                initialValue={"1"}
+                                                                label="Loại xe "
+                                                                rules={[
+                                                                    {
+                                                                        required: true,
+                                                                        message: 'Vui lòng chọn loại xe',
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                <Select
+                                                                    allowClear
+                                                                    disabled
+                                                                >
+                                                                    <Option value="1">Xe máy</Option>
+                                                                    <Option value="2">Ô tô</Option>
+                                                                </Select>
+                                                            </Form.Item>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Form.Item
+                                                                name="typeId1"
+                                                                initialValue={"2"}
+                                                                label="Loại xe "
+                                                                rules={[
+                                                                    {
+                                                                        required: true,
+                                                                        message: 'Vui lòng chọn loại xe',
+                                                                    },
+                                                                ]}
+                                                            >
+                                                                <Select
+                                                                    allowClear
+                                                                    disabled
+                                                                >
+                                                                    <Option value="1">Xe máy</Option>
+                                                                    <Option value="2">Ô tô</Option>
+                                                                </Select>
+                                                            </Form.Item>
+                                                        </>
+                                                    )
+                                                }
 
-                                    <Form.Item
-                                        name="producer"
-                                        initialValue={user?.vehicleRequest.producer}
-                                        label="Nhà sản xuất *"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Vùi lòng chọn nhà sản xuất',
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            allowClear
-                                        >
-                                            <Option value="Toyota"></Option>
-                                            <Option value="Honda"></Option>
-                                            <Option value="Hyundai"></Option>
-                                            <Option value="Ford"></Option>
-                                            <Option value="Suzuki"></Option>
-                                            <Option value="Mercedes-Benz"></Option>
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item
-                                        name="produceYear"
-                                        initialValue={user?.vehicleRequest.produceYear}
-                                        label="Năm sản xuất"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Vui lòng chọn năm sản xuất',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
-                                    {/* <Form.Item
+                                                <Form.Item
+                                                    name="producer1"
+                                                    initialValue={user?.vehicleRequest.producer}
+                                                    label="Nhà sản xuất *"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vùi lòng chọn nhà sản xuất',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        disabled
+                                                        allowClear
+                                                    >
+                                                        <Option value="Toyota"></Option>
+                                                        <Option value="Honda"></Option>
+                                                        <Option value="Hyundai"></Option>
+                                                        <Option value="Ford"></Option>
+                                                        <Option value="Suzuki"></Option>
+                                                        <Option value="Mercedes-Benz"></Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item
+                                                    name="produceYear1"
+                                                    initialValue={user?.vehicleRequest.produceYear}
+                                                    label="Năm sản xuất"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn năm sản xuất',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input disabled />
+                                                </Form.Item>
+                                                {/* <Form.Item
                                         name="interiorColor"
                                         label="Màu nội thất *"
                                         rules={[
@@ -437,88 +448,249 @@ const InfoContactTaixe = () => {
                                             <Option value="Xanh">Xanh</Option>
                                         </Select>
                                     </Form.Item> */}
-                                    <Form.Item
-                                        name="exteriorColor"
-                                        initialValue={user?.vehicleRequest.exteriorColor}
-                                        label="Màu sơn *"
+                                                <Form.Item
+                                                    name="exteriorColor1"
+                                                    initialValue={user?.vehicleRequest.exteriorColor}
+                                                    label="Màu sơn *"
 
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                        disabled
+                                                    >
+                                                        <Option value="Đen">Đen</Option>
+                                                        <Option value="Trắng">Trắng</Option>
+                                                        <Option value="Đỏ">Đỏ</Option>
+                                                        <Option value="Xanh">Xanh</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col sm={24} md={12} >
+                                                <Form.Item
+                                                    name="plate1"
+                                                    initialValue={user?.vehicleRequest.plate}
+                                                    label="Biển số"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Biển số xe không được để trống',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input disabled />
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    name="plateCountry1"
+                                                    initialValue={user?.vehicleRequest.plateCountry}
+                                                    label="Quốc gia đăng ký *"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn quốc gia đăng ký',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                        disabled
+                                                    >
+                                                        <Option value="vn">Việt nam</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item
+                                                    name="city1"
+                                                    initialValue={city1}
+                                                    label="Thành phố đăng ký"
+                                                >
+                                                    <Select
+                                                        disabled
+                                                        onChange={handleChangeCity1}
+                                                        labelInValue
+                                                        options={citys}
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item
+                                                >
+                                                    <Button style={{ marginLeft: "50%" }} type="primary" htmlType="submit">
+                                                        Tạo mới phương tiện
+                                                    </Button>
+                                                </Form.Item>
+
+                                            </Col>
+                                        </Row>
+
+
+
+                                    </Form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className='form-add' >
+                            <div className='form-header' style={{ height: "30px" }}
+                            >
+                            </div>
+                            <div className='form-contents' >
+                                <div >
+                                    <Form
+                                        onFinish={onfinish1}
+                                        labelCol={{
+                                            span: 8,
+                                        }}
+                                        wrapperCol={{
+                                            span: 12,
+                                        }}
                                     >
-                                        <Select
-                                            allowClear
-                                        >
-                                            <Option value="Đen">Đen</Option>
-                                            <Option value="Trắng">Trắng</Option>
-                                            <Option value="Đỏ">Đỏ</Option>
-                                            <Option value="Xanh">Xanh</Option>
-                                        </Select>
-                                    </Form.Item>
-                                </Col>
-                                <Col sm={24} md={12} >
-                                    <Form.Item
-                                        name="plate"
-                                        initialValue={user?.vehicleRequest.plate}
-                                        label="Biển số"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Biển số xe không được để trống',
-                                            },
-                                        ]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
+                                        <Row>
+                                            <Col sm={24} md={12} >
+                                                <Form.Item
+                                                    name="typeId"
+                                                    label="Loại xe "
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn loại xe',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                    >
+                                                        <Option value="1">Xe máy</Option>
+                                                        <Option value="2">Ô tô</Option>
+                                                    </Select>
+                                                </Form.Item>
 
-                                    <Form.Item
-                                        name="plateCountry"
-                                        initialValue={user?.vehicleRequest.plateCountry}
-                                        label="Quốc gia đăng ký *"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Vui lòng chọn quốc gia đăng ký',
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            allowClear
-                                        >
-                                            <Option value="vn">Việt nam</Option>
-                                        </Select>
-                                    </Form.Item>
-                                    <Form.Item
-                                        name="city"
-                                        initialValue={city1}
-                                        label="Thành phố đăng ký"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Vui lòng chọn thành phố',
-                                            },
-                                        ]}
-                                    >
-                                        <Select
-                                            onChange={handleChangeCity1}
-                                            labelInValue
-                                            options={citys}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                    >
-                                        <Button style={{ marginLeft: "50%" }} type="primary" htmlType="submit">
-                                            Thay đổi thông tin phương tiện
-                                        </Button>
-                                    </Form.Item>
+                                                <Form.Item
+                                                    name="producer"
 
-                                </Col>
-                            </Row>
+                                                    label="Nhà sản xuất *"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vùi lòng chọn nhà sản xuất',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                    >
+                                                        <Option value="Toyota"></Option>
+                                                        <Option value="Honda"></Option>
+                                                        <Option value="Hyundai"></Option>
+                                                        <Option value="Ford"></Option>
+                                                        <Option value="Suzuki"></Option>
+                                                        <Option value="Mercedes-Benz"></Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item
+                                                    name="produceYear"
+
+                                                    label="Năm sản xuất"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn năm sản xuất',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    name="exteriorColor"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn màu sơn',
+                                                        },
+                                                    ]}
+                                                    label="Màu sơn *"
+
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                    >
+                                                        <Option value="Đen">Đen</Option>
+                                                        <Option value="Trắng">Trắng</Option>
+                                                        <Option value="Đỏ">Đỏ</Option>
+                                                        <Option value="Xanh">Xanh</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                            </Col>
+                                            <Col sm={24} md={12} >
+                                                <Form.Item
+                                                    name="plate"
+
+                                                    label="Biển số"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Biển số xe không được để trống',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Input />
+                                                </Form.Item>
+
+                                                <Form.Item
+                                                    name="plateCountry"
+
+                                                    label="Quốc gia đăng ký *"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn quốc gia đăng ký',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                    >
+                                                        <Option value="vn">Việt nam</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                                <Form.Item
+                                                    name="city"
+
+                                                    label="Thành phố đăng ký"
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn thành phố',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        onChange={handleChangeCity1}
+                                                        labelInValue
+                                                        options={citys}
+                                                    />
+                                                </Form.Item>
+                                                <Form.Item
+                                                >
+                                                    <Button style={{ marginLeft: "50%" }} type="primary" htmlType="submit">
+                                                        Tạo phương tiện
+                                                    </Button>
+                                                </Form.Item>
+
+                                            </Col>
+                                        </Row>
 
 
 
-                        </Form>
-                    </div>
+                                    </Form>
+                                </div>
 
-                </div>
-            </div>
+                            </div>
+                        </div>
+                    </>
+                )
+            }
+
         </div>
 
     )
