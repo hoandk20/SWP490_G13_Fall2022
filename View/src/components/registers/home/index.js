@@ -55,10 +55,10 @@ const RegisterHome = () => {
                                 }}
                                 cover={<img style={{height:"460px"}} alt="example" src={ImageDriver} />}
                             >
-                                <Meta title="TÀI XẾ" description="Quản lý các hoạt động, tìm thông tin bạn cần để theo dõi thành công trong hành trình." />
+                                <Meta title="TÀI XẾ VÀ CÔNG TY" description="Quản lý các hoạt động, tìm thông tin bạn cần để theo dõi thành công trong hành trình." />
                                 <br/>
                                 <div>
-                                    <Button className='btn-regiter-home' type="primary"  onClick={onClickDriver} >Đăng ký cho tài xế</Button>
+                                    <Button className='btn-regiter-home' type="primary"  onClick={onClickDriver} >Đăng ký cho tài xế và công ty</Button>
                                 </div>
                             </Card>
                         </div>

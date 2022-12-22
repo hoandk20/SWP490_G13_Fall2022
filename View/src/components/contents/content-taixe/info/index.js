@@ -19,6 +19,7 @@ import { toast } from 'react-toastify';
 import jwtDecode from 'jwt-decode';
 import { useEffect } from 'react';
 import { editInforDriver } from '../../../../redux/apiRequest';
+import axios from 'axios';
 const { Option } = Select;
 
 
@@ -30,28 +31,29 @@ const InfoContactTaixe = () => {
     const dispatch = useDispatch();
     const u = useSelector((state) => state.user.userInfo?.currentUser);
     var user
-    if(u.statusDriver==="NE"){
-        user={
+    if (u.statusDriver === "NEW") {
+        user = {
             ...u,
-            statusDriver:"Chưa hoạt động"
+            statusDriver: "Chưa hoạt động"
         }
-    }else{
-        user={
+    } else {
+        user = {
             ...u,
-            statusDriver:"Chưa hoạt động"
+            statusDriver: "Đang hoạt động"
         }
     }
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
     console.log(user);
-    const [firstName, setFirstName] = useState(user.firstname);
-    const [lastName, setLastName] = useState(user.lastname);
-    const [email, setEmail] = useState(user.email);
-    const [phone, setPhone] = useState(user.phone);
-    const [address, setAddress] = useState(user.address);
-    const [avatar, setAvatar] = useState(user.avatarBase64);
-    const [city, setCity] = useState(user.cityId);
-    const [status, setStatus] = useState(user.statusDriver);
+    const [firstName, setFirstName] = useState(user?.firstname);
+    const [lastName, setLastName] = useState(user?.lastname);
+    const [email, setEmail] = useState(user?.email);
+    const [phone, setPhone] = useState(user?.phone);
+    const [address, setAddress] = useState(user?.address);
+    const [avatar, setAvatar] = useState(user?.avatarBase64);
+    const [city, setCity] = useState(user?.cityId);
+    const [city1, setCity1] = useState(user?.vehicleRequest?.platState);
+    const [status, setStatus] = useState(user?.statusDriver);
     const prefixSelector = (
         <Form.Item name="prefix" noStyle>
             <Select
@@ -83,7 +85,29 @@ const InfoContactTaixe = () => {
         await setAvatar(base64);
     };
 
-
+    const onfinish1 = async(values) => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/addVehicle`,
+                {
+                    driverEmail: user.email,
+                    producer: values.producer,
+                    produceYear: values.produceYear,
+                    interiorColor: "",
+                    exteriorColor: values.exteriorColor,
+                    plate: values.plate,
+                    platState: values.city.label,
+                    plateCountry: values.plateCountry,
+                    typeId: values.typeId
+                }
+                , {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            getUser(user.email, dispatch);
+            toast.success("Thay đổi thông tin phương tiện thành công")
+        } catch (error) {
+            toast.error("Tạo phương tiện thất bại")
+        }
+    };
     const onFinish = (values) => {
         const image = {
             base64: avatar,
@@ -128,6 +152,10 @@ const InfoContactTaixe = () => {
         // console.log(e.key);
         setCity(e.key)
     }
+    const handleChangeCity1 = (e) => {
+        // console.log(e.key);
+        setCity1(e.key)
+    }
     return (
 
         <div className='container-edit'>
@@ -152,7 +180,7 @@ const InfoContactTaixe = () => {
                         <Col sm={16} md={8}>
                             <FormItem
                                 name='name'
-                                label="Tên *"
+                                label="Tên "
                             // rules={[
                             //     {
                             //         required: true,
@@ -167,7 +195,7 @@ const InfoContactTaixe = () => {
                             </FormItem>
 
                             <FormItem
-                                label="Email *"
+                                label="Email "
                                 initialValue={email}
                                 name='email'
 
@@ -185,7 +213,7 @@ const InfoContactTaixe = () => {
                                 <Input onChange={handleChangeEmail} defaultValue={email} disabled />
                             </FormItem>
                             <Form.Item
-                                label="Số di động *"
+                                label="Số di động "
                                 name='phone'
                                 initialValue={phone}
                                 rules={[
@@ -197,21 +225,17 @@ const InfoContactTaixe = () => {
                                 ]}
                             >
                                 <Input onChange={handleChangePhone}
-                                    addonBefore={prefixSelector} 
+                                    addonBefore={prefixSelector}
                                 />
                             </Form.Item>
-                            <Form.Item
-                                label="Địa chỉ *"
-                            >
-                                <Input value={address} onChange={handleChangeAddress}
-                                />
-                            </Form.Item>
+
+
                         </Col>
                         <Col sm={16} md={8}  >
 
                             <FormItem
                                 name="country"
-                                label="Quốc gia *"
+                                label="Quốc gia "
                                 initialValue={user.country}
                                 labelCol={{
                                     span: 12,
@@ -240,7 +264,7 @@ const InfoContactTaixe = () => {
                                 labelCol={{
                                     span: 12,
                                 }}
-                                label="Trạng thái *"
+                                label="Trạng thái "
                             >
                                 <Input value={status} disabled
                                 />
@@ -254,7 +278,7 @@ const InfoContactTaixe = () => {
                                     className='avatar'
                                 />
 
-                                {/* <Upload><Button icon={<UploadOutlined />}>Click to Upload</Button></Upload> */}
+
                                 <div className='inputFile'>
                                     <input
                                         type="file"
@@ -267,7 +291,9 @@ const InfoContactTaixe = () => {
                             </div>
                         </Col>
                     </Row>
-                    <Row style={{ marginTop: "50px" }}>
+
+
+                    <Row style={{ marginTop: "10px" }}>
 
                         <Col sm={16} md={8}  >
                             <FormItem
@@ -292,6 +318,206 @@ const InfoContactTaixe = () => {
 
                 </Form>
 
+            </div>
+            <h3 style={{ float: "left", marginBottom: "20px" }}>Thông tin phương tiện</h3>
+            <div className='form-add' >
+                <div className='form-header' style={{ height: "30px" }}
+                >
+                </div>
+                <div className='form-contents' >
+                    <div >
+                        <Form
+                            onFinish={onfinish1}
+                            labelCol={{
+                                span: 8,
+                            }}
+                            wrapperCol={{
+                                span: 12,
+                            }}
+                        >
+                            <Row>
+                                <Col sm={24} md={12} >
+                                    {
+                                        user?.vehicleRequest.typeId === 1 ? (
+                                            <>
+                                                <Form.Item
+                                                    name="typeId"
+                                                    initialValue={"1"}
+                                                    label="Loại xe "
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn loại xe',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                    >
+                                                        <Option value="1">Xe máy</Option>
+                                                        <Option value="2">Ô tô</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Form.Item
+                                                    name="typeId"
+                                                    initialValue={"2"}
+                                                    label="Loại xe "
+                                                    rules={[
+                                                        {
+                                                            required: true,
+                                                            message: 'Vui lòng chọn loại xe',
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Select
+                                                        allowClear
+                                                    >
+                                                        <Option value="1">Xe máy</Option>
+                                                        <Option value="2">Ô tô</Option>
+                                                    </Select>
+                                                </Form.Item>
+                                            </>
+                                        )
+                                    }
+
+                                    <Form.Item
+                                        name="producer"
+                                        initialValue={user?.vehicleRequest.producer}
+                                        label="Nhà sản xuất *"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vùi lòng chọn nhà sản xuất',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="Toyota"></Option>
+                                            <Option value="Honda"></Option>
+                                            <Option value="Hyundai"></Option>
+                                            <Option value="Ford"></Option>
+                                            <Option value="Suzuki"></Option>
+                                            <Option value="Mercedes-Benz"></Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="produceYear"
+                                        initialValue={user?.vehicleRequest.produceYear}
+                                        label="Năm sản xuất"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn năm sản xuất',
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+                                    {/* <Form.Item
+                                        name="interiorColor"
+                                        label="Màu nội thất *"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn màu sơn',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="Đen">Đen</Option>
+                                            <Option value="Trắng">Trắng</Option>
+                                            <Option value="Đỏ">Đỏ</Option>
+                                            <Option value="Xanh">Xanh</Option>
+                                        </Select>
+                                    </Form.Item> */}
+                                    <Form.Item
+                                        name="exteriorColor"
+                                        initialValue={user?.vehicleRequest.exteriorColor}
+                                        label="Màu sơn *"
+
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="Đen">Đen</Option>
+                                            <Option value="Trắng">Trắng</Option>
+                                            <Option value="Đỏ">Đỏ</Option>
+                                            <Option value="Xanh">Xanh</Option>
+                                        </Select>
+                                    </Form.Item>
+                                </Col>
+                                <Col sm={24} md={12} >
+                                    <Form.Item
+                                        name="plate"
+                                        initialValue={user?.vehicleRequest.plate}
+                                        label="Biển số"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Biển số xe không được để trống',
+                                            },
+                                        ]}
+                                    >
+                                        <Input />
+                                    </Form.Item>
+
+                                    <Form.Item
+                                        name="plateCountry"
+                                        initialValue={user?.vehicleRequest.plateCountry}
+                                        label="Quốc gia đăng ký *"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn quốc gia đăng ký',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            allowClear
+                                        >
+                                            <Option value="vn">Việt nam</Option>
+                                        </Select>
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="city"
+                                        initialValue={city1}
+                                        label="Thành phố đăng ký"
+                                        rules={[
+                                            {
+                                                required: true,
+                                                message: 'Vui lòng chọn thành phố',
+                                            },
+                                        ]}
+                                    >
+                                        <Select
+                                            onChange={handleChangeCity1}
+                                            labelInValue
+                                            options={citys}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                    >
+                                        <Button style={{ marginLeft: "50%" }} type="primary" htmlType="submit">
+                                            Thay đổi thông tin phương tiện
+                                        </Button>
+                                    </Form.Item>
+
+                                </Col>
+                            </Row>
+
+
+
+                        </Form>
+                    </div>
+
+                </div>
             </div>
         </div>
 

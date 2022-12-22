@@ -42,8 +42,6 @@ const EditDriverForCompany = (props) => {
 
     };
     const handleDelete = () => {
-        // AddVehicleForDriver(drivers?.email,key,toast)
-        // setOpenModal(false);
         const object = {
             driverEmail: drivers.email,
             companyEmail: user.email,
@@ -71,78 +69,7 @@ const EditDriverForCompany = (props) => {
             />
         </Popconfirm>
     );
-    // const columns = [
-    //     // {
-    //     //     key: 'index',
-    //     //     title: 'Số',
-    //     //     dataIndex: 'index',
-    //     // },
-    //     {
-    //         key: 'producer',
-    //         title: 'Kiểu phương tiện',
-    //         dataIndex: 'producer',
-    //     },
-    //     {
-    //         key: 'plate',
-    //         title: 'Biển số',
-    //         dataIndex: 'plate',
-    //     },
-    //     {
-    //         key: 'produceYear',
-    //         title: 'Năm sản xuất',
-    //         dataIndex: 'produceYear',
-    //     },
-    //     {
-    //         key: 'price',
-    //         title: 'Giấy chứng nhận bảo hiểm',
-    //         dataIndex: 'price',
-    //     },
-    //     {
-    //         key: 'irs',
-    //         title: 'Giấy đăng kiểm',
-    //         dataIndex: 'irs',
-    //     },
-    //     {
-    //         key: 'status',
-    //         title: 'Trạng thái',
-    //         dataIndex: 'status',
-    //     },
 
-
-    //     // {
-    //     //     title: '',
-    //     //     dataIndex: '',
-    //     //     key: 'x',
-    //     //     render: (text, record, index) => {
-    //     //         return <div>
-    //     //             <EditVehico state={record} />
-
-    //     //         </div>
-
-    //     //     },
-    //     // },
-
-    //     {
-    //         title: 'Phân phương tiện',
-    //         dataIndex: '',
-    //         key: 'y',
-    //         render: (text, record, index) => {
-    //             return <div style={{ textAlign: "center" }}>
-    //                 <Popconfirm
-    //                     title="Bạn có muốn thêm phương tiện này cho tài xế?"
-    //                     onConfirm={() => handleAdd(record.key)}
-    //                     onCancel={cancel}
-    //                     okText="Yes"
-    //                     cancelText="No"
-    //                 >
-    //                     {/* <Button type="primary">Phân phương tiện</Button> */}
-    //                     <SelectOutlined style={{ fontSize: '20px', color: '#08c' }} />
-    //                 </Popconfirm>
-    //             </div>
-
-    //         },
-    //     },
-    // ];
     return (
         <>
             <EyeOutlined onClick={showDrawer} />

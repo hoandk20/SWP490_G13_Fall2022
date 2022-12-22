@@ -195,7 +195,6 @@ const RegisterDriverDoc = () => {
                                 <div className='form-header'>
                                     <span>
                                         Ảnh
-                                        <div className='status'>Chưa gửi</div>
                                     </span>
 
                                 </div>
@@ -246,7 +245,6 @@ const RegisterDriverDoc = () => {
                                 <div className='form-header'>
                                     <span>
                                         Bằng Lái Xe (Hạng B2 hoặc cao hơn nếu bạn là tài xế xe ô tô)
-                                        <div className='status'>Chưa gửi</div>
                                     </span>
 
                                 </div>
@@ -283,7 +281,6 @@ const RegisterDriverDoc = () => {
                                             hoặc lý lịch tư pháp
                                         </Col>
                                         <Col sm={8} md={4}>
-                                            <div className='status'>Chưa gửi</div>
                                         </Col>
                                     </Row>
                                 </div>

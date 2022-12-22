@@ -34,8 +34,14 @@ const CompanyManagementAdmin = () => {
         return date_parts + formatted.substr(formatted.indexOf(",") + 1);
     }
 
-    const drivers = all?.map((row) => ({ ...row, key: row.companyID, bangphi: 'Không',regDate:dateFormat(row.createDate) }));
-
+    const companys = all?.map((row) => ({ ...row, key: row.companyID, bangphi: 'Không',regDate:dateFormat(row.createDate) }));
+    const allCompany = companys?.map((row) => {
+        if (row.companyStatus === "NE") {
+            return { ...row, row, status: "Chưa hoạt động" }
+        } else if (row.companyStatus === "AT") {
+            return { ...row, row, status: "Hoạt động" }
+        }
+    })
 
     function onChangeDateStart(date, dateString) {
         setDate1(date.toISOString());
@@ -75,9 +81,9 @@ const CompanyManagementAdmin = () => {
             dataIndex: 'companyAddress',
         },
         {
-            key: 'companyStatus',
+            key: 'status',
             title: 'Trạng thái',
-            dataIndex: 'companyStatus',
+            dataIndex: 'status',
         },
         {
             key: 'regDate',
@@ -200,7 +206,7 @@ const CompanyManagementAdmin = () => {
                     {/* <AddVehico /> */}
                 </div>
                 <div className='table-info' style={{ marginTop: "5%" }}>
-                    <Table columns={columns} dataSource={drivers} size="middle" />
+                    <Table columns={columns} dataSource={allCompany} size="middle" />
                 </div>
             </div>
         </div >

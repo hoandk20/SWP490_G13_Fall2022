@@ -48,20 +48,20 @@ const DriverDetailAdmin = (props) => {
     const info = location.state?.record;
     const all = useSelector((state) => state.user.driver?.info);
     var drivers
-    if (all.status === "NE") {
+    if (all.status === "NEW") {
         drivers = {
             ...all,
-            status: "Chưa hoạt động"
+            statusvi: "Chưa hoạt động"
         }
     } else {
         drivers = {
             ...all,
-            status: "Chưa hoạt động"
+            statusvi: "Đang hoạt động"
         }
     }
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
-
+    console.log("drivers",drivers);
     const [city, setCity] = useState(drivers.cityId);
     const listDoc = drivers?.listDocs;
     const Bang_lai_xe = drivers.blx;
@@ -599,7 +599,7 @@ const DriverDetailAdmin = (props) => {
                         </Form.Item>
                         <Form.Item
                             name="status"
-                            initialValue={drivers?.status}
+                            initialValue={drivers?.statusvi}
 
                             label="Trạng thái"
                         >
@@ -916,9 +916,9 @@ const DriverDetailAdmin = (props) => {
                                             <Row>
                                                 <Col sm={24} md={12}>
                                                     <Form.Item
-                                                        name=""
-                                                        // initialValue={drivers?.vehicle.a}
-                                                        label="Hạng phương tiện"
+                                                        name="producer"
+                                                        initialValue={drivers?.vehicleInfo?.producer}
+                                                        label="Hãng xe"
                                                         rules={[
                                                             {
                                                                 required: true,
@@ -998,7 +998,7 @@ const DriverDetailAdmin = (props) => {
                                                     </Form.Item>
                                                     <Form.Item
                                                         name="platState"
-                                                        initialValue={drivers?.firstName}
+                                                        initialValue={drivers?.vehicleInfo?.platState}
                                                         label="Thành phố đăng ký"
                                                         rules={[
                                                             {

@@ -32,7 +32,13 @@ const DriverManagementAdmin = () => {
     }
 
     const drivers = all?.map((row) => ({ ...row, key: row.driverID, crDate: dateFormat(row.createDate), name: row.firstName + " " + row.lastName }));
- 
+    const allDriver = drivers?.map((row) => {
+        if (row.status === "NEW") {
+            return { ...row, row, statusDriver: "Chưa hoạt động" }
+        } else if (row.status === "ACT") {
+            return { ...row, row, statusDriver: "Hoạt động" }
+        }
+    })
     function onChangeDateStart(date, dateString) {
         setDate1(date.toISOString());
 
@@ -81,22 +87,22 @@ const DriverManagementAdmin = () => {
             title: 'Công ty',
             dataIndex: 'companyName',
         },
-        {
-            key: 'status',
-            title: 'Trạng thái',
-            dataIndex: 'status',
-        },
+
         {
             key: 'crDate',
             title: 'Ngày đăng ký',
             dataIndex: 'crDate',
         },
+        // {
+        //     key: 'docStatus',
+        //     title: 'Tài liệu',
+        //     dataIndex: 'docStatus',
+        // },
         {
-            key: 'docStatus',
-            title: 'Tài liệu',
-            dataIndex: 'docStatus',
+            key: 'statusDriver',
+            title: 'Trạng thái',
+            dataIndex: 'statusDriver',
         },
-
 
 
         {
@@ -205,8 +211,8 @@ const DriverManagementAdmin = () => {
                                             label="Trạng thái"
                                         >
                                             <Select>
-                                                <Option value="mới">Mới</Option>
-                                                <Option value="đang hoạt động">Đang hoạt động</Option>
+                                                <Option value="NEW">Chưa hoạt động</Option>
+                                                <Option value="ACT">Đang hoạt động</Option>
                                             </Select>
                                         </FormItem>
                                     </Col>
@@ -243,7 +249,7 @@ const DriverManagementAdmin = () => {
                             {/* <AddVehico /> */}
                         </div>
                         <div className='table-info' style={{ marginTop: "5%" }}>
-                            <Table columns={columns} dataSource={drivers} size="middle" />
+                            <Table columns={columns} dataSource={allDriver} size="middle" />
                         </div>
                     </div>
                 </div >

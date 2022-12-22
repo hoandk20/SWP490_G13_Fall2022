@@ -21,6 +21,7 @@ const DocumentDriver = () => {
     const [Chung_Nhan_Dang_Kiem, setChung_Nhan_Dang_Kiem] = useState("");
 
 
+
     const [baseImageBang_lai_xe, setBaseImageBang_lai_xe] = useState("");
     const [baseImageChung_Nhan_Kinh_nghiem, setBaseImageChung_Nhan_Kinh_nghiem] = useState("");
     const [baseImageChung_Nhan_Bao_Hiem, setBaseImageChung_Nhan_Bao_Hiem] = useState("");
@@ -36,6 +37,7 @@ const DocumentDriver = () => {
     const [checkChung_Nhan_Bao_Hiem, setcheckChung_Nhan_Bao_Hiem] = useState(false);
     const [checkChung_Nhan_Dang_Kiem, setcheckChung_Nhan_Dang_Kiem] = useState(false);
 
+
     const addDocBang_lai_xe = () => {
         setcheckBang_lai_xe(true);
     }
@@ -48,7 +50,7 @@ const DocumentDriver = () => {
     const addDocChung_Nhan_Dang_Kiem = () => {
         setcheckChung_Nhan_Dang_Kiem(true);
     }
-   
+
     const getDocBang_lai_xe = async () => {
         const file_name = "Bang_lai_xe";
         const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
@@ -64,7 +66,7 @@ const DocumentDriver = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-       
+
         setChung_Nhan_Kinh_nghiem(res.data.object);
     }
     const getDocChung_Nhan_Bao_Hiem = async () => {
@@ -73,8 +75,10 @@ const DocumentDriver = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-  
-        setChung_Nhan_Bao_Hiem(res.data.object);
+        if (res.data.object.vehicleId !== user?.vehicleRequest?.id) {
+            setChung_Nhan_Bao_Hiem("");
+        } else
+            setChung_Nhan_Bao_Hiem(res.data.object);
     }
     const getDocChung_Nhan_Dang_Kiem = async () => {
         const file_name = "Chung_Nhan_Dang_Kiem";
@@ -82,8 +86,10 @@ const DocumentDriver = () => {
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-      
-        setChung_Nhan_Dang_Kiem(res.data.object);
+        if (res.data.object.vehicleId !== user?.vehicleRequest?.id) {
+            setcheckChung_Nhan_Dang_Kiem("");
+        } else
+            setChung_Nhan_Dang_Kiem(res.data.object);
     }
 
 
@@ -146,14 +152,14 @@ const DocumentDriver = () => {
             year: year,
             month: month
         }
-        await UploadFile(object, toast);     
+        await UploadFile(object, toast);
         await getDocChung_Nhan_Bao_Hiem();
         setcheckBang_lai_xe(false)
 
 
     };
 
-    const uploadfileChung_Nhan_Kinh_nghiem = async() => {
+    const uploadfileChung_Nhan_Kinh_nghiem = async () => {
         const arr = dateChung_Nhan_Kinh_nghiem.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -166,18 +172,18 @@ const DocumentDriver = () => {
 
         }
         await UploadFile(object, toast);
-        await getDocChung_Nhan_Kinh_nghiem();  
+        await getDocChung_Nhan_Kinh_nghiem();
         setcheckChung_Nhan_Kinh_nghiem(false)
-      
+
 
     };
 
-    const uploadfileChung_Nhan_Bao_Hiem = async() => {
+    const uploadfileChung_Nhan_Bao_Hiem = async () => {
         const arr = dateChung_Nhan_Bao_Hiem.split("-");
         const year = arr[0];
         const month = arr[1];
         if (user.vehicleRequest !== null) {
-            setVehicleId(user.vehicleRequest.id);
+            setVehicleId(user?.vehicleRequest.id);
         }
         const object = {
             base64: baseImageChung_Nhan_Bao_Hiem,
@@ -185,14 +191,14 @@ const DocumentDriver = () => {
             fileName: "Chung_Nhan_Bao_Hiem",
             year: year,
             month: month,
-            vehicleId: vehicleId
+            vehicleId: user.vehicleRequest.id
         }
-        
+
         await UploadDocumentForVehicle(object, toast);
         await getDocChung_Nhan_Bao_Hiem();
         setcheckChung_Nhan_Bao_Hiem(false)
     };
-    const uploadfileChung_Nhan_Dang_Kiem = async() => {
+    const uploadfileChung_Nhan_Dang_Kiem = async () => {
         const arr = dateChung_Nhan_Dang_Kiem.split("-");
         const year = arr[0];
         const month = arr[1];
@@ -205,12 +211,12 @@ const DocumentDriver = () => {
             fileName: "Chung_Nhan_Dang_Kiem",
             year: year,
             month: month,
-            vehicleId: vehicleId
+            vehicleId: user.vehicleRequest.id
         }
         await UploadDocumentForVehicle(object, toast);
         await getDocChung_Nhan_Dang_Kiem();
         setcheckChung_Nhan_Dang_Kiem(false)
-     
+
     };
     useEffect(() => {
         getDocBang_lai_xe();
@@ -601,7 +607,7 @@ const DocumentDriver = () => {
                             <></>
                         ) : (
                             <>
-                                <p>Tài liệu cho phương tiện</p>
+                                <h3 style={{marginTop:"30px"}}>Tài liệu cho phương tiện</h3>
                                 <div>
                                     {
                                         Chung_Nhan_Bao_Hiem === "" ? (
@@ -706,7 +712,8 @@ const DocumentDriver = () => {
                                                                                 <span>
                                                                                     <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                                     <span>Tài liệu hợp lệ</span>
-                                                                                    <span> Ngày hết hạn :{Chung_Nhan_Bao_Hiem.status}</span>
+                                                                                    <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Bao_Hiem.expired_month}/{Chung_Nhan_Bao_Hiem.expired_year}</span>
+
                                                                                 </span>
                                                                             </div>
                                                                         </div>
@@ -881,7 +888,8 @@ const DocumentDriver = () => {
                                                                                 <span>
                                                                                     <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                                     <span>Tài liệu hợp lệ</span>
-                                                                                    <span style={{ marginLeft: "100px" }}> Ngày hết hạn :{Chung_Nhan_Kinh_nghiem.status}</span>
+                                                                                    <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Dang_Kiem.expired_month}/{Chung_Nhan_Dang_Kiem.expired_year}</span>
+
                                                                                 </span>
                                                                             </div>
                                                                         </div>

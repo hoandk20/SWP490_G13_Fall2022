@@ -15,7 +15,6 @@ const AddDriverForCompany = () => {
     const [open, setOpen] = useState(false);
     const [city, setCity] = useState("");
     const [form] = Form.useForm();
-
     const showDrawer = () => {
         setOpen(true);
     };
@@ -26,15 +25,20 @@ const AddDriverForCompany = () => {
         setCity(a.value);
       };
     const onfinish = (values) => {
-        const driver = {
-            ...values,
-            companyEmail: user.email,
-            city:city
+        if(user.statusCompany==="AT"){
+            const driver = {
+                ...values,
+                companyEmail: user.email,
+                city:city
+            }
+            
+             AddDriverByCompany(driver, toast, dispatch);
+            // getDriversForCompany(user.email,dispatch);
+            setOpen(false);
+        }else{
+            toast.error("Công ty chưa được cấp phép hoạt động.Vui lòng upload đầy đủ tài liệu và chờ xác nhận!")
         }
         
-         AddDriverByCompany(driver, toast, dispatch);
-        // getDriversForCompany(user.email,dispatch);
-        setOpen(false);
     };
 
 

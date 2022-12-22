@@ -47,12 +47,12 @@ const TabCompanyInfo = (props) => {
     if (company.companyStatus === "NE") {
         companys = {
             ...company,
-            companyStatus: "Chưa hoạt động"
+            companyStatusvi: "Chưa hoạt động"
         }
     } else {
         companys = {
             ...company,
-            companyStatus: "Chưa hoạt động"
+            companyStatusvi: "Chưa hoạt động"
         }
     }
     const listDoc = companys.listDoc;
@@ -396,7 +396,7 @@ const TabCompanyInfo = (props) => {
 
                         <Form.Item
                             name="status"
-                            initialValue={companys.companyStatus}
+                            initialValue={companys.companyStatusvi}
                             label="Trạng thái"
                         >
                             <Input disabled />

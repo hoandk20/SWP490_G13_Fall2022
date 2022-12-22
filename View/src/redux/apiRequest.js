@@ -845,7 +845,9 @@ export const AddDriverByCompany = async (driver, toast, dispatch) => {
     getDriversForCompany(driver.companyEmail, dispatch);
     toast.success("Tạo tài khoản tài xế thành công")
   } catch (error) {
-
+    if(error.response.data.object.IsExistedEmail){
+      toast.error("Email đã tồn tại")
+    }else
     toast.error("Tạo tài khoản tài xế thất bại")
 
   }
@@ -886,7 +888,7 @@ export const EditDriverByCompany = async (driver, toast, dispatch) => {
         phoneNumber: driver.phoneNumber,
         language: "vi",
         country: driver.country,
-        city: driver.city,
+        city: driver.city.value,
 
       }
       , {
