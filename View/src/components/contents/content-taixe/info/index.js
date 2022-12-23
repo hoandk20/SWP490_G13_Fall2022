@@ -104,6 +104,7 @@ const InfoContactTaixe = () => {
                     headers: { 'Content-Type': 'application/json' }
                 });
             getUser(user.email, dispatch);
+            
             toast.success("Thay đổi thông tin phương tiện thành công")
             setCheck(false);
         } catch (error) {
@@ -513,7 +514,7 @@ const InfoContactTaixe = () => {
                                                 <Form.Item
                                                 >
                                                     <Button style={{ marginLeft: "50%" }} type="primary" htmlType="submit">
-                                                        Tạo mới phương tiện
+                                                        Thay mới phương tiện
                                                     </Button>
                                                 </Form.Item>
 

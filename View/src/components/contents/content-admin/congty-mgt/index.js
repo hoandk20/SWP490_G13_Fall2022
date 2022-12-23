@@ -169,9 +169,11 @@ const CompanyManagementAdmin = () => {
                                     name="status"
                                     label="Trạng thái"
                                 >
-                                    <Select>
-                                        <Option value="mới">Mới</Option>
-                                        <Option value="đang hoạt động">Đang hoạt động</Option>
+                                    <Select
+                                    allowClear
+                                    >
+                                        <Option value="NE">Chưa hoạt động</Option>
+                                        <Option value="AT">Đang hoạt động</Option>
                                     </Select>
                                 </FormItem>
                             </Col>
