@@ -42,7 +42,7 @@ const FreeTripDetailOfDriver = () => {
     const user = useSelector((state) => state.user.userInfo?.currentUser);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [seatRegister, setSeatRegister] = useState();
+    const [seatRegister, setSeatRegister] = useState(1);
     const [note, setNote] = useState();
     const [modal, contextHolder] = Modal.useModal();
 

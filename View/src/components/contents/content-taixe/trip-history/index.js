@@ -69,11 +69,7 @@ const TripHistoryDriver = () => {
         getTripHistoryDriver(trip, dispatch);
     }, [])
     const columns = [
-        {
-            key: 'index',
-            title: 'Số',
-            dataIndex: 'index',
-        },
+
         {
             key: 'dateStart',
             title: 'Thời gian bắt đầu',
