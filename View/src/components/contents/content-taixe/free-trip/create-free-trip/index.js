@@ -183,7 +183,7 @@ const CreateFreeTripForDriver = () => {
                     toast.error("Cước không được vượt quá giá cước tối đa")
                 } else {
                     var trip
-                    if(user.vehicleRequest.typeId === 1){
+                    if(user.vehicleRequest?.typeId === 1){
                          trip = {
                             driverEmail: user.email,
                             from: originRef.current.value,
@@ -346,7 +346,7 @@ const CreateFreeTripForDriver = () => {
                                     </Autocomplete>
                                 </Form.Item>
                                 {
-                                    user.vehicleRequest.typeId === 1 ? (
+                                    user.vehicleRequest?.typeId === 1 ? (
                                         <>
                                             <div style={{ marginBottom: "20px" }}>
                                                 <span style={{ marginRight: "10px" }}>Phương tiện:</span>

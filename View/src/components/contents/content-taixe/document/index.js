@@ -4,24 +4,25 @@ import axios from 'axios';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { UploadDocumentForVehicle, UploadFile } from '../../../../redux/apiRequest';
-const URL = "http://26.36.110.116";
+import { getUser, UploadDocumentForVehicle, UploadFile } from '../../../../redux/apiRequest';
+
 
 const DocumentDriver = () => {
     const user = useSelector((state) => state.user.userInfo?.currentUser);
+    const dispatch=useDispatch();
     const [vehicleId, setVehicleId] = useState("");
     // if (user.vehicleRequest !== null) {
     //     setVehicleId(user.vehicleRequest.id);
     // }
     const [Bang_lai_xe, setBang_lai_xe] = useState("");
     const [Chung_Nhan_Kinh_nghiem, setChung_Nhan_Kinh_nghiem] = useState("");
-    const [Chung_Nhan_Bao_Hiem, setChung_Nhan_Bao_Hiem] = useState("");
-    const [Chung_Nhan_Dang_Kiem, setChung_Nhan_Dang_Kiem] = useState("");
+    const [Chung_Nhan_Bao_Hiem, setChung_Nhan_Bao_Hiem] = useState(null);
+    const [Chung_Nhan_Dang_Kiem, setChung_Nhan_Dang_Kiem] = useState(null);
 
-
-
+    console.log(user);
+    console.log(Chung_Nhan_Kinh_nghiem);
     const [baseImageBang_lai_xe, setBaseImageBang_lai_xe] = useState("");
     const [baseImageChung_Nhan_Kinh_nghiem, setBaseImageChung_Nhan_Kinh_nghiem] = useState("");
     const [baseImageChung_Nhan_Bao_Hiem, setBaseImageChung_Nhan_Bao_Hiem] = useState("");
@@ -53,7 +54,7 @@ const DocumentDriver = () => {
 
     const getDocBang_lai_xe = async () => {
         const file_name = "Bang_lai_xe";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -62,16 +63,26 @@ const DocumentDriver = () => {
     }
     const getDocChung_Nhan_Kinh_nghiem = async () => {
         const file_name = "Chung_Nhan_Kinh_nghiem";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
 
         setChung_Nhan_Kinh_nghiem(res.data.object);
     }
+    console.log(Chung_Nhan_Bao_Hiem)
+    const getDocVehicle = async () => {
+        const file_name = "Chung_Nhan_Bao_Hiem";
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/GetDocumentByVehicle?vehicleId=${user?.vehicleRequest.id}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+            setChung_Nhan_Bao_Hiem(res.data.object.cnbh);
+            setChung_Nhan_Dang_Kiem(res.data.object.cndk)
+    }
     const getDocChung_Nhan_Bao_Hiem = async () => {
         const file_name = "Chung_Nhan_Bao_Hiem";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/GetDocumentByVehicle?vehicleId=${user?.vehicleRequest.id}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -82,12 +93,12 @@ const DocumentDriver = () => {
     }
     const getDocChung_Nhan_Dang_Kiem = async () => {
         const file_name = "Chung_Nhan_Dang_Kiem";
-        const res = await axios.get(`${URL}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${user?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocumentVehicle?vehicleid=${user?.vehicleRequest.id}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
         if (res.data.object.vehicleId !== user?.vehicleRequest?.id) {
-            setcheckChung_Nhan_Dang_Kiem("");
+            setcheckChung_Nhan_Dang_Kiem(false);
         } else
             setChung_Nhan_Dang_Kiem(res.data.object);
     }
@@ -195,9 +206,11 @@ const DocumentDriver = () => {
         }
 
         await UploadDocumentForVehicle(object, toast);
-        await getDocChung_Nhan_Bao_Hiem();
+        
+        getDocVehicle();
         setcheckChung_Nhan_Bao_Hiem(false)
     };
+    
     const uploadfileChung_Nhan_Dang_Kiem = async () => {
         const arr = dateChung_Nhan_Dang_Kiem.split("-");
         const year = arr[0];
@@ -214,15 +227,16 @@ const DocumentDriver = () => {
             vehicleId: user.vehicleRequest.id
         }
         await UploadDocumentForVehicle(object, toast);
-        await getDocChung_Nhan_Dang_Kiem();
+         await getDocVehicle();
         setcheckChung_Nhan_Dang_Kiem(false)
 
     };
     useEffect(() => {
         getDocBang_lai_xe();
-        getDocChung_Nhan_Bao_Hiem();
+        // getDocChung_Nhan_Bao_Hiem();
+        getDocVehicle();
         getDocChung_Nhan_Kinh_nghiem();
-        getDocChung_Nhan_Dang_Kiem();
+        // getDocChung_Nhan_Dang_Kiem();
     }, [])
     return (
         <div>
@@ -610,7 +624,7 @@ const DocumentDriver = () => {
                                 <h3 style={{marginTop:"30px"}}>Tài liệu cho phương tiện</h3>
                                 <div>
                                     {
-                                        Chung_Nhan_Bao_Hiem === "" ? (
+                                        Chung_Nhan_Bao_Hiem === null ? (
                                             <>
                                                 {
                                                     checkChung_Nhan_Bao_Hiem === true ? (
@@ -668,7 +682,7 @@ const DocumentDriver = () => {
                                         ) : (
                                             <>
                                                 {
-                                                    Chung_Nhan_Bao_Hiem.status === "SENDED" ? (
+                                                    Chung_Nhan_Bao_Hiem?.status === "SENDED" ? (
                                                         <>
                                                             <div className='card-doc-ad'>
                                                                 <div className='form-header-ad' style={{ height: "40px" }}>
@@ -683,7 +697,7 @@ const DocumentDriver = () => {
                                                                         <span>
                                                                             <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                             <span>Tài liệu đang chờ xử lý</span>
-                                                                            <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Bao_Hiem.expired_month}/{Chung_Nhan_Bao_Hiem.expired_year}</span>
+                                                                            <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Bao_Hiem?.expired_month}/{Chung_Nhan_Bao_Hiem?.expired_year}</span>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -695,7 +709,7 @@ const DocumentDriver = () => {
                                                     ) : (
                                                         <>
                                                             {
-                                                                Chung_Nhan_Bao_Hiem.status === "VALID" ? (
+                                                                Chung_Nhan_Bao_Hiem?.status === "VALID" ? (
                                                                     <div className='card-doc-ad'>
                                                                         <div className='form-header-ad' style={{ height: "40px" }}>
                                                                             <span>
@@ -712,7 +726,7 @@ const DocumentDriver = () => {
                                                                                 <span>
                                                                                     <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                                     <span>Tài liệu hợp lệ</span>
-                                                                                    <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Bao_Hiem.expired_month}/{Chung_Nhan_Bao_Hiem.expired_year}</span>
+                                                                                    <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Bao_Hiem?.expired_month}/{Chung_Nhan_Bao_Hiem?.expired_year}</span>
 
                                                                                 </span>
                                                                             </div>
@@ -788,7 +802,7 @@ const DocumentDriver = () => {
                                 </div>
                                 <div>
                                     {
-                                        Chung_Nhan_Dang_Kiem === "" ? (
+                                        Chung_Nhan_Dang_Kiem === null ? (
                                             <>
                                                 {
                                                     checkChung_Nhan_Dang_Kiem === true ? (
@@ -846,7 +860,7 @@ const DocumentDriver = () => {
                                         ) : (
                                             <>
                                                 {
-                                                    Chung_Nhan_Dang_Kiem.status === "SENDED" ? (
+                                                    Chung_Nhan_Dang_Kiem?.status === "SENDED" ? (
                                                         <>
                                                             <div className='card-doc-ad'>
                                                                 <div className='form-header-ad' style={{ height: "40px" }}>
@@ -861,7 +875,7 @@ const DocumentDriver = () => {
                                                                         <span>
                                                                             <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                             <span>Tài liệu đang chờ xử lý</span>
-                                                                            <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Dang_Kiem.expired_month}/{Chung_Nhan_Dang_Kiem.expired_year}</span>
+                                                                            <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Dang_Kiem?.expired_month}/{Chung_Nhan_Dang_Kiem?.expired_year}</span>
                                                                         </span>
                                                                     </div>
                                                                 </div>
@@ -871,7 +885,7 @@ const DocumentDriver = () => {
                                                     ) : (
                                                         <>
                                                             {
-                                                                Chung_Nhan_Dang_Kiem.status === "VALID" ? (
+                                                                Chung_Nhan_Dang_Kiem?.status === "VALID" ? (
                                                                     <div className='card-doc-ad'>
                                                                         <div className='form-header-ad' style={{ height: "40px" }}>
                                                                             <span>
@@ -888,7 +902,7 @@ const DocumentDriver = () => {
                                                                                 <span>
                                                                                     <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                                     <span>Tài liệu hợp lệ</span>
-                                                                                    <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Dang_Kiem.expired_month}/{Chung_Nhan_Dang_Kiem.expired_year}</span>
+                                                                                    <span style={{ marginLeft: "20%" }}> Ngày hết hạn :{Chung_Nhan_Dang_Kiem?.expired_month}/{Chung_Nhan_Dang_Kiem?.expired_year}</span>
 
                                                                                 </span>
                                                                             </div>
@@ -942,7 +956,7 @@ const DocumentDriver = () => {
                                                                                                 <span>
                                                                                                     <span><FileOutlined style={{ fontSize: "40px", margin: "10px" }} /> </span>
                                                                                                     <span>Tài liệu không hợp lệ vui lòng gửi lại tài liệu</span>
-                                                                                                    <span> onClick={addDocChung_Nhan_Dang_Kiem}<Button style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
+                                                                                                    <span><Button  onClick={addDocChung_Nhan_Dang_Kiem} style={{ marginLeft: "10px" }} type="primary"> +Tải lên</Button></span>
                                                                                                 </span>
                                                                                             </div>
                                                                                         </div>

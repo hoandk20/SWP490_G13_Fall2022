@@ -13,7 +13,7 @@ import React from 'react';
 import { SaveOutlined, UploadOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import ModalRePassword from '../../../commons/modals/modal-re-password';
-import { getUser, UploadFile } from '../../../../redux/apiRequest';
+import { AcceptDriverAdmin, getUser, UploadFile } from '../../../../redux/apiRequest';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import jwtDecode from 'jwt-decode';
@@ -100,11 +100,20 @@ const InfoContactTaixe = () => {
                     plateCountry: values.plateCountry,
                     typeId: values.typeId
                 }
+                ,
+                {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+            const rest = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/ChangeStatusDriver`,
+                {
+                    id: user.email,
+                    status: "NEW",
+                }
                 , {
                     headers: { 'Content-Type': 'application/json' }
                 });
             getUser(user.email, dispatch);
-            
             toast.success("Thay đổi thông tin phương tiện thành công")
             setCheck(false);
         } catch (error) {
@@ -133,7 +142,7 @@ const InfoContactTaixe = () => {
             country: 'vi',
             cityId: city,
         }
-        console.log(object);
+
         editInforDriver(object, toast, dispatch);
 
     }
@@ -155,11 +164,11 @@ const InfoContactTaixe = () => {
         setAddress(e.target.value)
     }
     const handleChangeCity = (e) => {
-        // console.log(e.key);
+
         setCity(e.key)
     }
     const handleChangeCity1 = (e) => {
-        // console.log(e.key);
+
         setCity1(e.key)
     }
     return (

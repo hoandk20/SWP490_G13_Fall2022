@@ -67,13 +67,8 @@ const DriverDetailAdmin = (props) => {
     const Bang_lai_xe = drivers.blx;
 
     const Chung_Nhan_Kinh_nghiem = drivers.cnkn;
-    var Chung_Nhan_Bao_Hiem = null;
-    var Chung_Nhan_Dang_Kiem = null
-    if (drivers.vehicleInfo === null) {
-    } else {
-        Chung_Nhan_Bao_Hiem = drivers.vehicleInfo.cnbh;
-        Chung_Nhan_Dang_Kiem = drivers.vehicleInfo.cndk;
-    }
+    const [Chung_Nhan_Bao_Hiem, setChung_Nhan_Bao_Hiem] = useState(null);
+    const [Chung_Nhan_Dang_Kiem, setChung_Nhan_Dang_Kiem] = useState(null);
 
     const [open, setOpen] = useState(false);
     // const [check1, setCheck1] = useState(Bang_lai_xe.status != "SENDED");
@@ -101,8 +96,16 @@ const DriverDetailAdmin = (props) => {
 
         setCity(e.key)
     }
-
-
+    const getDocVehicle = async () => {
+        const file_name = "Chung_Nhan_Bao_Hiem";
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/driver/GetDocumentByVehicle?vehicleId=${drivers?.vehicleInfo.id}`
+            , {
+                headers: { 'Content-Type': 'application/json' }
+            });
+            setChung_Nhan_Bao_Hiem(res.data.object.cnbh);
+            setChung_Nhan_Dang_Kiem(res.data.object.cndk)
+           
+    }
     const getFileAvatar = async () => {
         const file_name = "Avatar";
         const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
@@ -168,18 +171,22 @@ const DriverDetailAdmin = (props) => {
     const changeStatusValid6 = () => {
         // setCheck3(true);
         ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "VALID", drivers?.email, toast, dispatch);
+        getDocVehicle();
     }
     const changeStatusInValid6 = () => {
         // setCheck3(true);
         ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "INVALID", drivers?.email, toast, dispatch);
+        getDocVehicle();
     }
     const changeStatusValid7 = () => {
         // setCheck4(true);
         ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "VALID", drivers?.email, toast, dispatch);
+        getDocVehicle();
     }
     const changeStatusInValid7 = () => {
         // setCheck4(true);
         ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "INVALID", drivers?.email, toast, dispatch);
+        getDocVehicle();
     }
 
 
@@ -350,25 +357,47 @@ const DriverDetailAdmin = (props) => {
             fileName: "Chung_Nhan_Bao_Hiem",
             year: year,
             month: month,
+            vehicleId:drivers.vehicleInfo.id
         }
         try {
-            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
-                {
-                    base64: object.base64,
-                    expired_month: object.month,
-                    expired_year: object.year,
-                    file_name: object.fileName,
-                    createBy: object.createBy
-                }
-                , {
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            getDriverDetail(drivers?.email, dispatch);
-            setCheckdoc6(false)
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/DocumentVehicle`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy,
+                vehicleId: object.vehicleId
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              getDocVehicle();
+              setCheckdoc6(false)
             toast.success("Upload file thành công")
-        } catch (error) {
+          } catch (error) {
             toast.error("Upload file thất bại")
-        }
+        
+          }
+        // try {
+        //     const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
+        //         {
+        //             base64: object.base64,
+        //             expired_month: object.month,
+        //             expired_year: object.year,
+        //             file_name: object.fileName,
+        //             createBy: object.createBy
+        //         }
+        //         , {
+        //             headers: { 'Content-Type': 'application/json' }
+        //         });
+        //     // getDriverDetail(drivers?.email, dispatch);
+        //     getDocVehicle();
+        //     setCheckdoc6(false)
+        //     toast.success("Upload file thành công")
+        // } catch (error) {
+        //     toast.error("Upload file thất bại")
+        // }
 
     };
     const uploadfile7 = async () => {
@@ -381,30 +410,38 @@ const DriverDetailAdmin = (props) => {
             fileName: "Chung_Nhan_Dang_Kiem",
             year: year,
             month: month,
+            vehicleId: drivers.vehicleInfo.id
         }
         try {
-            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/Document`,
-                {
-                    base64: object.base64,
-                    expired_month: object.month,
-                    expired_year: object.year,
-                    file_name: object.fileName,
-                    createBy: object.createBy
-                }
-                , {
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            getDriverDetail(drivers?.email, dispatch);
-            setCheckdoc7(false)
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/DocumentVehicle`,
+              {
+                base64: object.base64,
+                expired_month: object.month,
+                expired_year: object.year,
+                file_name: object.fileName,
+                createBy: object.createBy,
+                vehicleId: object.vehicleId
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+              getDocVehicle();
+              setCheckdoc7(false)
             toast.success("Upload file thành công")
-        } catch (error) {
+          } catch (error) {
             toast.error("Upload file thất bại")
-        }
+        
+          }
 
 
     };
     const acceptDriver = () => {
-        AcceptDriverAdmin(drivers.driverID, "ACT", toast, drivers.email, dispatch);
+        if(Bang_lai_xe.status==="VALID" && Chung_Nhan_Bao_Hiem?.status==="VALID" && Chung_Nhan_Kinh_nghiem?.status==="VALID" && Chung_Nhan_Dang_Kiem?.status==="VALID"){
+            AcceptDriverAdmin(drivers?.driverID, "ACT", toast, drivers?.email, dispatch);
+        }else{
+            toast.error("Còn tài liệu chưa duyệt.Vui lòng duyệt hết tài liệu")
+        }
+        
     }
     const notAcceptDriver = () => {
         AcceptDriverAdmin(drivers.driverID, "NEW", toast, drivers.email, dispatch);
@@ -425,6 +462,7 @@ const DriverDetailAdmin = (props) => {
         //     getDriverDetail(drivers.email, dispatch);
         // }, 1000)
         getDriverDetail(drivers.email, dispatch);
+        getDocVehicle();
     }, [])
     // getFileAvatar();
     return (

@@ -16,8 +16,7 @@ const RegisterSignup = () => {
     const [code, setCode] = useState("");
     const dispatch = useDispatch();
     const location = useLocation();
-    const newUser = location.state.newUser;
-  
+    const newUser = location.state.newUser; 
     const navigate = useNavigate();
     const user = {
         username: newUser.email,
