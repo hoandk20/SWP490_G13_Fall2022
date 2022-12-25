@@ -30,17 +30,20 @@ const InfoContactTaixe = () => {
     // const decodedTocken = jwtDecode(currentUser.access_token);
     const dispatch = useDispatch();
     const u = useSelector((state) => state.user.userInfo?.currentUser);
+    const [user1,setUser1]=useState();
     var user
     if (u.statusDriver === "NEW") {
         user = {
             ...u,
             statusDriver: "Chưa hoạt động"
         }
+
     } else {
         user = {
             ...u,
             statusDriver: "Đang hoạt động"
         }
+       
     }
     const allCity = useSelector((state) => state.data.citys?.all);
     const citys = allCity?.map((row) => ({ value: row.id.cityID, label: row.cityName }));
@@ -171,6 +174,9 @@ const InfoContactTaixe = () => {
 
         setCity1(e.key)
     }
+    useEffect(() => {
+        getUser(user?.email,dispatch)
+    }, [user?.statusDriver])
     return (
 
         <div className='container-edit'>
@@ -251,7 +257,7 @@ const InfoContactTaixe = () => {
                             <FormItem
                                 name="country"
                                 label="Quốc gia "
-                                initialValue={user.country}
+                                initialValue={user?.country}
                                 labelCol={{
                                     span: 12,
                                 }}

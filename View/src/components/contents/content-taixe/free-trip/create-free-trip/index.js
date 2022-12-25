@@ -2,7 +2,7 @@ import { Col, DatePicker, Form, Row, Select, TimePicker, Button, Spin } from 'an
 import { useRef, useState, useEffect, useMemo } from 'react'
 import React from 'react';
 import { useNavigate } from 'react-router';
-import { CreateFreeTrip, getTripDetailDriver } from '../../../../../redux/apiRequest';
+import { CreateFreeTrip, getTripDetailDriver, getUser } from '../../../../../redux/apiRequest';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -71,7 +71,7 @@ const CreateFreeTripForDriver = () => {
     const navigate = useNavigate();
 
     const user = useSelector((state) => state.user.userInfo?.currentUser);
-
+console.log(user);
 
 
     const { isLoaded } = useJsApiLoader({
