@@ -14,16 +14,16 @@ const contentStyle = {
 const CarouselHome = () => (
   <Carousel autoplay>
     <div>
-    <a href="#"> <img className='image-app-1' height={"500vh"} width={"100%"} src={ImageSlider4} alt="app store" /></a>
+    <a href="#"> <img className='image-app-1' height={"700vh"} width={"100%"} src={ImageSlider4} alt="app store" /></a>
     </div>
     <div>
-    <a href="#"> <img className='image-app-1' height={"500vh"} width={"100%"}  src={ImageSlider2} alt="app store" /></a>
+    <a href="#"> <img className='image-app-1' height={"700vh"} width={"100%"}  src={ImageSlider2} alt="app store" /></a>
     </div>
     <div>
-    <a href="#"> <img className='image-app-1' height={"500vh"} width={"100%"} src={ImageSlider3} alt="app store" /></a>
+    <a href="#"> <img className='image-app-1' height={"700vh"} width={"100%"} src={ImageSlider3} alt="app store" /></a>
     </div>
     <div>
-    <a href="#"> <img className='image-app-1' height={"500vh"} width={"100%"} src={ImageSlider1} alt="app store" /></a>
+    <a href="#"> <img className='image-app-1' height={"700vh"} width={"100%"} src={ImageSlider1} alt="app store" /></a>
     </div>
   </Carousel>
 );

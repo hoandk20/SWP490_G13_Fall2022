@@ -1003,8 +1003,8 @@ export const ChaangeStatusDoc = async (id, status, email, toast, dispatch) => {
       toast.error("Tài liệu không được chấp thuận")
     }
 
-    getDriverDetail(email, dispatch);
-    getCompanyDetail(email, dispatch);
+    await getDriverDetail(email, dispatch);
+    await getCompanyDetail(email, dispatch);
 
 
 

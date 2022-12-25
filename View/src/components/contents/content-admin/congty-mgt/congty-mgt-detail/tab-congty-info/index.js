@@ -351,7 +351,11 @@ const TabCompanyInfo = (props) => {
         }
     };
     const acceptCompany = () => {
-        AcceptCompanyAdmin(companys.companyId, "AT", toast, companys.email, dispatch);
+        if(Bang_lai_xe?.status === "VALID" && Chung_Nhan_Kinh_nghiem?.status==="VALID" && GP_Hoat_Dong.status==="VALID" && GP_Kinh_Doanh.status==="VALID"){
+            AcceptCompanyAdmin(companys.companyId, "AT", toast, companys.email, dispatch);
+        }else{
+            toast.error("Còn tài liệu chưa duyệt.Vui lòng duyệt hết tài liệu")
+        }
     }
     const notAcceptCompany = () => {
         AcceptCompanyAdmin(companys.companyId, "NE", toast, companys.email, dispatch);
