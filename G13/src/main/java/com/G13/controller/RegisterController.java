@@ -75,7 +75,11 @@ public class RegisterController {
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60*10));
             MailController mailAPI = new MailController();
-            mailAPI.SendEmailVerifyAccount(rc.getEmail(), verifyaccount.getVerificode());
+            try{
+                mailAPI.SendEmailVerifyAccount(rc.getEmail(), verifyaccount.getVerificode());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -168,7 +172,11 @@ public class RegisterController {
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60*10));
             MailController mailAPI = new MailController();
-            mailAPI.SendEmailVerifyAccount(rd.getEmail(), verifyaccount.getVerificode());
+            try{
+                mailAPI.SendEmailVerifyAccount(rd.getEmail(), verifyaccount.getVerificode());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
             response.setStatus(masterStatus.SUCCESSFULL);
             return ResponseEntity.ok().body(response);
@@ -250,8 +258,11 @@ public class RegisterController {
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(timeStamp.plusSeconds(60*10));
             MailController mailAPI = new MailController();
-            mailAPI.SendEmailVerifyAccount(rp.getEmail(), verifyaccount.getVerificode());
-
+            try{
+                mailAPI.SendEmailVerifyAccount(rp.getEmail(), verifyaccount.getVerificode());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
             response.setObject(verifyAccountService.SaveVerifyAccount(verifyaccount));
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -442,7 +453,6 @@ public class RegisterController {
                 response.setStatus(masterStatus.FAILURE);
                 return ResponseEntity.badRequest().body(response);
             }
-
         } catch (Exception exception) {
             response.setContent(exception.toString());
             response.setStatus(masterStatus.FAILURE);
@@ -468,7 +478,12 @@ public class RegisterController {
             verifyaccount.setVerificode(guid.getRandomNumberString());
             verifyaccount.setExpiredate(now.plusSeconds(60*10));
             MailController mailAPI = new MailController();
-            mailAPI.SendEmailVerifyAccount(email, verifyaccount.getVerificode());
+            try{
+                mailAPI.SendEmailVerifyAccount(email, verifyaccount.getVerificode());
+            }catch (Exception e){
+                System.out.println(e.toString());
+            }
+
             verifyAccountService.SaveVerifyAccount(verifyaccount);
             response.setContent("send successfull");
             response.setStatus(masterStatus.SUCCESSFULL);
@@ -482,7 +497,28 @@ public class RegisterController {
 
     }
 
+    @GetMapping("/getCode")
+    public ResponseEntity<?> getCode(String email){
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        DocumentStatus documentStatus = new DocumentStatus();
+        Instant now = Instant.now();
 
+        try {
+            User user = userService.getUserByEmail(email);
+            Date date = new Date();
+            Instant instant1 = Instant.now();
+            Verifyaccount verifyaccount = verifyAccountService.getVerifyAccountByUserId(user.getId());
+            response.setObject(verifyaccount);
+            response.setContent("send successfull");
+            response.setStatus(masterStatus.SUCCESSFULL);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
     public boolean IsEmailExisted(String email) {
         return userService.IsEmailExisted(email);
     }

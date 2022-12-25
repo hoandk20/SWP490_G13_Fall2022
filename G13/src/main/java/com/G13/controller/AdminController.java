@@ -156,16 +156,16 @@ public class AdminController {
         List<CompanyInfo> listResult = new ArrayList<>();
         for (CompanyInfo c:list) {
             if(companyName!=null&&!companyName.equals("")){
-                if(!c.getCompanyName().toLowerCase().contains(companyName)){continue;}
+                if(!c.getCompanyName().toLowerCase().contains(companyName.toLowerCase())){continue;}
             }
             if(email!=null&&!email.equals("")){
-                if(!c.getEmail().toLowerCase().contains(email)){continue;}
+                if(!c.getEmail().toLowerCase().contains(email.toLowerCase())){continue;}
             }
             if(Status!=null&&!Status.equals("")){
-                if(!c.getCompanyStatus().toLowerCase().contains(Status)){continue;}
+                if(!c.getCompanyStatus().toLowerCase().contains(Status.toLowerCase())){continue;}
             }
             if(city!=null&&!city.equals("")){
-                if(!c.getCompanyAddress().toLowerCase().contains(city)){continue;}
+                if(!c.getCompanyAddress().toLowerCase().contains(city.toLowerCase())){continue;}
             }
             if (regFrom != null) {
                 Instant instantFrom = regFrom.toInstant();
