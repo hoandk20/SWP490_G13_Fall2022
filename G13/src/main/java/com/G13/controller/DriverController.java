@@ -25,6 +25,7 @@ public class DriverController {
     private final PromotionTripService promotionTripService;
     private final CommonService commonService;
     private final FileService fileService;
+    private final VehicleDocumentService vehicleDocumentService;
     @PostMapping("/addVehicle")
     public ResponseEntity<?> AddVehicle (@RequestBody VehicleRequest vr) {
         Date date = new Date();
@@ -187,6 +188,52 @@ public class DriverController {
             response.setStatus(masterStatus.FAILURE);
             return ResponseEntity.badRequest().body(response);
         }
+    }
+
+    @GetMapping("GetDocumentByVehicle")
+    public ResponseEntity<?> getDocumentByVehicle(int vehicleId) {
+        ResopnseContent response = new ResopnseContent();
+        MasterStatus masterStatus = new MasterStatus();
+        MasterTripStatus masterTripStatus = new MasterTripStatus();
+        UploadFileMaster uploadFileMaster = new UploadFileMaster();
+        try {
+            DocumentVehicle documentVehicle = new DocumentVehicle();
+            documentVehicle.setVehicleId(vehicleId);
+            Vehicle vehicle = vehicleService.getVehicleByID(vehicleId);
+            List<Vehicledocument> vehicledocuments = vehicleDocumentService.getVehicleDocumentByVehicle(vehicle);
+
+            for (Vehicledocument vehicledocument:vehicledocuments) {
+                Document document = documentService.GetDocById(vehicledocument.getDocumentid().getId());
+                if(document.getFileName().equals(uploadFileMaster.Chung_Nhan_Dang_Kiem)&&documentVehicle.getCNDK()==null){
+                    DocumentRequest documentRequest = new DocumentRequest();
+                    documentRequest.setExpired_month(document.getExpiredMonth());
+                    documentRequest.setExpired_year(document.getExpiredYear());
+                    documentRequest.setId(document.getId());
+                    documentRequest.setStatus(document.getStatus());
+                    documentRequest.setFile_name(document.getFileName());
+                    documentRequest.setCreateBy(document.getCreatedBy());
+                    documentVehicle.setCNDK(documentRequest);
+                }
+                if(document.getFileName().equals(uploadFileMaster.Chung_Nhan_Bao_Hiem)&&documentVehicle.getCNBH()==null){
+                    DocumentRequest documentRequest = new DocumentRequest();
+                    documentRequest.setExpired_month(document.getExpiredMonth());
+                    documentRequest.setExpired_year(document.getExpiredYear());
+                    documentRequest.setId(document.getId());
+                    documentRequest.setStatus(document.getStatus());
+                    documentRequest.setFile_name(document.getFileName());
+                    documentRequest.setCreateBy(document.getCreatedBy());
+                    documentVehicle.setCNBH(documentRequest);
+                }
+            }
+            response.setStatus(masterStatus.SUCCESSFULL);
+            response.setObject(documentVehicle);
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            response.setContent(exception.toString());
+            response.setStatus(masterStatus.FAILURE);
+            return ResponseEntity.badRequest().body(response);
+        }
+
     }
 
     @GetMapping("/reportDriver")

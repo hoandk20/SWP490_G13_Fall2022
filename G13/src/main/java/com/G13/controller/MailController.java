@@ -19,8 +19,8 @@ public class MailController {
 
 
     final String fromEmail = "hoantnet12345@gmail.com";
-    final String password = "nxafnlppyjvrwphz";
-
+  //  final String password = "nxafnlppyjvrwphz";
+  final String password="";
     @PostMapping("/sendEmail")
     public void SendEmail(@RequestBody emailSend email) throws MessagingException, UnsupportedEncodingException {
         // dia chi email nguoi nhan
