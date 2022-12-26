@@ -132,18 +132,18 @@ const DriverDetailAdmin = (props) => {
     
         setBaseImage2(res.data.object.base64)
     }
+    console.log(Chung_Nhan_Bao_Hiem);
     const getFile6 = async () => {
         const file_name = "Chung_Nhan_Bao_Hiem";
-        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/getDocument?docId=${Chung_Nhan_Bao_Hiem?.id}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
-  
         setBaseImage6(res.data.object.base64)
     }
-    const getFile7 = async () => {
+    const getFile7 = async () => { 
         const file_name = "Chung_Nhan_Dang_Kiem";
-        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/Upload/GetDocument?file_name=${file_name}&createBy=${drivers?.email}`
+        const res = await axios.get(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/company/getDocument?docId=${Chung_Nhan_Dang_Kiem?.id}`
             , {
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -168,25 +168,72 @@ const DriverDetailAdmin = (props) => {
         // setCheck2(true);
         ChaangeStatusDoc(Chung_Nhan_Kinh_nghiem.id, "INVALID", drivers?.email, toast, dispatch);
     }
-    const changeStatusValid6 = () => {
+    const changeStatusValid6 = async() => {
         // setCheck3(true);
-        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "VALID", drivers?.email, toast, dispatch);
-        getDocVehicle();
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/DocumentChangeStatus`,
+              {
+                id: Chung_Nhan_Bao_Hiem.id,
+                status: "VALID"
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+            getDocVehicle();
+            toast.success("Tài liệu được chấp thuận")
+          } catch (error) {
+            toast.error("Thay đổi thất bại")
+          }
+        // ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "VALID", drivers?.email, toast, dispatch);
+        
     }
-    const changeStatusInValid6 = () => {
-        // setCheck3(true);
-        ChaangeStatusDoc(Chung_Nhan_Bao_Hiem.id, "INVALID", drivers?.email, toast, dispatch);
-        getDocVehicle();
+    const changeStatusInValid6 = async() => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/DocumentChangeStatus`,
+              {
+                id: Chung_Nhan_Bao_Hiem.id,
+                status: "INVALID"
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+            getDocVehicle();
+            toast.success("Tài liệu không được chấp thuận")
+          } catch (error) {
+            toast.error("Thay đổi thất bại")
+          }
     }
-    const changeStatusValid7 = () => {
-        // setCheck4(true);
-        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "VALID", drivers?.email, toast, dispatch);
-        getDocVehicle();
+    const changeStatusValid7 = async() => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/DocumentChangeStatus`,
+              {
+                id: Chung_Nhan_Dang_Kiem.id,
+                status: "VALID"
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+            getDocVehicle();
+            toast.success("Tài liệu được chấp thuận")
+          } catch (error) {
+            toast.error("Thay đổi thất bại")
+          }
     }
-    const changeStatusInValid7 = () => {
-        // setCheck4(true);
-        ChaangeStatusDoc(Chung_Nhan_Dang_Kiem.id, "INVALID", drivers?.email, toast, dispatch);
-        getDocVehicle();
+    const changeStatusInValid7 = async() => {
+        try {
+            const res = await axios.post(`${process.env.REACT_APP_BACKEND_KEY}:8080/api/admin/DocumentChangeStatus`,
+              {
+                id: Chung_Nhan_Dang_Kiem.id,
+                status: "INVALID"
+              }
+              , {
+                headers: { 'Content-Type': 'application/json' }
+              });
+            getDocVehicle();
+            toast.success("Tài liệu không được chấp thuận")
+          } catch (error) {
+            toast.error("Thay đổi thất bại")
+          }
     }
 
 
