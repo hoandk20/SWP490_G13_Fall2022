@@ -385,6 +385,7 @@ public class DriverTripController {
                 tripPassenger.setTimeStart(Date.from(t.getTimeStart()));
                 tripPassenger.setWaitingTime(t.getDriverWaitingTime());
                 tripPassenger.setPrice(t.getOpenPrice());
+                tripPassenger.setPhone(t.getMobileRelative());
                 tripPassengers.add(tripPassenger);
             }
             Driver driver = driverService.getDriverByEmail(tripDriver.getDriverEmail());

@@ -81,7 +81,6 @@ public class PassengerTripController {
     }
     @PostMapping("/create")
     public ResponseEntity<?> CreateTrip (@RequestBody TripPassenger rp) {
-
         Instant timeStamp= rp.getTimeStart().toInstant();
         ResopnseContent response = new ResopnseContent();
         MasterStatus masterStatus = new MasterStatus();
@@ -90,8 +89,6 @@ public class PassengerTripController {
         short noShort = (short)0;
         Date date = new Date();
         long time = date.getTime();
-
-
         try {
             Rider rider = riderService.getRiderByEmail(rp.getPassengerEmail());
             MasterTripStatus m = new MasterTripStatus();

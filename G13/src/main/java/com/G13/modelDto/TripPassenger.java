@@ -23,4 +23,5 @@ public class TripPassenger {
     String vehiclePlate;
     String vehicleName;
     String vehicleColor;
+    String phone;
 }
