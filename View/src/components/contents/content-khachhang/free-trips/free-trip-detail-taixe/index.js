@@ -40,6 +40,7 @@ const FreeTripDetailOfDriver = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user.userInfo?.currentUser);
+    console.log(user);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [seatRegister, setSeatRegister] = useState(1);
@@ -223,13 +224,13 @@ const FreeTripDetailOfDriver = () => {
                                     )
                                 }
 
-                                <Descriptions.Item span={2} label="Thời gian xuất phát">{formatted_date}</Descriptions.Item>
-                                <Descriptions.Item span={1} label="Cước tổng chuyến đi">{tripInfo?.price}</Descriptions.Item >
+                                <Descriptions.Item span={3} label="Thời gian xuất phát">{formatted_date}</Descriptions.Item>
+                                
                                 {
                                     view === "history" ? (
                                         <>
-                                            <Descriptions.Item span={2} label="Số ghế đã đặt">{tripPassenger?.seatRegister}</Descriptions.Item>
-                                            <Descriptions.Item span={1} label="Cước phải trả">{tripPassenger?.price}</Descriptions.Item >
+                                            <Descriptions.Item span={1} label="Số ghế đã đặt">{tripPassenger?.seatRegister}</Descriptions.Item>
+                                            <Descriptions.Item span={2} label="Cước phải trả">{tripPassenger?.price}</Descriptions.Item >
                                         </>
                                     ) : (
                                         <>
@@ -238,11 +239,12 @@ const FreeTripDetailOfDriver = () => {
                                         </>
                                     )
                                 }
-
-
                                 <Descriptions.Item span={1} label="Số người đi cùng">{listPassenger.length}</Descriptions.Item >
-                                <Descriptions.Item span={3} label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
 
+                                
+                                <Descriptions.Item span={2} label="Cước tổng chuyến đi">{tripInfo?.price}</Descriptions.Item >
+                                <Descriptions.Item span={3} label="Tài xế">{tripInfo?.driverEmail}</Descriptions.Item>
+                                <Descriptions.Item span={3} label="SĐT Tài xế">{user?.phone}</Descriptions.Item>
                                 {
                                     view === "history" ? (
                                         <>
