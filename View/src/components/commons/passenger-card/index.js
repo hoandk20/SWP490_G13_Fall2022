@@ -12,6 +12,7 @@ const PassengerCard = (props) => {
     const tripDriverDetail = useSelector((state) => state.freeTrip.tripDriverDetail?.detail);
     const listPassengerRegister = tripDriverDetail?.listPassenger;
 
+
     return (
         <div className='scroll-bg'>
             <div className='scroll-div'>
@@ -45,6 +46,7 @@ const PassengerCard = (props) => {
                                                         <div className='content-list'>
                                                             <div> <Badge color="hsl(102, 53%, 61%)" text={obj?.from} /></div>
                                                             <div><Badge color="#f50" text={obj?.to} /></div>
+                                                            <div>Số điện thoại: {obj?.phone}</div>
                                                             <div>
                                                                 <span style={{ marginRight: "40px", color: "black" }}>Số ghế: {obj?.seatRegister}</span>
                                                                 <span style={{ color: "black" }}>Giá tiền: {obj?.price} VNĐ</span>
